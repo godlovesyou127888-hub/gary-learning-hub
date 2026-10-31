@@ -4,12 +4,7 @@ body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans
 <section class="panel"><h2>基本資料</h2><div class="grid"><div class="field"><label>姓名</label><input id="studentName" name="student_name" form="deliveryForm" required></div><div class="field"><label>Email</label><input id="studentEmail" name="email" type="email" form="deliveryForm" required></div></div><p>本測驗為自編 TOEIC Part 5 文法練習，不是 ETS 官方題目。</p></section>
 <form id="quiz"></form><section class="panel"><button class="btn primary" type="button" onclick="gradeAndSend()">完成診斷並寄送結果</button><p class="muted">按一次即可計算成績、保存 10 題逐題作答並送出結果。若郵件服務異常，結果區仍可使用「複製完整紀錄」備援保存。</p></section>
 <section id="resultPanel" class="panel hidden"><h2>診斷結果</h2><div id="summary"></div><div id="explanations"></div><p><button class="btn secondary" type="button" onclick="copyFullRecord()">複製完整紀錄</button> <button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF</button> <button class="btn secondary" type="button" onclick="downloadCSV()">下載 CSV</button></p><p class="muted">完整 JSON 可用「複製完整紀錄」另行保存，避免任何郵件轉送異常造成資料遺失。</p>
-<form id="deliveryForm" action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" onsubmit="return prepareDelivery()">
-<input type="hidden" name="_subject" value="TOEIC Part 5 Grammar Lab Result">
-<input type="hidden" name="_template" value="table">
-<input type="hidden" name="_autoresponse" value="已收到你的 TOEIC Part 5 Grammar Lab 診斷結果。這封信是你的結果副本，請保留作為錯題訂正與同類再測參考。">
-<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-part5-grammar-lab/">
-<input type="hidden" name="_url" value="https://gary-learning-hub.onrender.com/toeic-part5-grammar-lab/">
+<form id="deliveryForm" action="https://script.google.com/macros/s/AKfycbzYp8q1FclBhvy3SJk9MmYx1WqcGwgcwooAEhoHtRdq0g_4JxzRReGNSlxwWL6ZvlZtIA/exec" method="POST" onsubmit="return prepareDelivery()">
 <input type="hidden" name="score" id="sendScore">
 <input type="hidden" name="accuracy" id="sendAccuracy">
 <input type="hidden" name="top_error_type" id="sendTopError">
@@ -25,7 +20,7 @@ body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans
 <input type="hidden" name="summary" id="sendAppSummary">
 <input type="hidden" name="responses_json" id="sendAppResponsesJson">
 <input type="hidden" name="submitted_at" id="sendTime">
-<button class="btn secondary" type="submit">重新寄送結果</button><p class="muted">若仍未收到信，請使用「複製完整紀錄」保存完整 10 題資料。</p>
+<button class="btn secondary" type="submit">送出並保存結果</button><p class="muted">結果會先保存到 Google Sheet，再寄 Email 通知；若 Email 失敗，Sheet 紀錄仍會保留。</p>
 </form></section>
 </main><script>
 const Q=[
