@@ -4,12 +4,12 @@
 </style></head><body><div style="background:#314247;color:#fff;padding:10px 16px;font-family:'Noto Sans TC','Microsoft JhengHei',sans-serif"><div style="max-width:1100px;margin:auto;display:flex;gap:10px;flex-wrap:wrap;align-items:center"><strong>T-PASS TOEIC Command Center｜Step 1 診斷／Step 4 Foundation｜詞素訓練</strong><a href="/tpass-toeic-command-center/" style="color:#fff;background:#6f9993;padding:7px 10px;border-radius:9px;text-decoration:none;font-weight:700">← 回 Command Center</a><a href="/toeic-weakness-radar/" style="color:#314247;background:#fffdf8;padding:7px 10px;border-radius:9px;text-decoration:none;font-weight:700">Step 1 下一步：Weakness Radar →</a><a href="/tpass-toeic-command-center/#step4" style="color:#314247;background:#fffdf8;padding:7px 10px;border-radius:9px;text-decoration:none;font-weight:700">Step 4 完成後：回自適應訓練 →</a></div></div><header><div class="wrap"><h1>TPASS｜詞素診斷與練習 V0.8</h1><p>18 題診斷 → 成績摘要 → 學生收件＋教練同步收件</p><p><a class="btn secondary" href="/">← Gary Learning Hub</a></p></div></header><main class="wrap">
 <section class="panel"><h2>基本資料</h2><div class="grid"><div class="field"><label>姓名</label><input id="studentNameInput"></div><div class="field"><label>Email</label><input id="studentEmailInput" type="email"></div><div class="field"><label>目標分數</label><input id="targetScoreInput" type="number" min="10" max="990" placeholder="例如 800"></div><div class="field"><label>每天可投入分钟</label><select id="dailyMinutesInput"><option>5</option><option selected>10</option><option>15</option><option>20</option></select></div></div><p class="muted">請勿查字典或使用 AI。此為自编診斷，不是官方 TOEIC 測驗。</p></section>
 <form id="quiz"></form>
-<section class="panel"><button class="btn primary" type="button" onclick="grade()">完成診斷</button></section>
+<section class="panel"><button class="btn primary" type="button" onclick="gradeAndSend()">完成診斷並寄送結果</button><p class="muted">按下後會同時計算成績、保存逐題作答，並將完整結果寄給學生與 GARY 教練。</p></section>
 <section id="resultPanel" class="panel hidden"><h2>診斷摘要</h2><div id="summary"></div><p><button class="btn secondary" type="button" onclick="window.print()">列印／储存 PDF</button></p>
-<form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prep()">
+<form id="deliveryForm" action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prep()">
 <input type="hidden" name="_subject" value="TPASS Morpheme Diagnostic V0.8｜Student Result"><input type="hidden" name="_template" value="table"><input type="hidden" name="_autoresponse" value="已收到你的 TPASS 詞素診斷結果。這封信是你的結果副本，請保留作為後续學習参考。"><input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/tpass-morpheme-v08/">
 <input type="hidden" name="student_name" id="sn"><input type="hidden" name="email" id="se"><input type="hidden" name="target_score" id="st"><input type="hidden" name="daily_minutes" id="sm"><input type="hidden" name="total_score" id="ss"><input type="hidden" name="group_scores" id="sg"><input type="hidden" name="question_responses" id="sqr"><input type="hidden" name="question_responses_json" id="sqrj"><input type="hidden" name="submitted_at" id="sd">
-<button class="btn primary" type="submit">寄給我並同步給教練｜Email Me & Coach</button></form><p class="foot">第一次啟用 FormSubmit 時，教練收件信箱可能需要完成一次確認。</p></section>
+<button class="btn primary" type="submit">重新寄送完整結果｜Resend Full Result</button></form><p class="foot">第一次啟用 FormSubmit 時，教練收件信箱可能需要完成一次確認。</p></section>
 </main><script>
 const Q=[
 ["C1","reusable（可重複使用的）哪個拆解最合理？",["re-＋use＋-able","reuse＋-ful","每個字母各有意思","英文都不能拆解","不知道"],0],
@@ -80,6 +80,14 @@ function grade(){
  localStorage.setItem("tpass_morpheme_v08_result",JSON.stringify({name:studentNameInput.value.trim(),email:studentEmailInput.value,total,g,responses,date:new Date().toISOString()}));
 }
 
+function gradeAndSend(){
+ grade();
+ if(!last)return;
+ const form=document.getElementById("deliveryForm");
+ if(form && prep()){
+   form.requestSubmit();
+ }
+}
 function prep(){
  if(!last){alert("請先完成診斷。");return false}
  sn.value=studentNameInput.value.trim();
