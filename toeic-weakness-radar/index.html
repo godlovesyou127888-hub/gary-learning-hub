@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOEIC Weakness Radar｜Gary Learning Hub</title>
+<style>
+:root{--bg:#f6f4ee;--card:#fffdf8;--text:#314247;--muted:#687b80;--line:#dce7e2;--accent:#6f9993;--accent2:#8fb1ab;--soft:#eef6f3;--amber:#b28959}
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);font-size:20px;line-height:1.8}
+header{background:linear-gradient(135deg,#5f7f7b,#789d98);color:#fff;padding:42px 20px}.wrap{max-width:1100px;margin:auto}.lead{color:#f6faf8;font-size:22px;line-height:1.85}
+.btn{display:inline-block;padding:14px 18px;border-radius:13px;text-decoration:none;font-weight:800;border:0;cursor:pointer;font-size:18px}.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}.secondary{background:#fffdf8;color:#3d5653;border:2px solid #cdded8}
+main{padding:30px 20px 64px}.panel{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:26px;margin-bottom:22px;box-shadow:0 10px 26px rgba(74,103,100,.06)}.muted{color:#526a6f}.foot{font-size:15px;color:#607377}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.field label{display:block;font-weight:800;margin-bottom:7px}.field input,.field select{width:100%;padding:14px;border:2px solid #d3e1dc;border-radius:12px;background:#fff;font:inherit}
+.q{padding:22px 0;border-bottom:2px solid var(--line)}.qid{font-size:16px;font-weight:800;color:#526a6f}.zh{font-size:23px;font-weight:800}.en{font-size:19px;color:#526a6f}.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:14px}.scale label{border:2px solid #d7e4df;border-radius:14px;padding:14px;text-align:center;cursor:pointer;background:#fffdf8;min-height:110px}.scale input{display:block;margin:0 auto 8px;width:24px;height:24px}
+.progress{height:16px;background:#e7efec;border-radius:999px;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,#7ba29c,#9bbdb7);width:0}
+.result{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.box{border:1px solid var(--line);border-radius:16px;padding:16px;background:#f7faf8}.score{font-size:34px;font-weight:900}.path{padding:14px;border-left:5px solid var(--accent);background:#f1f7f4;border-radius:10px;margin:12px 0}.hidden{display:none}
+@media(max-width:760px){.grid,.result,.scale{grid-template-columns:1fr}.scale label{text-align:left}.scale input{display:inline-block;margin-right:8px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>#28 TOEIC Weakness Radar<br><span style="font-size:.58em">TOEIC Weakness Diagnostic Radar</span></h1><p class="lead">用 20 題快速定位多益真正弱點：Listening、Reading、Vocabulary & Grammar、Strategy、Time & Performance。</p><p><a class="btn secondary" href="/">← Gary Learning Hub</a> <a class="btn secondary" href="/english-stuck-diagnosis/">#25 卡關診斷</a> <a class="btn secondary" href="/english-90day-plan/">#27 90天計畫</a></p></div></header>
+<main class="wrap">
+<section class="panel"><h2>基本資料｜Profile</h2><div class="grid">
+<div class="field"><label>姓名｜Name</label><input id="studentName"></div>
+<div class="field"><label>Email</label><input id="studentEmail" type="email"></div>
+<div class="field"><label>目前 TOEIC 分數｜Current Score</label><input id="currentScore" type="number" min="10" max="990" placeholder="例如 570"></div>
+<div class="field"><label>目標分數｜Target Score</label><input id="targetScore" type="number" min="10" max="990" placeholder="例如 800"></div>
+</div></section>
+
+<section class="panel"><h2>作答方式｜Instructions</h2><p class="muted">請依最近三個月準備 TOEIC 的真實狀況作答。1 = 幾乎不是問題，5 = 非常明顯。分數越高，代表該弱點越需要優先處理。</p><div class="progress"><div class="bar" id="bar"></div></div><p class="foot" id="pt">0 / 20</p></section>
+
+<form id="quiz"></form>
+
+<section class="panel"><button class="btn primary" type="button" onclick="calculate()">產生弱點雷達｜Generate Radar</button> <button class="btn secondary" type="button" onclick="downloadCSV()">下載 CSV</button></section>
+
+<section id="resultPanel" class="panel hidden"><h2>你的 TOEIC 弱點輪廓</h2><div id="headline"></div><div class="result" id="boxes"></div><div id="recommendation"></div>
+<p><button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF</button></p>
+<form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prepareDelivery()">
+<input type="hidden" name="_subject" value="TOEIC Weakness Radar｜Student Result">
+<input type="hidden" name="_template" value="table">
+<input type="hidden" name="_autoresponse" value="已收到你的 TOEIC Weakness Radar 結果。這封信是你的結果副本，請保留作為後續學習與複測參考。">
+<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-weakness-radar/">
+<input type="hidden" name="student_name" id="sendName"><input type="hidden" name="email" id="sendEmail"><input type="hidden" name="current_score" id="sendCurrent"><input type="hidden" name="target_score" id="sendTarget"><input type="hidden" name="primary_weakness" id="sendPrimary"><input type="hidden" name="secondary_weakness" id="sendSecondary"><input type="hidden" name="all_scores" id="sendScores"><input type="hidden" name="submitted_at" id="sendTime">
+<button class="btn primary" type="submit">寄給我並同步給教練｜Email Me & Coach</button>
+</form></section>
+</main>
+
+<script>
+const Q=[
+["L1","Listening","我常聽不清楚連音、弱讀或快速語音。","I often miss connected speech, reductions, or fast speech."],
+["L2","Listening","Part 2 問答題中，我常因關鍵字誤導而選錯。","In Part 2, I am often misled by keywords."],
+["L3","Listening","Part 3–4 長對話或獨白中，我容易漏掉細節。","In Parts 3–4, I often miss details in longer conversations or talks."],
+["L4","Listening","我難以邊聽邊看題目並快速定位答案。","I find it difficult to listen, read questions, and locate answers quickly."],
+["R1","Reading","Part 5 我常無法快速判斷詞性或文法結構。","In Part 5, I struggle to identify parts of speech or grammar quickly."],
+["R2","Reading","Part 6 我常看不出上下文與句子之間的連接。","In Part 6, I struggle with context and sentence connections."],
+["R3","Reading","Part 7 我閱讀速度太慢，常做不完。","In Part 7, my reading speed is too slow to finish."],
+["R4","Reading","多篇閱讀時，我常無法快速整合不同文件資訊。","In multiple-passage reading, I struggle to integrate information across texts."],
+["VG1","VocabGrammar","我常因高頻商務單字不足而看不懂題目。","I often lack high-frequency business vocabulary."],
+["VG2","VocabGrammar","我認得單字，但不熟搭配詞或慣用法。","I know individual words but not common collocations or usage."],
+["VG3","VocabGrammar","時態、語態、關係詞等核心文法仍不穩。","Core grammar such as tense, voice, and relative clauses is unstable."],
+["VG4","VocabGrammar","我容易被長句結構干擾，找不到主詞與動詞。","Long sentence structures make it hard to identify subjects and verbs."],
+["S1","Strategy","我做題時常靠感覺，而不是明確策略。","I often answer by feeling rather than using a clear strategy."],
+["S2","Strategy","我不清楚不同 Part 應該優先看什麼。","I am unclear about what to prioritize in each TOEIC part."],
+["S3","Strategy","錯題做完後，我很少分類原因。","I rarely classify the reasons behind my mistakes."],
+["S4","Strategy","我常重複刷題，但弱點沒有明顯改善。","I repeatedly do practice questions without clear improvement."],
+["TP1","Performance","正式模考時，我的表現比平常差。","My performance drops in full mock tests."],
+["TP2","Performance","我常在後半段因疲勞而失去專注。","I often lose focus in the later part due to fatigue."],
+["TP3","Performance","閱讀部分常因時間不足而猜題。","I often guess in Reading because I run out of time."],
+["TP4","Performance","我沒有固定的模考節奏與時間分配。","I do not have a stable pacing and time-allocation strategy."]
+];
+const labels={Listening:"Listening 聽力",Reading:"Reading 閱讀",VocabGrammar:"Vocabulary & Grammar 字彙文法",Strategy:"Strategy 解題策略",Performance:"Time & Performance 時間與表現"};
+const advice={
+Listening:"先做短段精聽、Part 2 反應模式與 Part 3–4 關鍵資訊定位。",
+Reading:"先做 Part 5 快速判斷、Part 7 定位閱讀與限時練習。",
+VocabGrammar:"先補高頻商務單字、搭配詞與核心文法句型。",
+Strategy:"建立固定 SOP：題型辨識 → 作答策略 → 錯題分類 → 再測。",
+Performance:"先做限時分段模考，固定節奏與時間分配，再做完整模考。"
+};
+const scale=[[1,"幾乎不是問題"],[2,"較少"],[3,"中等"],[4,"明顯"],[5,"非常明顯"]];
+const quiz=document.getElementById("quiz");
+Q.forEach((q,i)=>{const d=document.createElement("section");d.className="panel q";d.innerHTML=`<div class="qid">${q[0]}｜Item ${i+1}</div><div class="zh">${q[2]}</div><div class="en">${q[3]}</div><div class="scale">${scale.map(s=>`<label><input type="radio" name="q${i}" value="${s[0]}"><b>${s[0]}</b><br>${s[1]}</label>`).join("")}</div>`;quiz.appendChild(d)});
+quiz.onchange=()=>{const n=Q.filter((_,i)=>document.querySelector(`input[name="q${i}"]:checked`)).length;bar.style.width=(n/20*100)+"%";pt.textContent=n+" / 20"};
+function collect(){let totals={Listening:0,Reading:0,VocabGrammar:0,Strategy:0,Performance:0},counts={Listening:0,Reading:0,VocabGrammar:0,Strategy:0,Performance:0},raw=[];for(let i=0;i<Q.length;i++){const a=document.querySelector(`input[name="q${i}"]:checked`);if(!a)return null;const v=Number(a.value),k=Q[i][1];totals[k]+=v;counts[k]++;raw.push(v)}const scores=Object.keys(totals).map(k=>({k,mean:Math.round(totals[k]/counts[k]*100)/100,index:Math.round(totals[k]/counts[k]*20)})).sort((a,b)=>b.mean-a.mean);return{raw,scores}}
+function calculate(){if(!studentName.value.trim()){alert("請先填姓名。");studentName.focus();return}if(!studentEmail.value||!studentEmail.checkValidity()){alert("請填有效 Email。");studentEmail.focus();return}const r=collect();if(!r){alert("請完成全部 20 題。");return}const p=r.scores[0],s=r.scores[1];headline.innerHTML=`<p><b>主要弱點：</b>${labels[p.k]} <span class="score">${p.mean}/5</span></p><p><b>次要弱點：</b>${labels[s.k]} ${s.mean}/5</p>`;boxes.innerHTML=r.scores.map(x=>`<div class="box"><b>${labels[x.k]}</b><div class="score">${x.mean}/5</div><div>${x.index}/100</div></div>`).join("");recommendation.innerHTML=`<div class="path"><b>第一優先：</b>${advice[p.k]}</div><div class="path"><b>第二優先：</b>${advice[s.k]}</div><div class="path"><b>完成線：</b>先連續執行 14 天，再做一次相同雷達，不要同時改太多方法。</div>`;resultPanel.classList.remove("hidden");resultPanel.scrollIntoView({behavior:"smooth"});localStorage.setItem("toeic_weakness_radar_v1",JSON.stringify({name:studentName.value,email:studentEmail.value,current:currentScore.value,target:targetScore.value,scores:r.scores,date:new Date().toISOString()}))}
+function prepareDelivery(){const r=collect();if(!r){alert("請先完成診斷。");return false}const p=r.scores[0],s=r.scores[1];sendName.value=studentName.value.trim();sendEmail.value=studentEmail.value.trim();sendCurrent.value=currentScore.value;sendTarget.value=targetScore.value;sendPrimary.value=labels[p.k]+" "+p.mean+"/5";sendSecondary.value=labels[s.k]+" "+s.mean+"/5";sendScores.value=r.scores.map(x=>labels[x.k]+":"+x.mean+"/5").join(" | ");sendTime.value=new Date().toISOString();return true}
+function downloadCSV(){const r=collect();if(!r){alert("請先完成全部 20 題。");return}const h=["timestamp","name","email","current_score","target_score",...Q.map(x=>x[0]),...r.scores.map(x=>x.k+"_mean")];const v=[new Date().toISOString(),studentName.value,studentEmail.value,currentScore.value,targetScore.value,...r.raw,...r.scores.map(x=>x.mean)];const esc=x=>'"'+String(x??"").replaceAll('"','""')+'"';const csv="\uFEFF"+h.map(esc).join(",")+"\n"+v.map(esc).join(",");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.download="toeic_weakness_radar.csv";a.click()}
+</script>
+</body></html>
