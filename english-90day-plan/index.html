@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gary 英文90天進步計畫</title>
+<style>
+:root{--bg:#f6f4ee;--card:#fffdf8;--text:#314247;--muted:#687b80;--line:#dce7e2;--accent:#6f9993;--accent2:#8fb1ab;--soft:#eef6f3;--amber:#b28959}
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);font-size:20px;line-height:1.8}
+header{background:linear-gradient(135deg,#5f7f7b,#789d98);color:white;padding:42px 20px}.wrap{max-width:1100px;margin:auto}.lead{color:#f6faf8;font-size:22px;line-height:1.85}
+.btn{display:inline-block;padding:14px 18px;border-radius:13px;text-decoration:none;font-weight:800;border:0;cursor:pointer;font-size:18px}.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white}.secondary{background:#fffdf8;color:#3d5653;border:2px solid #cdded8}
+main{padding:30px 20px 64px}.panel{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:26px;margin-bottom:22px;box-shadow:0 10px 26px rgba(74,103,100,.06)}.muted{color:#526a6f}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.field label{display:block;font-weight:800;margin-bottom:7px}.field input,.field select{width:100%;padding:14px;border:2px solid #d3e1dc;border-radius:12px;background:#fff;font:inherit}
+.phase{border-left:6px solid var(--accent);padding:16px;background:#f3f8f5;border-radius:12px;margin:14px 0}.phase h3{margin:0 0 6px}.weekgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.week{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}.week b{font-size:18px}.progress{height:16px;background:#e7efec;border-radius:999px;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,#7ba29c,#9bbdb7);width:0}.metricgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.metric{background:#f7faf8;border:1px solid var(--line);border-radius:16px;padding:15px}.metric strong{display:block;font-size:28px}.task{display:flex;gap:10px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}.task input{width:24px;height:24px;margin-top:3px}.hidden{display:none}.foot{font-size:15px;color:#5c7075}
+@media(max-width:800px){.grid,.weekgrid,.metricgrid{grid-template-columns:1fr}.btn{width:100%;text-align:center;margin-bottom:8px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>Gary 英文90天進步計畫<br><span style="font-size:.58em">Gary 90-Day English Progress Plan</span></h1><p class="lead">把「診斷」轉成真正可執行的 90 天路徑。先選主要卡點與目標，再產生三階段行動計畫、每週任務與進度追蹤。</p><p><a class="btn secondary" href="/">← Gary Learning Hub</a> <a class="btn secondary" href="/english-stuck-diagnosis/">#25 卡關診斷</a> <a class="btn secondary" href="/adult-english-radar/">#26 程度雷達</a></p></div></header>
+<main class="wrap">
+<section class="panel"><h2>建立你的90天計畫｜Build Your Plan</h2><div class="grid">
+<div class="field"><label>主要卡點｜Primary Bottleneck</label><select id="bottleneck"><option>Input 輸入理解</option><option>Output 輸出表達</option><option>Language System 語言系統</option><option>Process 學習流程</option><option>Performance 情境表現</option></select></div>
+<div class="field"><label>主要目標｜Primary Goal</label><select id="goal"><option>日常溝通</option><option>工作英文</option><option>TOEIC</option><option>IELTS</option><option>TOEFL</option><option>旅遊英文</option></select></div>
+<div class="field"><label>每日可投入時間｜Daily Time</label><select id="minutes"><option value="15">15 分鐘</option><option value="30" selected>30 分鐘</option><option value="45">45 分鐘</option><option value="60">60 分鐘</option></select></div>
+<div class="field"><label>目前自評程度｜Self-rated Level</label><select id="level"><option>A1 起步</option><option>A2 基礎</option><option selected>B1 中階</option><option>B2 中高階</option><option>C1 進階</option></select></div>
+</div><p><button class="btn primary" onclick="buildPlan()">產生90天計畫｜Generate Plan</button></p></section>
+
+<section id="plan" class="hidden">
+<section class="panel"><h2>90天總覽｜90-Day Overview</h2><div class="metricgrid"><div class="metric"><strong>90</strong>天</div><div class="metric"><strong id="totalMin">2700</strong>總分鐘</div><div class="metric"><strong>13</strong>週</div><div class="metric"><strong>3</strong>階段</div></div></section>
+
+<section class="panel"><h2>三階段路徑｜3 Phases</h2>
+<div class="phase"><h3>Phase 1｜Day 1–30：重建基礎與方法</h3><div id="p1"></div></div>
+<div class="phase"><h3>Phase 2｜Day 31–60：強化弱點與輸出</h3><div id="p2"></div></div>
+<div class="phase"><h3>Phase 3｜Day 61–90：情境整合與穩定表現</h3><div id="p3"></div></div>
+</section>
+
+<section class="panel"><h2>每週任務｜Weekly Tasks</h2><div class="weekgrid" id="weeks"></div></section>
+
+<section class="panel"><h2>本週追蹤｜Weekly Tracking</h2><div class="progress"><div class="bar" id="bar"></div></div><p id="progressText" class="foot">0 / 7 已完成</p><div id="dailyTasks"></div></section>
+
+<section class="panel"><h2>90天完成線｜Completion Criteria</h2><ul><li>每週至少完成 5 天核心任務。</li><li>每 30 天重新做一次 #25 卡關診斷。</li><li>Day 1、30、60、90 记录一次 #26 能力雷達。</li><li>只在數據顯示需要時調整方法，不因焦慮頻繁換教材。</li></ul></section>
+</section>
+</main>
+<script>
+const map={
+"Input 輸入理解":["短音檔精聽＋短文精讀","建立關鍵字抓取與上下文理解","加入正常語速與較長內容的情境練習"],
+"Output 輸出表達":["每日短答與句型替換","錄音回聽＋短文輸出","情境口說／Email／簡報整合"],
+"Language System 語言系統":["核心單字＋高頻文法","搭配詞＋句型自動化","真實任務中反覆調用"],
+"Process 學習流程":["固定診斷→練習→錯題→再測","建立錯題本與週回顧","用數據決定是否調整策略"],
+"Performance 情境表現":["低壓限時小任務","題型／工作場景模擬","完整限時與真實情境演練"]
+};
+const goalMap={"日常溝通":"生活對話","工作英文":"會議、Email與簡報","TOEIC":"TOEIC 題型與限時","IELTS":"IELTS 四科任務","TOEFL":"TOEFL 四科任務","旅遊英文":"機場、飯店、餐廳與交通"};
+function buildPlan(){const b=bottleneck.value,g=goal.value,m=+minutes.value,l=level.value;totalMin.textContent=m*90;p1.innerHTML=`<b>主軸：</b>${map[b][0]}。<br><b>目標：</b>建立每天可重複的 ${m} 分鐘學習流程。`;p2.innerHTML=`<b>主軸：</b>${map[b][1]}。<br><b>情境：</b>${goalMap[g]}。`;p3.innerHTML=`<b>主軸：</b>${map[b][2]}。<br><b>成果：</b>在 ${goalMap[g]} 中維持穩定表現。`;
+weeks.innerHTML=Array.from({length:13},(_,i)=>{let phase=i<4?1:i<8?2:3;return `<div class="week"><b>Week ${i+1}</b><br><span class="foot">Phase ${phase}</span><p>${phase===1?map[b][0]:phase===2?map[b][1]:map[b][2]}</p></div>`}).join("");
+dailyTasks.innerHTML=Array.from({length:7},(_,i)=>`<label class="task"><input type="checkbox" onchange="updateProgress()"><span>Day ${i+1}｜${m} 分鐘：${i%3===0?"輸入練習":i%3===1?"核心弱點練習":"輸出／回顧"}（${l}）</span></label>`).join("");plan.classList.remove("hidden");plan.scrollIntoView({behavior:"smooth"});localStorage.setItem("gary_90day_plan_v1",JSON.stringify({b,g,m,l,date:new Date().toISOString()}));updateProgress()}
+function updateProgress(){const boxes=[...document.querySelectorAll('#dailyTasks input')],done=boxes.filter(x=>x.checked).length;bar.style.width=(done/7*100)+"%";progressText.textContent=done+" / 7 已完成";localStorage.setItem("gary_90day_week_progress",JSON.stringify(boxes.map(x=>x.checked)))}
+</script></body></html>
