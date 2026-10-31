@@ -190,18 +190,19 @@ let last=null;
 function grade(){
  if(!studentName.value.trim()){alert("請填寫姓名。");return}
  if(!studentEmail.value||!studentEmail.checkValidity()){alert("請填寫有效 Email。");return}
- const s={};D.forEach(d=>s[d]={c:0,n:0});let total=0,wrong=[];
+ const s={};D.forEach(d=>s[d]={c:0,n:0});let total=0,wrong=[],responses=[];
  for(let i=0;i<Q.length;i++){
   if(diagnosticPlays[i]<1){alert("Q"+(i+1)+" 尚未播放音檔。");return}
   const a=document.querySelector('input[name="q'+i+'"]:checked');if(!a){alert("請完成全部 20 題。");return}
-  const q=Q[i],ok=Number(a.value)===q[3];s[q[0]].n++;
-  if(ok){s[q[0]].c++;total++}else wrong.push({q:i+1,type:q[0],exp:q[4],script:q[1]})
+  const q=Q[i],chosenAnswer=Number(a.value),ok=chosenAnswer===q[3];s[q[0]].n++;
+  if(ok){s[q[0]].c++;total++}else wrong.push({q:i+1,type:q[0],exp:q[4],script:q[1]});
+  responses.push({question_id:"L-"+(i+1),dimension:q[0],audio_script:q[1],student_answer_index:chosenAnswer,student_answer:q[2][chosenAnswer],correct_answer_index:q[3],correct_answer:q[2][q[3]],is_correct:ok,plays:diagnosticPlays[i],accent:diagnosticAccents[i]||diagnosticAccent.value,speed:Number(diagnosticSpeed.value),explanation:q[4]});
  }
  const ranked=D.map(d=>({d,score:s[d].c,total:s[d].n,pct:Math.round(s[d].c/s[d].n*100)})).sort((a,b)=>a.pct-b.pct),weak=ranked[0].d;
  summary.innerHTML='<div class="path"><b>總分 '+total+'/20｜最低分構面：'+weak+'</b></div>';
  scores.innerHTML=ranked.map(x=>'<div class="path"><b>'+x.d+'</b> '+x.score+'/'+x.total+'（'+x.pct+'%）</div>').join("");
  detail.innerHTML=wrong.map(x=>'<div class="path"><b>Q'+x.q+'｜'+x.type+'</b><br><b>音檔原文：</b>'+x.script+'<br><b>中文解析：</b>'+x.exp+'</div>').join("")||'<div class="path">20 題全對。</div>';
- last={total,ranked,weak};result.classList.remove("hidden");buildRetest();retest.classList.remove("hidden");
+ last={total,ranked,weak,responses,retestResponses:[]};result.classList.remove("hidden");buildRetest();retest.classList.remove("hidden");
  localStorage.setItem("toeic_listening_training_v2",JSON.stringify({name:studentName.value,email:studentEmail.value,...last,date:new Date().toISOString()}));
 }
 function playRetest(i){
@@ -220,13 +221,15 @@ function buildRetest(){
  retestQuiz.innerHTML=RETEST[last.weak].map((q,i)=>'<div class="panel"><b>R'+(i+1)+'｜'+last.weak+'</b><p><button class="btn primary" type="button" onclick="playRetest('+i+')">▶ 播放再測音檔</button> <span id="rp'+i+'" class="pill">播放 0 / 2</span></p>'+q[1].map((o,j)=>'<label class="opt"><input type="radio" name="r'+i+'" value="'+j+'"> '+o+'</label>').join("")+'</div>').join("");
 }
 function gradeRetest(){
- let score=0,wrong=[];
+ let score=0,wrong=[],responses=[];
  for(let i=0;i<10;i++){
   if(retestPlays[i]<1){alert("R"+(i+1)+" 尚未播放音檔。");return}
   const a=document.querySelector('input[name="r'+i+'"]:checked');if(!a){alert("請完成全部 10 題再測。");return}
-  const q=RETEST[last.weak][i];
-  if(Number(a.value)===q[2])score++;else wrong.push({i:i+1,script:q[0],exp:q[3]});
+  const q=RETEST[last.weak][i],chosenAnswer=Number(a.value),ok=chosenAnswer===q[2];
+  if(ok)score++;else wrong.push({i:i+1,script:q[0],exp:q[3]});
+  responses.push({question_id:"L-R"+(i+1),dimension:last.weak,audio_script:q[0],student_answer_index:chosenAnswer,student_answer:q[1][chosenAnswer],correct_answer_index:q[2],correct_answer:q[1][q[2]],is_correct:ok,plays:retestPlays[i],accent:retestAccents[i]||diagnosticAccent.value,speed:Number(diagnosticSpeed.value),explanation:q[3]});
  }
  retestResult.innerHTML='<div class="path"><b>再測 '+score+'/10</b><br>'+(score>=8?'達成 80% 完成線。若限時條件也能維持 ≥80%，可回 Command Center 進 Step 5。':'尚未達標，請留在 Listening Track 繼續訓練。')+'</div>'+wrong.map(x=>'<div class="path"><b>R'+x.i+' 音檔原文：</b>'+x.script+'<br><b>中文解析：</b>'+x.exp+'</div>').join("");
+ last.retestScore=score;last.retestResponses=responses;localStorage.setItem("toeic_listening_training_v2",JSON.stringify({name:studentName.value,email:studentEmail.value,...last,date:new Date().toISOString()}));
 }
 </script></body></html>
