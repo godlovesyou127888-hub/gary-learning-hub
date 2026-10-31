@@ -1,0 +1,52 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TOEIC Part 7 Reading Lab</title><style>
+body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;background:#f6f4ee;color:#314247;font-size:19px;line-height:1.75}.wrap{max-width:1000px;margin:auto;padding:20px}header{background:linear-gradient(135deg,#5f7f7b,#789d98);color:#fff;padding:32px 18px}.panel{background:#fffdf8;border:2px solid #dce7e2;border-radius:18px;padding:20px;margin:16px 0}.btn{padding:12px 16px;border-radius:11px;border:0;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}.primary{background:#6f9993;color:#fff}.secondary{background:#fff;color:#3d5653;border:2px solid #dce7e2}.opt{display:block;border:1px solid #dce7e2;border-radius:10px;padding:10px;margin:7px 0;background:#fff}.path{background:#f1f7f4;border-left:5px solid #6f9993;padding:13px;border-radius:10px;margin:10px 0}.hidden{display:none}.field input{width:100%;padding:12px;border:2px solid #dce7e2;border-radius:10px;font:inherit;box-sizing:border-box}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.passage{background:#f8faf8;border:1px solid #dce7e2;border-radius:12px;padding:16px;margin:10px 0}@media(max-width:760px){.grid{grid-template-columns:1fr}}
+</style></head><body><header><div class="wrap"><h1>#34 TOEIC Part 7 Reading Lab</h1><p>閱讀速度、證據定位、同義改寫、推論與時間管理專項訓練。</p><p><a class="btn secondary" href="/">← Gary Learning Hub</a> <a class="btn secondary" href="/toeic-mock-test-lab/">#31 Mock Test Lab</a></p></div></header><main class="wrap">
+<section class="panel"><h2>基本資料</h2><div class="grid"><div class="field"><label>姓名</label><input id="studentName"></div><div class="field"><label>Email</label><input id="studentEmail" type="email"></div></div><p>本頁為自編 TOEIC Part 7 閱讀練習，不是 ETS 官方題目。</p></section>
+
+<section class="panel"><div class="passage"><b>Passage 1</b><p>Bright Office Supply will close at 4:00 p.m. this Friday for a staff training session. Orders placed before noon will still be shipped the same day. Orders received after noon will be processed on Monday.</p></div>
+<p><b>Q1. What will happen to an order placed at 2:00 p.m. on Friday?</b></p>
+<label class="opt"><input type="radio" name="q0" value="0"> It will ship Friday.</label>
+<label class="opt"><input type="radio" name="q0" value="1"> It will be processed Monday.</label>
+<label class="opt"><input type="radio" name="q0" value="2"> It will be cancelled.</label>
+<label class="opt"><input type="radio" name="q0" value="3"> It will be picked up Saturday.</label></section>
+
+<section class="panel"><div class="passage"><b>Passage 2</b><p>To reduce waiting time, City Dental Clinic asks patients to complete the online registration form before arriving. Patients who have already submitted the form do not need to fill it out again at the front desk.</p></div>
+<p><b>Q2. Why does the clinic ask patients to complete the form online?</b></p>
+<label class="opt"><input type="radio" name="q1" value="0"> To reduce waiting time.</label>
+<label class="opt"><input type="radio" name="q1" value="1"> To change appointments.</label>
+<label class="opt"><input type="radio" name="q1" value="2"> To pay in advance.</label>
+<label class="opt"><input type="radio" name="q1" value="3"> To choose a dentist.</label></section>
+
+<section class="panel"><div class="passage"><b>Passage 3</b><p>Employees may use Meeting Room B after 1:30 p.m. today. The room was originally reserved until 3:00 p.m., but the afternoon workshop has been moved to Room D.</p></div>
+<p><b>Q3. What can be inferred about Meeting Room B?</b></p>
+<label class="opt"><input type="radio" name="q2" value="0"> It is unavailable all day.</label>
+<label class="opt"><input type="radio" name="q2" value="1"> It becomes available earlier than planned.</label>
+<label class="opt"><input type="radio" name="q2" value="2"> It is being repaired.</label>
+<label class="opt"><input type="radio" name="q2" value="3"> It has moved to Room D.</label></section>
+
+<section class="panel"><div class="passage"><b>Passage 4</b><p>The Lakeside Hotel offers complimentary breakfast to guests who book directly through the hotel website. Reservations made through third-party travel sites do not include breakfast unless it is purchased separately.</p></div>
+<p><b>Q4. The word "complimentary" is closest in meaning to:</b></p>
+<label class="opt"><input type="radio" name="q3" value="0"> expensive</label>
+<label class="opt"><input type="radio" name="q3" value="1"> free</label>
+<label class="opt"><input type="radio" name="q3" value="2"> optional</label>
+<label class="opt"><input type="radio" name="q3" value="3"> limited</label></section>
+
+<section class="panel"><div class="passage"><b>Passage 5</b><p>Northline Electronics received your return request. Please place the product in its original packaging and attach the prepaid shipping label. Once the item arrives at our warehouse, a refund will be issued within five business days.</p></div>
+<p><b>Q5. When will the customer receive a refund?</b></p>
+<label class="opt"><input type="radio" name="q4" value="0"> Before shipping the item.</label>
+<label class="opt"><input type="radio" name="q4" value="1"> Immediately after submitting the request.</label>
+<label class="opt"><input type="radio" name="q4" value="2"> Within five business days after the item arrives.</label>
+<label class="opt"><input type="radio" name="q4" value="3"> After buying new packaging.</label></section>
+
+<section class="panel"><button class="btn primary" type="button" onclick="grade()">完成診斷</button></section>
+
+<section id="resultPanel" class="panel hidden"><h2>診斷結果</h2><div id="summary"></div><div id="detail"></div><p><button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF</button><button class="btn secondary" type="button" onclick="downloadCSV()">下載 CSV</button></p>
+<form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prep()">
+<input type="hidden" name="_subject" value="TOEIC Part 7 Reading Lab Result"><input type="hidden" name="_template" value="table"><input type="hidden" name="_autoresponse" value="已收到你的 TOEIC Part 7 Reading Lab 診斷結果。請保留這封結果副本，作為後續閱讀訓練與再測參考。"><input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-part7-reading-lab/">
+<input type="hidden" name="student_name" id="sendName"><input type="hidden" name="email" id="sendEmail"><input type="hidden" name="score" id="sendScore"><input type="hidden" name="weakness" id="sendWeakness"><input type="hidden" name="submitted_at" id="sendTime"><button class="btn primary" type="submit">寄給我並同步給教練</button></form></section>
+</main><script>
+const A=[1,0,1,1,2],T=["時間資訊定位","目的題定位","推論","同義改寫","流程與時間定位"],E=["Friday noon 之後的訂單週一處理。","原文明確說明是為了 reduce waiting time。","原訂到 3:00，但活動移走，所以更早可使用。","complimentary 在此表示免費提供。","退款是在商品抵達倉庫後五個工作天內完成。"];let last=null;
+function grade(){if(!studentName.value.trim()){alert("請先填寫姓名。");return}if(!studentEmail.value||!studentEmail.checkValidity()){alert("請填寫有效 Email。");return}let score=0,wrong=[];for(let i=0;i<5;i++){const a=document.querySelector('input[name="q'+i+'"]:checked');if(!a){alert("請完成全部 5 題。第 "+(i+1)+" 題尚未作答。");return}if(Number(a.value)===A[i])score++;else wrong.push({q:i+1,type:T[i],exp:E[i]})}const weakness=wrong.length?wrong[0].type:"目前無明顯弱點";summary.innerHTML="<p><b>總分："+score+"/5｜主要弱點："+weakness+"</b></p><p>完成線：正確率 80% 以上，再加入限時訓練。</p>";detail.innerHTML=wrong.map(x=>'<div class="path"><b>Q'+x.q+'｜'+x.type+'</b><br>'+x.exp+'</div>').join("")||'<div class="path">全部答對。下一步：限時完成同類 5 題。</div>';last={score,weakness,wrong};resultPanel.classList.remove("hidden");resultPanel.scrollIntoView({behavior:"smooth"});localStorage.setItem("toeic_part7_reading_lab_v1",JSON.stringify({name:studentName.value,email:studentEmail.value,...last,date:new Date().toISOString()}))}
+function prep(){if(!last){return false}sendName.value=studentName.value.trim();sendEmail.value=studentEmail.value.trim();sendScore.value=last.score+"/5";sendWeakness.value=last.weakness;sendTime.value=new Date().toISOString();return true}
+function downloadCSV(){if(!last){alert("請先完成診斷。");return}const rows=[["score","weakness"],[last.score+"/5",last.weakness]],esc=v=>'"'+String(v).replaceAll('"','""')+'"';const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\uFEFF"+rows.map(r=>r.map(esc).join(",")).join("\n")],{type:"text/csv;charset=utf-8"}));a.download="toeic_part7_reading_lab.csv";a.click()}
+</script></body></html>
