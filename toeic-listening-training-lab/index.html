@@ -30,7 +30,25 @@ body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;backgro
 　口音模式：<select id="diagnosticAccentMode"><option value="fixed">固定口音 Fixed</option><option value="random">隨機口音 Random Accent</option></select>
 <select id="diagnosticAccent"><option value="en-US">美式 American</option><option value="en-GB">英式 British</option><option value="en-AU">澳式 Australian</option><option value="en-IN">印度英文 Indian English</option></select></p>
 <div id="quiz"></div><button class="btn primary" onclick="grade()">完成診斷</button></section>
-<section id="result" class="panel hidden"><h2>診斷結果</h2><div id="summary"></div><div id="scores"></div><div id="detail"></div></section>
+<section id="result" class="panel hidden"><h2>診斷結果</h2><div id="summary"></div><div id="scores"></div><div id="detail"></div>
+<form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prepareListeningDelivery()">
+<input type="hidden" name="_subject" value="TOEIC Listening Training Lab｜Student Result">
+<input type="hidden" name="_template" value="table">
+<input type="hidden" name="_autoresponse" value="已收到你的 TOEIC Listening Training Lab 診斷結果。這封信是你的結果副本，請保留作為後續聽力訓練與再測參考。">
+<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-listening-training-lab/">
+<input type="hidden" name="student_name" id="sendName">
+<input type="hidden" name="email" id="sendEmail">
+<input type="hidden" name="diagnostic_score" id="sendScore">
+<input type="hidden" name="weakest_dimension" id="sendWeakness">
+<input type="hidden" name="dimension_scores" id="sendDimensions">
+<input type="hidden" name="diagnostic_responses" id="sendDiagnosticResponses">
+<input type="hidden" name="diagnostic_responses_json" id="sendDiagnosticResponsesJson">
+<input type="hidden" name="retest_score" id="sendRetestScore">
+<input type="hidden" name="retest_responses" id="sendRetestResponses">
+<input type="hidden" name="retest_responses_json" id="sendRetestResponsesJson">
+<input type="hidden" name="submitted_at" id="sendTime">
+<button class="btn primary" type="submit">寄給我並同步給教練</button>
+</form></section>
 <section id="retest" class="panel hidden"><h2>10 題弱點再測</h2><div id="retestIntro"></div><div id="retestQuiz"></div><button class="btn primary" onclick="gradeRetest()">完成再測</button><div id="retestResult"></div></section>
 </main><script>
 const PRACTICE=[
@@ -232,5 +250,20 @@ function gradeRetest(){
  }
  retestResult.innerHTML='<div class="path"><b>再測 '+score+'/10</b><br>'+(score>=8?'達成 80% 完成線。若限時條件也能維持 ≥80%，可回 Command Center 進 Step 5。':'尚未達標，請留在 Listening Track 繼續訓練。')+'</div>'+wrong.map(x=>'<div class="path"><b>R'+x.i+' 音檔原文：</b>'+x.script+'<br><b>中文解析：</b>'+x.exp+'</div>').join("");
  last.retestScore=score;last.retestResponses=responses;localStorage.setItem("toeic_listening_training_v2",JSON.stringify({name:studentName.value,email:studentEmail.value,...last,date:new Date().toISOString()}));
+}
+function prepareListeningDelivery(){
+ if(!last){alert("請先完成 Listening 診斷。");return false}
+ sendName.value=studentName.value.trim();
+ sendEmail.value=studentEmail.value.trim();
+ sendScore.value=last.total+"/20";
+ sendWeakness.value=last.weak;
+ sendDimensions.value=last.ranked.map(x=>x.d+":"+x.score+"/"+x.total+"("+x.pct+"%)").join(" | ");
+ sendDiagnosticResponses.value=(last.responses||[]).map(x=>x.question_id+"｜學生："+x.student_answer+"｜正解："+x.correct_answer+"｜"+(x.is_correct?"O":"X")+"｜"+x.dimension+"｜口音："+x.accent+"｜速度："+x.speed+"｜播放："+x.plays).join("\n");
+ sendDiagnosticResponsesJson.value=JSON.stringify(last.responses||[]);
+ sendRetestScore.value=last.retestScore==null?"尚未完成":last.retestScore+"/10";
+ sendRetestResponses.value=(last.retestResponses||[]).map(x=>x.question_id+"｜學生："+x.student_answer+"｜正解："+x.correct_answer+"｜"+(x.is_correct?"O":"X")+"｜"+x.dimension+"｜口音："+x.accent+"｜速度："+x.speed+"｜播放："+x.plays).join("\n");
+ sendRetestResponsesJson.value=JSON.stringify(last.retestResponses||[]);
+ sendTime.value=new Date().toISOString();
+ return true;
 }
 </script></body></html>
