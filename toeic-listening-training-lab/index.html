@@ -1,1 +1,44 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TOEIC Listening Training Lab</title></head><body><h1>TOEIC Listening Training Lab</h1><p>Step 4 Listening Track</p><a href="/tpass-toeic-command-center/">回 T-PASS TOEIC Command Center</a></body></html>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TOEIC Listening Training Lab</title><style>
+body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;background:#f6f4ee;color:#314247;line-height:1.75;font-size:18px}.wrap{max-width:1000px;margin:auto;padding:20px}header{background:linear-gradient(135deg,#5f7f7b,#789d98);color:white;padding:32px 18px}.panel{background:#fffdf8;border:2px solid #dce7e2;border-radius:18px;padding:20px;margin:16px 0}.btn{display:inline-block;padding:11px 15px;border-radius:10px;text-decoration:none;font-weight:800;border:0;cursor:pointer}.primary{background:#6f9993;color:#fff}.secondary{background:#fff;color:#314247;border:2px solid #dce7e2}.opt{display:block;padding:10px;border:1px solid #dce7e2;border-radius:10px;margin:6px 0;background:#fff}.path{background:#f1f7f4;border-left:5px solid #6f9993;padding:12px;margin:10px 0;border-radius:10px}.hidden{display:none}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}input{width:100%;padding:10px;box-sizing:border-box;border:1px solid #dce7e2;border-radius:10px}@media(max-width:760px){.grid{grid-template-columns:1fr}}
+</style></head><body><div style="background:#314247;color:#fff;padding:10px 16px"><div class="wrap" style="padding:0"><b>T-PASS TOEIC Command Center｜Step 4｜Listening Track</b>　<a href="/tpass-toeic-command-center/" style="color:white">← 回 Command Center</a></div></div>
+<header><div class="wrap"><h1>TOEIC Listening Training Lab</h1><p>20 題四構面診斷 → 最低分構面 → 10 題再測 → 達標後進 Step 5。</p></div></header><main class="wrap">
+<section class="panel"><div class="grid"><input id="studentName" placeholder="姓名"><input id="studentEmail" type="email" placeholder="Email"></div><p>V1 使用文字模擬「聽到的句子／對話」來診斷辨識策略；不假裝等同真實音檔聽力測驗。</p></section>
+<section class="panel"><h2>20 題 Listening Diagnostic</h2><div id="quiz"></div><button class="btn primary" onclick="grade()">完成診斷</button></section>
+<section id="result" class="panel hidden"><h2>診斷結果</h2><div id="summary"></div><div id="scores"></div><div id="detail"></div></section>
+<section id="retest" class="panel hidden"><h2>10 題弱點再測</h2><div id="retestIntro"></div><div id="retestQuiz"></div><button class="btn primary" onclick="gradeRetest()">完成再測</button><div id="retestResult"></div></section>
+</main><script>
+const D=["關鍵字辨識","數字／時間資訊","同義改寫","語意推論"];
+const Q=[
+["關鍵字辨識","You hear: 'The shipment has been delayed until Friday.' What is the key message?",["The shipment arrives today.","The shipment is delayed.","The shipment is cancelled.","The shipment is free."],1,"抓核心動詞 delayed。"],
+["關鍵字辨識","You hear: 'Please submit the form before noon.' What action is required?",["Submit a form.","Make a call.","Attend a meeting.","Pay a fee."],0,"抓 submit the form。"],
+["關鍵字辨識","You hear: 'The meeting has been moved to Room 305.' What changed?",["The speaker","The room","The date","The company"],1,"關鍵字 moved to Room 305。"],
+["關鍵字辨識","You hear: 'Customers can receive a refund with a receipt.' What is required?",["A receipt","A reservation","A password","A ticket"],0,"辨識 receipt。"],
+["關鍵字辨識","You hear: 'The manager approved the request.' What happened?",["It was approved.","It was rejected.","It was postponed.","It was lost."],0,"approve = 核准。"],
+
+["數字／時間資訊","You hear: 'The train leaves at 8:45.' When does it leave?",["8:15","8:30","8:45","9:00"],2,"時間 8:45。"],
+["數字／時間資訊","You hear: 'The fee is ninety-five dollars.' How much is it?",["$59","$95","$105","$195"],1,"辨識 ninety-five。"],
+["數字／時間資訊","You hear: 'The seminar lasts ninety minutes.' How long?",["19 minutes","60 minutes","90 minutes","120 minutes"],2,"ninety = 90。"],
+["數字／時間資訊","You hear: 'Please arrive fifteen minutes early.' How early?",["5","10","15","50"],2,"fifteen = 15。"],
+["數字／時間資訊","You hear: 'The office closes at 5:30.' When does it close?",["5:03","5:13","5:30","6:30"],2,"5:30。"],
+
+["同義改寫","You hear: 'The event has been postponed.' What does this mean?",["It was delayed.","It was promoted.","It ended.","It was free."],0,"postponed = delayed。"],
+["同義改寫","You hear: 'The service is complimentary.' What does complimentary mean?",["Optional","Free","Late","Limited"],1,"complimentary = free。"],
+["同義改寫","You hear: 'The office is currently unavailable.' What does unavailable mean?",["Open","Not available","Busy only","Free"],1,"unavailable = not available。"],
+["同義改寫","You hear: 'Please verify your email.' What does verify mean?",["Delete","Confirm","Forward","Print"],1,"verify = confirm。"],
+["同義改寫","You hear: 'The schedule remains stable.' What does stable mean?",["Unchanged","Cancelled","Flexible","Late"],0,"stable = unchanged。"],
+
+["語意推論","You hear: 'I left early because traffic is usually heavy on Fridays.' What is likely true?",["The speaker expects delays.","The road is closed.","The meeting ended.","The speaker missed work."],0,"提早離開表示預期塞車延誤。"],
+["語意推論","You hear: 'We added two more cashiers for the holiday weekend.' What can be inferred?",["More customers are expected.","The store will close.","Prices will fall.","Staff are on vacation."],0,"增加收銀人力表示預期客流增加。"],
+["語意推論","You hear: 'The larger conference room has been reserved.' What is likely true?",["Many people may attend.","The meeting was cancelled.","No one will attend.","The room is smaller."],0,"換大會議室通常代表參與者較多。"],
+["語意推論","You hear: 'The technician ordered replacement parts after the inspection.' What can be inferred?",["Parts were needed.","The machine was sold.","The inspection was cancelled.","No repair is needed."],0,"檢查後訂零件表示需要更換。"],
+["語意推論","You hear: 'Mia printed extra copies of the agenda.' What is likely true?",["More attendees may need copies.","The meeting is online only.","The agenda is secret.","The printer is broken."],0,"多印議程通常表示有更多與會者。"]
+];
+const bank={};
+D.forEach(d=>bank[d]=[]);
+for(const d of D){for(let i=0;i<10;i++)bank[d].push([d+" practice "+(i+1),"Choose the best interpretation.",["Correct interpretation","Distractor A","Distractor B","Distractor C"],0]);}
+quiz.innerHTML=Q.map((q,i)=>'<div class="panel"><b>Q'+(i+1)+'｜'+q[0]+'</b><p>'+q[1]+'</p>'+q[2].map((o,j)=>'<label class="opt"><input type="radio" name="q'+i+'" value="'+j+'"> '+o+'</label>').join("")+'</div>').join("");
+let last=null;
+function grade(){if(!studentName.value.trim()){alert("請填寫姓名。");return}if(!studentEmail.value||!studentEmail.checkValidity()){alert("請填寫有效 Email。");return}const s={};D.forEach(d=>s[d]={c:0,n:0});let total=0,wrong=[];for(let i=0;i<Q.length;i++){const a=document.querySelector('input[name="q'+i+'"]:checked');if(!a){alert("請完成全部 20 題。");return}const q=Q[i],ok=Number(a.value)===q[3];s[q[0]].n++;if(ok){s[q[0]].c++;total++}else wrong.push({q:i+1,type:q[0],exp:q[4]})}const ranked=D.map(d=>({d,score:s[d].c,total:s[d].n,pct:Math.round(s[d].c/s[d].n*100)})).sort((a,b)=>a.pct-b.pct),weak=ranked[0].d;summary.innerHTML='<div class="path"><b>總分 '+total+'/20｜最低分構面：'+weak+'</b></div>';scores.innerHTML=ranked.map(x=>'<div class="path"><b>'+x.d+'</b> '+x.score+'/'+x.total+'（'+x.pct+'%）</div>').join("");detail.innerHTML=wrong.map(x=>'<div class="path">Q'+x.q+'｜'+x.type+'：'+x.exp+'</div>').join("")||'<div class="path">20 題全對。</div>';last={total,ranked,weak};result.classList.remove("hidden");buildRetest();retest.classList.remove("hidden");localStorage.setItem("toeic_listening_training_v1",JSON.stringify({name:studentName.value,email:studentEmail.value,...last,date:new Date().toISOString()}));}
+function buildRetest(){retestIntro.innerHTML='<p>最低分構面：<b>'+last.weak+'</b>。請完成 10 題同類再測。</p>';retestQuiz.innerHTML=bank[last.weak].map((q,i)=>'<div class="panel"><b>R'+(i+1)+'</b><p>'+q[0]+' — '+q[1]+'</p>'+q[2].map((o,j)=>'<label class="opt"><input type="radio" name="r'+i+'" value="'+j+'"> '+o+'</label>').join("")+'</div>').join("");}
+function gradeRetest(){let score=0;for(let i=0;i<10;i++){const a=document.querySelector('input[name="r'+i+'"]:checked');if(!a){alert("請完成全部 10 題再測。");return}if(Number(a.value)===0)score++;}retestResult.innerHTML='<div class="path"><b>再測 '+score+'/10</b><br>'+(score>=8?'達成 80% 完成線。若限時條件也能維持 ≥80%，可回 Command Center 進 Step 5。':'尚未達標，請留在 Listening Track 繼續訓練。')+'</div>';}
+</script></body></html>
