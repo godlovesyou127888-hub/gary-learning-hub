@@ -52,3 +52,24 @@ Gary 提出新增或修改需求 → ChatGPT 修改 repository → 自動部署�
 - 若單次 `create_file` 或 `update_file` 被安全檢查擋下，立即拆分，不重複提交同一大包內容。
 - 先確保路徑存在，再補功能；這可避免使用者先看到 `Not Found`。
 - Hub 與 Roadmap 不手動維護總數，僅更新資料列，統計由頁面自動計算。
+
+
+## TOEIC Command Center 導覽規則
+
+所有 TOEIC 子網站必須以 **T-PASS TOEIC Command Center** 為母站，固定顯示：
+
+- **回 Command Center**
+- **目前所在 Step**
+- **下一步**
+
+目前對應：
+- #28 TOEIC Weakness Radar → Step 1 初始診斷
+- #29 TOEIC Mistake Doctor → Step 1 錯題根因診斷
+- #30 TOEIC 90-Day Planner → Step 3 90 天計畫
+- #32 TOEIC Part 5 Grammar Lab → Step 4 專項訓練
+- #34 TOEIC Part 7 Reading Lab → Step 4 專項訓練
+- #31 TOEIC Mock Test Lab → Step 5 模考驗證
+
+Step 2「教練解讀」與 Step 6「教練校準」回到 Command Center 的付費教練申請入口。
+
+新建任何 TOEIC 子網站時，不可只放 Gary Learning Hub 入口；必須同步加入 Command Center 導覽列，避免學生在多站之間迷路。
