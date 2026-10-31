@@ -8,7 +8,7 @@
 <section id="resultPanel" class="panel hidden"><h2>診斷摘要</h2><div id="summary"></div><p><button class="btn secondary" type="button" onclick="window.print()">列印／储存 PDF</button></p>
 <form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prep()">
 <input type="hidden" name="_subject" value="TPASS Morpheme Diagnostic V0.8｜Student Result"><input type="hidden" name="_template" value="table"><input type="hidden" name="_autoresponse" value="已收到你的 TPASS 詞素診斷結果。這封信是你的結果副本，請保留作為後续學習参考。"><input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/tpass-morpheme-v08/">
-<input type="hidden" name="student_name" id="sn"><input type="hidden" name="email" id="se"><input type="hidden" name="target_score" id="st"><input type="hidden" name="daily_minutes" id="sm"><input type="hidden" name="total_score" id="ss"><input type="hidden" name="group_scores" id="sg"><input type="hidden" name="submitted_at" id="sd">
+<input type="hidden" name="student_name" id="sn"><input type="hidden" name="email" id="se"><input type="hidden" name="target_score" id="st"><input type="hidden" name="daily_minutes" id="sm"><input type="hidden" name="total_score" id="ss"><input type="hidden" name="group_scores" id="sg"><input type="hidden" name="question_responses" id="sqr"><input type="hidden" name="question_responses_json" id="sqrj"><input type="hidden" name="submitted_at" id="sd">
 <button class="btn primary" type="submit">寄給我並同步給教練｜Email Me & Coach</button></form><p class="foot">第一次啟用 FormSubmit 時，教練收件信箱可能需要完成一次確認。</p></section>
 </main><script>
 const Q=[
@@ -38,7 +38,7 @@ const targetScoreInput=document.getElementById("targetScoreInput");
 const dailyMinutesInput=document.getElementById("dailyMinutesInput");
 const resultPanel=document.getElementById("resultPanel");
 const summaryBox=document.getElementById("summary");
-const sn=document.getElementById("sn"),se=document.getElementById("se"),st=document.getElementById("st"),sm=document.getElementById("sm"),ss=document.getElementById("ss"),sg=document.getElementById("sg"),sd=document.getElementById("sd");
+const sn=document.getElementById("sn"),se=document.getElementById("se"),st=document.getElementById("st"),sm=document.getElementById("sm"),ss=document.getElementById("ss"),sg=document.getElementById("sg"),sqr=document.getElementById("sqr"),sqrj=document.getElementById("sqrj"),sd=document.getElementById("sd");
 
 Q.forEach((q,i)=>{
  const d=document.createElement("section");
@@ -60,7 +60,7 @@ function grade(){
    studentEmailInput.focus();
    return;
  }
- let total=0,g={C:[0,0],A:[0,0],B:[0,0],D:[0,0]};
+ let total=0,g={C:[0,0],A:[0,0],B:[0,0],D:[0,0]},responses=[];
  for(let i=0;i<Q.length;i++){
    const a=document.querySelector(`input[name="q${i}"]:checked`);
    if(!a){
@@ -68,15 +68,16 @@ function grade(){
      document.querySelector(`input[name="q${i}"]`)?.scrollIntoView({behavior:"smooth",block:"center"});
      return;
    }
-   const ok=Number(a.value)===Q[i][3],k=Q[i][0][0];
+   const chosen=Number(a.value),ok=chosen===Q[i][3],k=Q[i][0][0];
    g[k][1]++;
    if(ok){total++;g[k][0]++;}
+   responses.push({question_id:Q[i][0],skill_tag:k,question:Q[i][1],student_answer_index:chosen,student_answer:Q[i][2][chosen],correct_answer_index:Q[i][3],correct_answer:Q[i][2][Q[i][3]],is_correct:ok});
  }
- last={total,g};
+ last={total,g,responses};
  summaryBox.innerHTML=`<p><span class="score">${total}/18</span></p><p>C：${g.C[0]}/${g.C[1]}　A：${g.A[0]}/${g.A[1]}　B：${g.B[0]}/${g.B[1]}　D：${g.D[0]}/${g.D[1]}</p><p class="muted">建議優先複習正確率最低的題組，再回看錯題與詞素拆解邏輯。</p>`;
  resultPanel.classList.remove("hidden");
  resultPanel.scrollIntoView({behavior:"smooth",block:"start"});
- localStorage.setItem("tpass_morpheme_v08_result",JSON.stringify({name:studentNameInput.value.trim(),email:studentEmailInput.value,total,g,date:new Date().toISOString()}));
+ localStorage.setItem("tpass_morpheme_v08_result",JSON.stringify({name:studentNameInput.value.trim(),email:studentEmailInput.value,total,g,responses,date:new Date().toISOString()}));
 }
 
 function prep(){
@@ -87,6 +88,8 @@ function prep(){
  sm.value=dailyMinutesInput.value;
  ss.value=last.total+"/18";
  sg.value=Object.entries(last.g).map(([k,v])=>k+":"+v[0]+"/"+v[1]).join(" | ");
+ sqr.value=last.responses.map(x=>x.question_id+"｜學生："+x.student_answer+"｜正解："+x.correct_answer+"｜"+(x.is_correct?"O":"X")).join("\n");
+ sqrj.value=JSON.stringify(last.responses);
  sd.value=new Date().toISOString();
  return true;
 }
