@@ -16,7 +16,7 @@ body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans
 <input type="hidden" name="_template" value="table">
 <input type="hidden" name="_autoresponse" value="已收到你的 TOEIC Part 7 Reading Diagnostic V1 結果。請保留這封結果副本，作為後續閱讀訓練與再測參考。">
 <input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-part7-reading-lab/">
-<input type="hidden" name="student_name" id="sendName"><input type="hidden" name="email" id="sendEmail"><input type="hidden" name="diagnostic_score" id="sendScore"><input type="hidden" name="weakest_dimension" id="sendWeakness"><input type="hidden" name="dimension_scores" id="sendDimensions"><input type="hidden" name="retest_score" id="sendRetest"><input type="hidden" name="submitted_at" id="sendTime">
+<input type="hidden" name="student_name" id="sendName"><input type="hidden" name="email" id="sendEmail"><input type="hidden" name="diagnostic_score" id="sendScore"><input type="hidden" name="weakest_dimension" id="sendWeakness"><input type="hidden" name="dimension_scores" id="sendDimensions"><input type="hidden" name="diagnostic_responses" id="sendDiagnosticResponses"><input type="hidden" name="diagnostic_responses_json" id="sendDiagnosticResponsesJson"><input type="hidden" name="retest_score" id="sendRetest"><input type="hidden" name="retest_responses" id="sendRetestResponses"><input type="hidden" name="retest_responses_json" id="sendRetestResponsesJson"><input type="hidden" name="submitted_at" id="sendTime">
 <button class="btn primary" type="submit">寄給我並同步給教練</button></form></section>
 
 <section id="retestPanel" class="panel hidden"><h2>10 題弱點再測｜Targeted Retest</h2>
@@ -121,8 +121,8 @@ let last=null,retestScore=null;
 function gradeDiagnostic(){
  if(!studentName.value.trim()){alert("請先填寫姓名。");return}
  if(!studentEmail.value||!studentEmail.checkValidity()){alert("請填寫有效 Email。");return}
- const dim={};DIMS.forEach(d=>dim[d]={c:0,n:0});let total=0,wrong=[];
- for(let i=0;i<diagnostic.length;i++){const a=document.querySelector('input[name="q'+i+'"]:checked');if(!a){alert("請完成全部 20 題。第 "+(i+1)+" 題尚未作答。");return}const q=diagnostic[i],ok=Number(a.value)===q[4];dim[q[0]].n++;if(ok){total++;dim[q[0]].c++}else wrong.push({q:i+1,type:q[0],exp:q[5]})}
+ const dim={};DIMS.forEach(d=>dim[d]={c:0,n:0});let total=0,wrong=[],responses=[];
+ for(let i=0;i<diagnostic.length;i++){const a=document.querySelector('input[name="q'+i+'"]:checked');if(!a){alert("請完成全部 20 題。第 "+(i+1)+" 題尚未作答。");return}const q=diagnostic[i],chosen=Number(a.value),ok=chosen===q[4];dim[q[0]].n++;if(ok){total++;dim[q[0]].c++}else wrong.push({q:i+1,type:q[0],exp:q[5]});responses.push({question_id:"P7-"+(i+1),dimension:q[0],passage:q[1],question:q[2],student_answer_index:chosen,student_answer:q[3][chosen],correct_answer_index:q[4],correct_answer:q[3][q[4]],is_correct:ok,explanation:q[5]})}
  const ranked=DIMS.map(d=>({d,score:dim[d].c,total:dim[d].n,pct:Math.round(dim[d].c/dim[d].n*100)})).sort((a,b)=>a.pct-b.pct);
  const weakest=ranked[0].d;
  summary.innerHTML='<p><b>總分：'+total+'/20｜正確率：'+Math.round(total/20*100)+'%｜最低分構面：'+weakest+'</b></p>';
@@ -173,7 +173,7 @@ function gradeDiagnostic(){
  '<p><b>English explanation：</b>'+en+'</p>'+
  '<div class="strategy"><b>解題策略 Strategy</b><br>'+strategyMap[q[0]]+'</div></div>';
 }).join("");
- last={total,dim,ranked,weakest,wrong};retestScore=null;
+ last={total,dim,ranked,weakest,wrong,responses,retestResponses:[]};retestScore=null;
  resultPanel.classList.remove("hidden");buildRetest(weakest);retestPanel.classList.remove("hidden");resultPanel.scrollIntoView({behavior:"smooth"});
  localStorage.setItem("toeic_part7_reading_v1",JSON.stringify({name:studentName.value,email:studentEmail.value,...last,date:new Date().toISOString()}));
 }
@@ -191,9 +191,11 @@ function gradeRetest(){
    if(!a){alert("請完成全部 10 題再測。第 "+(i+1)+" 題尚未作答。");return}
    const chosen=Number(a.value),ok=chosen===bank[i][3];
    if(ok)score++;
-   details.push({i,chosen,ok});
+   details.push({question_id:"P7-R"+(i+1),i,dimension:last.weakest,passage:bank[i][0],question:bank[i][1],student_answer_index:chosen,student_answer:bank[i][2][chosen],correct_answer_index:bank[i][3],correct_answer:bank[i][2][bank[i][3]],is_correct:ok});
  }
  retestScore=score;
+ last.retestResponses=details;
+ localStorage.setItem("toeic_part7_reading_v1",JSON.stringify({name:studentName.value,email:studentEmail.value,...last,retestScore,date:new Date().toISOString()}));
  const strategyMap={
  "細節定位":"快速掃描關鍵字，再回原文找精確對應。",
  "目的／主旨":"抓整段功能與作者目的，不選只代表局部細節的答案。",
@@ -214,6 +216,6 @@ function gradeRetest(){
    '<div class="strategy"><b>本構面策略 Strategy</b><br>'+strategyMap[last.weakest]+'</div></div>';
  }).join("");
 }
-function prep(){if(!last){return false}sendName.value=studentName.value.trim();sendEmail.value=studentEmail.value.trim();sendScore.value=last.total+"/20";sendWeakness.value=last.weakest;sendDimensions.value=last.ranked.map(x=>x.d+":"+x.score+"/"+x.total).join(" | ");sendRetest.value=retestScore===null?"尚未完成":retestScore+"/10";sendTime.value=new Date().toISOString();return true}
+function prep(){if(!last){return false}sendName.value=studentName.value.trim();sendEmail.value=studentEmail.value.trim();sendScore.value=last.total+"/20";sendWeakness.value=last.weakest;sendDimensions.value=last.ranked.map(x=>x.d+":"+x.score+"/"+x.total).join(" | ");sendDiagnosticResponses.value=last.responses.map(x=>x.question_id+"｜學生："+x.student_answer+"｜正解："+x.correct_answer+"｜"+(x.is_correct?"O":"X")+"｜"+x.dimension).join("\n");sendDiagnosticResponsesJson.value=JSON.stringify(last.responses);sendRetest.value=retestScore===null?"尚未完成":retestScore+"/10";sendRetestResponses.value=(last.retestResponses||[]).map(x=>x.question_id+"｜學生："+x.student_answer+"｜正解："+x.correct_answer+"｜"+(x.is_correct?"O":"X")+"｜"+x.dimension).join("\n");sendRetestResponsesJson.value=JSON.stringify(last.retestResponses||[]);sendTime.value=new Date().toISOString();return true}
 function downloadCSV(){if(!last){alert("請先完成診斷。");return}const rows=[["dimension","score","total","percent"],...last.ranked.map(x=>[x.d,x.score,x.total,x.pct])],esc=v=>'"'+String(v).replaceAll('"','""')+'"';const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\uFEFF"+rows.map(r=>r.map(esc).join(",")).join("\n")],{type:"text/csv;charset=utf-8"}));a.download="toeic_part7_reading_diagnostic_v1.csv";a.click()}
 </script></body></html>
