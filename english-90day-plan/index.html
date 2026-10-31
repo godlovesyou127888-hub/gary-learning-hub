@@ -37,7 +37,38 @@ main{padding:30px 20px 64px}.panel{background:var(--card);border:2px solid var(-
 
 <section class="panel"><h2>本週追蹤｜Weekly Tracking</h2><div class="progress"><div class="bar" id="bar"></div></div><p id="progressText" class="foot">0 / 7 已完成</p><div id="dailyTasks"></div></section>
 
-<section class="panel"><h2>90天完成線｜Completion Criteria</h2><ul><li>每週至少完成 5 天核心任務。</li><li>每 30 天重新做一次 #25 卡關診斷。</li><li>Day 1、30、60、90 记录一次 #26 能力雷達。</li><li>只在數據顯示需要時調整方法，不因焦慮頻繁換教材。</li></ul></section>
+<section class="panel"><h2>90天完成線｜Completion Criteria</h2><ul><li>每週至少完成 5 天核心任務。</li><li>每 30 天重新做一次 #25 卡關診斷。</li><li>Day 1、30、60、90 記錄一次 #26 能力雷達。</li><li>只在數據顯示需要時調整方法，不因焦慮頻繁換教材。</li></ul></section>
+
+<section class="panel">
+<h2>學生收件＋教練收件｜Student & Coach Delivery</h2>
+<p class="muted">學生可以先把自己的計畫列印或儲存成 PDF；若要讓 Gary 教練收到資料，請填姓名與 Email 後送出。送出後，教練會收到完整摘要，學生也會收到自動回覆副本。</p>
+<div class="grid">
+<div class="field"><label>學生姓名｜Student Name</label><input id="studentName" placeholder="請輸入姓名"></div>
+<div class="field"><label>學生 Email｜Student Email</label><input id="studentEmail" type="email" placeholder="name@example.com"></div>
+</div>
+<p><button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF｜Print / Save PDF</button>
+<button class="btn secondary" type="button" onclick="downloadPlanCSV()">下載計畫 CSV｜Download CSV</button></p>
+
+<form id="coachForm" action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prepareCoachSubmission()">
+<input type="hidden" name="_subject" value="Gary 90-Day English Plan｜New Student Submission">
+<input type="hidden" name="_template" value="table">
+<input type="hidden" name="_autoresponse" value="已收到你的 Gary 英文90天進步計畫。這封信是你的提交副本，請保留作為 Day 1 紀錄。建議在 Day 30、60、90 回來重新檢視與更新。">
+<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/english-90day-plan/">
+<input type="hidden" name="student_name" id="sendName">
+<input type="hidden" name="email" id="sendEmail">
+<input type="hidden" name="primary_bottleneck" id="sendBottleneck">
+<input type="hidden" name="primary_goal" id="sendGoal">
+<input type="hidden" name="daily_minutes" id="sendMinutes">
+<input type="hidden" name="self_rated_level" id="sendLevel">
+<input type="hidden" name="phase_1" id="sendP1">
+<input type="hidden" name="phase_2" id="sendP2">
+<input type="hidden" name="phase_3" id="sendP3">
+<input type="hidden" name="week_progress" id="sendProgress">
+<input type="hidden" name="submitted_at" id="sendTime">
+<button class="btn primary" type="submit">送出給 Gary 教練｜Send to Coach</button>
+</form>
+<p class="foot">第一次啟用此 FormSubmit 表單時，Gary 的收件信箱可能需要點一次確認信完成啟用。官方說明亦指出，未啟用前的提交會暫存，確認後再寄送。</p>
+</section>
 </section>
 </main>
 <script>
@@ -53,4 +84,35 @@ function buildPlan(){const b=bottleneck.value,g=goal.value,m=+minutes.value,l=le
 weeks.innerHTML=Array.from({length:13},(_,i)=>{let phase=i<4?1:i<8?2:3;return `<div class="week"><b>Week ${i+1}</b><br><span class="foot">Phase ${phase}</span><p>${phase===1?map[b][0]:phase===2?map[b][1]:map[b][2]}</p></div>`}).join("");
 dailyTasks.innerHTML=Array.from({length:7},(_,i)=>`<label class="task"><input type="checkbox" onchange="updateProgress()"><span>Day ${i+1}｜${m} 分鐘：${i%3===0?"輸入練習":i%3===1?"核心弱點練習":"輸出／回顧"}（${l}）</span></label>`).join("");plan.classList.remove("hidden");plan.scrollIntoView({behavior:"smooth"});localStorage.setItem("gary_90day_plan_v1",JSON.stringify({b,g,m,l,date:new Date().toISOString()}));updateProgress()}
 function updateProgress(){const boxes=[...document.querySelectorAll('#dailyTasks input')],done=boxes.filter(x=>x.checked).length;bar.style.width=(done/7*100)+"%";progressText.textContent=done+" / 7 已完成";localStorage.setItem("gary_90day_week_progress",JSON.stringify(boxes.map(x=>x.checked)))}
+function currentPlan(){
+ const boxes=[...document.querySelectorAll('#dailyTasks input')];
+ return {
+  student_name:studentName.value.trim(),
+  email:studentEmail.value.trim(),
+  primary_bottleneck:bottleneck.value,
+  primary_goal:goal.value,
+  daily_minutes:minutes.value,
+  self_rated_level:level.value,
+  phase_1:p1.innerText.trim(),
+  phase_2:p2.innerText.trim(),
+  phase_3:p3.innerText.trim(),
+  week_progress:boxes.length?boxes.filter(x=>x.checked).length+"/7":"0/7",
+  submitted_at:new Date().toISOString()
+ };
+}
+function prepareCoachSubmission(){
+ if(plan.classList.contains("hidden")){alert("請先產生 90 天計畫。");return false}
+ const d=currentPlan();
+ if(!d.student_name){alert("請輸入學生姓名。");studentName.focus();return false}
+ if(!d.email || !studentEmail.checkValidity()){alert("請輸入有效的學生 Email。");studentEmail.focus();return false}
+ sendName.value=d.student_name;sendEmail.value=d.email;sendBottleneck.value=d.primary_bottleneck;sendGoal.value=d.primary_goal;sendMinutes.value=d.daily_minutes;sendLevel.value=d.self_rated_level;sendP1.value=d.phase_1;sendP2.value=d.phase_2;sendP3.value=d.phase_3;sendProgress.value=d.week_progress;sendTime.value=d.submitted_at;
+ return true;
+}
+function downloadPlanCSV(){
+ if(plan.classList.contains("hidden")){alert("請先產生 90 天計畫。");return}
+ const d=currentPlan(),headers=Object.keys(d),values=Object.values(d);
+ const esc=v=>'"'+String(v??"").replaceAll('"','""')+'"';
+ const csv="\uFEFF"+headers.map(esc).join(",")+"\n"+values.map(esc).join(",");
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.download="gary_90day_plan_"+(d.student_name||"student")+".csv";a.click();URL.revokeObjectURL(a.href);
+}
 </script></body></html>
