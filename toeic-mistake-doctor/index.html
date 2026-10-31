@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOEIC Mistake Doctor｜Gary Learning Hub</title>
+<style>
+:root{--bg:#f6f4ee;--card:#fffdf8;--text:#314247;--muted:#687b80;--line:#dce7e2;--accent:#6f9993;--accent2:#8fb1ab;--soft:#eef6f3;--amber:#b28959}
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);font-size:20px;line-height:1.8}
+header{background:linear-gradient(135deg,#5f7f7b,#789d98);color:#fff;padding:42px 20px}.wrap{max-width:1100px;margin:auto}.lead{color:#f6faf8;font-size:22px;line-height:1.85}
+.btn{display:inline-block;padding:14px 18px;border-radius:13px;text-decoration:none;font-weight:800;border:0;cursor:pointer;font-size:18px}.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}.secondary{background:#fffdf8;color:#3d5653;border:2px solid #cdded8}
+main{padding:30px 20px 64px}.panel{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:26px;margin-bottom:22px;box-shadow:0 10px 26px rgba(74,103,100,.06)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.field label{display:block;font-weight:800;margin-bottom:7px}.field input,.field select,.field textarea{width:100%;padding:14px;border:2px solid #d3e1dc;border-radius:12px;background:#fff;font:inherit}
+.error-row{display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr;gap:10px;padding:14px 0;border-bottom:1px solid var(--line)}.error-row select,.error-row input{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff}
+.result{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.box{border:1px solid var(--line);border-radius:16px;padding:16px;background:#f7faf8}.score{font-size:32px;font-weight:900}.path{padding:14px;border-left:5px solid var(--accent);background:#f1f7f4;border-radius:10px;margin:12px 0}.hidden{display:none}.muted{color:#526a6f}.foot{font-size:15px;color:#607377}
+@media(max-width:800px){.grid,.result,.error-row{grid-template-columns:1fr}.btn{width:100%;text-align:center;margin-bottom:8px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>#29 TOEIC Mistake Doctor<br><span style="font-size:.58em">TOEIC Error Diagnosis & Learning Prescription</span></h1><p class="lead">不是只看「错几题」，而是判断：错在哪里、为什么错、下一次怎么避免再错。</p><p><a class="btn secondary" href="/">← Gary Learning Hub</a> <a class="btn secondary" href="/toeic-weakness-radar/">#28 Weakness Radar</a></p></div></header>
+<main class="wrap">
+<section class="panel"><h2>基本资料｜Profile</h2><div class="grid">
+<div class="field"><label>姓名｜Name</label><input id="studentName"></div>
+<div class="field"><label>Email</label><input id="studentEmail" type="email"></div>
+<div class="field"><label>目前 TOEIC 分数｜Current Score</label><input id="currentScore" type="number" min="10" max="990"></div>
+<div class="field"><label>目标分数｜Target Score</label><input id="targetScore" type="number" min="10" max="990"></div>
+</div></section>
+
+<section class="panel">
+<h2>输入最近错题｜Enter Recent Mistakes</h2>
+<p class="muted">先输入最多 10 题最近做错的题目。重点不是贴整题，而是标记「题型＋错误原因＋你的信心」。</p>
+<div id="rows"></div>
+<p><button type="button" class="btn secondary" onclick="addRow()">＋ 新增错题</button></p>
+</section>
+
+<section class="panel"><button class="btn primary" type="button" onclick="diagnose()">开始诊断｜Diagnose My Mistakes</button></section>
+
+<section id="resultPanel" class="panel hidden">
+<h2>错题诊断结果｜Diagnosis</h2>
+<div class="result" id="summaryBoxes"></div>
+<div id="prescription"></div>
+<p><button class="btn secondary" type="button" onclick="window.print()">列印／储存 PDF</button> <button class="btn secondary" type="button" onclick="downloadCSV()">下载 CSV</button></p>
+
+<form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prepareDelivery()">
+<input type="hidden" name="_subject" value="TOEIC Mistake Doctor｜Student Result">
+<input type="hidden" name="_template" value="table">
+<input type="hidden" name="_autoresponse" value="已收到你的 TOEIC Mistake Doctor 错题诊断结果。这封信是你的结果副本，请保留作为后续订正与再测参考。">
+<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-mistake-doctor/">
+<input type="hidden" name="student_name" id="sendName">
+<input type="hidden" name="email" id="sendEmail">
+<input type="hidden" name="current_score" id="sendCurrent">
+<input type="hidden" name="target_score" id="sendTarget">
+<input type="hidden" name="mistake_count" id="sendCount">
+<input type="hidden" name="top_error_type" id="sendTop">
+<input type="hidden" name="secondary_error_type" id="sendSecond">
+<input type="hidden" name="prescription" id="sendPrescription">
+<input type="hidden" name="submitted_at" id="sendTime">
+<button class="btn primary" type="submit">寄给我并同步给教练｜Email Me & Coach</button>
+</form>
+</section>
+</main>
+
+<script>
+const errorTypes={
+"Vocabulary":"Vocabulary 字汇不足",
+"Grammar":"Grammar 文法判断",
+"Collocation":"Collocation 搭配词",
+"Reading":"Reading 阅读定位",
+"Listening":"Listening 听力辨识",
+"Strategy":"Strategy 题型策略",
+"Time":"Time 时间压力",
+"Careless":"Careless 粗心／看错"
+};
+const prescriptions={
+"Vocabulary":"建立错题单字卡：每题只收 1–3 个真正影响理解的高频字，48 小时内再测。",
+"Grammar":"把错题改写成「规则＋最小例句＋再测题」；不要只记答案。",
+"Collocation":"记录完整搭配而不是单字，例如 make a decision，而不是只背 decision。",
+"Reading":"练习关键词定位、同义改写与证据句；每题必须指出答案证据位置。",
+"Listening":"回听错题片段 3 次：第一次抓大意、第二次听关键词、第三次跟读。",
+"Strategy":"建立该 Part 的固定 SOP，做题前先知道看什么、排除什么、何时跳题。",
+"Time":"分段限时训练；先稳定正确率，再逐步压缩时间。",
+"Careless":"建立粗心检查清单：否定词、数字、时态、单复数、题目问法。"
+};
+let rowCount=0,lastDiagnosis=null;
+function addRow(){
+ if(rowCount>=10){alert("最多输入 10 题。");return}
+ rowCount++;
+ const d=document.createElement("div");d.className="error-row";d.dataset.row=rowCount;
+ d.innerHTML=`
+ <select class="part"><option>Part 1</option><option>Part 2</option><option>Part 3</option><option>Part 4</option><option>Part 5</option><option>Part 6</option><option>Part 7</option></select>
+ <select class="etype">${Object.entries(errorTypes).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select>
+ <select class="confidence"><option value="3">高信心但错</option><option value="2">不确定</option><option value="1">猜的</option></select>
+ <input class="note" placeholder="错因备注（选填）">`;
+ document.getElementById("rows").appendChild(d);
+}
+for(let i=0;i<5;i++)addRow();
+
+function collect(){
+ const rows=[...document.querySelectorAll(".error-row")];
+ return rows.map(r=>({
+   part:r.querySelector(".part").value,
+   type:r.querySelector(".etype").value,
+   confidence:Number(r.querySelector(".confidence").value),
+   note:r.querySelector(".note").value.trim()
+ }));
+}
+function diagnose(){
+ if(!studentName.value.trim()){alert("请先填写姓名。");studentName.focus();return}
+ if(!studentEmail.value||!studentEmail.checkValidity()){alert("请填写有效 Email。");studentEmail.focus();return}
+ const data=collect();
+ if(!data.length){alert("请至少输入 1 题错题。");return}
+ const counts={};const weighted={};
+ data.forEach(x=>{counts[x.type]=(counts[x.type]||0)+1;weighted[x.type]=(weighted[x.type]||0)+x.confidence});
+ const ranked=Object.keys(counts).map(k=>({k,count:counts[k],weight:weighted[k]})).sort((a,b)=>b.count-a.count||b.weight-a.weight);
+ const top=ranked[0],second=ranked[1]||ranked[0];
+ const highConfidenceWrong=data.filter(x=>x.confidence===3).length;
+ summaryBoxes.innerHTML=`
+ <div class="box"><b>主要错误类型</b><div class="score">${errorTypes[top.k]}</div><div>${top.count} / ${data.length} 题</div></div>
+ <div class="box"><b>次要错误类型</b><div class="score" style="font-size:24px">${errorTypes[second.k]}</div><div>${second.count} / ${data.length} 题</div></div>
+ <div class="box"><b>高信心却答错</b><div class="score">${highConfidenceWrong}</div><div>需要优先校正错误规则</div></div>
+ <div class="box"><b>本次样本</b><div class="score">${data.length}</div><div>最近错题</div></div>`;
+ prescription.innerHTML=`
+ <h3>学习处方｜Prescription</h3>
+ <div class="path"><b>第一优先｜${errorTypes[top.k]}</b><br>${prescriptions[top.k]}</div>
+ <div class="path"><b>第二优先｜${errorTypes[second.k]}</b><br>${prescriptions[second.k]}</div>
+ <div class="path"><b>再测规则</b><br>24–48 小时后只重做同类 5 题；正确率达到 80% 以上，再进入下一类错误。</div>`;
+ lastDiagnosis={data,ranked,top,second,highConfidenceWrong,prescription:prescriptions[top.k]+" | "+prescriptions[second.k]};
+ resultPanel.classList.remove("hidden");resultPanel.scrollIntoView({behavior:"smooth"});
+ localStorage.setItem("toeic_mistake_doctor_v1",JSON.stringify({name:studentName.value,email:studentEmail.value,current:currentScore.value,target:targetScore.value,...lastDiagnosis,date:new Date().toISOString()}));
+}
+function prepareDelivery(){
+ if(!lastDiagnosis){alert("请先完成错题诊断。");return false}
+ sendName.value=studentName.value.trim();sendEmail.value=studentEmail.value.trim();sendCurrent.value=currentScore.value;sendTarget.value=targetScore.value;sendCount.value=lastDiagnosis.data.length;sendTop.value=errorTypes[lastDiagnosis.top.k]+" ("+lastDiagnosis.top.count+")";sendSecond.value=errorTypes[lastDiagnosis.second.k]+" ("+lastDiagnosis.second.count+")";sendPrescription.value=lastDiagnosis.prescription;sendTime.value=new Date().toISOString();return true
+}
+function downloadCSV(){
+ if(!lastDiagnosis){alert("请先完成诊断。");return}
+ const h=["part","error_type","confidence","note"];
+ const esc=x=>'"'+String(x??"").replaceAll('"','""')+'"';
+ const lines=[h.map(esc).join(","),...lastDiagnosis.data.map(x=>[x.part,errorTypes[x.type],x.confidence,x.note].map(esc).join(","))];
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\uFEFF"+lines.join("\n")],{type:"text/csv;charset=utf-8"}));a.download="toeic_mistake_doctor.csv";a.click();
+}
+</script>
+</body></html>
