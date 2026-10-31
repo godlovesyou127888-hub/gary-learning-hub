@@ -47,6 +47,15 @@ body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;backgro
 <input type="hidden" name="retest_score" id="sendRetestScore">
 <input type="hidden" name="retest_responses" id="sendRetestResponses">
 <input type="hidden" name="retest_responses_json" id="sendRetestResponsesJson">
+<input type="hidden" name="submission_id" id="sendSubmissionId">
+<input type="hidden" name="assessment_type" value="TOEIC Listening Training Lab">
+<input type="hidden" name="source_page" value="https://gary-learning-hub.onrender.com/toeic-listening-training-lab/">
+<input type="hidden" name="total_score" id="sendTotalScore">
+<input type="hidden" name="accuracy" id="sendAccuracy">
+<input type="hidden" name="primary_weakness" id="sendPrimaryWeakness">
+<input type="hidden" name="secondary_weakness" id="sendSecondaryWeakness">
+<input type="hidden" name="summary" id="sendAppSummary">
+<input type="hidden" name="responses_json" id="sendAppResponsesJson">
 <input type="hidden" name="submitted_at" id="sendTime">
 <button class="btn primary" type="submit">寄送完整 Listening 結果</button>
 </form></section>
@@ -380,6 +389,13 @@ function prepareListeningDelivery(){
  sendRetestScore.value=last.retestScore==null?"尚未完成":last.retestScore+"/10";
  sendRetestResponses.value=(last.retestResponses||[]).map(x=>x.question_id+"｜學生："+x.student_answer+"｜正解："+x.correct_answer+"｜"+(x.is_correct?"O":"X")+"｜"+x.dimension+"｜口音："+x.accent+"｜速度："+x.speed+"｜播放："+x.plays).join("\n");
  sendRetestResponsesJson.value=JSON.stringify(last.retestResponses||[]);
+ if(!sendSubmissionId.value)sendSubmissionId.value=(crypto&&crypto.randomUUID?crypto.randomUUID():"L-"+Date.now());
+ sendTotalScore.value=last.total+"/20";
+ sendAccuracy.value=Math.round(last.total/20*100)+"%";
+ sendPrimaryWeakness.value=last.weak;
+ sendSecondaryWeakness.value=(last.ranked&&last.ranked[1]?last.ranked[1].d:"");
+ sendAppSummary.value=(last.ranked||[]).map(x=>x.d+":"+x.score+"/"+x.total+"("+x.pct+"%)").join(" | ");
+ sendAppResponsesJson.value=JSON.stringify({diagnostic:last.responses||[],retest:last.retestResponses||[],retest_score:last.retestScore});
  sendTime.value=new Date().toISOString();
  return true;
 }
