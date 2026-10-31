@@ -16,6 +16,14 @@ body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans
 <input type="hidden" name="error_summary" id="sendSummary">
 <input type="hidden" name="question_responses" id="sendResponses">
 <input type="hidden" name="question_responses_json" id="sendResponsesJson">
+<input type="hidden" name="submission_id" id="sendSubmissionId">
+<input type="hidden" name="assessment_type" value="TOEIC Part 5 Grammar Lab">
+<input type="hidden" name="source_page" value="https://gary-learning-hub.onrender.com/toeic-part5-grammar-lab/">
+<input type="hidden" name="total_score" id="sendTotalScore">
+<input type="hidden" name="primary_weakness" id="sendPrimaryWeakness">
+<input type="hidden" name="secondary_weakness" id="sendSecondaryWeakness">
+<input type="hidden" name="summary" id="sendAppSummary">
+<input type="hidden" name="responses_json" id="sendAppResponsesJson">
 <input type="hidden" name="submitted_at" id="sendTime">
 <button class="btn secondary" type="submit">重新寄送結果</button><p class="muted">若仍未收到信，請使用「複製完整紀錄」保存完整 10 題資料。</p>
 </form></section>
@@ -75,6 +83,6 @@ function gradeAndSend(){
    form.requestSubmit();
  }
 }
-function prepareDelivery(){if(!last){alert("請先完成診斷。");return false}sendScore.value=last.correct+"/10";sendAccuracy.value=last.accuracy+"%";sendTopError.value=last.top;sendSummary.value=Object.entries(last.errors).map(([k,v])=>k+":"+v).join(" | ")||"無明顯錯誤";sendResponses.value=last.details.map(x=>x.question_id+"｜學生："+x.chosen+"｜正解："+x.answer+"｜"+(x.ok?"O":"X")+"｜"+x.type).join("\n");sendResponsesJson.value=JSON.stringify(last.details);sendTime.value=new Date().toISOString();return true}
+function prepareDelivery(){if(!last){alert("請先完成診斷。");return false}sendScore.value=last.correct+"/10";sendAccuracy.value=last.accuracy+"%";sendTopError.value=last.top;sendSummary.value=Object.entries(last.errors).map(([k,v])=>k+":"+v).join(" | ")||"無明顯錯誤";sendResponses.value=last.details.map(x=>x.question_id+"｜學生："+x.chosen+"｜正解："+x.answer+"｜"+(x.ok?"O":"X")+"｜"+x.type).join("\n");sendResponsesJson.value=JSON.stringify(last.details);if(!sendSubmissionId.value)sendSubmissionId.value=(crypto&&crypto.randomUUID?crypto.randomUUID():"P5-"+Date.now());sendTotalScore.value=last.correct+"/10";sendPrimaryWeakness.value=last.top;sendSecondaryWeakness.value=Object.entries(last.errors).sort((a,b)=>b[1]-a[1])[1]?.[0]||"";sendAppSummary.value=Object.entries(last.errors).map(([k,v])=>k+":"+v).join(" | ")||"無明顯錯誤";sendAppResponsesJson.value=JSON.stringify(last.details);sendTime.value=new Date().toISOString();return true}
 function downloadCSV(){if(!last){alert("請先完成診斷。");return}const esc=v=>'"'+String(v??"").replaceAll('"','""')+'"';const rows=[["question","chosen","answer","correct","error_type","explanation"],...last.details.map(x=>[x.n,x.chosen,x.answer,x.ok?"Y":"N",x.type,x.exp])];const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\uFEFF"+rows.map(r=>r.map(esc).join(",")).join("\n")],{type:"text/csv;charset=utf-8"}));a.download="toeic_part5_grammar_lab.csv";a.click()}
 </script></body></html>
