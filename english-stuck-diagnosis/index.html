@@ -66,6 +66,35 @@ table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid var(--li
 <section id="resultPanel" class="panel hidden"><h2>診斷結果｜Diagnostic Results</h2><div id="headline"></div><div class="result" id="scores"></div><div id="recommendation"></div>
 <p class="foot">構面分數以該構面四題平均值（1–5）呈現；100分指標 = 平均值 × 20。這是描述性學習診斷，不等同 CEFR、TOEIC、IELTS 或其他正式能力測驗。</p></section>
 
+<section class="panel">
+<h2>結果交付｜Receive Your Results</h2>
+<p class="muted">完成診斷後，請填寫姓名與 Email。送出時，<b>填寫人會收到自己的結果副本，Gary 教練也會同步收到完整診斷資料</b>。你也可以先列印／儲存 PDF 或下載 CSV。</p>
+<div class="research-grid">
+<div class="field"><label>姓名｜Name</label><input id="studentName" placeholder="請輸入姓名 / Your name"></div>
+<div class="field"><label>Email</label><input id="studentEmail" type="email" placeholder="name@example.com"></div>
+</div>
+<p><button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF｜Print / Save PDF</button>
+<button class="btn secondary" type="button" onclick="downloadCSV()">下載研究 CSV｜Download CSV</button></p>
+<form id="coachForm25" action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prepareDelivery25()">
+<input type="hidden" name="_subject" value="Gary English Bottleneck Diagnostic｜Student Result">
+<input type="hidden" name="_template" value="table">
+<input type="hidden" name="_autoresponse" value="已收到你的 Gary 英文卡關診斷結果。這封信是你的結果副本，請保留作为后续学习与复测参考。">
+<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/english-stuck-diagnosis/">
+<input type="hidden" name="student_name" id="sendName25">
+<input type="hidden" name="email" id="sendEmail25">
+<input type="hidden" name="participant_code" id="sendPid25">
+<input type="hidden" name="age_group" id="sendAge25">
+<input type="hidden" name="primary_goal" id="sendGoal25">
+<input type="hidden" name="self_rated_level" id="sendLevel25">
+<input type="hidden" name="primary_bottleneck" id="sendPrimary25">
+<input type="hidden" name="secondary_bottleneck" id="sendSecondary25">
+<input type="hidden" name="all_scores" id="sendScores25">
+<input type="hidden" name="submitted_at" id="sendTime25">
+<button class="btn primary" type="submit">寄给我并同步给教练｜Email Me & Coach</button>
+</form>
+<p class="foot">第一次启用 FormSubmit 时，教练收件信箱可能需要完成一次确认。</p>
+</section>
+
 <section class="panel"><h2>五構面架構｜Five-Construct Framework</h2>
 <p class="muted"><b>Input 輸入理解</b>：聽力與閱讀的即時理解。<br><b>Output 輸出表達</b>：口說與寫作的可用輸出。<br><b>Language System 語言系統</b>：單字、搭配與文法系統。<br><b>Process 學習流程</b>：診斷、方法、錯誤回饋與持續性。<br><b>Performance 情境表現</b>：限時、考試與真實使用情境下的穩定度。</p>
 </section>
@@ -176,6 +205,23 @@ function downloadCSV(){
  const csv="\uFEFF"+headers.map(esc).join(",")+"\n"+values.map(esc).join(",");
  const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="gary_english_bottleneck_scale_"+(pid.value||"anonymous")+".csv";a.click();URL.revokeObjectURL(a.href);
 }
-function resetAll(){if(confirm("確定重新作答？ / Reset all answers?")){form.reset();pid.value="";age.value="";goal.value="";level.value="";resultPanel.classList.add("hidden");updateProgress();window.scrollTo({top:0,behavior:"smooth"})}}
+function prepareDelivery25(){
+ const r=collect();if(!r){alert("請先完成全部 20 題並產生結果。");return false}
+ if(!studentName.value.trim()){alert("請輸入姓名。");studentName.focus();return false}
+ if(!studentEmail.value || !studentEmail.checkValidity()){alert("請輸入有效 Email。");studentEmail.focus();return false}
+ const p=r.scored[0],s=r.scored[1];
+ sendName25.value=studentName.value.trim();
+ sendEmail25.value=studentEmail.value.trim();
+ sendPid25.value=pid.value;
+ sendAge25.value=age.value;
+ sendGoal25.value=goal.value;
+ sendLevel25.value=level.value;
+ sendPrimary25.value=labels[p.k][0]+" / "+p.mean+"/5";
+ sendSecondary25.value=labels[s.k][0]+" / "+s.mean+"/5";
+ sendScores25.value=r.scored.map(x=>labels[x.k][0]+":"+x.mean+"/5").join(" | ");
+ sendTime25.value=new Date().toISOString();
+ return true;
+}
+function resetAll(){if(confirm("確定重新作答？ / Reset all answers?")){form.reset();pid.value="";age.value="";goal.value="";level.value="";studentName.value="";studentEmail.value="";resultPanel.classList.add("hidden");updateProgress();window.scrollTo({top:0,behavior:"smooth"})}}
 </script>
 </body></html>
