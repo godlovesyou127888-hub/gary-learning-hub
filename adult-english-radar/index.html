@@ -10,6 +10,27 @@ main{padding:30px 20px 64px}.panel{background:var(--card);border:2px solid var(-
 <form id="f"></form>
 <section class="panel"><button type="button" class="btn primary" onclick="calc()">產生程度雷達｜Generate Radar</button> <button type="button" class="btn secondary" onclick="downloadCSV()">下載 CSV</button></section>
 <section id="res" class="panel hidden"><h2>你的能力輪廓｜Your Profile</h2><div id="summary"></div><div class="result" id="boxes"></div><div id="next"></div></section>
+<section class="panel"><h2>結果交付｜Receive Your Results</h2><p class="muted">完成程度雷達後，填写姓名与 Email。送出时，<b>填写人会收到自己的结果副本，Gary 教练也会同步收到完整能力轮廓</b>。</p>
+<div class="result">
+<div class="box"><label><b>姓名｜Name</b></label><input id="studentName" style="width:100%;padding:14px;border:2px solid var(--line);border-radius:12px;font:inherit" placeholder="請輸入姓名"></div>
+<div class="box"><label><b>Email</b></label><input id="studentEmail" type="email" style="width:100%;padding:14px;border:2px solid var(--line);border-radius:12px;font:inherit" placeholder="name@example.com"></div>
+</div>
+<p><button class="btn secondary" type="button" onclick="window.print()">列印／储存 PDF</button> <button class="btn secondary" type="button" onclick="downloadCSV()">下载 CSV</button></p>
+<form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prepareDelivery26()">
+<input type="hidden" name="_subject" value="Gary Adult English Proficiency Radar｜Student Result">
+<input type="hidden" name="_template" value="table">
+<input type="hidden" name="_autoresponse" value="已收到你的 Gary 成人英文程度雷达结果。这封信是你的结果副本，请保留作为后续学习与复测参考。">
+<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/adult-english-radar/">
+<input type="hidden" name="student_name" id="sendName26">
+<input type="hidden" name="email" id="sendEmail26">
+<input type="hidden" name="overall_level" id="sendOverall26">
+<input type="hidden" name="dimension_scores" id="sendScores26">
+<input type="hidden" name="priority_areas" id="sendPriority26">
+<input type="hidden" name="submitted_at" id="sendTime26">
+<button class="btn primary" type="submit">寄给我并同步给教练｜Email Me & Coach</button>
+</form>
+<p class="foot">第一次启用 FormSubmit 时，教练收件信箱可能需要完成一次确认。</p>
+</section>
 </main><script>
 const qs=[
 ["L1","Listening","我能理解熟悉主題的簡短英文對話。","I can understand short conversations on familiar topics."],
@@ -41,5 +62,17 @@ form.onchange=()=>{const n=qs.filter((_,i)=>document.querySelector(`input[name=q
 function collect(){let t={Listening:0,Speaking:0,Reading:0,Writing:0,Foundation:0},c={Listening:0,Speaking:0,Reading:0,Writing:0,Foundation:0},raw=[];for(let i=0;i<20;i++){const a=document.querySelector(`input[name=q${i}]:checked`);if(!a)return null;let v=+a.value,k=qs[i][1];t[k]+=v;c[k]++;raw.push(v)}let s=Object.keys(t).map(k=>({k,mean:Math.round(t[k]/c[k]*100)/100,index:Math.round(t[k]/c[k]*20)}));return {raw,s}}
 function band(m){if(m<1.8)return["A1 起步","Beginner"];if(m<2.6)return["A2 基礎","Elementary"];if(m<3.4)return["B1 中階","Intermediate"];if(m<4.2)return["B2 中高階","Upper-intermediate"];return["C1 自評高階","Advanced self-rating"]}
 function calc(){const r=collect();if(!r){alert("請完成全部 20 題。");return}const avg=r.s.reduce((a,b)=>a+b.mean,0)/5,b=band(avg);summary.innerHTML=`<p><b>整體自評：約 ${b[0]} / ${b[1]}</b></p><p class="muted">此分級僅為自評推估，不可取代正式 CEFR 對應測驗。</p>`;boxes.innerHTML=r.s.map(x=>`<div class="box"><b>${labels[x.k]}</b><div class="score">${x.mean}/5</div><div>${x.index}/100</div></div>`).join("");let low=[...r.s].sort((a,b)=>a.mean-b.mean).slice(0,2);next.innerHTML=`<h3>優先補強</h3><p>${labels[low[0].k]}、${labels[low[1].k]}</p><p><a class="btn primary" href="/english-stuck-diagnosis/">進一步做 #25 卡關診斷</a></p>`;res.classList.remove("hidden");res.scrollIntoView({behavior:"smooth"})}
+function prepareDelivery26(){
+ const r=collect();if(!r){alert("請先完成全部 20 題并產生結果。");return false}
+ if(!studentName.value.trim()){alert("請輸入姓名。");studentName.focus();return false}
+ if(!studentEmail.value || !studentEmail.checkValidity()){alert("請輸入有效 Email。");studentEmail.focus();return false}
+ const avg=r.s.reduce((a,b)=>a+b.mean,0)/5,b=band(avg),low=[...r.s].sort((a,b)=>a.mean-b.mean).slice(0,2);
+ sendName26.value=studentName.value.trim();sendEmail26.value=studentEmail.value.trim();
+ sendOverall26.value=b[0]+" / "+b[1];
+ sendScores26.value=r.s.map(x=>labels[x.k]+":"+x.mean+"/5").join(" | ");
+ sendPriority26.value=low.map(x=>labels[x.k]).join("、");
+ sendTime26.value=new Date().toISOString();
+ return true;
+}
 function downloadCSV(){const r=collect();if(!r){alert("請完成全部 20 題。");return}const h=["timestamp",...qs.map(x=>x[0]),...r.s.map(x=>x.k+"_mean")];const v=[new Date().toISOString(),...r.raw,...r.s.map(x=>x.mean)];const csv="\uFEFF"+h.join(",")+"\n"+v.join(",");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="gary_adult_english_radar.csv";a.click()}
 </script></body></html>
