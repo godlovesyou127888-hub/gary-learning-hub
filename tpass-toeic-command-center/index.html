@@ -1,1 +1,32 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>T-PASS TOEIC Command Center</title></head><body><main><h1>T-PASS TOEIC Command Center</h1><p>TOEIC 診斷、計畫、專項訓練、模考與教練校準的單一入口。</p><a href="/">回 Gary Learning Hub</a><div id="app"></div></main></body></html>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>T-PASS TOEIC Command Center</title><style>
+:root{--bg:#f6f4ee;--card:#fffdf8;--text:#314247;--muted:#687b80;--line:#dce7e2;--a:#6f9993;--a2:#8fb1ab;--lock:#9a6b3d}
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--text);font-size:18px;line-height:1.75}header{background:linear-gradient(135deg,#5f7f7b,#789d98);color:#fff;padding:40px 18px}.wrap{max-width:1100px;margin:auto}.lead{max-width:850px}.panel,.step{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:20px;margin:16px 0}.steps{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.step h2{margin-top:0}.badge{display:inline-block;padding:5px 9px;border-radius:999px;font-size:13px;font-weight:800;background:#e9f3ef;color:#456a64}.paid{background:#fff4e7;color:#8b5b2d}.btn{display:inline-block;padding:11px 15px;border-radius:11px;text-decoration:none;font-weight:800;margin:4px 5px 4px 0}.primary{background:linear-gradient(135deg,var(--a),var(--a2));color:#fff}.secondary{background:#fff;border:2px solid var(--line);color:#3d5653}.locked{background:#f5efe7;color:#8b5b2d;border:2px solid #ead9c6}.progress{height:16px;background:#e7efec;border-radius:999px;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,var(--a),var(--a2));width:0}.check{display:flex;gap:10px;align-items:center;margin:9px 0}.check input{width:22px;height:22px}.muted{color:var(--muted)}@media(max-width:760px){.steps{grid-template-columns:1fr}.btn{display:block;text-align:center}}
+</style></head><body>
+<header><div class="wrap"><h1>T-PASS TOEIC Command Center</h1><p class="lead">一條路徑完成：診斷 → 教練解讀 → 90 天計畫 → 專項訓練 → 模考 → 教練校準。標準化工具交給系統；真正需要判斷與策略調整的地方，由教練介入。</p><p><a class="btn secondary" href="/">← Gary Learning Hub</a></p></div></header>
+<main class="wrap">
+<section class="panel"><h2>你的 TOEIC 路徑</h2><div class="progress"><div class="bar" id="bar"></div></div><p id="progressText" class="muted">0 / 6 完成</p></section>
+
+<section class="steps">
+<article class="step"><span class="badge">FREE / SYSTEM</span><h2>Step 1｜診斷</h2><p>先找出真正弱點與錯題根因，不先平均刷題。</p><p><a class="btn primary" href="/toeic-weakness-radar/">Weakness Radar</a><a class="btn secondary" href="/toeic-mistake-doctor/">Mistake Doctor</a></p><label class="check"><input type="checkbox" data-step="1">我已完成初始診斷</label></article>
+
+<article class="step"><span class="badge paid">PAID / COACH</span><h2>Step 2｜教練解讀</h2><p>Gary 根據診斷結果判斷：真正瓶頸、優先順序、哪些教材暫時不要做。</p><p><span class="btn locked">🔒 付費解鎖：教練診斷會談</span></p><p class="muted">建議 30–45 分鐘。此步驟是策略決策，不由自動工具取代。</p><label class="check"><input type="checkbox" data-step="2">我已完成教練解讀</label></article>
+
+<article class="step"><span class="badge">SYSTEM</span><h2>Step 3｜90 天計畫</h2><p>把診斷轉成三階段、13 週的 TOEIC 提分計畫。</p><p><a class="btn primary" href="/toeic-90day-planner/">開啟 90-Day Planner</a></p><label class="check"><input type="checkbox" data-step="3">我已建立 90 天計畫</label></article>
+
+<article class="step"><span class="badge">SYSTEM</span><h2>Step 4｜專項訓練</h2><p>只練目前最低分能力，先求正確與穩定，再加速度。</p><p><a class="btn primary" href="/toeic-part5-grammar-lab/">Part 5 Grammar Lab</a><a class="btn primary" href="/toeic-part7-reading-lab/">Part 7 Reading Diagnostic</a></p><label class="check"><input type="checkbox" data-step="4">我已完成本階段專項訓練</label></article>
+
+<article class="step"><span class="badge">SYSTEM</span><h2>Step 5｜模考驗證</h2><p>用 Listening、Reading 與總分趨勢確認：方法是否真的有效。</p><p><a class="btn primary" href="/toeic-mock-test-lab/">開啟 Mock Test Lab</a></p><label class="check"><input type="checkbox" data-step="5">我已完成階段模考</label></article>
+
+<article class="step"><span class="badge paid">PAID / COACH</span><h2>Step 6｜教練校準</h2><p>根據模考、錯題與弱點變化，決定維持、加速、換策略或重設下一個 30 天週期。</p><p><span class="btn locked">🔒 付費解鎖：教練校準會談</span></p><p class="muted">建議放在 Day 30、Day 60 或分數停滯時。</p><label class="check"><input type="checkbox" data-step="6">我已完成教練校準</label></article>
+</section>
+
+<section class="panel"><h2>收費邏輯</h2><p><b>免費／低價：</b>工具完成資料蒐集、初步診斷、計畫與練習。</p><p><b>付費：</b>教練負責「判斷」——真正瓶頸、優先順序、策略切換與停滯處理。</p><p class="muted">這個 V1 先以流程鎖定呈現；會員登入、付款與預約可在下一版串接。</p></section>
+</main><script>
+const key="tpass_toeic_command_center_v1";
+const boxes=[...document.querySelectorAll('input[data-step]')];
+const saved=JSON.parse(localStorage.getItem(key)||"{}");
+boxes.forEach(b=>{b.checked=!!saved[b.dataset.step];b.addEventListener("change",save)});
+function save(){const d={};boxes.forEach(b=>d[b.dataset.step]=b.checked);localStorage.setItem(key,JSON.stringify(d));draw()}
+function draw(){const done=boxes.filter(b=>b.checked).length;bar.style.width=(done/boxes.length*100)+"%";progressText.textContent=done+" / "+boxes.length+" 完成"}
+draw();
+</script></body></html>
