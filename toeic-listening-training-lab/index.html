@@ -33,12 +33,7 @@ body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;backgro
 <section id="result" class="panel hidden"><h2>診斷結果</h2><div id="summary"></div><div id="scores"></div><div id="detail"></div>
 <p><button class="btn secondary" type="button" onclick="copyListeningReport()">複製完整結果</button></p>
 <p class="muted">若寄送後仍未收到信，請使用「複製完整結果」保留 20 題診斷與 10 題再測紀錄。</p>
-<form id="listeningDeliveryForm" action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" onsubmit="return prepareListeningDelivery()">
-<input type="hidden" name="_subject" value="TOEIC Listening Training Lab｜Student Result">
-<input type="hidden" name="_template" value="table">
-<input type="hidden" name="_autoresponse" value="已收到你的 TOEIC Listening Training Lab 診斷結果。這封信是你的結果副本，請保留作為後續聽力訓練與再測參考。">
-<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-listening-training-lab/">
-<input type="hidden" name="_url" value="https://gary-learning-hub.onrender.com/toeic-listening-training-lab/">
+<form id="listeningDeliveryForm" action="https://script.google.com/macros/s/AKfycbzYp8q1FclBhvy3SJk9MmYx1WqcGwgcwooAEhoHtRdq0g_4JxzRReGNSlxwWL6ZvlZtIA/exec" method="POST" onsubmit="return prepareListeningDelivery()">
 <input type="hidden" name="diagnostic_score" id="sendScore">
 <input type="hidden" name="weakest_dimension" id="sendWeakness">
 <input type="hidden" name="dimension_scores" id="sendDimensions">
@@ -57,7 +52,7 @@ body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;backgro
 <input type="hidden" name="summary" id="sendAppSummary">
 <input type="hidden" name="responses_json" id="sendAppResponsesJson">
 <input type="hidden" name="submitted_at" id="sendTime">
-<button class="btn primary" type="submit">寄送完整 Listening 結果</button>
+<button class="btn primary" type="submit">送出並保存 Listening 結果</button>
 </form></section>
 <section id="retest" class="panel hidden"><h2>10 題弱點再測</h2><div id="retestIntro"></div><div id="retestQuiz"></div><button class="btn primary" type="button" onclick="gradeRetest()">完成再測</button><div id="retestResult"></div></section>
 </main><script>
