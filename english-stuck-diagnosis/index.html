@@ -6,17 +6,17 @@
 <title>Gary 英文卡關診斷中心｜Bilingual Likert Scale</title>
 <style>
 :root{--bg:#f7f8fc;--card:#fff;--text:#1f2937;--muted:#667085;--line:#e5e7eb;--blue:#2563eb;--green:#047857;--amber:#b45309}
-*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",Arial,sans-serif;background:var(--bg);color:var(--text)}
-header{background:#111827;color:white;padding:30px 18px}.wrap{max-width:1100px;margin:auto}.lead{color:#d1d5db;line-height:1.7}.top{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-.btn{display:inline-block;padding:11px 15px;border-radius:11px;text-decoration:none;font-weight:700;border:0;cursor:pointer}.primary{background:var(--blue);color:white}.secondary{background:white;color:#111827;border:1px solid #d1d5db}
-main{padding:22px 18px 50px}.panel{background:white;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px}.muted{color:var(--muted);line-height:1.65}.foot{font-size:13px;color:var(--muted);line-height:1.55}
-.tag{display:inline-block;padding:5px 9px;border-radius:999px;background:#eef2ff;color:#3730a3;font-size:12px;font-weight:700;margin-right:6px}
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text);font-size:20px;line-height:1.8}
+header{background:#111827;color:white;padding:38px 20px}.wrap{max-width:1100px;margin:auto}.lead{color:#f3f4f6;line-height:1.8;font-size:22px}.top{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.btn{display:inline-block;padding:15px 20px;border-radius:14px;text-decoration:none;font-weight:800;border:0;cursor:pointer;font-size:19px;min-height:52px}.primary{background:var(--blue);color:white}.secondary{background:white;color:#111827;border:1px solid #d1d5db}
+main{padding:28px 20px 60px}.panel{background:white;border:2px solid var(--line);border-radius:18px;padding:24px;margin-bottom:20px}.muted{color:#475467;line-height:1.85;font-size:19px}.foot{font-size:16px;color:#475467;line-height:1.7}
+.tag{display:inline-block;padding:7px 11px;border-radius:999px;background:#eef2ff;color:#312e81;font-size:15px;font-weight:800;margin-right:6px}
 .progress{height:14px;background:#eef2f7;border-radius:999px;overflow:hidden}.bar{height:100%;width:0;background:var(--blue);transition:.2s}
-.research-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.field label{display:block;font-weight:700;margin-bottom:6px}.field input,.field select{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;font:inherit;background:white}
-.q{padding:18px 0;border-bottom:1px solid var(--line)}.q:last-child{border-bottom:0}.qid{font-size:12px;color:#475467;font-weight:800;margin-bottom:7px}.zh{font-size:17px;font-weight:750;line-height:1.55}.en{font-size:15px;color:#475467;line-height:1.55;margin-top:4px}
-.scale-head,.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:12px}.scale-head div,.scale label{border:1px solid var(--line);border-radius:10px;padding:9px;text-align:center;background:#fff}.scale-head div{font-size:12px;background:#f8fafc}.scale label{cursor:pointer}.scale input{display:block;margin:0 auto 5px}
-.result{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.box{border:1px solid var(--line);border-radius:14px;padding:15px;background:#fafafa}.score{font-size:30px;font-weight:800}.path{padding:13px;border-left:4px solid var(--blue);background:#f8fafc;border-radius:8px;margin:10px 0}.hidden{display:none}.warning{background:#fff7ed;border-left:4px solid var(--amber);padding:13px;border-radius:8px;line-height:1.65}
-table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid var(--line);padding:9px;text-align:left;font-size:14px}
+.research-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.field label{display:block;font-weight:800;margin-bottom:8px;font-size:19px}.field input,.field select{width:100%;padding:15px;border:2px solid #cbd5e1;border-radius:12px;font:inherit;background:white;min-height:54px}
+.q{padding:24px 0;border-bottom:2px solid var(--line)}.q:last-child{border-bottom:0}.qid{font-size:16px;color:#344054;font-weight:800;margin-bottom:10px}.zh{font-size:24px;font-weight:800;line-height:1.7}.en{font-size:20px;color:#344054;line-height:1.7;margin-top:8px}
+.scale-head,.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:16px}.scale-head div,.scale label{border:2px solid #d0d5dd;border-radius:12px;padding:14px;text-align:center;background:#fff}.scale-head div{font-size:15px;background:#f8fafc;font-weight:700}.scale label{cursor:pointer;font-size:17px;line-height:1.55;min-height:118px}.scale input{display:block;margin:0 auto 8px;width:24px;height:24px;accent-color:#2563eb}
+.result{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.box{border:1px solid var(--line);border-radius:14px;padding:15px;background:#fafafa}.score{font-size:36px;font-weight:900}.path{padding:13px;border-left:4px solid var(--blue);background:#f8fafc;border-radius:8px;margin:10px 0}.hidden{display:none}.warning{background:#fff7ed;border-left:4px solid var(--amber);padding:13px;border-radius:8px;line-height:1.65}
+table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid var(--line);padding:13px;text-align:left;font-size:18px}th{font-size:18px;background:#f8fafc}
 @media(max-width:760px){.research-grid,.result{grid-template-columns:1fr}.scale-head{display:none}.scale{grid-template-columns:1fr}.scale label{text-align:left}.scale input{display:inline-block;margin-right:8px}}
 </style>
 </head>
@@ -47,7 +47,7 @@ table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid var(--li
 </section>
 
 <section class="panel">
-<h2>Likert 五點量尺｜5-point Likert Scale</h2>
+<h2>Likert 五點量尺｜5-point Likert Scale</h2><p class="muted"><b>樂齡友善設計：</b>本頁採較大字級、高對比、寬行距與大型選項。請直接點選整個選項方框，不需要精準點擊小圓圈。</p>
 <table><tr><th>分數</th><th>中文</th><th>English</th></tr>
 <tr><td>1</td><td>非常不同意</td><td>Strongly disagree</td></tr>
 <tr><td>2</td><td>不同意</td><td>Disagree</td></tr>
