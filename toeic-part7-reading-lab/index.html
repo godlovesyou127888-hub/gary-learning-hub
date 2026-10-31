@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TOEIC Part 7 Reading Lab</title><style>
-body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;background:#f6f4ee;color:#314247;font-size:19px;line-height:1.75}.wrap{max-width:1000px;margin:auto;padding:20px}header{background:linear-gradient(135deg,#5f7f7b,#789d98);color:#fff;padding:32px 18px}.panel{background:#fffdf8;border:2px solid #dce7e2;border-radius:18px;padding:20px;margin:16px 0}.btn{padding:12px 16px;border-radius:11px;border:0;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}.primary{background:#6f9993;color:#fff}.secondary{background:#fff;color:#3d5653;border:2px solid #dce7e2}.opt{display:block;border:1px solid #dce7e2;border-radius:10px;padding:10px;margin:7px 0;background:#fff}.path{background:#f1f7f4;border-left:5px solid #6f9993;padding:13px;border-radius:10px;margin:10px 0}.hidden{display:none}.field input{width:100%;padding:12px;border:2px solid #dce7e2;border-radius:10px;font:inherit;box-sizing:border-box}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.passage{background:#f8faf8;border:1px solid #dce7e2;border-radius:12px;padding:16px;margin:10px 0}@media(max-width:760px){.grid{grid-template-columns:1fr}}
+body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;background:#f6f4ee;color:#314247;font-size:19px;line-height:1.75}.wrap{max-width:1000px;margin:auto;padding:20px}header{background:linear-gradient(135deg,#5f7f7b,#789d98);color:#fff;padding:32px 18px}.panel{background:#fffdf8;border:2px solid #dce7e2;border-radius:18px;padding:20px;margin:16px 0}.btn{padding:12px 16px;border-radius:11px;border:0;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}.primary{background:#6f9993;color:#fff}.secondary{background:#fff;color:#3d5653;border:2px solid #dce7e2}.opt{display:block;border:1px solid #dce7e2;border-radius:10px;padding:10px;margin:7px 0;background:#fff}.path{background:#f1f7f4;border-left:5px solid #6f9993;padding:13px;border-radius:10px;margin:10px 0}.explain{background:#fff;border:1px solid #dce7e2;border-radius:14px;padding:16px;margin:12px 0}.explain h3{margin:0 0 8px}.evidence{background:#f8faf8;border-left:4px solid #8fb1ab;padding:10px 12px;margin:8px 0}.strategy{background:#fff7ed;border-left:4px solid #b28959;padding:10px 12px;margin:8px 0}.hidden{display:none}.field input{width:100%;padding:12px;border:2px solid #dce7e2;border-radius:10px;font:inherit;box-sizing:border-box}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.passage{background:#f8faf8;border:1px solid #dce7e2;border-radius:12px;padding:16px;margin:10px 0}@media(max-width:760px){.grid{grid-template-columns:1fr}}
 </style></head><body><header><div class="wrap"><h1>#34 TOEIC Part 7 Reading Lab</h1><p>閱讀速度、證據定位、同義改寫、推論與時間管理專項訓練。</p><p><a class="btn secondary" href="/">← Gary Learning Hub</a> <a class="btn secondary" href="/toeic-mock-test-lab/">#31 Mock Test Lab</a></p></div></header><main class="wrap">
 <section class="panel"><h2>基本資料</h2><div class="grid"><div class="field"><label>姓名</label><input id="studentName"></div><div class="field"><label>Email</label><input id="studentEmail" type="email"></div></div><p>本頁為自編 TOEIC Part 7 閱讀練習，不是 ETS 官方題目。</p></section>
 
@@ -8,7 +8,7 @@ body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans
 <div id="quiz"></div>
 <p><button class="btn primary" type="button" onclick="gradeDiagnostic()">完成 20 題診斷</button></p></section>
 
-<section id="resultPanel" class="panel hidden"><h2>診斷結果</h2>
+<section id="resultPanel" class="panel hidden"><h2>診斷結果｜Your Diagnostic Report</h2><p>你會看到五構面成績、最低分能力，以及 20 題逐題中英對照詳解。目的不是只知道對錯，而是知道「為什麼錯、下次怎麼做對」。</p>
 <div id="summary"></div><div id="dimensionScores"></div><div id="detail"></div>
 <p><button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF</button><button class="btn secondary" type="button" onclick="downloadCSV()">下載 CSV</button></p>
 <form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prep()">
@@ -127,7 +127,52 @@ function gradeDiagnostic(){
  const weakest=ranked[0].d;
  summary.innerHTML='<p><b>總分：'+total+'/20｜正確率：'+Math.round(total/20*100)+'%｜最低分構面：'+weakest+'</b></p>';
  dimensionScores.innerHTML=ranked.map(x=>'<div class="path"><b>'+x.d+'</b>：'+x.score+'/'+x.total+'（'+x.pct+'%）</div>').join("");
- detail.innerHTML=wrong.map(x=>'<div class="path"><b>Q'+x.q+'｜'+x.type+'</b><br>'+x.exp+'</div>').join("")||'<div class="path">20 題全部答對。再測將從任一構面中選擇進階題。</div>';
+ detail.innerHTML='<h2>逐題中英對照詳解｜Bilingual Explanations</h2>'+diagnostic.map((q,i)=>{
+ const a=document.querySelector('input[name="q'+i+'"]:checked');
+ const chosen=Number(a.value),ok=chosen===q[4];
+ const evidence=q[1];
+ const zh=q[5];
+ const en=[
+ "Locate the exact time condition in the passage. Orders placed after noon are processed on Monday.",
+ "The passage directly states that online registration is intended to reduce waiting time.",
+ "The workshop moved to Room D, so Room B becomes available earlier than originally planned.",
+ "In this context, complimentary means provided at no charge.",
+ "The refund is issued only after the returned item reaches the warehouse.",
+ "The exact opening time for weekends is 10:00.",
+ "The required deadline is within ten days after returning from the trip.",
+ "Lunch service ends at 2:30 p.m.; drinks continue later.",
+ "The purpose is explicitly stated: to reduce waiting time.",
+ "The notice asks residents to remove vehicles before garage cleaning.",
+ "The email provides the price list that the recipient requested.",
+ "The main idea is the library's new mobile app and its functions.",
+ "Because the workshop moved, Room B is available earlier.",
+ "Leaving earlier suggests Sara expects possible transportation delays.",
+ "Adding outdoor tables suggests high weekend demand.",
+ "Maria is specifically asked to review sections 4 and 7.",
+ "Complimentary is a common TOEIC paraphrase for free.",
+ "Postponed means delayed to a later time.",
+ "Valid means officially acceptable or effective.",
+ "Stable means remaining relatively unchanged.",
+ "The returned item must arrive at the warehouse before the refund is issued.",
+ "Among the listed dates, May 8 occurs last.",
+ "Email verification happens immediately before software download.",
+ "Ordering replacement parts depends on what the inspection finds."
+ ][i]||zh;
+ const strategyMap={
+ "細節定位":"先圈時間、數字、地點、人名，再回原文找完全對應。",
+ "目的／主旨":"先問「作者為什麼寫這段？」不要被單一細節帶走。",
+ "推論":"只能推論原文支持的內容，不加入常識或想像。",
+ "同義改寫":"找語境中的近義詞，不只看單字字面意思。",
+ "跨句／流程整合":"把事件依先後順序串起來，注意 before / after / once / then。"
+ };
+ return '<div class="explain"><h3>Q'+(i+1)+'｜'+q[0]+'｜'+(ok?'✅ 正確 Correct':'❌ 需修正 Review')+'</h3>'+
+ '<p><b>你的答案 Your answer：</b>'+q[3][chosen]+'</p>'+
+ '<p><b>正確答案 Correct answer：</b>'+q[3][q[4]]+'</p>'+
+ '<div class="evidence"><b>證據句 Evidence</b><br>'+evidence+'</div>'+
+ '<p><b>中文解析：</b>'+zh+'</p>'+
+ '<p><b>English explanation：</b>'+en+'</p>'+
+ '<div class="strategy"><b>解題策略 Strategy</b><br>'+strategyMap[q[0]]+'</div></div>';
+}).join("");
  last={total,dim,ranked,weakest,wrong};retestScore=null;
  resultPanel.classList.remove("hidden");buildRetest(weakest);retestPanel.classList.remove("hidden");resultPanel.scrollIntoView({behavior:"smooth"});
  localStorage.setItem("toeic_part7_reading_v1",JSON.stringify({name:studentName.value,email:studentEmail.value,...last,date:new Date().toISOString()}));
@@ -138,9 +183,36 @@ function buildRetest(dim){
  retestResult.innerHTML="";
 }
 function gradeRetest(){
- if(!last)return;const bank=retestBank[last.weakest];let score=0;
- for(let i=0;i<bank.length;i++){const a=document.querySelector('input[name="r'+i+'"]:checked');if(!a){alert("請完成全部 10 題再測。第 "+(i+1)+" 題尚未作答。");return}if(Number(a.value)===bank[i][3])score++}
- retestScore=score;retestResult.innerHTML='<div class="path"><b>再測：'+score+'/10</b><br>'+(score>=8?'已達 80% 完成線，可進入限時訓練。':'尚未達 80%，請再回看這個構面的錯題與證據定位。')+'</div>';
+ if(!last)return;
+ const bank=retestBank[last.weakest];
+ let score=0,details=[];
+ for(let i=0;i<bank.length;i++){
+   const a=document.querySelector('input[name="r'+i+'"]:checked');
+   if(!a){alert("請完成全部 10 題再測。第 "+(i+1)+" 題尚未作答。");return}
+   const chosen=Number(a.value),ok=chosen===bank[i][3];
+   if(ok)score++;
+   details.push({i,chosen,ok});
+ }
+ retestScore=score;
+ const strategyMap={
+ "細節定位":"快速掃描關鍵字，再回原文找精確對應。",
+ "目的／主旨":"抓整段功能與作者目的，不選只代表局部細節的答案。",
+ "推論":"答案必須能由原文合理推出，不能超出文本證據。",
+ "同義改寫":"確認語意是否在此語境成立，避免只靠單字外形。",
+ "跨句／流程整合":"依時間與步驟排序資訊，找前後因果關係。"
+ };
+ retestResult.innerHTML='<div class="path"><b>再測成績：'+score+'/10</b><br>'+(score>=8?'已達 80% 完成線，可進入限時訓練。':'尚未達 80%，請再回看這個構面的錯題與證據定位。')+'</div>'+
+ '<h3>10 題再測逐題詳解｜Retest Explanations</h3>'+
+ details.map(x=>{
+   const q=bank[x.i];
+   return '<div class="explain"><h3>R'+(x.i+1)+'｜'+(x.ok?'✅ 正確 Correct':'❌ 需修正 Review')+'</h3>'+
+   '<div class="evidence"><b>題幹 Evidence / Context</b><br>'+q[0]+'</div>'+
+   '<p><b>你的答案 Your answer：</b>'+q[2][x.chosen]+'</p>'+
+   '<p><b>正確答案 Correct answer：</b>'+q[2][q[3]]+'</p>'+
+   '<p><b>中文解析：</b>請回到題幹找出直接證據，並確認答案沒有超出原文資訊。</p>'+
+   '<p><b>English explanation：</b>The correct answer is directly supported by the wording or sequence in the passage. Avoid adding information that is not stated or logically supported.</p>'+
+   '<div class="strategy"><b>本構面策略 Strategy</b><br>'+strategyMap[last.weakest]+'</div></div>';
+ }).join("");
 }
 function prep(){if(!last){return false}sendName.value=studentName.value.trim();sendEmail.value=studentEmail.value.trim();sendScore.value=last.total+"/20";sendWeakness.value=last.weakest;sendDimensions.value=last.ranked.map(x=>x.d+":"+x.score+"/"+x.total).join(" | ");sendRetest.value=retestScore===null?"尚未完成":retestScore+"/10";sendTime.value=new Date().toISOString();return true}
 function downloadCSV(){if(!last){alert("請先完成診斷。");return}const rows=[["dimension","score","total","percent"],...last.ranked.map(x=>[x.d,x.score,x.total,x.pct])],esc=v=>'"'+String(v).replaceAll('"','""')+'"';const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\uFEFF"+rows.map(r=>r.map(esc).join(",")).join("\n")],{type:"text/csv;charset=utf-8"}));a.download="toeic_part7_reading_diagnostic_v1.csv";a.click()}
