@@ -2,7 +2,7 @@
 body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;background:#f6f4ee;color:#314247;line-height:1.75;font-size:18px}.wrap{max-width:1000px;margin:auto;padding:20px}header{background:linear-gradient(135deg,#5f7f7b,#789d98);color:white;padding:32px 18px}.panel{background:#fffdf8;border:2px solid #dce7e2;border-radius:18px;padding:20px;margin:16px 0}.btn{display:inline-block;padding:11px 15px;border-radius:10px;text-decoration:none;font-weight:800;border:0;cursor:pointer}.primary{background:#6f9993;color:#fff}.secondary{background:#fff;color:#314247;border:2px solid #dce7e2}.opt{display:block;padding:10px;border:1px solid #dce7e2;border-radius:10px;margin:6px 0;background:#fff}.path{background:#f1f7f4;border-left:5px solid #6f9993;padding:12px;margin:10px 0;border-radius:10px}.hidden{display:none}.trainer{border:2px solid #dce7e2;border-radius:16px;padding:16px;background:#fff}.trainer textarea{width:100%;box-sizing:border-box;padding:10px;border:1px solid #dce7e2;border-radius:10px;font:inherit}.pill{display:inline-block;padding:5px 9px;border-radius:999px;background:#eef6f3;margin:3px}.bad{background:#fff1ef;border-left:5px solid #b86b61}.good{background:#eef8f1;border-left:5px solid #669477}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}input{width:100%;padding:10px;box-sizing:border-box;border:1px solid #dce7e2;border-radius:10px}@media(max-width:760px){.grid{grid-template-columns:1fr}}
 </style></head><body><div style="background:#314247;color:#fff;padding:10px 16px"><div class="wrap" style="padding:0"><b>T-PASS TOEIC Command Center｜Step 4｜Listening Track</b>　<a href="/tpass-toeic-command-center/" style="color:white">← 回 Command Center</a>　<a href="/tpass-toeic-command-center/#step4" style="color:#314247;background:#fffdf8;padding:7px 10px;border-radius:9px;text-decoration:none;font-weight:700">完成後：回 Step 4 檢查達標 →</a></div></div>
 <header><div class="wrap"><h1>TOEIC Listening Training Lab</h1><p>TTS 真實播放 → 播放次數限制 → 語速控制 → 聽寫 → 錯詞分析，再接 20 題診斷與 10 題再測。</p></div></header><main class="wrap">
-<section class="panel"><div class="grid"><input id="studentName" placeholder="姓名"><input id="studentEmail" type="email" placeholder="Email"></div><p>V2 使用瀏覽器 TTS 播放英文句子，並加入聽寫與錯詞分析。可切換美式、英式、澳式、印度英文口音，也可使用 Random Accent 隨機模式；同一題第二次播放會維持相同口音。實際聲線取決於裝置／瀏覽器已安裝的 TTS voice。仍不等同 ETS 官方 TOEIC 音檔。</p></section>
+<section class="panel"><div class="grid"><input id="studentName" name="student_name" form="listeningDeliveryForm" placeholder="姓名" required><input id="studentEmail" name="email" form="listeningDeliveryForm" type="email" placeholder="Email" required></div><p>V2 使用瀏覽器 TTS 播放英文句子，並加入聽寫與錯詞分析。可切換美式、英式、澳式、印度英文口音，也可使用 Random Accent 隨機模式；同一題第二次播放會維持相同口音。實際聲線取決於裝置／瀏覽器已安裝的 TTS voice。仍不等同 ETS 官方 TOEIC 音檔。</p></section>
 <section class="panel"><h2>Listening V2 實戰訓練</h2>
 <p>先聽，不先看文字。每題最多播放 2 次；可調整語速。完成聽寫後，再檢查漏聽與錯詞。</p>
 <div class="trainer">
@@ -31,13 +31,14 @@ body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;backgro
 <select id="diagnosticAccent"><option value="en-US">美式 American</option><option value="en-GB">英式 British</option><option value="en-AU">澳式 Australian</option><option value="en-IN">印度英文 Indian English</option></select></p>
 <div id="draftStatus" class="path" style="margin-bottom:12px"><b>進度保護已開啟：</b>姓名、Email、播放次數與每題答案都會自動保存；重新整理或重新開啟本頁可恢復。</div><div id="quiz"></div><button class="btn primary" type="button" onclick="grade()">完成診斷</button></section>
 <section id="result" class="panel hidden"><h2>診斷結果</h2><div id="summary"></div><div id="scores"></div><div id="detail"></div>
-<form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prepareListeningDelivery()">
+<p><button class="btn secondary" type="button" onclick="copyListeningReport()">複製完整結果</button></p>
+<p class="muted">若 FormSubmit 顯示 Thanks 但沒有收到信，請使用「複製完整結果」保留 20 題診斷與 10 題再測紀錄。</p>
+<form id="listeningDeliveryForm" action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prepareListeningDelivery()">
 <input type="hidden" name="_subject" value="TOEIC Listening Training Lab｜Student Result">
 <input type="hidden" name="_template" value="table">
 <input type="hidden" name="_autoresponse" value="已收到你的 TOEIC Listening Training Lab 診斷結果。這封信是你的結果副本，請保留作為後續聽力訓練與再測參考。">
 <input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-listening-training-lab/">
-<input type="hidden" name="student_name" id="sendName">
-<input type="hidden" name="email" id="sendEmail">
+<input type="hidden" name="_url" value="https://gary-learning-hub.onrender.com/toeic-listening-training-lab/">
 <input type="hidden" name="diagnostic_score" id="sendScore">
 <input type="hidden" name="weakest_dimension" id="sendWeakness">
 <input type="hidden" name="dimension_scores" id="sendDimensions">
@@ -47,7 +48,7 @@ body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;backgro
 <input type="hidden" name="retest_responses" id="sendRetestResponses">
 <input type="hidden" name="retest_responses_json" id="sendRetestResponsesJson">
 <input type="hidden" name="submitted_at" id="sendTime">
-<button class="btn primary" type="submit">寄給我並同步給教練</button>
+<button class="btn secondary" type="submit">FormSubmit 備援寄送</button>
 </form></section>
 <section id="retest" class="panel hidden"><h2>10 題弱點再測</h2><div id="retestIntro"></div><div id="retestQuiz"></div><button class="btn primary" type="button" onclick="gradeRetest()">完成再測</button><div id="retestResult"></div></section>
 </main><script>
@@ -334,10 +335,43 @@ function gradeRetest(){
  retestResult.innerHTML='<div class="path"><b>再測 '+score+'/10</b><br>'+(score>=8?'達成 80% 完成線。若限時條件也能維持 ≥80%，可回 Command Center 進 Step 5。':'尚未達標，請留在 Listening Track 繼續訓練。')+'</div>'+wrong.map(x=>'<div class="path"><b>R'+x.i+' 音檔原文：</b>'+x.script+'<br><b>中文解析：</b>'+x.exp+'</div>').join("");
  last.retestScore=score;last.retestResponses=responses;localStorage.setItem("toeic_listening_training_v2",JSON.stringify({name:studentName.value,email:studentEmail.value,...last,date:new Date().toISOString()}));
 }
+function buildListeningReport(){
+ if(!last)return "";
+ const lines=[
+  "學員："+studentName.value.trim(),
+  "學員 Email："+studentEmail.value.trim(),
+  "診斷分數："+last.total+"/20",
+  "最低分構面："+last.weak,
+  "",
+  "20 題完整診斷："
+ ];
+ (last.responses||[]).forEach(x=>{
+  lines.push(x.question_id+"｜學生："+x.student_answer+"｜正解："+x.correct_answer+"｜"+(x.is_correct?"O":"X")+"｜"+x.dimension+"｜口音："+x.accent+"｜速度："+x.speed+"｜播放："+x.plays);
+ });
+ lines.push("","診斷 JSON：",JSON.stringify(last.responses||[]));
+ if(last.retestScore!=null){
+  lines.push("","再測分數："+last.retestScore+"/10","10 題再測：");
+  (last.retestResponses||[]).forEach(x=>{
+   lines.push(x.question_id+"｜學生："+x.student_answer+"｜正解："+x.correct_answer+"｜"+(x.is_correct?"O":"X")+"｜"+x.dimension+"｜口音："+x.accent+"｜速度："+x.speed+"｜播放："+x.plays);
+  });
+  lines.push("","再測 JSON：",JSON.stringify(last.retestResponses||[]));
+ }
+ return lines.join("\n");
+}
+async function copyListeningReport(){
+ if(!last){alert("請先完成 Listening 診斷。");return}
+ const report=buildListeningReport();
+ try{
+  await navigator.clipboard.writeText(report);
+  alert("完整 Listening 結果已複製。");
+ }catch(e){
+  const ta=document.createElement("textarea");
+  ta.value=report;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();
+  alert("完整 Listening 結果已複製。");
+ }
+}
 function prepareListeningDelivery(){
  if(!last){alert("請先完成 Listening 診斷。");return false}
- sendName.value=studentName.value.trim();
- sendEmail.value=studentEmail.value.trim();
  sendScore.value=last.total+"/20";
  sendWeakness.value=last.weak;
  sendDimensions.value=last.ranked.map(x=>x.d+":"+x.score+"/"+x.total+"("+x.pct+"%)").join(" | ");
