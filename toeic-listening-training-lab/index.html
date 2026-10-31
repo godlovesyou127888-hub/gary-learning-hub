@@ -29,7 +29,7 @@ body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;backgro
 <p>診斷語速：<select id="diagnosticSpeed"><option value="0.9">0.9×</option><option value="1" selected>1.0×</option><option value="1.1">1.1×</option></select>
 　口音模式：<select id="diagnosticAccentMode"><option value="fixed">固定口音 Fixed</option><option value="random">隨機口音 Random Accent</option></select>
 <select id="diagnosticAccent"><option value="en-US">美式 American</option><option value="en-GB">英式 British</option><option value="en-AU">澳式 Australian</option><option value="en-IN">印度英文 Indian English</option></select></p>
-<div id="draftStatus" class="path" style="margin-bottom:12px">作答會自動保存。</div><div id="quiz"></div><button class="btn primary" type="button" onclick="grade()">完成診斷</button></section>
+<div id="draftStatus" class="path" style="margin-bottom:12px"><b>進度保護已開啟：</b>姓名、Email、播放次數與每題答案都會自動保存；重新整理或重新開啟本頁可恢復。</div><div id="quiz"></div><button class="btn primary" type="button" onclick="grade()">完成診斷</button></section>
 <section id="result" class="panel hidden"><h2>診斷結果</h2><div id="summary"></div><div id="scores"></div><div id="detail"></div>
 <form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prepareListeningDelivery()">
 <input type="hidden" name="_subject" value="TOEIC Listening Training Lab｜Student Result">
@@ -273,7 +273,20 @@ diagnosticSpeed.addEventListener("change",saveDraft);
 diagnosticAccentMode.addEventListener("change",saveDraft);
 diagnosticAccent.addEventListener("change",saveDraft);
 restoreDraft();
+window.addEventListener("pagehide",saveDraft);
+window.addEventListener("beforeunload",saveDraft);
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")saveDraft();});
 
+function focusDiagnosticQuestion(i,message){
+  const panels=document.querySelectorAll("#quiz > .panel");
+  const p=panels[i];
+  if(p){
+    p.scrollIntoView({behavior:"smooth",block:"center"});
+    p.style.outline="3px solid #d97706";
+    setTimeout(()=>{p.style.outline="";},1800);
+  }
+  alert(message);
+}
 
 let last=null;
 function grade(){
@@ -281,8 +294,8 @@ function grade(){
  if(!studentEmail.value||!studentEmail.checkValidity()){alert("請填寫有效 Email。");return}
  const s={};D.forEach(d=>s[d]={c:0,n:0});let total=0,wrong=[],responses=[];
  for(let i=0;i<Q.length;i++){
-  if(diagnosticPlays[i]<1){alert("Q"+(i+1)+" 尚未播放音檔。");return}
-  const a=document.querySelector('input[name="q'+i+'"]:checked');if(!a){alert("請完成全部 20 題。");return}
+  if(diagnosticPlays[i]<1){focusDiagnosticQuestion(i,"Q"+(i+1)+" 尚未播放音檔。");return}
+  const a=document.querySelector('input[name="q'+i+'"]:checked');if(!a){focusDiagnosticQuestion(i,"Q"+(i+1)+" 尚未作答。");return}
   const q=Q[i],chosenAnswer=Number(a.value),ok=chosenAnswer===q[3];s[q[0]].n++;
   if(ok){s[q[0]].c++;total++}else wrong.push({q:i+1,type:q[0],exp:q[4],script:q[1]});
   responses.push({question_id:"L-"+(i+1),dimension:q[0],audio_script:q[1],student_answer_index:chosenAnswer,student_answer:q[2][chosenAnswer],correct_answer_index:q[3],correct_answer:q[2][q[3]],is_correct:ok,plays:diagnosticPlays[i],accent:diagnosticAccents[i]||diagnosticAccent.value,speed:Number(diagnosticSpeed.value),explanation:q[4]});
