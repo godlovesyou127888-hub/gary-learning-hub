@@ -3,7 +3,21 @@ body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans
 </style></head><body><header><div class="wrap"><h1>#32 TOEIC Part 5 Grammar Lab</h1><p>Part 5 文法快速診斷 → 錯誤分類 → 中文詳解 → 同類再測。</p><a class="btn secondary" href="/">← Gary Learning Hub</a></div></header><main class="wrap">
 <section class="panel"><h2>基本資料</h2><div class="grid"><div class="field"><label>姓名</label><input id="studentName"></div><div class="field"><label>Email</label><input id="studentEmail" type="email"></div></div><p>本測驗為自編 TOEIC Part 5 文法練習，不是 ETS 官方題目。</p></section>
 <form id="quiz"></form><section class="panel"><button class="btn primary" type="button" onclick="grade()">完成診斷</button></section>
-<section id="resultPanel" class="panel hidden"><h2>診斷結果</h2><div id="summary"></div><div id="explanations"></div><p><button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF</button><button class="btn secondary" type="button" onclick="downloadCSV()">下載 CSV</button></p></section>
+<section id="resultPanel" class="panel hidden"><h2>診斷結果</h2><div id="summary"></div><div id="explanations"></div><p><button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF</button><button class="btn secondary" type="button" onclick="downloadCSV()">下載 CSV</button></p>
+<form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prepareDelivery()">
+<input type="hidden" name="_subject" value="TOEIC Part 5 Grammar Lab Result">
+<input type="hidden" name="_template" value="table">
+<input type="hidden" name="_autoresponse" value="已收到你的 TOEIC Part 5 Grammar Lab 診斷結果。這封信是你的結果副本，請保留作為錯題訂正與同類再測參考。">
+<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-part5-grammar-lab/">
+<input type="hidden" name="student_name" id="sendName">
+<input type="hidden" name="email" id="sendEmail">
+<input type="hidden" name="score" id="sendScore">
+<input type="hidden" name="accuracy" id="sendAccuracy">
+<input type="hidden" name="top_error_type" id="sendTopError">
+<input type="hidden" name="error_summary" id="sendSummary">
+<input type="hidden" name="submitted_at" id="sendTime">
+<button class="btn primary" type="submit">寄給我並同步給教練</button>
+</form></section>
 </main><script>
 const Q=[
 ["The manager asked the staff to submit the report ___ Friday.",["at","by","during","since"],1,"Preposition 介系詞","by + 時間點表示「最晚在……之前」。"],
@@ -20,5 +34,6 @@ const Q=[
 const quiz=document.getElementById("quiz");Q.forEach((x,i)=>{const s=document.createElement("section");s.className="panel";s.innerHTML="<b>Q"+(i+1)+". "+x[0]+"</b>"+x[1].map((o,j)=>'<label class="opt"><input type="radio" name="q'+i+'" value="'+j+'"> '+String.fromCharCode(65+j)+'. '+o+'</label>').join("");quiz.appendChild(s)});
 let last=null;
 function grade(){if(!studentName.value.trim()){alert("請先填寫姓名。");return}if(!studentEmail.value||!studentEmail.checkValidity()){alert("請填寫有效 Email。");return}let correct=0,errors={},details=[];for(let i=0;i<Q.length;i++){const a=document.querySelector('input[name="q'+i+'"]:checked');if(!a){alert("請完成全部 10 題。第 "+(i+1)+" 題尚未作答。");return}const chosen=Number(a.value),ok=chosen===Q[i][2];if(ok)correct++;else errors[Q[i][3]]=(errors[Q[i][3]]||0)+1;details.push({n:i+1,chosen:Q[i][1][chosen],answer:Q[i][1][Q[i][2]],ok,type:Q[i][3],exp:Q[i][4]})}const accuracy=Math.round(correct/Q.length*100);const top=Object.keys(errors).length?Object.entries(errors).sort((a,b)=>b[1]-a[1])[0][0]:"無明顯錯誤";summary.innerHTML="<p><b>總分："+correct+"/10｜正確率："+accuracy+"%｜主要錯誤："+top+"</b></p>";explanations.innerHTML=details.filter(x=>!x.ok).map(x=>'<div class="path"><b>Q'+x.n+'｜'+x.type+'</b><br>你的答案：'+x.chosen+'<br>正確答案：'+x.answer+'<br>'+x.exp+'</div>').join("")||'<div class="path"><b>全部答對。</b>下一步改做限時版。</div>';last={correct,accuracy,top,errors,details};resultPanel.classList.remove("hidden");resultPanel.scrollIntoView({behavior:"smooth"});localStorage.setItem("toeic_part5_grammar_lab_v1",JSON.stringify({name:studentName.value,email:studentEmail.value,...last,date:new Date().toISOString()}))}
+function prepareDelivery(){if(!last){alert("請先完成診斷。");return false}sendName.value=studentName.value.trim();sendEmail.value=studentEmail.value.trim();sendScore.value=last.correct+"/10";sendAccuracy.value=last.accuracy+"%";sendTopError.value=last.top;sendSummary.value=Object.entries(last.errors).map(([k,v])=>k+":"+v).join(" | ")||"無明顯錯誤";sendTime.value=new Date().toISOString();return true}
 function downloadCSV(){if(!last){alert("請先完成診斷。");return}const esc=v=>'"'+String(v??"").replaceAll('"','""')+'"';const rows=[["question","chosen","answer","correct","error_type","explanation"],...last.details.map(x=>[x.n,x.chosen,x.answer,x.ok?"Y":"N",x.type,x.exp])];const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\uFEFF"+rows.map(r=>r.map(esc).join(",")).join("\n")],{type:"text/csv;charset=utf-8"}));a.download="toeic_part5_grammar_lab.csv";a.click()}
 </script></body></html>
