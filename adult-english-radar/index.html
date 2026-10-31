@@ -1,0 +1,45 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Gary 成人英文程度雷達</title><style>
+:root{--bg:#f7f8fc;--card:#fff;--text:#1f2937;--muted:#667085;--line:#e5e7eb;--blue:#2563eb}
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);font-size:20px;line-height:1.8}
+header{background:#111827;color:#fff;padding:38px 20px}.wrap{max-width:1050px;margin:auto}.lead{color:#f3f4f6;font-size:22px}.btn{display:inline-block;padding:14px 18px;border-radius:12px;text-decoration:none;font-weight:800;border:0;cursor:pointer}.primary{background:var(--blue);color:#fff}.secondary{background:#fff;color:#111827;border:1px solid #d1d5db}
+main{padding:26px 20px 60px}.panel{background:#fff;border:2px solid var(--line);border-radius:18px;padding:24px;margin-bottom:20px}.muted{color:#475467}.q{padding:22px 0;border-bottom:2px solid var(--line)}.qid{font-size:16px;font-weight:800;color:#344054}.zh{font-size:24px;font-weight:800}.en{font-size:20px;color:#344054}.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:14px}.scale label{border:2px solid #d0d5dd;border-radius:12px;padding:14px;text-align:center;cursor:pointer;min-height:108px}.scale input{display:block;margin:0 auto 8px;width:24px;height:24px}.result{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.box{border:1px solid var(--line);border-radius:14px;padding:15px;background:#fafafa}.score{font-size:34px;font-weight:900}.progress{height:14px;background:#eef2f7;border-radius:999px;overflow:hidden}.bar{height:100%;background:var(--blue);width:0}.hidden{display:none}.foot{font-size:16px;color:#475467}
+@media(max-width:760px){.scale{grid-template-columns:1fr}.scale label{text-align:left}.scale input{display:inline-block;margin-right:8px}.result{grid-template-columns:1fr}}
+</style></head><body>
+<header><div class="wrap"><h1>Gary 成人英文程度雷達<br><span style="font-size:.58em">Gary Adult English Proficiency Radar</span></h1><p class="lead">用 20 題快速自評聽、說、讀、寫與語言基礎，建立成人英文能力輪廓。</p><p><a class="btn secondary" href="/">← Gary Learning Hub</a> <a class="btn secondary" href="/english-stuck-diagnosis/">先做 #25 卡關診斷</a></p></div></header>
+<main class="wrap"><section class="panel"><h2>作答說明｜Instructions</h2><p class="muted">請依最近三個月的真實表現作答。1 = 幾乎做不到，5 = 大多能穩定做到。這是自評雷達，不等同正式 CEFR、TOEIC、IELTS 或 TOEFL 成績。</p><div class="progress"><div class="bar" id="bar"></div></div><p class="foot" id="pt">0 / 20</p></section>
+<form id="f"></form>
+<section class="panel"><button type="button" class="btn primary" onclick="calc()">產生程度雷達｜Generate Radar</button> <button type="button" class="btn secondary" onclick="downloadCSV()">下載 CSV</button></section>
+<section id="res" class="panel hidden"><h2>你的能力輪廓｜Your Profile</h2><div id="summary"></div><div class="result" id="boxes"></div><div id="next"></div></section>
+</main><script>
+const qs=[
+["L1","Listening","我能理解熟悉主題的簡短英文對話。","I can understand short conversations on familiar topics."],
+["L2","Listening","我能跟上一般速度的日常英文對話大意。","I can follow the main idea of everyday English at a normal speed."],
+["L3","Listening","我能從英文音檔中抓到關鍵資訊。","I can identify key information in English audio."],
+["L4","Listening","即使有少量生字，我仍能理解整體內容。","I can understand the overall message even with some unfamiliar words."],
+["S1","Speaking","我能用英文做基本自我介紹與生活交流。","I can introduce myself and handle basic daily communication in English."],
+["S2","Speaking","我能用完整句子表達自己的意見。","I can express my opinions in complete English sentences."],
+["S3","Speaking","我能在熟悉主題上持續說一段英文。","I can speak continuously for a short time on familiar topics."],
+["S4","Speaking","我能在工作或生活情境中主動回應英文問題。","I can respond actively to English questions in work or daily-life situations."],
+["R1","Reading","我能理解日常公告、Email或短文的大意。","I can understand the main idea of everyday notices, emails, or short texts."],
+["R2","Reading","我能快速找出英文文章中的關鍵資訊。","I can quickly locate key information in an English text."],
+["R3","Reading","我能理解一般工作或學習文章的主要內容。","I can understand the main content of general work or study texts."],
+["R4","Reading","我能根據上下文推測部分陌生字詞。","I can infer some unfamiliar words from context."],
+["W1","Writing","我能寫出正確的基本英文句子。","I can write basic English sentences accurately."],
+["W2","Writing","我能寫簡短Email或訊息表達明確目的。","I can write short emails or messages with a clear purpose."],
+["W3","Writing","我能用不同句型組織一段英文。","I can organize a paragraph using different sentence patterns."],
+["W4","Writing","我能檢查並修正自己常見的英文錯誤。","I can review and correct common errors in my English writing."],
+["G1","Foundation","我具備足夠的高頻單字應付日常需求。","I have enough high-frequency vocabulary for daily needs."],
+["G2","Foundation","我能使用常見文法組成正確句子。","I can use common grammar to form correct sentences."],
+["G3","Foundation","我了解常見搭配詞與自然用法。","I understand common collocations and natural usage."],
+["G4","Foundation","我能辨識基本句型與詞性在句中的功能。","I can recognize basic sentence patterns and word functions."]
+];
+const labels={Listening:"聽力 Listening",Speaking:"口說 Speaking",Reading:"閱讀 Reading",Writing:"寫作 Writing",Foundation:"語言基礎 Foundation"};
+const scale=[[1,"幾乎做不到","Rarely able"],[2,"較少做到","Sometimes able"],[3,"大約一半","About half the time"],[4,"大多做到","Usually able"],[5,"穩定做到","Consistently able"]];
+const form=document.getElementById("f");
+qs.forEach((q,i)=>{const d=document.createElement("section");d.className="panel q";d.innerHTML=`<div class="qid">${q[0]}｜Item ${i+1}</div><div class="zh">${q[2]}</div><div class="en">${q[3]}</div><div class="scale">${scale.map(s=>`<label><input type="radio" name="q${i}" value="${s[0]}"><b>${s[0]}</b><br>${s[1]}<br><span class="foot">${s[2]}</span></label>`).join("")}</div>`;form.appendChild(d)});
+form.onchange=()=>{const n=qs.filter((_,i)=>document.querySelector(`input[name=q${i}]:checked`)).length;bar.style.width=(n/20*100)+"%";pt.textContent=n+" / 20"};
+function collect(){let t={Listening:0,Speaking:0,Reading:0,Writing:0,Foundation:0},c={Listening:0,Speaking:0,Reading:0,Writing:0,Foundation:0},raw=[];for(let i=0;i<20;i++){const a=document.querySelector(`input[name=q${i}]:checked`);if(!a)return null;let v=+a.value,k=qs[i][1];t[k]+=v;c[k]++;raw.push(v)}let s=Object.keys(t).map(k=>({k,mean:Math.round(t[k]/c[k]*100)/100,index:Math.round(t[k]/c[k]*20)}));return {raw,s}}
+function band(m){if(m<1.8)return["A1 起步","Beginner"];if(m<2.6)return["A2 基礎","Elementary"];if(m<3.4)return["B1 中階","Intermediate"];if(m<4.2)return["B2 中高階","Upper-intermediate"];return["C1 自評高階","Advanced self-rating"]}
+function calc(){const r=collect();if(!r){alert("請完成全部 20 題。");return}const avg=r.s.reduce((a,b)=>a+b.mean,0)/5,b=band(avg);summary.innerHTML=`<p><b>整體自評：約 ${b[0]} / ${b[1]}</b></p><p class="muted">此分級僅為自評推估，不可取代正式 CEFR 對應測驗。</p>`;boxes.innerHTML=r.s.map(x=>`<div class="box"><b>${labels[x.k]}</b><div class="score">${x.mean}/5</div><div>${x.index}/100</div></div>`).join("");let low=[...r.s].sort((a,b)=>a.mean-b.mean).slice(0,2);next.innerHTML=`<h3>優先補強</h3><p>${labels[low[0].k]}、${labels[low[1].k]}</p><p><a class="btn primary" href="/english-stuck-diagnosis/">進一步做 #25 卡關診斷</a></p>`;res.classList.remove("hidden");res.scrollIntoView({behavior:"smooth"})}
+function downloadCSV(){const r=collect();if(!r){alert("請完成全部 20 題。");return}const h=["timestamp",...qs.map(x=>x[0]),...r.s.map(x=>x.k+"_mean")];const v=[new Date().toISOString(),...r.raw,...r.s.map(x=>x.mean)];const csv="\uFEFF"+h.join(",")+"\n"+v.join(",");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="gary_adult_english_radar.csv";a.click()}
+</script></body></html>
