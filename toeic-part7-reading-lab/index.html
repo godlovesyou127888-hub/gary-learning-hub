@@ -1,7 +1,7 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TOEIC Part 7 Reading Lab</title><style>
 body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;background:#f6f4ee;color:#314247;font-size:19px;line-height:1.75}.wrap{max-width:1000px;margin:auto;padding:20px}header{background:linear-gradient(135deg,#5f7f7b,#789d98);color:#fff;padding:32px 18px}.panel{background:#fffdf8;border:2px solid #dce7e2;border-radius:18px;padding:20px;margin:16px 0}.btn{padding:12px 16px;border-radius:11px;border:0;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}.primary{background:#6f9993;color:#fff}.secondary{background:#fff;color:#3d5653;border:2px solid #dce7e2}.opt{display:block;border:1px solid #dce7e2;border-radius:10px;padding:10px;margin:7px 0;background:#fff}.path{background:#f1f7f4;border-left:5px solid #6f9993;padding:13px;border-radius:10px;margin:10px 0}.explain{background:#fff;border:1px solid #dce7e2;border-radius:14px;padding:16px;margin:12px 0}.explain h3{margin:0 0 8px}.evidence{background:#f8faf8;border-left:4px solid #8fb1ab;padding:10px 12px;margin:8px 0}.strategy{background:#fff7ed;border-left:4px solid #b28959;padding:10px 12px;margin:8px 0}.hidden{display:none}.field input{width:100%;padding:12px;border:2px solid #dce7e2;border-radius:10px;font:inherit;box-sizing:border-box}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.passage{background:#f8faf8;border:1px solid #dce7e2;border-radius:12px;padding:16px;margin:10px 0}@media(max-width:760px){.grid{grid-template-columns:1fr}}
 </style></head><body><div style="background:#314247;color:#fff;padding:10px 16px;font-family:'Noto Sans TC','Microsoft JhengHei',sans-serif"><div style="max-width:1100px;margin:auto;display:flex;gap:10px;flex-wrap:wrap;align-items:center"><strong>T-PASS TOEIC Command Center｜Step 4｜Part 7 專項訓練</strong><a href="/tpass-toeic-command-center/" style="color:#fff;background:#6f9993;padding:7px 10px;border-radius:9px;text-decoration:none;font-weight:700">← 回 Command Center</a><a href="/tpass-toeic-command-center/#step4" style="color:#314247;background:#fffdf8;padding:7px 10px;border-radius:9px;text-decoration:none;font-weight:700">完成後：回 Step 4 檢查達標 →</a></div></div><header><div class="wrap"><h1>#34 TOEIC Part 7 Reading Lab</h1><p>閱讀速度、證據定位、同義改寫、推論與時間管理專項訓練。</p><p><a class="btn secondary" href="/">← Gary Learning Hub</a> <a class="btn secondary" href="/toeic-mock-test-lab/">#31 Mock Test Lab</a></p></div></header><main class="wrap">
-<section class="panel"><h2>基本資料</h2><div class="grid"><div class="field"><label>姓名</label><input id="studentName"></div><div class="field"><label>Email</label><input id="studentEmail" type="email"></div></div><p>本頁為自編 TOEIC Part 7 閱讀練習，不是 ETS 官方題目。</p></section>
+<section class="panel"><h2>基本資料</h2><div class="grid"><div class="field"><label>姓名</label><input id="studentName" name="student_name" form="part7DeliveryForm"></div><div class="field"><label>Email</label><input id="studentEmail" name="email" form="part7DeliveryForm" type="email"></div></div><p>本頁為自編 TOEIC Part 7 閱讀練習，不是 ETS 官方題目。</p></section>
 
 <section class="panel"><h2>20 題診斷｜Diagnostic</h2>
 <p>共 5 個構面，每個構面 4 題。請先完成全部 20 題，系統會找出最低分構面。</p>
@@ -11,13 +11,14 @@ body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans
 <section id="resultPanel" class="panel hidden"><h2>診斷結果｜Your Diagnostic Report</h2><p>你會看到五構面成績、最低分能力，以及 20 題逐題中英對照詳解。目的不是只知道對錯，而是知道「為什麼錯、下次怎麼做對」。</p>
 <div id="summary"></div><div id="dimensionScores"></div><div id="detail"></div>
 <p><button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF</button><button class="btn secondary" type="button" onclick="downloadCSV()">下載 CSV</button></p>
-<form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prep()">
+<p><button class="btn secondary" type="button" onclick="copyPart7Report()">複製完整結果</button></p><p class="muted">若 FormSubmit 顯示 Thanks 但沒有收到信，請先用「複製完整結果」保存 20 題診斷與 10 題再測紀錄。</p><form id="part7DeliveryForm" action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prep()">
 <input type="hidden" name="_subject" value="TOEIC Part 7 Reading Diagnostic V1 Result">
 <input type="hidden" name="_template" value="table">
 <input type="hidden" name="_autoresponse" value="已收到你的 TOEIC Part 7 Reading Diagnostic V1 結果。請保留這封結果副本，作為後續閱讀訓練與再測參考。">
 <input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-part7-reading-lab/">
-<input type="hidden" name="student_name" id="sendName"><input type="hidden" name="email" id="sendEmail"><input type="hidden" name="diagnostic_score" id="sendScore"><input type="hidden" name="weakest_dimension" id="sendWeakness"><input type="hidden" name="dimension_scores" id="sendDimensions"><input type="hidden" name="diagnostic_responses" id="sendDiagnosticResponses"><input type="hidden" name="diagnostic_responses_json" id="sendDiagnosticResponsesJson"><input type="hidden" name="retest_score" id="sendRetest"><input type="hidden" name="retest_responses" id="sendRetestResponses"><input type="hidden" name="retest_responses_json" id="sendRetestResponsesJson"><input type="hidden" name="submitted_at" id="sendTime">
-<button class="btn primary" type="submit">寄給我並同步給教練</button></form></section>
+<input type="hidden" name="_url" value="https://gary-learning-hub.onrender.com/toeic-part7-reading-lab/">
+<input type="hidden" name="diagnostic_score" id="sendScore"><input type="hidden" name="weakest_dimension" id="sendWeakness"><input type="hidden" name="dimension_scores" id="sendDimensions"><input type="hidden" name="diagnostic_responses" id="sendDiagnosticResponses"><input type="hidden" name="diagnostic_responses_json" id="sendDiagnosticResponsesJson"><input type="hidden" name="retest_score" id="sendRetest"><input type="hidden" name="retest_responses" id="sendRetestResponses"><input type="hidden" name="retest_responses_json" id="sendRetestResponsesJson"><input type="hidden" name="submitted_at" id="sendTime">
+<button class="btn secondary" type="submit">FormSubmit 備援寄送</button></form></section>
 
 <section id="retestPanel" class="panel hidden"><h2>10 題弱點再測｜Targeted Retest</h2>
 <p id="retestIntro"></p><div id="retestQuiz"></div>
@@ -116,13 +117,73 @@ const retestBank={
 
 const quiz=document.getElementById("quiz");
 diagnostic.forEach((q,i)=>{const s=document.createElement("section");s.className="panel";s.innerHTML='<div class="passage"><b>'+q[0]+'</b><p>'+q[1]+'</p></div><p><b>Q'+(i+1)+'. '+q[2]+'</b></p>'+q[3].map((o,j)=>'<label class="opt"><input type="radio" name="q'+i+'" value="'+j+'"> '+String.fromCharCode(65+j)+'. '+o+'</label>').join("");quiz.appendChild(s)});
+const PART7_DRAFT_KEY="toeic_part7_reading_v1_draft";
+function collectPart7Draft(){
+ return {
+  name:studentName.value||"",
+  email:studentEmail.value||"",
+  answers:diagnostic.map((q,i)=>{
+   const a=document.querySelector('input[name="q'+i+'"]:checked');
+   return a?a.value:null;
+  }),
+  savedAt:new Date().toISOString()
+ };
+}
+function savePart7Draft(){
+ try{
+  const d=collectPart7Draft();
+  localStorage.setItem(PART7_DRAFT_KEY,JSON.stringify(d));
+  if(typeof draftStatus!=="undefined"&&draftStatus){
+   const answered=d.answers.filter(x=>x!==null).length;
+   draftStatus.textContent="已自動保存："+answered+"/20 題｜"+new Date().toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit"});
+  }
+ }catch(e){}
+}
+function restorePart7Draft(){
+ try{
+  const raw=localStorage.getItem(PART7_DRAFT_KEY);
+  if(!raw)return;
+  const d=JSON.parse(raw);
+  if(d.name)studentName.value=d.name;
+  if(d.email)studentEmail.value=d.email;
+  if(Array.isArray(d.answers)){
+   d.answers.forEach((v,i)=>{
+    if(v===null||v===undefined)return;
+    const el=document.querySelector('input[name="q'+i+'"][value="'+v+'"]');
+    if(el)el.checked=true;
+   });
+  }
+  if(typeof draftStatus!=="undefined"&&draftStatus){
+   const answered=(d.answers||[]).filter(x=>x!==null&&x!==undefined).length;
+   draftStatus.textContent="已恢復上次進度："+answered+"/20 題。作答會繼續自動保存。";
+  }
+ }catch(e){}
+}
+function focusPart7Question(i,message){
+ const panels=document.querySelectorAll("#quiz > .panel");
+ const p=panels[i];
+ if(p){
+  p.scrollIntoView({behavior:"smooth",block:"center"});
+  p.style.outline="3px solid #d97706";
+  setTimeout(()=>{p.style.outline="";},1800);
+ }
+ alert(message);
+}
+quiz.addEventListener("change",savePart7Draft);
+studentName.addEventListener("input",savePart7Draft);
+studentEmail.addEventListener("input",savePart7Draft);
+window.addEventListener("pagehide",savePart7Draft);
+window.addEventListener("beforeunload",savePart7Draft);
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")savePart7Draft();});
+restorePart7Draft();
+
 
 let last=null,retestScore=null;
 function gradeDiagnostic(){
  if(!studentName.value.trim()){alert("請先填寫姓名。");return}
  if(!studentEmail.value||!studentEmail.checkValidity()){alert("請填寫有效 Email。");return}
  const dim={};DIMS.forEach(d=>dim[d]={c:0,n:0});let total=0,wrong=[],responses=[];
- for(let i=0;i<diagnostic.length;i++){const a=document.querySelector('input[name="q'+i+'"]:checked');if(!a){alert("請完成全部 20 題。第 "+(i+1)+" 題尚未作答。");return}const q=diagnostic[i],chosen=Number(a.value),ok=chosen===q[4];dim[q[0]].n++;if(ok){total++;dim[q[0]].c++}else wrong.push({q:i+1,type:q[0],exp:q[5]});responses.push({question_id:"P7-"+(i+1),dimension:q[0],passage:q[1],question:q[2],student_answer_index:chosen,student_answer:q[3][chosen],correct_answer_index:q[4],correct_answer:q[3][q[4]],is_correct:ok,explanation:q[5]})}
+ for(let i=0;i<diagnostic.length;i++){const a=document.querySelector('input[name="q'+i+'"]:checked');if(!a){focusPart7Question(i,"Q"+(i+1)+" 尚未作答。");return}const q=diagnostic[i],chosen=Number(a.value),ok=chosen===q[4];dim[q[0]].n++;if(ok){total++;dim[q[0]].c++}else wrong.push({q:i+1,type:q[0],exp:q[5]});responses.push({question_id:"P7-"+(i+1),dimension:q[0],passage:q[1],question:q[2],student_answer_index:chosen,student_answer:q[3][chosen],correct_answer_index:q[4],correct_answer:q[3][q[4]],is_correct:ok,explanation:q[5]})}
  const ranked=DIMS.map(d=>({d,score:dim[d].c,total:dim[d].n,pct:Math.round(dim[d].c/dim[d].n*100)})).sort((a,b)=>a.pct-b.pct);
  const weakest=ranked[0].d;
  summary.innerHTML='<p><b>總分：'+total+'/20｜正確率：'+Math.round(total/20*100)+'%｜最低分構面：'+weakest+'</b></p>';
@@ -175,7 +236,7 @@ function gradeDiagnostic(){
 }).join("");
  last={total,dim,ranked,weakest,wrong,responses,retestResponses:[]};retestScore=null;
  resultPanel.classList.remove("hidden");buildRetest(weakest);retestPanel.classList.remove("hidden");resultPanel.scrollIntoView({behavior:"smooth"});
- localStorage.setItem("toeic_part7_reading_v1",JSON.stringify({name:studentName.value,email:studentEmail.value,...last,date:new Date().toISOString()}));
+ localStorage.setItem("toeic_part7_reading_v1",JSON.stringify({name:studentName.value,email:studentEmail.value,...last,date:new Date().toISOString()}));localStorage.removeItem(PART7_DRAFT_KEY);
 }
 function buildRetest(dim){
  retestIntro.textContent='你的最低分構面是「'+dim+'」。以下 10 題全部針對這個能力再測。';
@@ -216,6 +277,41 @@ function gradeRetest(){
    '<div class="strategy"><b>本構面策略 Strategy</b><br>'+strategyMap[last.weakest]+'</div></div>';
  }).join("");
 }
-function prep(){if(!last){return false}sendName.value=studentName.value.trim();sendEmail.value=studentEmail.value.trim();sendScore.value=last.total+"/20";sendWeakness.value=last.weakest;sendDimensions.value=last.ranked.map(x=>x.d+":"+x.score+"/"+x.total).join(" | ");sendDiagnosticResponses.value=last.responses.map(x=>x.question_id+"｜學生："+x.student_answer+"｜正解："+x.correct_answer+"｜"+(x.is_correct?"O":"X")+"｜"+x.dimension).join("\n");sendDiagnosticResponsesJson.value=JSON.stringify(last.responses);sendRetest.value=retestScore===null?"尚未完成":retestScore+"/10";sendRetestResponses.value=(last.retestResponses||[]).map(x=>x.question_id+"｜學生："+x.student_answer+"｜正解："+x.correct_answer+"｜"+(x.is_correct?"O":"X")+"｜"+x.dimension).join("\n");sendRetestResponsesJson.value=JSON.stringify(last.retestResponses||[]);sendTime.value=new Date().toISOString();return true}
+function buildPart7Report(){
+ if(!last)return "";
+ const lines=[
+  "學員："+studentName.value.trim(),
+  "學員 Email："+studentEmail.value.trim(),
+  "診斷分數："+last.total+"/20",
+  "最低分構面："+last.weakest,
+  "",
+  "20 題完整診斷："
+ ];
+ (last.responses||[]).forEach(x=>{
+  lines.push(x.question_id+"｜學生："+x.student_answer+"｜正解："+x.correct_answer+"｜"+(x.is_correct?"O":"X")+"｜"+x.dimension);
+ });
+ lines.push("","診斷 JSON：",JSON.stringify(last.responses||[]));
+ if(retestScore!==null){
+  lines.push("","再測分數："+retestScore+"/10","10 題再測：");
+  (last.retestResponses||[]).forEach(x=>{
+   lines.push(x.question_id+"｜學生："+x.student_answer+"｜正解："+x.correct_answer+"｜"+(x.is_correct?"O":"X")+"｜"+x.dimension);
+  });
+  lines.push("","再測 JSON：",JSON.stringify(last.retestResponses||[]));
+ }
+ return lines.join("\n");
+}
+async function copyPart7Report(){
+ if(!last){alert("請先完成診斷。");return}
+ const report=buildPart7Report();
+ try{
+  await navigator.clipboard.writeText(report);
+  alert("完整 Part 7 結果已複製。");
+ }catch(e){
+  const ta=document.createElement("textarea");
+  ta.value=report;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();
+  alert("完整 Part 7 結果已複製。");
+ }
+}
+function prep(){if(!last){return false}sendScore.value=last.total+"/20";sendWeakness.value=last.weakest;sendDimensions.value=last.ranked.map(x=>x.d+":"+x.score+"/"+x.total).join(" | ");sendDiagnosticResponses.value=last.responses.map(x=>x.question_id+"｜學生："+x.student_answer+"｜正解："+x.correct_answer+"｜"+(x.is_correct?"O":"X")+"｜"+x.dimension).join("\n");sendDiagnosticResponsesJson.value=JSON.stringify(last.responses);sendRetest.value=retestScore===null?"尚未完成":retestScore+"/10";sendRetestResponses.value=(last.retestResponses||[]).map(x=>x.question_id+"｜學生："+x.student_answer+"｜正解："+x.correct_answer+"｜"+(x.is_correct?"O":"X")+"｜"+x.dimension).join("\n");sendRetestResponsesJson.value=JSON.stringify(last.retestResponses||[]);sendTime.value=new Date().toISOString();return true}
 function downloadCSV(){if(!last){alert("請先完成診斷。");return}const rows=[["dimension","score","total","percent"],...last.ranked.map(x=>[x.d,x.score,x.total,x.pct])],esc=v=>'"'+String(v).replaceAll('"','""')+'"';const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\uFEFF"+rows.map(r=>r.map(esc).join(",")).join("\n")],{type:"text/csv;charset=utf-8"}));a.download="toeic_part7_reading_diagnostic_v1.csv";a.click()}
 </script></body></html>
