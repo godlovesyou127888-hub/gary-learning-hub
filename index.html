@@ -20,10 +20,10 @@ footer{padding:28px 18px 50px;color:var(--muted);text-align:center}@media(max-wi
 </style>
 </head>
 <body>
-<header><div class="wrap"><div style="display:inline-block;margin-bottom:10px;padding:6px 10px;border-radius:999px;background:#1f2937;border:1px solid #374151;font-size:12px;">LEARNING HUB</div><h1>Gary Learning Hub</h1><p class="lead">28 個內容網站的唯一入口｜樂齡英語、英檢、文法、學科複習、AI 工具、創意教學與雙語品格教育集中管理。</p></div></header>
+<header><div class="wrap"><div style="display:inline-block;margin-bottom:10px;padding:6px 10px;border-radius:999px;background:#1f2937;border:1px solid #374151;font-size:12px;">LEARNING HUB</div><h1>Gary Learning Hub</h1><p class="lead"><span id="headerCount">0</span> 個內容網站的唯一入口｜樂齡英語、英檢、文法、學科複習、AI 工具、創意教學與雙語品格教育集中管理。</p></div></header>
 <div class="toolbar"><div class="wrap"><div class="controls"><input id="q" type="search" placeholder="搜尋：樂齡、TOEIC、Jasper、AI…"><select id="cat"><option value="">全部分類</option></select><select id="state"><option value="">全部存取</option><option value="public">一般開啟</option><option value="limited">限定／私人</option></select><select id="sort"><option value="original">建議順序</option><option value="category">依分類</option><option value="name">依名稱</option></select></div><div class="stats wrap" id="stats"></div></div></div>
 <main class="wrap">
-<section class="dashboard"><div class="metric"><b>28</b><span>內容網站</span></div><div class="metric"><b>7</b><span>主要分類</span></div><div class="metric"><b>0</b><span>待補網址</span></div></section><section class="panel" style="margin-bottom:16px"><h2 style="margin-top:0">從這裡開始</h2><p class="note" style="font-size:16px">先選分類，再進入網站；或直接搜尋人名、考試、科目與工具名稱。這裡是唯一中央入口。</p><p><a class="btn primary" href="/roadmap/">查看 Gary 101 Website Master Roadmap（29 / 101）</a></p><div id="quick" class="quick"></div></section><div id="grid" class="grid"></div>
+<section class="dashboard"><div class="metric"><b id="siteCount">0</b><span>內容網站</span></div><div class="metric"><b id="categoryCount">0</b><span>主要分類</span></div><div class="metric"><b id="missingUrlCount">0</b><span>待補網址</span></div></section><section class="panel" style="margin-bottom:16px"><h2 style="margin-top:0">從這裡開始</h2><p class="note" style="font-size:16px">先選分類，再進入網站；或直接搜尋人名、考試、科目與工具名稱。這裡是唯一中央入口。</p><p><a class="btn primary" href="/roadmap/">查看 Gary 101 Website Master Roadmap（<span id="roadmapOnlineCount">0</span> / 101）</a></p><div id="quick" class="quick"></div></section><div id="grid" class="grid"></div>
 <section class="section panel"><h2>中央入口規則</h2><p class="note">① Gary Learning Hub 是唯一總入口。② 新網站只在這裡新增一次。③ 子網站只保留「回 Hub／聯絡站長／核心功能」。④ 舊版網站保留但清楚標示，避免和正式版本混淆。</p></section>
 <section class="section panel" id="contact"><h2>聯絡站長</h2><p class="note">此表單使用 FormSubmit。首次正式寄送前，站長可能需要完成服務驗證。</p><form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST"><input type="hidden" name="_subject" value="Gary Learning Hub 聯絡站長"><input type="hidden" name="_captcha" value="false"><input name="name" placeholder="姓名" required><input type="email" name="email" placeholder="Email" required><textarea name="message" rows="5" placeholder="留言內容" required></textarea><button class="btn primary" type="submit">送出給站長</button></form></section>
 </main>
@@ -64,13 +64,18 @@ const sites=[
 const q=document.getElementById("q"),cat=document.getElementById("cat"),state=document.getElementById("state"),sort=document.getElementById("sort"),grid=document.getElementById("grid"),stats=document.getElementById("stats"),quick=document.getElementById("quick");
 const categories=[...new Set(sites.map(x=>x.category))].sort();
 categories.forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c;cat.appendChild(o)});
-["全部",...categories].forEach(c=>{const b=document.createElement("button");b.className="chip"+(c==="全部"?" active":"");b.textContent=c==="全部"?"全部 28":c+" "+sites.filter(x=>x.category===c).length;b.onclick=()=>{cat.value=c==="全部"?"":c;[...quick.children].forEach(x=>x.classList.remove("active"));b.classList.add("active");draw()};quick.appendChild(b)});
+["全部",...categories].forEach(c=>{const b=document.createElement("button");b.className="chip"+(c==="全部"?" active":"");b.textContent=c==="全部"?"全部 "+sites.length:c+" "+sites.filter(x=>x.category===c).length;b.onclick=()=>{cat.value=c==="全部"?"":c;[...quick.children].forEach(x=>x.classList.remove("active"));b.classList.add("active");draw()};quick.appendChild(b)});
 function isLimited(s){return /限定|私人/.test(s.status)}
 function draw(){const keyword=q.value.trim().toLowerCase();let filtered=sites.filter(s=>{const hit=[s.name,s.category,s.audience,s.desc,s.status].join(" ").toLowerCase().includes(keyword);const hitCat=!cat.value||s.category===cat.value;const hitState=!state.value||(state.value==="limited"?isLimited(s):!isLimited(s));return hit&&hitCat&&hitState});
 if(sort.value==="category")filtered.sort((a,b)=>a.category.localeCompare(b.category,"zh-Hant")||a.name.localeCompare(b.name,"zh-Hant"));if(sort.value==="name")filtered.sort((a,b)=>a.name.localeCompare(b.name,"zh-Hant"));
 grid.innerHTML="";filtered.forEach(s=>{const article=document.createElement("article");article.className="card";const limited=isLimited(s);const button=`<a class="btn primary" href="${s.url}" target="_blank" rel="noopener">${limited?"進入限定網站":"進入網站"}</a>`;article.innerHTML=`<div class="meta"><span class="tag">${s.category}</span><span class="tag">${s.audience}</span><span class="tag status">${s.status}</span></div><h2>${s.name}</h2><div class="desc">${s.desc}</div><div class="actions">${button}</div>`;grid.appendChild(article)});
-const limitedCount=sites.filter(isLimited).length;stats.textContent=`28 個內容網站｜8 個分類｜限定／私人 ${limitedCount} 站｜目前顯示 ${filtered.length} 站｜最後整理：2026-10-31`}
+const limitedCount=sites.filter(isLimited).length;stats.textContent=`${sites.length} 個內容網站｜${categories.length} 個分類｜限定／私人 ${limitedCount} 站｜目前顯示 ${filtered.length} 站｜最後整理：2026-10-31`}
 [q,cat,state,sort].forEach(el=>el.addEventListener("input",draw));cat.addEventListener("change",()=>{[...quick.children].forEach(x=>x.classList.toggle("active",(cat.value===""&&x.textContent.startsWith("全部"))||x.textContent.startsWith(cat.value+" ")))});
+headerCount.textContent=sites.length;
+siteCount.textContent=sites.length;
+categoryCount.textContent=categories.length;
+missingUrlCount.textContent=sites.filter(s=>!s.url).length;
+roadmapOnlineCount.textContent=sites.filter(s=>Boolean(s.url)).length+1;
 draw();
 </script>
 </body></html>
