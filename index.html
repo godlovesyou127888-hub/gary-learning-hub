@@ -31,9 +31,9 @@ footer{padding:28px 18px 50px;color:var(--muted);text-align:center}@media(max-wi
 <footer>Gary Learning Hub｜GitHub 母站 V1</footer>
 <script>
 const sites=[
-{name:"Gary 樂齡英語｜字母・音標・單字入門",category:"樂齡英語",audience:"零基礎／樂齡",desc:"A–Z、IPA、生活單字、中英短句、5題測驗、學習紀錄、PDF學習單。",url:"",status:"待遷入母站"},
+{name:"Gary 樂齡英語｜字母・音標・單字入門",category:"樂齡英語",audience:"零基礎／樂齡",desc:"A–Z、IPA、生活單字、中英短句、5題測驗、學習紀錄、PDF學習單。",url:"https://gary-learning-hub.onrender.com/senior-english-a-z/",status:"已遷入母站"},
 {name:"Gary 樂齡英語花園",category:"樂齡英語",audience:"零基礎／樂齡",desc:"字母、生活單字、句子、測驗、錯題複習與成績紀錄。",url:"https://senior-english-garden.gary2049.chatgpt.site",status:"已確認網址"},
-{name:"Gary老師｜樂活英語陪練",category:"樂齡英語",audience:"樂齡成人",desc:"樂齡生活英語陪練入口。",url:"",status:"待補網址"},
+{name:"Gary老師｜樂活英語陪練",category:"樂齡英語",audience:"樂齡成人",desc:"樂齡生活英語陪練入口。",url:"https://gary-ymca-english-practice.gary2049.chatgpt.site",status:"已確認網址"},
 {name:"TPASS｜詞素診斷與練習",category:"英語檢定",audience:"TOEIC／成人",desc:"18題診斷、分流、練習、雙語詳解、成果摘要與教練邀請。",url:"https://tpass-morpheme.gary2049.chatgpt.site",status:"已確認網址"},
 {name:"T-PASS AI 入學診斷",category:"英語檢定",audience:"TOEIC／成人",desc:"AI 多益入學診斷。",url:"https://t-pass-ai-assessment.gary2049.chatgpt.site",status:"已確認網址"},
 {name:"T-PASS Member Dashboard V1",category:"英語檢定",audience:"T-PASS會員",desc:"會員學習儀表板與進度入口。",url:"https://t-pass-member-dashboard.gary2049.chatgpt.site",status:"限定存取"},
@@ -46,8 +46,8 @@ const sites=[
 {name:"Gary 蛋・自由彩繪工作室",category:"創意教學",audience:"兒童／教師",desc:"手機與 iPad 可操作的2D／3D彩繪互動網站。",url:"https://gary-egg-paint.gary2049.chatgpt.site",status:"已確認網址"},
 {name:"Gary 國小老師的一天",category:"創意教學",audience:"教師／教育",desc:"國小主任、組長、導師、科任角色情境學習。",url:"https://gary-school-day.gary2049.chatgpt.site",status:"已確認網址"},
 {name:"神隊友雙語聖經品格教育",category:"雙語品格",audience:"5–12歲兒童／家長",desc:"雙語英文、AI活動、聖經故事與品格任務。",url:"https://skywalker-bilingual-bible.gary2049.chatgpt.site/",status:"已確認網址"},
-{name:"Gary AI Threads 客戶雷達",category:"AI工具",audience:"工作／行銷",desc:"關鍵字搜尋、AI診斷、Lead Score、草稿與人工批准。",url:"",status:"待補網址"},
-{name:"Skywalker AI Content Factory",category:"AI工具",audience:"工作／內容",desc:"AI內容工作流程與產製工具。",url:"",status:"待補網址"}];
+{name:"Gary AI Threads 客戶雷達",category:"AI工具",audience:"工作／行銷",desc:"關鍵字搜尋、AI診斷、Lead Score、草稿與人工批准。",url:"https://gary-threads-radar.gary2049.chatgpt.site",status:"已確認網址"},
+{name:"Skywalker AI Content Factory",category:"AI工具",audience:"工作／內容",desc:"AI內容工作流程與產製工具。",url:"https://gary-learning-hub.onrender.com/ai-content-factory/",status:"已建置"}];
 const q=document.getElementById("q"),cat=document.getElementById("cat"),state=document.getElementById("state"),grid=document.getElementById("grid"),stats=document.getElementById("stats");
 [...new Set(sites.map(x=>x.category))].sort().forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c;cat.appendChild(o)});
 function draw(){const keyword=q.value.trim().toLowerCase();const filtered=sites.filter(s=>{const hit=[s.name,s.category,s.audience,s.desc,s.status].join(" ").toLowerCase().includes(keyword);const hitCat=!cat.value||s.category===cat.value;const pending=!s.url;const hitState=!state.value||(state.value==="pending"?pending:!pending);return hit&&hitCat&&hitState});grid.innerHTML="";filtered.forEach(s=>{const article=document.createElement("article");article.className="card";const pending=!s.url;const button=pending?'<span class="btn disabled">待補網址／遷入</span>':`<a class="btn primary" href="${s.url}" target="_blank" rel="noopener">進入網站</a>`;article.innerHTML=`<div class="meta"><span class="tag">${s.category}</span><span class="tag">${s.audience}</span><span class="tag status ${pending?"pending":""}">${s.status}</span></div><h2>${s.name}</h2><div class="desc">${s.desc}</div><div class="actions">${button}</div>`;grid.appendChild(article)});const ready=sites.filter(s=>s.url).length,pending=sites.length-ready;stats.textContent=`目前收錄 ${sites.length} 站｜可直接開啟 ${ready} 站｜待補／遷入 ${pending} 站｜目前顯示 ${filtered.length} 站`}
