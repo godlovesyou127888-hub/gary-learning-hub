@@ -1,0 +1,55 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Business English Survival Kit</title><style>
+body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;background:#f6f4ee;color:#314247;font-size:19px;line-height:1.75}.wrap{max-width:1000px;margin:auto;padding:20px}header{background:linear-gradient(135deg,#5f7f7b,#789d98);color:#fff;padding:32px 18px}.panel{background:#fffdf8;border:2px solid #dce7e2;border-radius:18px;padding:20px;margin:16px 0}.btn{padding:12px 16px;border-radius:11px;border:0;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}.primary{background:#6f9993;color:#fff}.secondary{background:#fff;color:#3d5653;border:2px solid #dce7e2}.opt{display:block;border:1px solid #dce7e2;border-radius:10px;padding:10px;margin:7px 0;background:#fff}.path{background:#f1f7f4;border-left:5px solid #6f9993;padding:13px;border-radius:10px;margin:10px 0}.explain{background:#fff;border:1px solid #dce7e2;border-radius:14px;padding:16px;margin:12px 0}.field input{width:100%;padding:12px;border:2px solid #dce7e2;border-radius:10px;font:inherit;box-sizing:border-box}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.hidden{display:none}@media(max-width:760px){.grid{grid-template-columns:1fr}}
+</style></head><body>
+<header><div class="wrap"><h1>#37 Business English Survival Kit</h1><p>5 大職場情境 × 15 題診斷 × 中英雙語實戰句型。</p><p><a class="btn secondary" href="/">← Gary Learning Hub</a></p></div></header>
+<main class="wrap">
+<section class="panel"><h2>基本資料</h2><div class="grid"><div class="field"><label>姓名</label><input id="studentName"></div><div class="field"><label>Email</label><input id="studentEmail" type="email"></div></div></section>
+<section class="panel"><h2>15 題職場英語生存力診斷</h2><div id="quiz"></div><p><button class="btn primary" type="button" onclick="grade()">完成診斷</button></p></section>
+<section id="resultPanel" class="panel hidden"><h2>你的 Business English Survival Report</h2><div id="summary"></div><div id="scores"></div><div id="details"></div><div id="kit"></div>
+<p><button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF</button><button class="btn secondary" type="button" onclick="downloadCSV()">下載 CSV</button></p>
+<form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prep()">
+<input type="hidden" name="_subject" value="Business English Survival Kit Result"><input type="hidden" name="_template" value="table"><input type="hidden" name="_autoresponse" value="已收到你的 Business English Survival Kit 診斷結果。請保留這封結果副本，作為後續職場英語練習參考。"><input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/business-english-survival-kit/">
+<input type="hidden" name="student_name" id="sendName"><input type="hidden" name="email" id="sendEmail"><input type="hidden" name="score" id="sendScore"><input type="hidden" name="weakest_area" id="sendWeakness"><input type="hidden" name="area_scores" id="sendAreas"><input type="hidden" name="submitted_at" id="sendTime"><button class="btn primary" type="submit">寄給我並同步給教練</button></form></section>
+</main><script>
+const Q=[
+["Email","Which sentence is most professional for a request?",["Send me the file now.","Could you please send me the updated file by 3 p.m.?","I want the file.","You forgot the file."],1,"用 could you please + 動詞，語氣專業且清楚。","Could you please... is polite, specific, and action-oriented."],
+["Email","How should you politely follow up?",["Why haven't you replied?","Just checking in on my previous email regarding the proposal.","Answer me today.","You ignored my email."],1,"Just checking in... 是常見且不具攻擊性的追蹤句型。","Just checking in... is a neutral and professional follow-up phrase."],
+["Email","Which closing is appropriate?",["Reply ASAP.","Thanks in advance for your help.","Do it.","No excuses."],1,"Thanks in advance for your help. 可禮貌收尾。","This closing is courteous and signals appreciation."],
+["Meeting","How do you interrupt politely?",["Stop.","Can I jump in for a moment?","You're wrong.","Listen to me."],1,"Can I jump in for a moment? 是自然的會議插話句型。","It signals a polite request to enter the discussion."],
+["Meeting","How do you ask for clarification?",["What?","Could you clarify what you mean by the timeline?","Say again.","That makes no sense."],1,"clarify + 具體項目，可避免模糊溝通。","Clarify + a specific point makes the request precise."],
+["Meeting","How do you disagree professionally?",["No.","I see your point, but I have a different concern.","That's stupid.","Wrong."],1,"先承接對方觀點，再提出不同意見，可降低對立。","Acknowledge first, then state your concern."],
+["Phone","How should you begin a business call?",["Who are you?","Hello, this is Gary Wang calling from Skywalker.","Talk to me.","Hey."],1,"先自我介紹姓名與單位，讓對方快速建立情境。","State your name and organization at the start of a business call."],
+["Phone","How do you ask someone to hold?",["Wait.","Could you hold for a moment, please?","Don't hang up.","Stay there."],1,"Could you hold for a moment, please? 是標準電話禮貌句。","This is a standard polite phrase for putting someone on hold."],
+["Phone","How do you confirm information?",["Okay maybe.","Let me confirm: the meeting is at 2 p.m. on Thursday, correct?","I think so.","Whatever."],1,"重述關鍵資訊＋correct? 可降低錯誤。","Restating key information helps prevent misunderstandings."],
+["Presentation","How do you introduce your main point?",["Whatever.","The key point I'd like to highlight is...","Look here.","This is obvious."],1,"The key point I'd like to highlight is... 可清楚標示重點。","This phrase clearly signals the main message."],
+["Presentation","How do you transition?",["Next thing.","Let's move on to the next section.","Forget that.","Anyway."],1,"Let's move on to... 是清楚自然的轉場。","It provides a clear transition between sections."],
+["Presentation","How do you handle a question you cannot answer?",["I don't know.","That's a good question. Let me verify the details and get back to you.","Not my problem.","Ask someone else."],1,"承認問題＋承諾查證，比亂答更專業。","Acknowledge the question and commit to verifying the answer."],
+["Small Talk","What is a safe opener with a new client?",["How much do you earn?","How was your trip here?","Why are you late?","Are you married?"],1,"How was your trip here? 屬低風險、安全開場。","Travel is a safe and neutral small-talk topic."],
+["Small Talk","How do you exit a conversation politely?",["Bye.","It was great speaking with you. I hope we can continue this conversation later.","I'm bored.","I need to leave."],1,"先正向收尾，再自然離開。","A positive closing preserves rapport."],
+["Small Talk","Which topic is usually safest in a first business meeting?",["Personal salary","Recent travel or the event venue","Political beliefs","Private family issues"],1,"初次商務互動以中性、低敏感議題為主。","Neutral topics are safer in first-time business interactions."]
+];
+const AREAS=["Email","Meeting","Phone","Presentation","Small Talk"];
+const phraseKit={
+"Email":["Could you please send me...｜可以請您寄給我……嗎？","Just checking in on...｜想跟進一下……","Thanks in advance for your help.｜先謝謝您的協助。"],
+"Meeting":["Can I jump in for a moment?｜我可以補充一下嗎？","Could you clarify...?｜可以請您說明……嗎？","I see your point, but...｜我理解您的觀點，不過……"],
+"Phone":["This is ___ calling from ___.｜我是……，來自……","Could you hold for a moment, please?｜可以請您稍候一下嗎？","Let me confirm...｜讓我確認一下……"],
+"Presentation":["The key point I'd like to highlight is...｜我想強調的重點是……","Let's move on to...｜接下來我們進入……","Let me verify and get back to you.｜我確認後再回覆您。"],
+"Small Talk":["How was your trip here?｜您一路過來還順利嗎？","How are you finding the event so far?｜目前覺得這場活動如何？","It was great speaking with you.｜很高興和您聊聊。"]
+};
+quiz.innerHTML=Q.map((q,i)=>'<section class="panel"><b>Q'+(i+1)+'. ['+q[0]+'] '+q[1]+'</b>'+q[2].map((o,j)=>'<label class="opt"><input type="radio" name="q'+i+'" value="'+j+'"> '+String.fromCharCode(65+j)+'. '+o+'</label>').join("")+'</section>').join("");
+let last=null;
+function grade(){
+ if(!studentName.value.trim()){alert("請先填寫姓名。");return}
+ if(!studentEmail.value||!studentEmail.checkValidity()){alert("請填寫有效 Email。");return}
+ const area={};AREAS.forEach(a=>area[a]={c:0,n:0});let total=0,answers=[];
+ for(let i=0;i<Q.length;i++){const a=document.querySelector('input[name="q'+i+'"]:checked');if(!a){alert("請完成全部 15 題。第 "+(i+1)+" 題尚未作答。");return}const chosen=Number(a.value),ok=chosen===Q[i][3];area[Q[i][0]].n++;if(ok){total++;area[Q[i][0]].c++}answers.push({i,chosen,ok})}
+ const ranked=AREAS.map(a=>({a,score:area[a].c,total:area[a].n,pct:Math.round(area[a].c/area[a].n*100)})).sort((x,y)=>x.pct-y.pct),weakest=ranked[0].a;
+ summary.innerHTML='<div class="path"><b>總分 '+total+'/15｜最低分情境：'+weakest+'</b><br>先補最低分情境，再擴充其他職場英語。</div>';
+ scores.innerHTML=ranked.map(x=>'<div class="path"><b>'+x.a+'</b>：'+x.score+'/'+x.total+'（'+x.pct+'%）</div>').join("");
+ details.innerHTML='<h2>逐題中英對照解析</h2>'+answers.map(x=>{const q=Q[x.i];return '<div class="explain"><h3>Q'+(x.i+1)+'｜'+q[0]+'｜'+(x.ok?'✅ Correct':'❌ Review')+'</h3><p><b>Your answer：</b>'+q[2][x.chosen]+'</p><p><b>Correct answer：</b>'+q[2][q[3]]+'</p><p><b>中文解析：</b>'+q[4]+'</p><p><b>English explanation：</b>'+q[5]+'</p></div>'}).join("");
+ kit.innerHTML='<h2>你的實戰句型包｜Your Survival Phrase Kit</h2><div class="path"><b>'+weakest+' 優先句型</b><br>'+phraseKit[weakest].join("<br>")+'</div>';
+ last={total,ranked,weakest,answers};resultPanel.classList.remove("hidden");resultPanel.scrollIntoView({behavior:"smooth"});localStorage.setItem("business_english_survival_v1",JSON.stringify({name:studentName.value,email:studentEmail.value,...last,date:new Date().toISOString()}));
+}
+function prep(){if(!last)return false;sendName.value=studentName.value.trim();sendEmail.value=studentEmail.value.trim();sendScore.value=last.total+"/15";sendWeakness.value=last.weakest;sendAreas.value=last.ranked.map(x=>x.a+":"+x.score+"/"+x.total).join(" | ");sendTime.value=new Date().toISOString();return true}
+function downloadCSV(){if(!last){alert("請先完成診斷。");return}const rows=[["area","score","total","percent"],...last.ranked.map(x=>[x.a,x.score,x.total,x.pct])],esc=v=>'"'+String(v).replaceAll('"','""')+'"';const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\uFEFF"+rows.map(r=>r.map(esc).join(",")).join("\n")],{type:"text/csv;charset=utf-8"}));a.download="business_english_survival_kit.csv";a.click()}
+</script></body></html>
