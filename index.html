@@ -58,7 +58,9 @@ const sites=[
 {name:"Gary 英文90天進步計畫",category:"成人英語",audience:"成人／上班族",desc:"把卡點診斷與程度雷達轉成90天三階段行動計畫、每週任務與進度追蹤。",url:"https://gary-learning-hub.onrender.com/english-90day-plan/",status:"測試版"},
 {name:"TOEIC Weakness Radar",category:"英語檢定",audience:"TOEIC／成人",desc:"中英雙語20題，診斷聽力、閱讀、字彙文法、解題策略、時間與考場表現；學生與教練雙交付。",url:"https://gary-learning-hub.onrender.com/toeic-weakness-radar/",status:"測試版"},
 {name:"TOEIC Mistake Doctor",category:"英語檢定",audience:"TOEIC／成人",desc:"輸入最近錯題，診斷錯誤類型、根因與優先學習處方，並安排24–48小時再測；學生與教練雙交付。",url:"https://gary-learning-hub.onrender.com/toeic-mistake-doctor/",status:"測試版"},
-{name:"TOEIC 90-Day Planner",category:"英語檢定",audience:"TOEIC／成人",desc:"承接#28弱點雷達與#29錯題醫生，轉成90天三階段提分計畫、13週任務與複測節點；學生與教練雙交付。",url:"https://gary-learning-hub.onrender.com/toeic-90day-planner/",status:"測試版"}];
+{name:"TOEIC 90-Day Planner",category:"英語檢定",audience:"TOEIC／成人",desc:"承接#28弱點雷達與#29錯題醫生，轉成90天三階段提分計畫、13週任務與複測節點；學生與教練雙交付。",url:"https://gary-learning-hub.onrender.com/toeic-90day-planner/",status:"測試版"},
+{name:"TOEIC Mock Test Lab",category:"英語檢定",audience:"TOEIC／成人",desc:"記錄每次模考 Listening、Reading、總分與主要失分，追蹤前後變化。",url:"https://gary-learning-hub.onrender.com/toeic-mock-test-lab/",status:"測試版"},
+{name:"TOEIC Part 5 Grammar Lab",category:"英語檢定",audience:"TOEIC／成人",desc:"10題 Part 5 文法診斷、錯誤分類、中文詳解與同類再測；學生與教練雙交付。",url:"https://gary-learning-hub.onrender.com/toeic-part5-grammar-lab/",status:"測試版"}];
 const q=document.getElementById("q"),cat=document.getElementById("cat"),state=document.getElementById("state"),sort=document.getElementById("sort"),grid=document.getElementById("grid"),stats=document.getElementById("stats"),quick=document.getElementById("quick");
 const categories=[...new Set(sites.map(x=>x.category))].sort();
 categories.forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c;cat.appendChild(o)});
