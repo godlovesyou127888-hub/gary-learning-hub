@@ -19,32 +19,32 @@ main{padding:30px 20px 64px}.panel{background:var(--card);border:2px solid var(-
 <body><div style="background:#314247;color:#fff;padding:10px 16px;font-family:'Noto Sans TC','Microsoft JhengHei',sans-serif"><div style="max-width:1100px;margin:auto;display:flex;gap:10px;flex-wrap:wrap;align-items:center"><strong>T-PASS TOEIC Command Center｜Step 1｜錯題根因診斷</strong><a href="/tpass-toeic-command-center/" style="color:#fff;background:#6f9993;padding:7px 10px;border-radius:9px;text-decoration:none;font-weight:700">← 回 Command Center</a><a href="/tpass-toeic-command-center/#coach-apply" style="color:#314247;background:#fffdf8;padding:7px 10px;border-radius:9px;text-decoration:none;font-weight:700">下一步：Step 2 教練解讀 →</a></div></div>
 <header><div class="wrap"><h1>#29 TOEIC Mistake Doctor<br><span style="font-size:.58em">TOEIC Error Diagnosis & Learning Prescription</span></h1><p class="lead">不是只看「错几题」，而是判断：错在哪里、为什么错、下一次怎么避免再错。</p><p><a class="btn secondary" href="/">← Gary Learning Hub</a> <a class="btn secondary" href="/toeic-weakness-radar/">#28 Weakness Radar</a></p></div></header>
 <main class="wrap">
-<section class="panel"><h2>基本资料｜Profile</h2><div class="grid">
+<section class="panel"><h2>基本資料｜Profile</h2><div class="grid">
 <div class="field"><label>姓名｜Name</label><input id="studentName"></div>
 <div class="field"><label>Email</label><input id="studentEmail" type="email"></div>
 <div class="field"><label>目前 TOEIC 分数｜Current Score</label><input id="currentScore" type="number" min="10" max="990"></div>
-<div class="field"><label>目标分数｜Target Score</label><input id="targetScore" type="number" min="10" max="990"></div>
+<div class="field"><label>目標分数｜Target Score</label><input id="targetScore" type="number" min="10" max="990"></div>
 </div></section>
 
 <section class="panel">
-<h2>输入最近错题｜Enter Recent Mistakes</h2>
-<p class="muted">先输入最多 10 题最近做错的题目。重点不是贴整题，而是标记「题型＋错误原因＋你的信心」。</p>
+<h2>輸入最近錯題｜Enter Recent Mistakes</h2>
+<p class="muted">先輸入最多 10 题最近做错的题目。重点不是贴整题，而是标记「题型＋錯誤原因＋你的信心」。</p>
 <div id="rows"></div>
-<p><button type="button" class="btn secondary" onclick="addRow()">＋ 新增错题</button></p>
+<p><button type="button" class="btn secondary" onclick="addRow()">＋ 新增錯題</button></p>
 </section>
 
-<section class="panel"><button class="btn primary" type="button" onclick="diagnose()">开始诊断｜Diagnose My Mistakes</button></section>
+<section class="panel"><button class="btn primary" type="button" onclick="diagnose()">开始診斷｜Diagnose My Mistakes</button></section>
 
 <section id="resultPanel" class="panel hidden">
-<h2>错题诊断结果｜Diagnosis</h2>
+<h2>錯題診斷結果｜Diagnosis</h2>
 <div class="result" id="summaryBoxes"></div>
 <div id="prescription"></div>
-<p><button class="btn secondary" type="button" onclick="window.print()">列印／储存 PDF</button> <button class="btn secondary" type="button" onclick="downloadCSV()">下载 CSV</button></p>
+<p><button class="btn secondary" type="button" onclick="window.print()">列印／储存 PDF</button> <button class="btn secondary" type="button" onclick="downloadCSV()">下載 CSV</button></p>
 
 <form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prepareDelivery()">
 <input type="hidden" name="_subject" value="TOEIC Mistake Doctor｜Student Result">
 <input type="hidden" name="_template" value="table">
-<input type="hidden" name="_autoresponse" value="已收到你的 TOEIC Mistake Doctor 错题诊断结果。这封信是你的结果副本，请保留作为后续订正与再测参考。">
+<input type="hidden" name="_autoresponse" value="已收到你的 TOEIC Mistake Doctor 錯題診斷結果。这封信是你的結果副本，请保留作为后续订正与再测参考。">
 <input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-mistake-doctor/">
 <input type="hidden" name="student_name" id="sendName">
 <input type="hidden" name="email" id="sendEmail">
@@ -55,7 +55,7 @@ main{padding:30px 20px 64px}.panel{background:var(--card);border:2px solid var(-
 <input type="hidden" name="secondary_error_type" id="sendSecond">
 <input type="hidden" name="prescription" id="sendPrescription">
 <input type="hidden" name="submitted_at" id="sendTime">
-<button class="btn primary" type="submit">寄给我并同步给教练｜Email Me & Coach</button>
+<button class="btn primary" type="submit">寄给我并同步给教練｜Email Me & Coach</button>
 </form>
 </section>
 </main>
@@ -65,25 +65,25 @@ const errorTypes={
 "Vocabulary":"Vocabulary 字汇不足",
 "Grammar":"Grammar 文法判断",
 "Collocation":"Collocation 搭配词",
-"Reading":"Reading 阅读定位",
-"Listening":"Listening 听力辨识",
+"Reading":"Reading 閱讀定位",
+"Listening":"Listening 聽力辨识",
 "Strategy":"Strategy 题型策略",
-"Time":"Time 时间压力",
+"Time":"Time 時間压力",
 "Careless":"Careless 粗心／看错"
 };
 const prescriptions={
-"Vocabulary":"建立错题单字卡：每题只收 1–3 个真正影响理解的高频字，48 小时内再测。",
-"Grammar":"把错题改写成「规则＋最小例句＋再测题」；不要只记答案。",
+"Vocabulary":"建立錯題单字卡：每题只收 1–3 个真正影响理解的高频字，48 小时内再测。",
+"Grammar":"把錯題改写成「规则＋最小例句＋再测题」；不要只记答案。",
 "Collocation":"记录完整搭配而不是单字，例如 make a decision，而不是只背 decision。",
-"Reading":"练习关键词定位、同义改写与证据句；每题必须指出答案证据位置。",
-"Listening":"回听错题片段 3 次：第一次抓大意、第二次听关键词、第三次跟读。",
+"Reading":"練習关键词定位、同义改写与证据句；每题必须指出答案证据位置。",
+"Listening":"回听錯題片段 3 次：第一次抓大意、第二次听关键词、第三次跟读。",
 "Strategy":"建立该 Part 的固定 SOP，做题前先知道看什么、排除什么、何时跳题。",
-"Time":"分段限时训练；先稳定正确率，再逐步压缩时间。",
+"Time":"分段限时训练；先稳定正确率，再逐步压缩時間。",
 "Careless":"建立粗心检查清单：否定词、数字、时态、单复数、题目问法。"
 };
 let rowCount=0,lastDiagnosis=null;
 function addRow(){
- if(rowCount>=10){alert("最多输入 10 题。");return}
+ if(rowCount>=10){alert("最多輸入 10 题。");return}
  rowCount++;
  const d=document.createElement("div");d.className="error-row";d.dataset.row=rowCount;
  d.innerHTML=`
@@ -105,35 +105,35 @@ function collect(){
  }));
 }
 function diagnose(){
- if(!studentName.value.trim()){alert("请先填写姓名。");studentName.focus();return}
- if(!studentEmail.value||!studentEmail.checkValidity()){alert("请填写有效 Email。");studentEmail.focus();return}
+ if(!studentName.value.trim()){alert("請先填寫姓名。");studentName.focus();return}
+ if(!studentEmail.value||!studentEmail.checkValidity()){alert("请填寫有效 Email。");studentEmail.focus();return}
  const data=collect();
- if(!data.length){alert("请至少输入 1 题错题。");return}
+ if(!data.length){alert("请至少輸入 1 题錯題。");return}
  const counts={};const weighted={};
  data.forEach(x=>{counts[x.type]=(counts[x.type]||0)+1;weighted[x.type]=(weighted[x.type]||0)+x.confidence});
  const ranked=Object.keys(counts).map(k=>({k,count:counts[k],weight:weighted[k]})).sort((a,b)=>b.count-a.count||b.weight-a.weight);
  const top=ranked[0],second=ranked[1]||ranked[0];
  const highConfidenceWrong=data.filter(x=>x.confidence===3).length;
  summaryBoxes.innerHTML=`
- <div class="box"><b>主要错误类型</b><div class="score">${errorTypes[top.k]}</div><div>${top.count} / ${data.length} 题</div></div>
- <div class="box"><b>次要错误类型</b><div class="score" style="font-size:24px">${errorTypes[second.k]}</div><div>${second.count} / ${data.length} 题</div></div>
- <div class="box"><b>高信心却答错</b><div class="score">${highConfidenceWrong}</div><div>需要优先校正错误规则</div></div>
- <div class="box"><b>本次样本</b><div class="score">${data.length}</div><div>最近错题</div></div>`;
+ <div class="box"><b>主要錯誤类型</b><div class="score">${errorTypes[top.k]}</div><div>${top.count} / ${data.length} 题</div></div>
+ <div class="box"><b>次要錯誤类型</b><div class="score" style="font-size:24px">${errorTypes[second.k]}</div><div>${second.count} / ${data.length} 题</div></div>
+ <div class="box"><b>高信心却答错</b><div class="score">${highConfidenceWrong}</div><div>需要優先校正錯誤规则</div></div>
+ <div class="box"><b>本次样本</b><div class="score">${data.length}</div><div>最近錯題</div></div>`;
  prescription.innerHTML=`
- <h3>学习处方｜Prescription</h3>
- <div class="path"><b>第一优先｜${errorTypes[top.k]}</b><br>${prescriptions[top.k]}</div>
- <div class="path"><b>第二优先｜${errorTypes[second.k]}</b><br>${prescriptions[second.k]}</div>
- <div class="path"><b>再测规则</b><br>24–48 小时后只重做同类 5 题；正确率达到 80% 以上，再进入下一类错误。</div>`;
+ <h3>學習处方｜Prescription</h3>
+ <div class="path"><b>第一優先｜${errorTypes[top.k]}</b><br>${prescriptions[top.k]}</div>
+ <div class="path"><b>第二優先｜${errorTypes[second.k]}</b><br>${prescriptions[second.k]}</div>
+ <div class="path"><b>再测规则</b><br>24–48 小时后只重做同类 5 题；正确率达到 80% 以上，再进入下一类錯誤。</div>`;
  lastDiagnosis={data,ranked,top,second,highConfidenceWrong,prescription:prescriptions[top.k]+" | "+prescriptions[second.k]};
  resultPanel.classList.remove("hidden");resultPanel.scrollIntoView({behavior:"smooth"});
  localStorage.setItem("toeic_mistake_doctor_v1",JSON.stringify({name:studentName.value,email:studentEmail.value,current:currentScore.value,target:targetScore.value,...lastDiagnosis,date:new Date().toISOString()}));
 }
 function prepareDelivery(){
- if(!lastDiagnosis){alert("请先完成错题诊断。");return false}
+ if(!lastDiagnosis){alert("請先完成錯題診斷。");return false}
  sendName.value=studentName.value.trim();sendEmail.value=studentEmail.value.trim();sendCurrent.value=currentScore.value;sendTarget.value=targetScore.value;sendCount.value=lastDiagnosis.data.length;sendTop.value=errorTypes[lastDiagnosis.top.k]+" ("+lastDiagnosis.top.count+")";sendSecond.value=errorTypes[lastDiagnosis.second.k]+" ("+lastDiagnosis.second.count+")";sendPrescription.value=lastDiagnosis.prescription;sendTime.value=new Date().toISOString();return true
 }
 function downloadCSV(){
- if(!lastDiagnosis){alert("请先完成诊断。");return}
+ if(!lastDiagnosis){alert("請先完成診斷。");return}
  const h=["part","error_type","confidence","note"];
  const esc=x=>'"'+String(x??"").replaceAll('"','""')+'"';
  const lines=[h.map(esc).join(","),...lastDiagnosis.data.map(x=>[x.part,errorTypes[x.type],x.confidence,x.note].map(esc).join(","))];
