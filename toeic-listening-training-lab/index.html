@@ -27,7 +27,8 @@ body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;backgro
 <section class="panel"><h2>20 題 Listening Diagnostic</h2>
 <p>所有題幹皆以音檔方式播放，不顯示文字。每題至少播放 1 次才能作答，最多播放 2 次。</p>
 <p>診斷語速：<select id="diagnosticSpeed"><option value="0.9">0.9×</option><option value="1" selected>1.0×</option><option value="1.1">1.1×</option></select>
-　口音：<select id="diagnosticAccent"><option value="en-US">美式 American</option><option value="en-GB">英式 British</option><option value="en-AU">澳式 Australian</option></select></p>
+　口音模式：<select id="diagnosticAccentMode"><option value="fixed">固定口音 Fixed</option><option value="random">隨機口音 Random Accent</option></select>
+<select id="diagnosticAccent"><option value="en-US">美式 American</option><option value="en-GB">英式 British</option><option value="en-AU">澳式 Australian</option><option value="en-IN">印度英文 Indian English</option></select></p>
 <div id="quiz"></div><button class="btn primary" onclick="grade()">完成診斷</button></section>
 <section id="result" class="panel hidden"><h2>診斷結果</h2><div id="summary"></div><div id="scores"></div><div id="detail"></div></section>
 <section id="retest" class="panel hidden"><h2>10 題弱點再測</h2><div id="retestIntro"></div><div id="retestQuiz"></div><button class="btn primary" onclick="gradeRetest()">完成再測</button><div id="retestResult"></div></section>
