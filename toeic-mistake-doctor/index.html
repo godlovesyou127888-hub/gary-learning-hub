@@ -54,6 +54,8 @@ main{padding:30px 20px 64px}.panel{background:var(--card);border:2px solid var(-
 <input type="hidden" name="top_error_type" id="sendTop">
 <input type="hidden" name="secondary_error_type" id="sendSecond">
 <input type="hidden" name="prescription" id="sendPrescription">
+<input type="hidden" name="mistake_items" id="sendItems">
+<input type="hidden" name="mistake_items_json" id="sendItemsJson">
 <input type="hidden" name="submitted_at" id="sendTime">
 <button class="btn primary" type="submit">寄給我並同步給教練｜Email Me & Coach</button>
 </form>
@@ -97,7 +99,8 @@ for(let i=0;i<5;i++)addRow();
 
 function collect(){
  const rows=[...document.querySelectorAll(".error-row")];
- return rows.map(r=>({
+ return rows.map((r,i)=>({
+   question_id:"MD-"+(i+1),
    part:r.querySelector(".part").value,
    type:r.querySelector(".etype").value,
    confidence:Number(r.querySelector(".confidence").value),
@@ -130,7 +133,7 @@ function diagnose(){
 }
 function prepareDelivery(){
  if(!lastDiagnosis){alert("請先完成錯題診斷。");return false}
- sendName.value=studentName.value.trim();sendEmail.value=studentEmail.value.trim();sendCurrent.value=currentScore.value;sendTarget.value=targetScore.value;sendCount.value=lastDiagnosis.data.length;sendTop.value=errorTypes[lastDiagnosis.top.k]+" ("+lastDiagnosis.top.count+")";sendSecond.value=errorTypes[lastDiagnosis.second.k]+" ("+lastDiagnosis.second.count+")";sendPrescription.value=lastDiagnosis.prescription;sendTime.value=new Date().toISOString();return true
+ sendName.value=studentName.value.trim();sendEmail.value=studentEmail.value.trim();sendCurrent.value=currentScore.value;sendTarget.value=targetScore.value;sendCount.value=lastDiagnosis.data.length;sendTop.value=errorTypes[lastDiagnosis.top.k]+" ("+lastDiagnosis.top.count+")";sendSecond.value=errorTypes[lastDiagnosis.second.k]+" ("+lastDiagnosis.second.count+")";sendPrescription.value=lastDiagnosis.prescription;sendItems.value=lastDiagnosis.data.map(x=>x.question_id+"｜"+x.part+"｜"+errorTypes[x.type]+"｜信心 "+x.confidence+"｜"+(x.note||"無備註")).join("\n");sendItemsJson.value=JSON.stringify(lastDiagnosis.data);sendTime.value=new Date().toISOString();return true
 }
 function downloadCSV(){
  if(!lastDiagnosis){alert("請先完成診斷。");return}
