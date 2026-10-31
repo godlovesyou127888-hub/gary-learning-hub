@@ -1,0 +1,78 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TOEIC Mock Test Lab</title>
+<style>
+:root{--bg:#f6f4ee;--card:#fffdf8;--text:#314247;--line:#dce7e2;--a:#6f9993;--a2:#8fb1ab}
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--text);font-size:19px;line-height:1.75}header{background:linear-gradient(135deg,#5f7f7b,#789d98);color:#fff;padding:38px 18px}.wrap{max-width:1050px;margin:auto}.panel{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:22px;margin:18px 0}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.field label{display:block;font-weight:800}.field input,.field select{width:100%;padding:12px;border:2px solid var(--line);border-radius:10px;font:inherit}.btn{padding:12px 16px;border-radius:11px;border:0;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}.primary{background:linear-gradient(135deg,var(--a),var(--a2));color:#fff}.secondary{background:#fff;color:#3d5653;border:2px solid var(--line)}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{background:#f7faf8;border:1px solid var(--line);border-radius:14px;padding:14px}.metric b{display:block;font-size:28px}.tablebox{overflow:auto}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left}.path{background:#f1f7f4;border-left:5px solid var(--a);padding:13px;border-radius:10px;margin:10px 0}.hidden{display:none}@media(max-width:760px){.grid,.metrics{grid-template-columns:1fr}}
+</style></head><body>
+<header><div class="wrap"><h1>#31 TOEIC Mock Test Lab</h1><p>模考驗證：記錄分數、比較變化、找出主要失分，再回到診斷與計畫校準。</p><p><a class="btn secondary" href="/">← Gary Learning Hub</a> <a class="btn secondary" href="/toeic-90day-planner/">#30 90-Day Planner</a></p></div></header>
+<main class="wrap">
+<section class="panel"><h2>基本資料</h2><div class="grid">
+<div class="field"><label>姓名</label><input id="studentName"></div>
+<div class="field"><label>Email</label><input id="studentEmail" type="email"></div>
+<div class="field"><label>目標分數</label><input id="targetScore" type="number" min="10" max="990" value="750"></div>
+<div class="field"><label>90 天計畫起始日</label><input id="planStart" type="date"></div>
+</div></section>
+
+<section class="panel"><h2>新增模考紀錄</h2><div class="grid">
+<div class="field"><label>日期</label><input id="mockDate" type="date"></div>
+<div class="field"><label>Listening</label><input id="listeningScore" type="number" min="5" max="495"></div>
+<div class="field"><label>Reading</label><input id="readingScore" type="number" min="5" max="495"></div>
+<div class="field"><label>閱讀是否做完</label><select id="finishedReading"><option>是</option><option>否</option></select></div>
+<div class="field"><label>主要失分類型</label><select id="lossType"><option>Listening 聽力辨識</option><option>Reading 閱讀定位</option><option>Vocabulary 字彙不足</option><option>Grammar 文法判斷</option><option>Strategy 題型策略</option><option>Time 時間壓力</option><option>Careless 粗心／看錯</option></select></div>
+</div><p><button class="btn primary" type="button" onclick="addMock()">加入紀錄</button></p></section>
+
+<section class="panel"><h2>模考趨勢</h2><div class="metrics">
+<div class="metric"><b id="mockCount">0</b>模考次數</div>
+<div class="metric"><b id="latestScore">—</b>最新總分</div>
+<div class="metric"><b id="changeScore">—</b>相較第一次</div>
+<div class="metric"><b id="targetGap">—</b>距目標</div>
+</div></section>
+
+<section class="panel"><h2>紀錄表</h2><div class="tablebox"><table><thead><tr><th>日期</th><th>總分</th><th>聽力</th><th>閱讀</th><th>做完</th><th>主要失分</th></tr></thead><tbody id="historyBody"></tbody></table></div></section>
+
+<section id="analysisPanel" class="panel hidden"><h2>驗證結果</h2><div id="analysis"></div>
+<p><button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF</button><button class="btn secondary" type="button" onclick="downloadCSV()">下載 CSV</button></p>
+<form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prepareDelivery()">
+<input type="hidden" name="_subject" value="TOEIC Mock Test Lab Result">
+<input type="hidden" name="_template" value="table">
+<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-mock-test-lab/">
+<input type="hidden" name="student_name" id="sendName"><input type="hidden" name="email" id="sendEmail"><input type="hidden" name="target_score" id="sendTarget"><input type="hidden" name="mock_count" id="sendCount"><input type="hidden" name="first_score" id="sendFirst"><input type="hidden" name="latest_score" id="sendLatest"><input type="hidden" name="score_change" id="sendChange"><input type="hidden" name="main_loss_pattern" id="sendLoss"><input type="hidden" name="coach_recommendation" id="sendRecommendation"><input type="hidden" name="submitted_at" id="sendTime">
+<button class="btn primary" type="submit">寄給我並同步給教練</button>
+</form></section>
+</main>
+<script>
+let records=JSON.parse(localStorage.getItem("toeic_mock_test_lab_v1")||"[]");
+function save(){localStorage.setItem("toeic_mock_test_lab_v1",JSON.stringify(records))}
+function addMock(){
+ if(!studentName.value.trim()){alert("請先填寫姓名。");return}
+ if(!studentEmail.value||!studentEmail.checkValidity()){alert("請填寫有效 Email。");return}
+ const d=mockDate.value,l=Number(listeningScore.value),r=Number(readingScore.value);
+ if(!d||!l||!r){alert("請完整填寫日期、Listening 與 Reading 分數。");return}
+ records.push({date:d,total:l+r,listening:l,reading:r,finished:finishedReading.value,loss:lossType.value});
+ records.sort((a,b)=>a.date.localeCompare(b.date));save();render();
+ listeningScore.value="";readingScore.value="";
+}
+function render(){
+ historyBody.innerHTML=records.map(x=>'<tr><td>'+x.date+'</td><td>'+x.total+'</td><td>'+x.listening+'</td><td>'+x.reading+'</td><td>'+x.finished+'</td><td>'+x.loss+'</td></tr>').join("");
+ mockCount.textContent=records.length;
+ if(!records.length){latestScore.textContent=changeScore.textContent=targetGap.textContent="—";analysisPanel.classList.add("hidden");return}
+ const first=records[0],latest=records[records.length-1],target=Number(targetScore.value)||0,change=latest.total-first.total,gap=Math.max(0,target-latest.total);
+ latestScore.textContent=latest.total;changeScore.textContent=(change>=0?"+":"")+change;targetGap.textContent=gap;
+ const counts={};records.forEach(x=>counts[x.loss]=(counts[x.loss]||0)+1);
+ const topLoss=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
+ let verdict=records.length<2?"目前只有一次模考，先建立基準。":change>=50?"分數趨勢明顯向上，維持目前策略。":change>0?"已有進步，但仍需集中處理重複失分。":"尚未出現有效提分，建議回到 #28 與 #29 重新診斷。";
+ analysis.innerHTML='<div class="path"><b>趨勢：</b>'+verdict+'</div><div class="path"><b>最常失分：</b>'+topLoss+'</div><div class="path"><b>下一步：</b>把最常失分送回 #29 Mistake Doctor，再做同類題再測。</div>';
+ analysisPanel.classList.remove("hidden");
+}
+targetScore.addEventListener("input",render);
+function prepareDelivery(){
+ if(!records.length){alert("請先新增至少一次模考紀錄。");return false}
+ const first=records[0],latest=records[records.length-1],change=latest.total-first.total,counts={};records.forEach(x=>counts[x.loss]=(counts[x.loss]||0)+1);const topLoss=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
+ sendName.value=studentName.value.trim();sendEmail.value=studentEmail.value.trim();sendTarget.value=targetScore.value;sendCount.value=records.length;sendFirst.value=first.total;sendLatest.value=latest.total;sendChange.value=(change>=0?"+":"")+change;sendLoss.value=topLoss;sendRecommendation.value=analysis.innerText.trim();sendTime.value=new Date().toISOString();return true
+}
+function downloadCSV(){
+ if(!records.length){alert("目前沒有模考紀錄。");return}
+ const esc=v=>'"'+String(v??"").replaceAll('"','""')+'"',rows=[["date","total","listening","reading","finished_reading","main_loss"],...records.map(x=>[x.date,x.total,x.listening,x.reading,x.finished,x.loss])];
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\uFEFF"+rows.map(r=>r.map(esc).join(",")).join("\n")],{type:"text/csv;charset=utf-8"}));a.download="toeic_mock_test_lab.csv";a.click()
+}
+render();
+</script></body></html>
