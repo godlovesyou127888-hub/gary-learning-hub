@@ -2,9 +2,9 @@
 body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;background:#f6f4ee;color:#314247;font-size:19px;line-height:1.75}.wrap{max-width:1000px;margin:auto;padding:20px}header{background:linear-gradient(135deg,#5f7f7b,#789d98);color:#fff;padding:32px 18px}.panel{background:#fffdf8;border:2px solid #dce7e2;border-radius:18px;padding:20px;margin:16px 0}.btn{padding:12px 16px;border-radius:11px;border:0;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}.primary{background:#6f9993;color:#fff}.secondary{background:#fff;color:#3d5653;border:2px solid #dce7e2}.opt{display:block;border:1px solid #dce7e2;border-radius:10px;padding:10px;margin:7px 0;background:#fff}.path{background:#f1f7f4;border-left:5px solid #6f9993;padding:13px;border-radius:10px;margin:10px 0}.hidden{display:none}.field input{width:100%;padding:12px;border:2px solid #dce7e2;border-radius:10px;font:inherit;box-sizing:border-box}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:760px){.grid{grid-template-columns:1fr}}
 </style></head><body><div style="background:#314247;color:#fff;padding:10px 16px;font-family:'Noto Sans TC','Microsoft JhengHei',sans-serif"><div style="max-width:1100px;margin:auto;display:flex;gap:10px;flex-wrap:wrap;align-items:center"><strong>T-PASS TOEIC Command Center｜Step 4｜Part 5 專項訓練</strong><a href="/tpass-toeic-command-center/" style="color:#fff;background:#6f9993;padding:7px 10px;border-radius:9px;text-decoration:none;font-weight:700">← 回 Command Center</a><a href="/tpass-toeic-command-center/#step4" style="color:#314247;background:#fffdf8;padding:7px 10px;border-radius:9px;text-decoration:none;font-weight:700">完成後：回 Step 4 檢查達標 →</a></div></div><header><div class="wrap"><h1>#32 TOEIC Part 5 Grammar Lab</h1><p>Part 5 文法快速診斷 → 錯誤分類 → 中文詳解 → 同類再測。</p><a class="btn secondary" href="/">← Gary Learning Hub</a></div></header><main class="wrap">
 <section class="panel"><h2>基本資料</h2><div class="grid"><div class="field"><label>姓名</label><input id="studentName" name="student_name" form="deliveryForm" required></div><div class="field"><label>Email</label><input id="studentEmail" name="email" type="email" form="deliveryForm" required></div></div><p>本測驗為自編 TOEIC Part 5 文法練習，不是 ETS 官方題目。</p></section>
-<form id="quiz"></form><section class="panel"><button class="btn primary" type="button" onclick="grade()">完成診斷</button><p class="muted">完成後會保存 10 題逐題作答；教練回報請使用結果區的「寄給 GARY 教練」按鈕。</p></section>
-<section id="resultPanel" class="panel hidden"><h2>診斷結果</h2><div id="summary"></div><div id="explanations"></div><p><button class="btn primary" type="button" onclick="sendCoachEmail()">寄給 GARY 教練</button> <button class="btn secondary" type="button" onclick="copyFullRecord()">複製完整紀錄</button> <button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF</button> <button class="btn secondary" type="button" onclick="downloadCSV()">下載 CSV</button></p><p class="muted">寄信按鈕只帶入精簡的 10 題逐題結果，避免 Gmail Error 400；完整 JSON 可用「複製完整紀錄」另行保存。</p>
-<form id="deliveryForm" action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prepareDelivery()">
+<form id="quiz"></form><section class="panel"><button class="btn primary" type="button" onclick="gradeAndSend()">完成診斷並寄送結果</button><p class="muted">按一次即可計算成績、保存 10 題逐題作答並送出結果。若郵件服務異常，結果區仍可使用「複製完整紀錄」備援保存。</p></section>
+<section id="resultPanel" class="panel hidden"><h2>診斷結果</h2><div id="summary"></div><div id="explanations"></div><p><button class="btn secondary" type="button" onclick="copyFullRecord()">複製完整紀錄</button> <button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF</button> <button class="btn secondary" type="button" onclick="downloadCSV()">下載 CSV</button></p><p class="muted">完整 JSON 可用「複製完整紀錄」另行保存，避免任何郵件轉送異常造成資料遺失。</p>
+<form id="deliveryForm" action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" onsubmit="return prepareDelivery()">
 <input type="hidden" name="_subject" value="TOEIC Part 5 Grammar Lab Result">
 <input type="hidden" name="_template" value="table">
 <input type="hidden" name="_autoresponse" value="已收到你的 TOEIC Part 5 Grammar Lab 診斷結果。這封信是你的結果副本，請保留作為錯題訂正與同類再測參考。">
@@ -17,7 +17,7 @@ body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans
 <input type="hidden" name="question_responses" id="sendResponses">
 <input type="hidden" name="question_responses_json" id="sendResponsesJson">
 <input type="hidden" name="submitted_at" id="sendTime">
-<button class="btn secondary" type="submit">FormSubmit 備援寄送</button><p class="muted">若此方式顯示 Thanks 但沒有收到信，請改用上方「寄給 GARY 教練」。</p>
+<button class="btn secondary" type="submit">重新寄送結果</button><p class="muted">若仍未收到信，請使用「複製完整紀錄」保存完整 10 題資料。</p>
 </form></section>
 </main><script>
 const Q=[
@@ -54,13 +54,6 @@ function buildCoachReport(includeJson=false){
    parts.push("","原始 JSON：",JSON.stringify(last.details));
  }
  return parts.join("\n");
-}
-function sendCoachEmail(){
- if(!last){alert("請先完成診斷。");return}
- const name=studentName.value.trim();
- const subject="TOEIC Part 5 Grammar Lab Result｜"+name;
- const body=buildCoachReport(false);
- window.location.href="mailto:godlovesyou127888@gmail.com?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
 }
 async function copyFullRecord(){
  if(!last){alert("請先完成診斷。");return}
