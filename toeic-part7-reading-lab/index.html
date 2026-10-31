@@ -3,50 +3,145 @@ body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans
 </style></head><body><header><div class="wrap"><h1>#34 TOEIC Part 7 Reading Lab</h1><p>閱讀速度、證據定位、同義改寫、推論與時間管理專項訓練。</p><p><a class="btn secondary" href="/">← Gary Learning Hub</a> <a class="btn secondary" href="/toeic-mock-test-lab/">#31 Mock Test Lab</a></p></div></header><main class="wrap">
 <section class="panel"><h2>基本資料</h2><div class="grid"><div class="field"><label>姓名</label><input id="studentName"></div><div class="field"><label>Email</label><input id="studentEmail" type="email"></div></div><p>本頁為自編 TOEIC Part 7 閱讀練習，不是 ETS 官方題目。</p></section>
 
-<section class="panel"><div class="passage"><b>Passage 1</b><p>Bright Office Supply will close at 4:00 p.m. this Friday for a staff training session. Orders placed before noon will still be shipped the same day. Orders received after noon will be processed on Monday.</p></div>
-<p><b>Q1. What will happen to an order placed at 2:00 p.m. on Friday?</b></p>
-<label class="opt"><input type="radio" name="q0" value="0"> It will ship Friday.</label>
-<label class="opt"><input type="radio" name="q0" value="1"> It will be processed Monday.</label>
-<label class="opt"><input type="radio" name="q0" value="2"> It will be cancelled.</label>
-<label class="opt"><input type="radio" name="q0" value="3"> It will be picked up Saturday.</label></section>
+<section class="panel"><h2>20 題診斷｜Diagnostic</h2>
+<p>共 5 個構面，每個構面 4 題。請先完成全部 20 題，系統會找出最低分構面。</p>
+<div id="quiz"></div>
+<p><button class="btn primary" type="button" onclick="gradeDiagnostic()">完成 20 題診斷</button></p></section>
 
-<section class="panel"><div class="passage"><b>Passage 2</b><p>To reduce waiting time, City Dental Clinic asks patients to complete the online registration form before arriving. Patients who have already submitted the form do not need to fill it out again at the front desk.</p></div>
-<p><b>Q2. Why does the clinic ask patients to complete the form online?</b></p>
-<label class="opt"><input type="radio" name="q1" value="0"> To reduce waiting time.</label>
-<label class="opt"><input type="radio" name="q1" value="1"> To change appointments.</label>
-<label class="opt"><input type="radio" name="q1" value="2"> To pay in advance.</label>
-<label class="opt"><input type="radio" name="q1" value="3"> To choose a dentist.</label></section>
-
-<section class="panel"><div class="passage"><b>Passage 3</b><p>Employees may use Meeting Room B after 1:30 p.m. today. The room was originally reserved until 3:00 p.m., but the afternoon workshop has been moved to Room D.</p></div>
-<p><b>Q3. What can be inferred about Meeting Room B?</b></p>
-<label class="opt"><input type="radio" name="q2" value="0"> It is unavailable all day.</label>
-<label class="opt"><input type="radio" name="q2" value="1"> It becomes available earlier than planned.</label>
-<label class="opt"><input type="radio" name="q2" value="2"> It is being repaired.</label>
-<label class="opt"><input type="radio" name="q2" value="3"> It has moved to Room D.</label></section>
-
-<section class="panel"><div class="passage"><b>Passage 4</b><p>The Lakeside Hotel offers complimentary breakfast to guests who book directly through the hotel website. Reservations made through third-party travel sites do not include breakfast unless it is purchased separately.</p></div>
-<p><b>Q4. The word "complimentary" is closest in meaning to:</b></p>
-<label class="opt"><input type="radio" name="q3" value="0"> expensive</label>
-<label class="opt"><input type="radio" name="q3" value="1"> free</label>
-<label class="opt"><input type="radio" name="q3" value="2"> optional</label>
-<label class="opt"><input type="radio" name="q3" value="3"> limited</label></section>
-
-<section class="panel"><div class="passage"><b>Passage 5</b><p>Northline Electronics received your return request. Please place the product in its original packaging and attach the prepaid shipping label. Once the item arrives at our warehouse, a refund will be issued within five business days.</p></div>
-<p><b>Q5. When will the customer receive a refund?</b></p>
-<label class="opt"><input type="radio" name="q4" value="0"> Before shipping the item.</label>
-<label class="opt"><input type="radio" name="q4" value="1"> Immediately after submitting the request.</label>
-<label class="opt"><input type="radio" name="q4" value="2"> Within five business days after the item arrives.</label>
-<label class="opt"><input type="radio" name="q4" value="3"> After buying new packaging.</label></section>
-
-<section class="panel"><button class="btn primary" type="button" onclick="grade()">完成診斷</button></section>
-
-<section id="resultPanel" class="panel hidden"><h2>診斷結果</h2><div id="summary"></div><div id="detail"></div><p><button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF</button><button class="btn secondary" type="button" onclick="downloadCSV()">下載 CSV</button></p>
+<section id="resultPanel" class="panel hidden"><h2>診斷結果</h2>
+<div id="summary"></div><div id="dimensionScores"></div><div id="detail"></div>
+<p><button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF</button><button class="btn secondary" type="button" onclick="downloadCSV()">下載 CSV</button></p>
 <form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prep()">
-<input type="hidden" name="_subject" value="TOEIC Part 7 Reading Lab Result"><input type="hidden" name="_template" value="table"><input type="hidden" name="_autoresponse" value="已收到你的 TOEIC Part 7 Reading Lab 診斷結果。請保留這封結果副本，作為後續閱讀訓練與再測參考。"><input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-part7-reading-lab/">
-<input type="hidden" name="student_name" id="sendName"><input type="hidden" name="email" id="sendEmail"><input type="hidden" name="score" id="sendScore"><input type="hidden" name="weakness" id="sendWeakness"><input type="hidden" name="submitted_at" id="sendTime"><button class="btn primary" type="submit">寄給我並同步給教練</button></form></section>
-</main><script>
-const A=[1,0,1,1,2],T=["時間資訊定位","目的題定位","推論","同義改寫","流程與時間定位"],E=["Friday noon 之後的訂單週一處理。","原文明確說明是為了 reduce waiting time。","原訂到 3:00，但活動移走，所以更早可使用。","complimentary 在此表示免費提供。","退款是在商品抵達倉庫後五個工作天內完成。"];let last=null;
-function grade(){if(!studentName.value.trim()){alert("請先填寫姓名。");return}if(!studentEmail.value||!studentEmail.checkValidity()){alert("請填寫有效 Email。");return}let score=0,wrong=[];for(let i=0;i<5;i++){const a=document.querySelector('input[name="q'+i+'"]:checked');if(!a){alert("請完成全部 5 題。第 "+(i+1)+" 題尚未作答。");return}if(Number(a.value)===A[i])score++;else wrong.push({q:i+1,type:T[i],exp:E[i]})}const weakness=wrong.length?wrong[0].type:"目前無明顯弱點";summary.innerHTML="<p><b>總分："+score+"/5｜主要弱點："+weakness+"</b></p><p>完成線：正確率 80% 以上，再加入限時訓練。</p>";detail.innerHTML=wrong.map(x=>'<div class="path"><b>Q'+x.q+'｜'+x.type+'</b><br>'+x.exp+'</div>').join("")||'<div class="path">全部答對。下一步：限時完成同類 5 題。</div>';last={score,weakness,wrong};resultPanel.classList.remove("hidden");resultPanel.scrollIntoView({behavior:"smooth"});localStorage.setItem("toeic_part7_reading_lab_v1",JSON.stringify({name:studentName.value,email:studentEmail.value,...last,date:new Date().toISOString()}))}
-function prep(){if(!last){return false}sendName.value=studentName.value.trim();sendEmail.value=studentEmail.value.trim();sendScore.value=last.score+"/5";sendWeakness.value=last.weakness;sendTime.value=new Date().toISOString();return true}
-function downloadCSV(){if(!last){alert("請先完成診斷。");return}const rows=[["score","weakness"],[last.score+"/5",last.weakness]],esc=v=>'"'+String(v).replaceAll('"','""')+'"';const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\uFEFF"+rows.map(r=>r.map(esc).join(",")).join("\n")],{type:"text/csv;charset=utf-8"}));a.download="toeic_part7_reading_lab.csv";a.click()}
+<input type="hidden" name="_subject" value="TOEIC Part 7 Reading Diagnostic V1 Result">
+<input type="hidden" name="_template" value="table">
+<input type="hidden" name="_autoresponse" value="已收到你的 TOEIC Part 7 Reading Diagnostic V1 結果。請保留這封結果副本，作為後續閱讀訓練與再測參考。">
+<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-part7-reading-lab/">
+<input type="hidden" name="student_name" id="sendName"><input type="hidden" name="email" id="sendEmail"><input type="hidden" name="diagnostic_score" id="sendScore"><input type="hidden" name="weakest_dimension" id="sendWeakness"><input type="hidden" name="dimension_scores" id="sendDimensions"><input type="hidden" name="retest_score" id="sendRetest"><input type="hidden" name="submitted_at" id="sendTime">
+<button class="btn primary" type="submit">寄給我並同步給教練</button></form></section>
+
+<section id="retestPanel" class="panel hidden"><h2>10 題弱點再測｜Targeted Retest</h2>
+<p id="retestIntro"></p><div id="retestQuiz"></div>
+<p><button class="btn primary" type="button" onclick="gradeRetest()">完成 10 題再測</button></p>
+<div id="retestResult"></div></section></main><script>
+const DIMS=["細節定位","目的／主旨","推論","同義改寫","跨句／流程整合"];
+const diagnostic=[
+["細節定位","Bright Office Supply will close at 4:00 p.m. Friday. Orders placed before noon ship the same day; later orders are processed Monday.","What happens to an order placed at 2:00 p.m. Friday?",["It ships Friday.","It is processed Monday.","It is cancelled.","It ships Saturday."],1,"noon 之後的訂單於 Monday 處理。"],
+["細節定位","The museum opens at 9:00 on weekdays and 10:00 on weekends. Guided tours begin at 11:30 daily.","When does the museum open on Saturday?",["9:00","10:00","11:30","12:00"],1,"Saturday 是 weekend，因此 10:00 開門。"],
+["細節定位","Employees must submit travel receipts within ten days after returning from a business trip.","When must receipts be submitted?",["Before the trip","Within ten days after returning","At month-end","Within ten days before departure"],1,"原文是 within ten days after returning。"],
+["細節定位","The café serves lunch until 2:30 p.m., but hot drinks are available until closing at 6:00 p.m.","Until when is lunch served?",["2:30 p.m.","4:00 p.m.","6:00 p.m.","All day"],0,"lunch until 2:30 p.m.。"],
+
+["目的／主旨","To reduce waiting time, City Dental Clinic asks patients to complete the online registration form before arriving.","Why does the clinic request online registration?",["To reduce waiting time","To collect payment","To assign dentists","To cancel visits"],0,"明確目的為 reduce waiting time。"],
+["目的／主旨","This notice is to remind residents that the parking garage will be cleaned on Tuesday morning. Please remove all vehicles by 8:00 a.m.","What is the purpose of the notice?",["To advertise parking","To request vehicle removal","To change parking fees","To announce a new garage"],1,"通知核心是清潔前請住戶移車。"],
+["目的／主旨","Thank you for attending last week's product demonstration. We are sending the attached price list as requested.","Why was the email sent?",["To confirm a refund","To provide requested prices","To invite a speaker","To cancel a demonstration"],1,"email 是提供對方要求的 price list。"],
+["目的／主旨","The library's new mobile app lets members renew books, reserve study rooms, and receive due-date reminders.","What is the passage mainly about?",["Library fines","A new app and its functions","Book donations","Staff schedules"],1,"主旨是新 app 及功能。"],
+
+["推論","Meeting Room B was reserved until 3:00 p.m., but the afternoon workshop has been moved to Room D. Employees may use Room B after 1:30.","What can be inferred?",["Room B is under repair.","Room B becomes available earlier than planned.","Room D is closed.","The workshop was cancelled."],1,"活動移至 Room D，所以 Room B 提早空出。"],
+["推論","Sara usually takes the 8:10 train. Today she left home twenty minutes earlier because maintenance may cause delays.","What is most likely true?",["She expects possible delays.","She missed the train.","She works from home.","The train leaves earlier today."],0,"提早出門是因為預期 maintenance 可能延誤。"],
+["推論","The restaurant has added six outdoor tables after receiving many weekend reservations.","What can be inferred?",["Weekend demand is high.","Indoor seating is closed.","Prices were reduced.","The restaurant moved."],0,"增加座位是因為週末預約多。"],
+["推論","Leo attached the revised contract and asked Maria to review sections 4 and 7 before Friday's meeting.","What is Maria expected to do?",["Sign immediately","Review specific sections","Cancel the meeting","Rewrite the entire contract"],1,"要求 review sections 4 and 7。"],
+
+["同義改寫","The hotel offers complimentary breakfast to guests who book directly.","What does complimentary mean?",["Free","Limited","Expensive","Optional"],0,"complimentary = free。"],
+["同義改寫","The shipment has been postponed until next Wednesday.","What does postponed most nearly mean?",["Cancelled permanently","Delayed","Delivered","Inspected"],1,"postponed = delayed。"],
+["同義改寫","Applicants must provide a valid identification document.","What does valid most nearly mean?",["Officially acceptable","Old","Optional","Photocopied"],0,"valid = officially acceptable / 有效的。"],
+["同義改寫","Sales remained stable during the second quarter.","What does stable most nearly mean?",["Unchanged","Rapidly increasing","Uncertain","Seasonal"],0,"stable = relatively unchanged。"],
+
+["跨句／流程整合","Northline Electronics asks customers to attach a prepaid label to returns. Once the item reaches the warehouse, a refund is issued within five business days.","What must happen before the refund is issued?",["A new order is placed.","The returned item reaches the warehouse.","The customer calls support.","The label is purchased."],1,"退款流程要先等退貨抵達倉庫。"],
+["跨句／流程整合","Conference registration closes May 3. Payment must be received by May 5. Name badges will be emailed for printing on May 8.","Which event happens last?",["Registration closes","Payment is due","Badges are emailed","All happen May 3"],2,"May 8 最晚。"],
+["跨句／流程整合","Customers first create an account, then verify their email address. After verification, they can download the software.","What happens immediately before software download?",["Account deletion","Email verification","Payment refund","Password reset"],1,"流程是 create account → verify email → download。"],
+["跨句／流程整合","The repair team will inspect the machine Monday morning. If replacement parts are needed, they will order them that afternoon. Installation is planned for Thursday.","What depends on the inspection result?",["Whether parts are ordered","Monday's inspection","Thursday's date","The machine's location"],0,"是否訂零件取決於檢查結果。"]
+];
+
+const retestBank={
+"細節定位":[
+["The store opens at 8:30 on weekdays and 9:30 on Sundays.","When does it open Sunday?",["8:30","9:00","9:30","10:30"],2],
+["Applications received after June 10 will be reviewed in July.","When are late applications reviewed?",["May","June","July","August"],2],
+["Breakfast is served from 6:30 to 10:00.","When does breakfast end?",["6:30","9:00","10:00","10:30"],2],
+["The shuttle leaves every 30 minutes beginning at 7:00.","When is the second shuttle?",["7:00","7:15","7:30","8:00"],2],
+["Returns are accepted within 14 days of purchase.","How long is the return period?",["7 days","10 days","14 days","30 days"],2],
+["The webinar starts at 3:00 and lasts 45 minutes.","When does it end?",["3:30","3:45","4:00","4:15"],1],
+["Parking is free after 6:00 p.m.","When does free parking begin?",["5:00","6:00","7:00","Midnight"],1],
+["The office is closed on national holidays.","When is it closed?",["Every Friday","National holidays","Weekends only","Every afternoon"],1],
+["Orders over $50 qualify for free delivery.","What minimum order qualifies?",["$20","$40","Over $50","Any amount"],2],
+["The workshop is on the third floor, Room 305.","Where is it held?",["Room 205","Room 305","Lobby","Cafeteria"],1]
+],
+"目的／主旨":[
+["Please update your emergency contact information by Friday.","Why was this message sent?",["To request updated information","To announce a holiday","To sell insurance","To change salaries"],0],
+["We are pleased to introduce our new online payment system.","What is the main purpose?",["To announce a new system","To report an outage","To request a refund","To close accounts"],0],
+["This email confirms your reservation for March 12.","Why was the email sent?",["To cancel","To confirm a reservation","To advertise","To ask for payment"],1],
+["The memo explains three changes to the employee travel policy.","What is the memo mainly about?",["Travel policy changes","New employees","Office repairs","Sales results"],0],
+["Please complete the survey so we can improve customer service.","Why is the survey requested?",["To improve service","To increase prices","To hire staff","To change addresses"],0],
+["The brochure describes membership benefits and annual fees.","What is the brochure mainly about?",["Membership details","Weather","Training schedules","Product returns"],0],
+["We are writing to apologize for the shipping delay.","Why was the message sent?",["To apologize","To promote a sale","To confirm payment","To recruit staff"],0],
+["This notice explains how to access the building after 8 p.m.","What is its purpose?",["Explain after-hours access","Announce lunch","Change payroll","Advertise parking"],0],
+["The article summarizes this quarter's sales performance.","What is the article mainly about?",["Quarterly sales","Office design","Hiring","Travel"],0],
+["Please review the attached agenda before tomorrow's meeting.","Why was the email sent?",["To request agenda review","To cancel the meeting","To book a room","To order lunch"],0]
+],
+"推論":[
+["The café hired two additional baristas for Saturday mornings.","What can be inferred?",["Saturday mornings are busy.","The café closes Saturday.","Coffee prices fell.","The café moved."],0],
+["Mina brought an umbrella after checking the weather forecast.","What is likely true?",["Rain is possible.","It is snowing.","She lost her umbrella.","The forecast was unavailable."],0],
+["The company extended customer-service hours until 9 p.m.","What can be inferred?",["Customers need later support.","The office opens later.","All staff work nights.","Sales ended."],0],
+["A hotel added more charging stations for electric cars.","What is likely true?",["More guests use electric cars.","Parking is removed.","Gas is cheaper.","Rooms are smaller."],0],
+["Tom printed extra copies of the agenda before the meeting.","What can be inferred?",["More attendees may need copies.","The meeting is cancelled.","The agenda is secret.","Tom is leaving."],0],
+["The store increased inventory before the holiday weekend.","What is likely true?",["Higher demand is expected.","The store will close.","Prices are fixed.","Staff decreased."],0],
+["A manager reserved a larger conference room for the presentation.","What can be inferred?",["Many people may attend.","The presentation is cancelled.","The room is cheaper.","No equipment is needed."],0],
+["The airline sent passengers a gate-change alert.","What can be inferred?",["The departure gate changed.","The flight was cancelled.","The ticket price changed.","Baggage was lost."],0],
+["The team scheduled an extra rehearsal before the client presentation.","What is likely true?",["They want more preparation.","The client cancelled.","The project ended.","The presentation is optional."],0],
+["The restaurant began accepting reservations online.","What can be inferred?",["It wants easier booking.","It stopped serving food.","It removed tables.","It only accepts cash."],0]
+],
+"同義改寫":[
+["The meeting was rescheduled for Thursday.","rescheduled means:",["Moved to a different time","Cancelled forever","Shortened","Recorded"],0],
+["The product is currently unavailable.","unavailable means:",["Not available","Discounted","Improved","Popular"],0],
+["The deadline is approaching.","approaching means:",["Getting closer","Being extended","Already passed","Unknown"],0],
+["The company will reimburse travel expenses.","reimburse means:",["Repay","Reduce","Ignore","Estimate"],0],
+["The instructions are mandatory.","mandatory means:",["Required","Optional","Temporary","Unclear"],0],
+["The office underwent renovation.","renovation means:",["Improvement work","Relocation","Closure","Inspection"],0],
+["The offer is valid until Friday.","valid means:",["Effective","Expensive","Cancelled","Incomplete"],0],
+["The process is efficient.","efficient means:",["Works well with little waste","Very slow","Unplanned","Costly"],0],
+["The event was postponed.","postponed means:",["Delayed","Promoted","Repeated","Finished"],0],
+["The service is complimentary.","complimentary means:",["Free","Late","Limited","Required"],0]
+],
+"跨句／流程整合":[
+["Register online, verify your email, then choose a course.","What happens before course selection?",["Email verification","Payment refund","Course completion","Account deletion"],0],
+["Submit the form by Monday. Approved applicants are contacted Wednesday.","What happens after submission?",["Review/approval process","Immediate payment","Course graduation","Office closure"],0],
+["A technician inspects the device, orders parts if necessary, then schedules repair.","What may happen after inspection?",["Parts are ordered","The device is sold","The office closes","The warranty ends"],0],
+["Customers book a pickup, receive confirmation, then prepare the package.","What happens before package preparation?",["Confirmation","Refund","Delivery","Inspection"],0],
+["Employees request leave, managers approve it, then HR updates the schedule.","Who acts before HR?",["Managers","Customers","Vendors","Drivers"],0],
+["The company interviews candidates Tuesday and makes final selections Friday.","What happens first?",["Interviews","Final selections","Orientation","Payroll"],0],
+["After payment is confirmed, a receipt is emailed and the order enters processing.","What triggers processing?",["Payment confirmation","Receipt printing","Delivery","Return"],0],
+["A guest checks in, receives a room key, then leaves luggage with the porter.","What happens immediately before luggage is left?",["Receiving a room key","Booking online","Checking out","Paying a refund"],0],
+["The team drafts the report, the manager reviews it, and the final copy is sent to the client.","Who reviews the draft?",["The manager","The client","The courier","The accountant"],0],
+["First back up your files, then install the update, and restart the computer.","What should happen before installation?",["Back up files","Restart","Delete files","Call support"],0]
+]
+};
+
+const quiz=document.getElementById("quiz");
+diagnostic.forEach((q,i)=>{const s=document.createElement("section");s.className="panel";s.innerHTML='<div class="passage"><b>'+q[0]+'</b><p>'+q[1]+'</p></div><p><b>Q'+(i+1)+'. '+q[2]+'</b></p>'+q[3].map((o,j)=>'<label class="opt"><input type="radio" name="q'+i+'" value="'+j+'"> '+String.fromCharCode(65+j)+'. '+o+'</label>').join("");quiz.appendChild(s)});
+
+let last=null,retestScore=null;
+function gradeDiagnostic(){
+ if(!studentName.value.trim()){alert("請先填寫姓名。");return}
+ if(!studentEmail.value||!studentEmail.checkValidity()){alert("請填寫有效 Email。");return}
+ const dim={};DIMS.forEach(d=>dim[d]={c:0,n:0});let total=0,wrong=[];
+ for(let i=0;i<diagnostic.length;i++){const a=document.querySelector('input[name="q'+i+'"]:checked');if(!a){alert("請完成全部 20 題。第 "+(i+1)+" 題尚未作答。");return}const q=diagnostic[i],ok=Number(a.value)===q[4];dim[q[0]].n++;if(ok){total++;dim[q[0]].c++}else wrong.push({q:i+1,type:q[0],exp:q[5]})}
+ const ranked=DIMS.map(d=>({d,score:dim[d].c,total:dim[d].n,pct:Math.round(dim[d].c/dim[d].n*100)})).sort((a,b)=>a.pct-b.pct);
+ const weakest=ranked[0].d;
+ summary.innerHTML='<p><b>總分：'+total+'/20｜正確率：'+Math.round(total/20*100)+'%｜最低分構面：'+weakest+'</b></p>';
+ dimensionScores.innerHTML=ranked.map(x=>'<div class="path"><b>'+x.d+'</b>：'+x.score+'/'+x.total+'（'+x.pct+'%）</div>').join("");
+ detail.innerHTML=wrong.map(x=>'<div class="path"><b>Q'+x.q+'｜'+x.type+'</b><br>'+x.exp+'</div>').join("")||'<div class="path">20 題全部答對。再測將從任一構面中選擇進階題。</div>';
+ last={total,dim,ranked,weakest,wrong};retestScore=null;
+ resultPanel.classList.remove("hidden");buildRetest(weakest);retestPanel.classList.remove("hidden");resultPanel.scrollIntoView({behavior:"smooth"});
+ localStorage.setItem("toeic_part7_reading_v1",JSON.stringify({name:studentName.value,email:studentEmail.value,...last,date:new Date().toISOString()}));
+}
+function buildRetest(dim){
+ retestIntro.textContent='你的最低分構面是「'+dim+'」。以下 10 題全部針對這個能力再測。';
+ retestQuiz.innerHTML=retestBank[dim].map((q,i)=>'<section class="panel"><div class="passage"><b>'+dim+'</b><p>'+q[0]+'</p></div><p><b>R'+(i+1)+'. '+q[1]+'</b></p>'+q[2].map((o,j)=>'<label class="opt"><input type="radio" name="r'+i+'" value="'+j+'"> '+String.fromCharCode(65+j)+'. '+o+'</label>').join("")+'</section>').join("");
+ retestResult.innerHTML="";
+}
+function gradeRetest(){
+ if(!last)return;const bank=retestBank[last.weakest];let score=0;
+ for(let i=0;i<bank.length;i++){const a=document.querySelector('input[name="r'+i+'"]:checked');if(!a){alert("請完成全部 10 題再測。第 "+(i+1)+" 題尚未作答。");return}if(Number(a.value)===bank[i][3])score++}
+ retestScore=score;retestResult.innerHTML='<div class="path"><b>再測：'+score+'/10</b><br>'+(score>=8?'已達 80% 完成線，可進入限時訓練。':'尚未達 80%，請再回看這個構面的錯題與證據定位。')+'</div>';
+}
+function prep(){if(!last){return false}sendName.value=studentName.value.trim();sendEmail.value=studentEmail.value.trim();sendScore.value=last.total+"/20";sendWeakness.value=last.weakest;sendDimensions.value=last.ranked.map(x=>x.d+":"+x.score+"/"+x.total).join(" | ");sendRetest.value=retestScore===null?"尚未完成":retestScore+"/10";sendTime.value=new Date().toISOString();return true}
+function downloadCSV(){if(!last){alert("請先完成診斷。");return}const rows=[["dimension","score","total","percent"],...last.ranked.map(x=>[x.d,x.score,x.total,x.pct])],esc=v=>'"'+String(v).replaceAll('"','""')+'"';const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\uFEFF"+rows.map(r=>r.map(esc).join(",")).join("\n")],{type:"text/csv;charset=utf-8"}));a.download="toeic_part7_reading_diagnostic_v1.csv";a.click()}
 </script></body></html>
