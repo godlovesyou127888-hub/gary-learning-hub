@@ -4,7 +4,7 @@
 main{padding:20px 18px 50px}.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}.metric{background:white;border:1px solid var(--line);border-radius:16px;padding:16px}.metric b{display:block;font-size:28px;margin-bottom:3px}.panel{background:white;border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:16px}.controls{display:grid;grid-template-columns:minmax(240px,1fr) repeat(3,minmax(150px,210px));gap:10px}input,select{font:inherit;padding:11px;border:1px solid var(--line);border-radius:10px;background:white}.progress{height:16px;background:#eef2f7;border-radius:999px;overflow:hidden}.bar{height:100%;background:var(--blue);width:23.76%}.small{font-size:13px;color:var(--muted)}.tablebox{overflow:auto;border:1px solid var(--line);border-radius:14px;background:white}table{border-collapse:collapse;width:100%;min-width:1250px}th,td{padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left;font-size:14px}th{position:sticky;top:0;background:#f8fafc;z-index:1;font-size:13px}td:first-child,th:first-child{text-align:center;width:62px}.status{display:inline-block;padding:5px 8px;border-radius:999px;font-weight:700;font-size:12px}.live{background:#ecfdf5;color:var(--green)}.build{background:#eef2ff;color:var(--violet)}.test{background:#fff7ed;color:var(--amber)}.todo{background:#f3f4f6;color:#4b5563}.prio{font-weight:800}.p1{color:#b42318}.p2{color:#b54708}.p3{color:#475467}.url a{color:#175cd3}.legend{display:flex;gap:8px;flex-wrap:wrap}.hidden{display:none}
 @media(max-width:800px){.metrics{grid-template-columns:1fr 1fr}.controls{grid-template-columns:1fr}.metric b{font-size:24px}}@media(max-width:520px){.metrics{grid-template-columns:1fr}}
 </style></head><body><header><div class="wrap"><h1>Gary 101 Website Master Roadmap</h1><p class="lead">固定管理 101 個網站資產：編號不重排，狀態依序從「待建 → 建置中 → 測試 → 正式上線」。</p><div class="actions"><a class="btn" href="/">← 回 Gary Learning Hub</a></div></div></header><main class="wrap">
-<section class="metrics"><div class="metric"><b>101</b><span>目標網站</span></div><div class="metric"><b id="liveN">0</b><span>正式上線</span></div><div class="metric"><b id="testN">0</b><span>測試中</span></div><div class="metric"><b id="todoN">0</b><span>尚待建置</span></div><div class="metric"><b id="pct">0%</b><span>建置進度</span></div></section>
+<section class="metrics"><div class="metric"><b id="targetN">0</b><span>目標網站</span></div><div class="metric"><b id="onlineN">0</b><span>已有網址／可開啟</span></div><div class="metric"><b id="testN">0</b><span>測試中</span></div><div class="metric"><b id="todoN">0</b><span>尚無網址</span></div><div class="metric"><b id="pct">0%</b><span>上線進度</span></div></section>
 <section class="panel"><div class="progress"><div class="bar" id="bar"></div></div><p class="small" id="baseline"></p></section>
 <section class="panel"><div class="controls"><input id="q" type="search" placeholder="搜尋編號、網站、對象、功能…"><select id="cat"><option value="">全部類別</option></select><select id="status"><option value="">全部狀態</option><option>待建</option><option>建置中</option><option>測試</option><option>正式上線</option></select><select id="priority"><option value="">全部優先級</option><option>P0</option><option>P1</option><option>P2</option><option>P3</option></select></div><p class="small" id="count"></p><div class="legend"><span class="status todo">待建</span><span class="status build">建置中</span><span class="status test">測試</span><span class="status live">正式上線</span></div></section>
 <div class="tablebox"><table><thead><tr><th>編號</th><th>網站名稱</th><th>類別</th><th>對象</th><th>核心功能</th><th>狀態</th><th>正式網址</th><th>版本</th><th>優先級</th></tr></thead><tbody id="rows"></tbody></table></div>
@@ -16,16 +16,18 @@ function sClass(s){return s==="正式上線"?"live":s==="建置中"?"build":s===
 function draw(){const kw=q.value.trim().toLowerCase();const f=data.filter(x=>{const text=x.join(" ").toLowerCase();return (!kw||text.includes(kw))&&(!cat.value||x[2]===cat.value)&&(!status.value||x[5]===status.value)&&(!priority.value||x[8]===priority.value)});
 rows.innerHTML=f.map(x=>`<tr><td>${x[0]}</td><td><b>${x[1]}</b></td><td>${x[2]}</td><td>${x[3]}</td><td>${x[4]}</td><td><span class="status ${sClass(x[5])}">${x[5]}</span></td><td class="url">${x[6]?`<a href="${x[6]}" target="_blank" rel="noopener">開啟</a>`:"—"}</td><td>${x[7]}</td><td class="prio ${x[8].toLowerCase()}">${x[8]}</td></tr>`).join("");count.textContent=`目前顯示 ${f.length} / 101 筆`}
 [q,cat,status,priority].forEach(el=>el.addEventListener("input",draw));draw();
+const total=data.length;
 const live=data.filter(x=>x[5]==="正式上線").length;
 const test=data.filter(x=>x[5]==="測試").length;
 const build=data.filter(x=>x[5]==="建置中").length;
-const todo=data.filter(x=>x[5]==="待建").length;
-const built=live+test+build;
-const p=Math.round(built/data.length*1000)/10;
-liveN.textContent=live;
+const online=data.filter(x=>Boolean(x[6])).length;
+const todo=data.filter(x=>!x[6]).length;
+const p=Math.round(online/total*1000)/10;
+targetN.textContent=total;
+onlineN.textContent=online;
 testN.textContent=test;
 todoN.textContent=todo;
 pct.textContent=p+"%";
 bar.style.width=p+"%";
-baseline.textContent=`目前：正式上線 ${live} 站＋測試中 ${test} 站＋建置中 ${build} 站＝已建置／已部署 ${built} 站；尚待建置 ${todo} 站。建置進度以「正式上線＋測試＋建置中」計算。`;
+baseline.textContent=`即時計算：目前共有 ${online} / ${total} 個網站已有網址可開啟，其中正式上線 ${live}、測試中 ${test}、建置中 ${build}；尚有 ${todo} 個網站尚無網址。以上數字直接依 Roadmap 資料列自動更新，不再手動填寫。`;
 </script></body></html>
