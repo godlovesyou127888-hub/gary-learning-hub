@@ -19,11 +19,8 @@
 
 <article class="step" id="step3"><span class="badge">SYSTEM</span><h2>Step 3｜90 天計畫</h2><p>把診斷轉成三階段、13 週的 TOEIC 提分計畫。</p><p><a class="btn primary" href="/toeic-90day-planner/">開啟 90-Day Planner</a></p><label class="check"><input type="checkbox" data-step="3">我已建立 90 天計畫</label></article>
 
-<article class="step" id="step4"><span class="badge">SYSTEM / ADAPTIVE</span><h2>Step 4｜Adaptive Training Engine V1.1</h2>
-<p>依 Step 1 的最低分能力分流，只練最需要補強的軌道；達標後才進 Step 5。</p>
-<section class="panel" id="adaptiveCoach" style="margin:12px 0;padding:14px"><h3 style="margin-top:0">自適應推薦｜Adaptive Recommendation</h3>
-<div id="adaptiveRecommendation"><p class="muted">正在讀取 Step 1 診斷資料…</p></div>
-</section>
+<article class="step" id="step4"><span class="badge">SYSTEM</span><h2>Step 4｜專項訓練</h2>
+<p>依 Step 1 診斷與 Gary 教練解讀，選擇目前最需要補強的專項；達標後再進 Step 5。</p>
 <div class="panel" id="track-grammar" style="margin:10px 0;padding:14px">
 <p><b>Grammar Track｜Part 5 文法</b><br>適合文法、詞性、時態、關係詞與句型錯誤。</p>
 <a class="btn secondary" href="/toeic-part5-grammar-lab/">Part 5 Grammar Lab</a>
@@ -48,7 +45,7 @@
 <section class="panel"><h2>T-PASS／TOEIC 全系列整合地圖</h2>
 <p><b>入口：</b>T-PASS AI 入學診斷 → TPASS 詞素診斷 → TOEIC Weakness Radar → Mistake Doctor</p>
 <p><b>計畫：</b>Gary 教練解讀 → TOEIC 90-Day Planner</p>
-<p><b>訓練：</b>Adaptive Training Engine 依診斷推薦 Grammar／Reading／Listening 其中一條優先軌道；詞素／字彙基礎只保留在 Step 1 診斷。</p>
+<p><b>訓練：</b>依診斷與教練解讀，從 Grammar／Reading／Listening 選擇目前最需要補強的專項；詞素／字彙基礎只保留在 Step 1 診斷。</p>
 <p><b>驗證：</b>Mock Test Lab → Gary 教練校準</p>
 <p><b>會員：</b>T-PASS Member Dashboard 負責會員進度查看；Command Center 負責學習決策與下一步。</p>
 </section>
@@ -72,52 +69,6 @@ const saved=JSON.parse(localStorage.getItem(key)||"{}");
 boxes.forEach(b=>{b.checked=!!saved[b.dataset.step];b.addEventListener("change",save)});
 function save(){const d={};boxes.forEach(b=>d[b.dataset.step]=b.checked);localStorage.setItem(key,JSON.stringify(d));draw()}
 function draw(){const done=boxes.filter(b=>b.checked).length;bar.style.width=(done/boxes.length*100)+"%";progressText.textContent=done+" / "+boxes.length+" 完成"}
-function adaptiveRecommend(){
-  const box=document.getElementById("adaptiveRecommendation");
-  let radar=null,morph=null,doctor=null;
-  try{radar=JSON.parse(localStorage.getItem("toeic_weakness_radar_v1")||"null")}catch(e){}
-  try{morph=JSON.parse(localStorage.getItem("tpass_morpheme_v08_result")||"null")}catch(e){}
-  try{doctor=JSON.parse(localStorage.getItem("toeic_mistake_doctor_v1")||"null")}catch(e){}
-  const tracks={
-    Grammar:{label:"Grammar Track｜Part 5 文法",url:"/toeic-part5-grammar-lab/",reason:[]},
-    Reading:{label:"Reading Track｜Part 7 閱讀",url:"/toeic-part7-reading-lab/",reason:[]},
-    Listening:{label:"Listening Track｜聽力",url:"/toeic-listening-training-lab/",reason:[]}
-  };
-  let choice=null;
-  if(radar&&Array.isArray(radar.scores)&&radar.scores.length){
-    const top=radar.scores[0];
-    if(top.k==="Listening"){choice="Listening";tracks.Listening.reason.push("Weakness Radar 顯示聽力是目前最高弱點："+top.mean+"/5");}
-    else if(top.k==="Reading"){choice="Reading";tracks.Reading.reason.push("Weakness Radar 顯示閱讀是目前最高弱點："+top.mean+"/5");}
-    else if(top.k==="VocabGrammar"){choice="Grammar";tracks.Grammar.reason.push("Weakness Radar 顯示字彙／文法是目前最高弱點："+top.mean+"/5；Step 4 以 Part 5 詞性、句構與文法應用為主。");}
-    else if(top.k==="Strategy"||top.k==="Performance"){choice="Reading";tracks.Reading.reason.push("策略／時間表現偏弱，先用 Reading Track 做定位與限時訓練。");}
-  }
-  if(morph&&morph.total!=null){
-    const pct=Math.round(morph.total/18*100);
-    if(pct<80){
-      tracks.Grammar.reason.push("Step 1 詞素診斷為 "+morph.total+"/18（"+pct+"%）。詞素／字彙基礎留在 Step 1 補強，不再重複列為 Step 4 軌道。");
-      if(!choice) choice="Grammar";
-    }
-  }
-  if(doctor&&doctor.top&&doctor.top.k){
-    const k=doctor.top.k;
-    if(!choice && (k==="Grammar"||k==="Collocation"||k==="Vocabulary")) choice="Grammar";
-    if(!choice && k==="Reading") choice="Reading";
-    if(!choice && k==="Listening") choice="Listening";
-    if(choice){
-      const target=tracks[choice];
-      target.reason.push("Mistake Doctor 主要錯誤類型："+k);
-    }
-  }
-  document.querySelectorAll('[id^="track-"]').forEach(el=>{el.style.outline="";el.style.boxShadow=""});
-  if(!choice){
-    box.innerHTML='<div class="path"><b>尚無足夠 Step 1 診斷資料</b><br>請先完成 Weakness Radar；若字彙基礎不確定，再完成 TPASS 詞素診斷。Step 4 不再重複設 Foundation Track。</div><p><a class="btn primary" href="/toeic-weakness-radar/">先做 Weakness Radar</a></p>';
-    return;
-  }
-  const t=tracks[choice];
-  const el=document.getElementById("track-"+choice.toLowerCase());
-  if(el){el.style.outline="4px solid #6f9993";el.style.boxShadow="0 0 0 6px rgba(111,153,147,.12)"}
-  box.innerHTML='<div class="path"><b>系統建議你現在先做：</b><br><span style="font-size:22px;font-weight:900">'+t.label+'</span><br>'+t.reason.join("<br>")+'</div><p><a class="btn primary" href="'+t.url+'">開始目前優先軌道 →</a></p><p class="muted">原則：一次只處理一個主要弱點；達到診斷 ≥80%、再測 ≥8/10、限時 ≥80% 後，再進 Step 5。</p>';
-}
-adaptiveRecommend();
+
 draw();
 </script></body></html>
