@@ -24,7 +24,10 @@ body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;backgro
 <p><button class="btn primary" type="button" onclick="nextPractice()">下一題 →</button></p>
 </div>
 </section>
-<section class="panel"><h2>20 題 Listening Diagnostic</h2><div id="quiz"></div><button class="btn primary" onclick="grade()">完成診斷</button></section>
+<section class="panel"><h2>20 題 Listening Diagnostic</h2>
+<p>所有題幹皆以音檔方式播放，不顯示文字。每題至少播放 1 次才能作答，最多播放 2 次。</p>
+<p>診斷語速：<select id="diagnosticSpeed"><option value="0.9">0.9×</option><option value="1" selected>1.0×</option><option value="1.1">1.1×</option></select></p>
+<div id="quiz"></div><button class="btn primary" onclick="grade()">完成診斷</button></section>
 <section id="result" class="panel hidden"><h2>診斷結果</h2><div id="summary"></div><div id="scores"></div><div id="detail"></div></section>
 <section id="retest" class="panel hidden"><h2>10 題弱點再測</h2><div id="retestIntro"></div><div id="retestQuiz"></div><button class="btn primary" onclick="gradeRetest()">完成再測</button><div id="retestResult"></div></section>
 </main><script>
@@ -96,12 +99,106 @@ const Q=[
 ["語意推論","You hear: 'The technician ordered replacement parts after the inspection.' What can be inferred?",["Parts were needed.","The machine was sold.","The inspection was cancelled.","No repair is needed."],0,"檢查後訂零件表示需要更換。"],
 ["語意推論","You hear: 'Mia printed extra copies of the agenda.' What is likely true?",["More attendees may need copies.","The meeting is online only.","The agenda is secret.","The printer is broken."],0,"多印議程通常表示有更多與會者。"]
 ];
-const bank={};
-D.forEach(d=>bank[d]=[]);
-for(const d of D){for(let i=0;i<10;i++)bank[d].push([d+" practice "+(i+1),"Choose the best interpretation.",["Correct interpretation","Distractor A","Distractor B","Distractor C"],0]);}
-quiz.innerHTML=Q.map((q,i)=>'<div class="panel"><b>Q'+(i+1)+'｜'+q[0]+'</b><p>'+q[1]+'</p>'+q[2].map((o,j)=>'<label class="opt"><input type="radio" name="q'+i+'" value="'+j+'"> '+o+'</label>').join("")+'</div>').join("");
+const RETEST={
+"關鍵字辨識":[
+["The delivery truck is waiting at the rear entrance. What should the listener notice?",["The truck location","The delivery date","The driver name","The payment method"],0,"rear entrance 是關鍵位置資訊。"],
+["Please attach the invoice to your email before sending it. What action is required?",["Attach the invoice","Print the email","Call the client","Change the price"],0,"attach the invoice 是核心動作。"],
+["The cafeteria will remain closed during the renovation. What is the key message?",["It is closed","It moved upstairs","It opens earlier","It is free"],0,"remain closed 是核心訊息。"],
+["Mr. Chen will lead today's safety briefing. Who will lead the briefing?",["Mr. Chen","The receptionist","A customer","The driver"],0,"抓人名與 lead。"],
+["Employees should use the east elevator this morning. Which elevator should they use?",["East","West","North","South"],0,"east elevator 是關鍵資訊。"],
+["The printer on the second floor is out of service. What is unavailable?",["The printer","The elevator","The meeting room","The parking lot"],0,"out of service 指印表機無法使用。"],
+["Please place all completed forms in the blue box. Where should forms go?",["The blue box","The front desk","The mailbox","The cabinet"],0,"blue box 是位置關鍵字。"],
+["The customer requested a window seat. What did the customer request?",["A window seat","A refund","A receipt","A menu"],0,"requested a window seat。"],
+["The workshop begins immediately after lunch. When does it begin?",["After lunch","Before breakfast","At midnight","Next week"],0,"immediately after lunch。"],
+["The manager cancelled tomorrow's training session. What happened?",["The training was cancelled","The office moved","The fee increased","The speaker arrived"],0,"cancelled 是核心動詞。"]
+],
+"數字／時間資訊":[
+["The appointment is scheduled for ten fifteen. What time is it?",["10:15","10:50","1:15","11:10"],0,"ten fifteen = 10:15。"],
+["The package weighs forty-two kilograms. How much does it weigh?",["42 kg","24 kg","40 kg","52 kg"],0,"forty-two = 42。"],
+["The store will reopen on March eighteenth. On what date?",["March 18","March 8","May 18","March 28"],0,"March eighteenth。"],
+["The meeting will last one hour and twenty minutes. How long?",["80 minutes","20 minutes","60 minutes","120 minutes"],0,"1 小時 20 分 = 80 分鐘。"],
+["The invoice total is two hundred thirty dollars. How much?",["$230","$203","$320","$130"],0,"two hundred thirty = 230。"],
+["Please call back at six forty-five. What time?",["6:45","6:15","7:45","6:54"],0,"six forty-five。"],
+["There are seventy-five seats in the auditorium. How many seats?",["75","57","70","85"],0,"seventy-five = 75。"],
+["The deadline is April twenty-first. What is the deadline?",["April 21","April 12","April 20","May 21"],0,"April twenty-first。"],
+["The flight departs in thirty-five minutes. How long until departure?",["35 minutes","53 minutes","30 minutes","45 minutes"],0,"thirty-five = 35。"],
+["The discount is twelve percent. What is the discount?",["12%","20%","2%","21%"],0,"twelve percent。"]
+],
+"同義改寫":[
+["The meeting has been rescheduled. What does rescheduled mean?",["Moved to another time","Cancelled forever","Made shorter","Made free"],0,"rescheduled = moved to another time。"],
+["The product is temporarily out of stock. What does that mean?",["Not available now","Very expensive","Damaged","Free"],0,"out of stock = currently unavailable。"],
+["Please contact us at your earliest convenience. What does this mean?",["As soon as reasonably possible","Next year","Only at night","Never"],0,"at your earliest convenience = as soon as reasonably possible。"],
+["The company will reimburse your travel expenses. What does reimburse mean?",["Pay you back","Cancel the trip","Book a hotel","Reduce your salary"],0,"reimburse = pay back。"],
+["The reservation has been confirmed. What does confirmed mean?",["Verified and accepted","Deleted","Delayed","Changed"],0,"confirmed = verified and accepted。"],
+["The new policy is mandatory. What does mandatory mean?",["Required","Optional","Temporary","Unclear"],0,"mandatory = required。"],
+["The manager will review the proposal. What does review mean here?",["Examine","Print","Deliver","Ignore"],0,"review = examine。"],
+["The office will relocate next month. What does relocate mean?",["Move to another place","Hire more staff","Close permanently","Reduce hours"],0,"relocate = move。"],
+["The fee has been waived. What does waived mean?",["No payment is required","Payment doubled","Payment is late","Cash only"],0,"waived = not required。"],
+["The shipment is expected to arrive shortly. What does shortly mean?",["Soon","Next year","Never","Yesterday"],0,"shortly = soon。"]
+],
+"語意推論":[
+["We ordered extra chairs because several guests confirmed this morning. What can be inferred?",["More people will attend","The event is cancelled","The room is closed","No guests are coming"],0,"增加椅子表示人數增加。"],
+["I brought an umbrella because the forecast mentioned heavy rain. What can be inferred?",["Rain is expected","It is snowing","The umbrella is broken","The forecast is old"],0,"帶傘表示預期下雨。"],
+["The restaurant extended its hours during the festival. What is likely true?",["More customers are expected","The restaurant is closing","Food is unavailable","Staff were dismissed"],0,"延長營業時間通常因預期客流增加。"],
+["Ken took notes throughout the presentation. What is likely true?",["He wanted to remember information","He was asleep","He left early","He forgot his notebook"],0,"持續做筆記代表重視資訊。"],
+["The company reserved a larger bus for the trip. What can be inferred?",["More passengers may join","The trip is cancelled","The route is shorter","No driver is available"],0,"換大巴士表示乘客可能更多。"],
+["The clerk opened another checkout counter. What is likely true?",["There was a line of customers","The store was empty","The lights failed","The store closed"],0,"多開結帳櫃台表示排隊人潮。"],
+["Maria reviewed the contract twice before signing it. What can be inferred?",["She wanted to check it carefully","She lost the contract","She refused to sign","She could not read"],0,"簽約前重看表示謹慎確認。"],
+["The airport advised passengers to arrive earlier than usual. What is likely true?",["Extra processing time may be needed","Flights are free","The airport is empty","No identification is needed"],0,"要求提早抵達表示流程可能變慢。"],
+["The technician brought several tools to the site. What can be inferred?",["A repair may be needed","The site is a restaurant","The tools are for sale","No work is planned"],0,"帶工具表示可能需要維修。"],
+["The team booked a video room for clients overseas. What is likely true?",["A remote meeting is planned","The clients are next door","The meeting is cancelled","No internet is needed"],0,"海外客戶＋視訊室表示遠端會議。"]
+]};
+
+const diagnosticPlays=Array(Q.length).fill(0);
+let retestPlays=Array(10).fill(0);
+
+function speakText(text,rate){
+ if(!("speechSynthesis" in window)){alert("此瀏覽器不支援 TTS 音檔播放。");return false}
+ speechSynthesis.cancel();
+ const u=new SpeechSynthesisUtterance(text);u.lang="en-US";u.rate=Number(rate)||1;speechSynthesis.speak(u);return true;
+}
+function playDiagnostic(i){
+ if(diagnosticPlays[i]>=2){alert("本題最多播放 2 次。");return}
+ if(speakText(Q[i][1],diagnosticSpeed.value)){diagnosticPlays[i]++;document.getElementById("dp"+i).textContent="播放 "+diagnosticPlays[i]+" / 2";}
+}
+quiz.innerHTML=Q.map((q,i)=>'<div class="panel"><b>Q'+(i+1)+'｜'+q[0]+'</b><p><button class="btn primary" type="button" onclick="playDiagnostic('+i+')">▶ 播放題目音檔</button> <span id="dp'+i+'" class="pill">播放 0 / 2</span></p>'+q[2].map((o,j)=>'<label class="opt"><input type="radio" name="q'+i+'" value="'+j+'"> '+o+'</label>').join("")+'</div>').join("");
+
 let last=null;
-function grade(){if(!studentName.value.trim()){alert("請填寫姓名。");return}if(!studentEmail.value||!studentEmail.checkValidity()){alert("請填寫有效 Email。");return}const s={};D.forEach(d=>s[d]={c:0,n:0});let total=0,wrong=[];for(let i=0;i<Q.length;i++){const a=document.querySelector('input[name="q'+i+'"]:checked');if(!a){alert("請完成全部 20 題。");return}const q=Q[i],ok=Number(a.value)===q[3];s[q[0]].n++;if(ok){s[q[0]].c++;total++}else wrong.push({q:i+1,type:q[0],exp:q[4]})}const ranked=D.map(d=>({d,score:s[d].c,total:s[d].n,pct:Math.round(s[d].c/s[d].n*100)})).sort((a,b)=>a.pct-b.pct),weak=ranked[0].d;summary.innerHTML='<div class="path"><b>總分 '+total+'/20｜最低分構面：'+weak+'</b></div>';scores.innerHTML=ranked.map(x=>'<div class="path"><b>'+x.d+'</b> '+x.score+'/'+x.total+'（'+x.pct+'%）</div>').join("");detail.innerHTML=wrong.map(x=>'<div class="path">Q'+x.q+'｜'+x.type+'：'+x.exp+'</div>').join("")||'<div class="path">20 題全對。</div>';last={total,ranked,weak};result.classList.remove("hidden");buildRetest();retest.classList.remove("hidden");localStorage.setItem("toeic_listening_training_v1",JSON.stringify({name:studentName.value,email:studentEmail.value,...last,date:new Date().toISOString()}));}
-function buildRetest(){retestIntro.innerHTML='<p>最低分構面：<b>'+last.weak+'</b>。請完成 10 題同類再測。</p>';retestQuiz.innerHTML=bank[last.weak].map((q,i)=>'<div class="panel"><b>R'+(i+1)+'</b><p>'+q[0]+' — '+q[1]+'</p>'+q[2].map((o,j)=>'<label class="opt"><input type="radio" name="r'+i+'" value="'+j+'"> '+o+'</label>').join("")+'</div>').join("");}
-function gradeRetest(){let score=0;for(let i=0;i<10;i++){const a=document.querySelector('input[name="r'+i+'"]:checked');if(!a){alert("請完成全部 10 題再測。");return}if(Number(a.value)===0)score++;}retestResult.innerHTML='<div class="path"><b>再測 '+score+'/10</b><br>'+(score>=8?'達成 80% 完成線。若限時條件也能維持 ≥80%，可回 Command Center 進 Step 5。':'尚未達標，請留在 Listening Track 繼續訓練。')+'</div>';}
+function grade(){
+ if(!studentName.value.trim()){alert("請填寫姓名。");return}
+ if(!studentEmail.value||!studentEmail.checkValidity()){alert("請填寫有效 Email。");return}
+ const s={};D.forEach(d=>s[d]={c:0,n:0});let total=0,wrong=[];
+ for(let i=0;i<Q.length;i++){
+  if(diagnosticPlays[i]<1){alert("Q"+(i+1)+" 尚未播放音檔。");return}
+  const a=document.querySelector('input[name="q'+i+'"]:checked');if(!a){alert("請完成全部 20 題。");return}
+  const q=Q[i],ok=Number(a.value)===q[3];s[q[0]].n++;
+  if(ok){s[q[0]].c++;total++}else wrong.push({q:i+1,type:q[0],exp:q[4],script:q[1]})
+ }
+ const ranked=D.map(d=>({d,score:s[d].c,total:s[d].n,pct:Math.round(s[d].c/s[d].n*100)})).sort((a,b)=>a.pct-b.pct),weak=ranked[0].d;
+ summary.innerHTML='<div class="path"><b>總分 '+total+'/20｜最低分構面：'+weak+'</b></div>';
+ scores.innerHTML=ranked.map(x=>'<div class="path"><b>'+x.d+'</b> '+x.score+'/'+x.total+'（'+x.pct+'%）</div>').join("");
+ detail.innerHTML=wrong.map(x=>'<div class="path"><b>Q'+x.q+'｜'+x.type+'</b><br><b>音檔原文：</b>'+x.script+'<br><b>中文解析：</b>'+x.exp+'</div>').join("")||'<div class="path">20 題全對。</div>';
+ last={total,ranked,weak};result.classList.remove("hidden");buildRetest();retest.classList.remove("hidden");
+ localStorage.setItem("toeic_listening_training_v2",JSON.stringify({name:studentName.value,email:studentEmail.value,...last,date:new Date().toISOString()}));
+}
+function playRetest(i){
+ if(retestPlays[i]>=2){alert("本題最多播放 2 次。");return}
+ const q=RETEST[last.weak][i];
+ if(speakText(q[0],diagnosticSpeed.value)){retestPlays[i]++;document.getElementById("rp"+i).textContent="播放 "+retestPlays[i]+" / 2";}
+}
+function buildRetest(){
+ retestPlays=Array(10).fill(0);
+ retestIntro.innerHTML='<p>最低分構面：<b>'+last.weak+'</b>。以下 10 題全部以音檔播放，不顯示題幹文字。</p>';
+ retestQuiz.innerHTML=RETEST[last.weak].map((q,i)=>'<div class="panel"><b>R'+(i+1)+'｜'+last.weak+'</b><p><button class="btn primary" type="button" onclick="playRetest('+i+')">▶ 播放再測音檔</button> <span id="rp'+i+'" class="pill">播放 0 / 2</span></p>'+q[1].map((o,j)=>'<label class="opt"><input type="radio" name="r'+i+'" value="'+j+'"> '+o+'</label>').join("")+'</div>').join("");
+}
+function gradeRetest(){
+ let score=0,wrong=[];
+ for(let i=0;i<10;i++){
+  if(retestPlays[i]<1){alert("R"+(i+1)+" 尚未播放音檔。");return}
+  const a=document.querySelector('input[name="r'+i+'"]:checked');if(!a){alert("請完成全部 10 題再測。");return}
+  const q=RETEST[last.weak][i];
+  if(Number(a.value)===q[2])score++;else wrong.push({i:i+1,script:q[0],exp:q[3]});
+ }
+ retestResult.innerHTML='<div class="path"><b>再測 '+score+'/10</b><br>'+(score>=8?'達成 80% 完成線。若限時條件也能維持 ≥80%，可回 Command Center 進 Step 5。':'尚未達標，請留在 Listening Track 繼續訓練。')+'</div>'+wrong.map(x=>'<div class="path"><b>R'+x.i+' 音檔原文：</b>'+x.script+'<br><b>中文解析：</b>'+x.exp+'</div>').join("");
+}
 </script></body></html>
