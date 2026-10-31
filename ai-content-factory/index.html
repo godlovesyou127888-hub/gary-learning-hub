@@ -1,0 +1,23 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Skywalker AI Content Factory</title><style>body{font-family:system-ui,-apple-system,"Noto Sans TC";margin:0;background:#f6f7fb;color:#1f2937}header{background:#111827;color:white;padding:30px 18px}.wrap{max-width:980px;margin:auto;padding:18px}.panel{background:white;border:1px solid #e5e7eb;border-radius:18px;padding:18px;margin-bottom:16px}label{display:block;font-weight:700;margin:12px 0 5px}input,textarea,select{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:10px;font:inherit}textarea{min-height:100px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.btn{border:0;border-radius:11px;padding:11px 14px;background:#2563eb;color:white;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}.btn.alt{background:white;color:#2563eb;border:1px solid #2563eb}.out{white-space:pre-wrap;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;min-height:120px}.muted{color:#64748b}.tag{display:inline-block;background:#e0e7ff;color:#3730a3;padding:4px 9px;border-radius:999px;font-size:13px;margin-right:6px}</style></head><body><header><div class="wrap"><h1>Skywalker AI Content Factory</h1><p>把一個主題轉成可直接交給 AI 的多平台內容製作指令。</p></div></header><main class="wrap"><p><a class="btn alt" href="/">🏠 回 Gary Learning Hub</a> <a class="btn alt" href="#contact">✉️ 聯絡站長</a></p><section class="panel"><span class="tag">MVP V1</span><span class="tag">人工審核優先</span><h2>內容任務輸入</h2><div class="grid"><div><label>主題</label><input id="topic" placeholder="例如：成人英文卡關真正原因"></div><div><label>目標受眾</label><input id="aud" placeholder="例如：30–55歲上班族"></div><div><label>內容目標</label><select id="goal"><option>教育與建立信任</option><option>招生轉換</option><option>社群互動</option><option>品牌定位</option></select></div><div><label>語氣</label><select id="tone"><option>直接、理性、白話</option><option>專業顧問</option><option>溫暖教練</option><option>簡潔有力</option></select></div></div><label>核心觀點／素材</label><textarea id="notes" placeholder="輸入 3–5 個重點、案例、數字或限制"></textarea><p><button class="btn" onclick="generate()">生成內容工作包</button> <button class="btn alt" onclick="copyOut()">複製結果</button> <button class="btn alt" onclick="saveItem()">儲存本機版本</button></p></section><section class="panel"><h2>AI 內容工作包</h2><div id="out" class="out">輸入主題後按「生成內容工作包」。</div></section><section class="panel"><h2>本機歷史</h2><div id="history" class="muted"></div></section><section id="contact" class="panel"><h2>聯絡站長</h2><form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST"><input type="hidden" name="_subject" value="Skywalker AI Content Factory 留言"><label>姓名</label><input name="name" required><label>Email</label><input name="email" type="email" required><label>留言</label><textarea name="message" required></textarea><p><button class="btn" type="submit">送出</button></p></form></section></main><script>const KEY='skywalker_content_factory_v1';function generate(){const t=topic.value.trim()||'請輸入主題',a=aud.value.trim()||'一般受眾',n=notes.value.trim()||'尚未提供素材';out.textContent=`【任務】
+主題：${t}
+受眾：${a}
+目標：${goal.value}
+語氣：${tone.value}
+
+【核心素材】
+${n}
+
+【請 AI 一次產出】
+1. 30字內主標題 5個
+2. Facebook 長文 1篇：結論→3個理由→1個行動
+3. Threads 短文 3篇：每篇80–150字
+4. 60秒短影音腳本：Hook→問題→方法→CTA
+5. Email 主旨 5個＋正文 1封
+6. 內容風險檢查：事實、誇大、重複、敏感資訊
+
+【品質規則】
+- 不杜撰數字、案例或成果。
+- 資料不足標示「待補」。
+- 避免大量複製同一模板。
+- 每份內容先做70分測試版，再依回饋校準。
+- 最終發布前人工審核。`};async function copyOut(){await navigator.clipboard.writeText(out.textContent);alert('已複製')};function saveItem(){let arr=JSON.parse(localStorage.getItem(KEY)||'[]');arr.unshift({date:new Date().toLocaleString('zh-TW'),text:out.textContent});arr=arr.slice(0,10);localStorage.setItem(KEY,JSON.stringify(arr));renderHistory()}function renderHistory(){let arr=JSON.parse(localStorage.getItem(KEY)||'[]');history.innerHTML=arr.length?arr.map((x,i)=>`<details><summary>${i+1}. ${x.date}</summary><pre style="white-space:pre-wrap">${x.text.replaceAll('<','&lt;')}</pre></details>`).join(''):'尚無儲存紀錄。'}renderHistory();</script></body></html>
