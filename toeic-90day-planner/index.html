@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOEIC 90-Day Planner｜Gary Learning Hub</title>
+<style>
+:root{--bg:#f6f4ee;--card:#fffdf8;--text:#314247;--muted:#687b80;--line:#dce7e2;--accent:#6f9993;--accent2:#8fb1ab;--soft:#eef6f3}
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);font-size:20px;line-height:1.8}
+header{background:linear-gradient(135deg,#5f7f7b,#789d98);color:#fff;padding:42px 20px}.wrap{max-width:1100px;margin:auto}.lead{color:#f6faf8;font-size:22px;line-height:1.85}
+.btn{display:inline-block;padding:14px 18px;border-radius:13px;text-decoration:none;font-weight:800;border:0;cursor:pointer;font-size:18px}.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}.secondary{background:#fffdf8;color:#3d5653;border:2px solid #cdded8}
+main{padding:30px 20px 64px}.panel{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:26px;margin-bottom:22px;box-shadow:0 10px 26px rgba(74,103,100,.06)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.field label{display:block;font-weight:800;margin-bottom:7px}.field input,.field select{width:100%;padding:14px;border:2px solid #d3e1dc;border-radius:12px;background:#fff;font:inherit}
+.metricgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.metric{background:#f7faf8;border:1px solid var(--line);border-radius:16px;padding:16px}.metric strong{display:block;font-size:30px}
+.phase{border-left:6px solid var(--accent);padding:16px;background:#f1f7f4;border-radius:12px;margin:14px 0}.weekgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.week{border:1px solid var(--line);background:#fff;border-radius:14px;padding:14px}.task{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}.task input{width:24px;height:24px;margin-top:4px}.progress{height:16px;background:#e7efec;border-radius:999px;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,#7ba29c,#9bbdb7);width:0}.hidden{display:none}.muted{color:#526a6f}.foot{font-size:15px;color:#607377}
+@media(max-width:800px){.grid,.metricgrid,.weekgrid{grid-template-columns:1fr}.btn{width:100%;text-align:center;margin-bottom:8px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>#30 TOEIC 90-Day Planner<br><span style="font-size:.58em">TOEIC 90-Day Score Improvement Plan</span></h1>
+<p class="lead">把 #28 弱點雷達與 #29 錯題醫生的結果，轉成 90 天提分路徑、每週任務、複測節點與進度追蹤。</p>
+<p><a class="btn secondary" href="/">← Gary Learning Hub</a> <a class="btn secondary" href="/toeic-weakness-radar/">#28 Weakness Radar</a> <a class="btn secondary" href="/toeic-mistake-doctor/">#29 Mistake Doctor</a></p>
+</div></header>
+
+<main class="wrap">
+<section class="panel"><h2>建立你的 90 天計畫｜Build Your Plan</h2><div class="grid">
+<div class="field"><label>姓名｜Name</label><input id="studentName"></div>
+<div class="field"><label>Email</label><input id="studentEmail" type="email"></div>
+<div class="field"><label>目前 TOEIC 分數｜Current Score</label><input id="currentScore" type="number" min="10" max="990" value="550"></div>
+<div class="field"><label>目標分數｜Target Score</label><input id="targetScore" type="number" min="10" max="990" value="750"></div>
+<div class="field"><label>主要弱點｜Primary Weakness</label><select id="weakness"><option>Listening 聽力</option><option>Reading 閱讀</option><option>Vocabulary & Grammar 字彙文法</option><option>Strategy 解題策略</option><option>Time & Performance 時間與表現</option></select></div>
+<div class="field"><label>主要錯誤類型｜Top Error Type</label><select id="errorType"><option>Vocabulary 字彙不足</option><option>Grammar 文法判斷</option><option>Collocation 搭配詞</option><option>Reading 閱讀定位</option><option>Listening 聽力辨識</option><option>Strategy 題型策略</option><option>Time 時間壓力</option><option>Careless 粗心／看錯</option></select></div>
+<div class="field"><label>每日可投入時間｜Daily Minutes</label><select id="minutes"><option value="20">20 分鐘</option><option value="30" selected>30 分鐘</option><option value="45">45 分鐘</option><option value="60">60 分鐘</option></select></div>
+<div class="field"><label>每週可學習天數｜Days per Week</label><select id="days"><option value="5" selected>5 天</option><option value="6">6 天</option><option value="7">7 天</option></select></div>
+</div>
+<p><button class="btn primary" type="button" onclick="buildPlan()">產生 90 天 TOEIC 計畫｜Generate Plan</button></p></section>
+
+<section id="plan" class="hidden">
+<section class="panel"><h2>計畫總覽｜Overview</h2><div class="metricgrid">
+<div class="metric"><strong>90</strong>天</div>
+<div class="metric"><strong id="gap">200</strong>分數差距</div>
+<div class="metric"><strong id="weeklyMin">150</strong>每週分鐘</div>
+<div class="metric"><strong>4</strong>複測節點</div>
+</div></section>
+
+<section class="panel"><h2>三階段提分路徑｜3 Phases</h2>
+<div class="phase"><h3>Phase 1｜Day 1–30：穩定基礎與修正主要弱點</h3><div id="p1"></div></div>
+<div class="phase"><h3>Phase 2｜Day 31–60：題型整合與速度提升</h3><div id="p2"></div></div>
+<div class="phase"><h3>Phase 3｜Day 61–90：模考、時間配置與穩定輸出</h3><div id="p3"></div></div>
+</section>
+
+<section class="panel"><h2>13 週任務｜13-Week Plan</h2><div class="weekgrid" id="weeks"></div></section>
+
+<section class="panel"><h2>本週進度｜Weekly Progress</h2><div class="progress"><div class="bar" id="bar"></div></div><p class="foot" id="progressText">0 / 5 已完成</p><div id="tasks"></div></section>
+
+<section class="panel"><h2>複測節點｜Retest Milestones</h2><ul>
+<li><b>Day 1：</b>保留 #28 Weakness Radar 與 #29 Mistake Doctor 作為基準。</li>
+<li><b>Day 30：</b>重做 #28，檢查主要弱點是否下降。</li>
+<li><b>Day 60：</b>重做 #29，檢查錯誤類型是否改變。</li>
+<li><b>Day 90：</b>完整模考＋#28＋#29，決定下一個 30 天週期。</li>
+</ul></section>
+
+<section class="panel"><h2>學生收件＋教練收件｜Student & Coach Delivery</h2>
+<p class="muted">完成計畫後，可先列印／儲存 PDF。提交時，學生會收到自己的計畫副本，Gary 教練同步收到同一份摘要。</p>
+<p><button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF</button> <button class="btn secondary" type="button" onclick="downloadCSV()">下載 CSV</button></p>
+<form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prepareDelivery()">
+<input type="hidden" name="_subject" value="TOEIC 90-Day Planner｜Student Plan">
+<input type="hidden" name="_template" value="table">
+<input type="hidden" name="_autoresponse" value="已收到你的 TOEIC 90 天提分計畫。這封信是你的計畫副本，請保留作為 Day 1 紀錄，並在 Day 30、60、90 進行複測。">
+<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-90day-planner/">
+<input type="hidden" name="student_name" id="sendName">
+<input type="hidden" name="email" id="sendEmail">
+<input type="hidden" name="current_score" id="sendCurrent">
+<input type="hidden" name="target_score" id="sendTarget">
+<input type="hidden" name="score_gap" id="sendGap">
+<input type="hidden" name="primary_weakness" id="sendWeakness">
+<input type="hidden" name="top_error_type" id="sendError">
+<input type="hidden" name="daily_minutes" id="sendMinutes">
+<input type="hidden" name="days_per_week" id="sendDays">
+<input type="hidden" name="phase_1" id="sendP1">
+<input type="hidden" name="phase_2" id="sendP2">
+<input type="hidden" name="phase_3" id="sendP3">
+<input type="hidden" name="submitted_at" id="sendTime">
+<button class="btn primary" type="submit">寄給我並同步給教練｜Email Me & Coach</button>
+</form>
+</section>
+</section>
+</main>
+
+<script>
+const weaknessPlan={
+"Listening 聽力":["短段精聽＋Part 2 反應模式","Part 3–4 關鍵資訊定位＋題目預讀","完整 Listening 限時模考＋錯題回聽"],
+"Reading 閱讀":["Part 5 快速判斷＋短文定位","Part 6–7 同義改寫＋限時閱讀","完整 Reading 限時模考＋時間分配"],
+"Vocabulary & Grammar 字彙文法":["高頻字彙＋核心文法補強","搭配詞＋句型自動化＋Part 5/6","模考錯題回收＋高頻錯誤再測"],
+"Strategy 解題策略":["建立各 Part 固定 SOP","錯題分類＋題型策略反覆練習","整套模考中固定策略並檢查穩定度"],
+"Time & Performance 時間與表現":["分段限時＋專注力節奏","Reading 時間切割＋Listening 專注訓練","完整 2 小時模考＋配速校準"]
+};
+const errorPlan={
+"Vocabulary 字彙不足":"每日建立 5–10 個高頻錯題字彙與搭配詞。",
+"Grammar 文法判斷":"每日做 5 題同類文法再測，要求說出規則。",
+"Collocation 搭配詞":"以完整詞組記憶，不單背單字。",
+"Reading 閱讀定位":"每題都標出證據句與同義改寫。",
+"Listening 聽力辨識":"錯題片段回聽三次並跟讀。",
+"Strategy 題型策略":"每個 Part 固定一套作答 SOP。",
+"Time 時間壓力":"每週至少兩次分段限時練習。",
+"Careless 粗心／看錯":"建立否定詞、數字、時態、單複數檢查清單。"
+};
+let last=null;
+function buildPlan(){
+ if(!studentName.value.trim()){alert("請先填寫姓名。");studentName.focus();return}
+ if(!studentEmail.value||!studentEmail.checkValidity()){alert("請填寫有效 Email。");studentEmail.focus();return}
+ const c=Number(currentScore.value),t=Number(targetScore.value),m=Number(minutes.value),d=Number(days.value);
+ if(!c||!t||t<=c){alert("目標分數需高於目前分數。");return}
+ const w=weakness.value,e=errorType.value,g=t-c;
+ gap.textContent=g;weeklyMin.textContent=m*d;
+ p1.innerHTML="<b>主軸：</b>"+weaknessPlan[w][0]+"。<br><b>錯題處方：</b>"+errorPlan[e];
+ p2.innerHTML="<b>主軸：</b>"+weaknessPlan[w][1]+"。<br><b>完成線：</b>同類錯題正確率至少 80%。";
+ p3.innerHTML="<b>主軸：</b>"+weaknessPlan[w][2]+"。<br><b>完成線：</b>模考節奏穩定，並重新比較 Day 1 與 Day 90。";
+ weeks.innerHTML=Array.from({length:13},(_,i)=>{
+   const phase=i<4?1:i<8?2:3;
+   const focus=phase===1?weaknessPlan[w][0]:phase===2?weaknessPlan[w][1]:weaknessPlan[w][2];
+   return `<div class="week"><b>Week ${i+1}</b><br><span class="foot">Phase ${phase}</span><p>${focus}</p></div>`;
+ }).join("");
+ tasks.innerHTML=Array.from({length:d},(_,i)=>`<label class="task"><input type="checkbox" onchange="updateProgress()"><span>Day ${i+1}｜${m} 分鐘：${i%3===0?"弱點訓練":i%3===1?"錯題再測":"限時整合"}</span></label>`).join("");
+ last={c,t,g,m,d,w,e};
+ plan.classList.remove("hidden");plan.scrollIntoView({behavior:"smooth"});updateProgress();
+ localStorage.setItem("toeic_90day_planner_v1",JSON.stringify({...last,name:studentName.value,email:studentEmail.value,date:new Date().toISOString()}));
+}
+function updateProgress(){
+ const boxes=[...document.querySelectorAll("#tasks input")],done=boxes.filter(x=>x.checked).length;
+ bar.style.width=(boxes.length?done/boxes.length*100:0)+"%";
+ progressText.textContent=done+" / "+boxes.length+" 已完成";
+}
+function prepareDelivery(){
+ if(!last){alert("請先產生 90 天計畫。");return false}
+ sendName.value=studentName.value.trim();sendEmail.value=studentEmail.value.trim();sendCurrent.value=last.c;sendTarget.value=last.t;sendGap.value=last.g;sendWeakness.value=last.w;sendError.value=last.e;sendMinutes.value=last.m;sendDays.value=last.d;sendP1.value=p1.innerText.trim();sendP2.value=p2.innerText.trim();sendP3.value=p3.innerText.trim();sendTime.value=new Date().toISOString();return true;
+}
+function downloadCSV(){
+ if(!last){alert("請先產生 90 天計畫。");return}
+ const d={timestamp:new Date().toISOString(),name:studentName.value,email:studentEmail.value,current_score:last.c,target_score:last.t,score_gap:last.g,primary_weakness:last.w,top_error_type:last.e,daily_minutes:last.m,days_per_week:last.d,phase_1:p1.innerText.trim(),phase_2:p2.innerText.trim(),phase_3:p3.innerText.trim()};
+ const esc=v=>'"'+String(v??"").replaceAll('"','""')+'"';
+ const csv="\uFEFF"+Object.keys(d).map(esc).join(",")+"\n"+Object.values(d).map(esc).join(",");
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.download="toeic_90day_planner.csv";a.click();
+}
+</script>
+</body></html>
