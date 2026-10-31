@@ -10,16 +10,16 @@ main{padding:30px 20px 64px}.panel{background:var(--card);border:2px solid var(-
 <form id="f"></form>
 <section class="panel"><button type="button" class="btn primary" onclick="calc()">產生程度雷達｜Generate Radar</button> <button type="button" class="btn secondary" onclick="downloadCSV()">下載 CSV</button></section>
 <section id="res" class="panel hidden"><h2>你的能力輪廓｜Your Profile</h2><div id="summary"></div><div class="result" id="boxes"></div><div id="next"></div></section>
-<section class="panel"><h2>結果交付｜Receive Your Results</h2><p class="muted">完成程度雷達後，填写姓名与 Email。送出时，<b>填写人会收到自己的结果副本，Gary 教练也会同步收到完整能力轮廓</b>。</p>
+<section class="panel"><h2>結果交付｜Receive Your Results</h2><p class="muted">完成程度雷達後，填寫姓名与 Email。送出时，<b>填寫人会收到自己的結果副本，Gary 教練也会同步收到完整能力轮廓</b>。</p>
 <div class="result">
 <div class="box"><label><b>姓名｜Name</b></label><input id="studentName" style="width:100%;padding:14px;border:2px solid var(--line);border-radius:12px;font:inherit" placeholder="請輸入姓名"></div>
 <div class="box"><label><b>Email</b></label><input id="studentEmail" type="email" style="width:100%;padding:14px;border:2px solid var(--line);border-radius:12px;font:inherit" placeholder="name@example.com"></div>
 </div>
-<p><button class="btn secondary" type="button" onclick="window.print()">列印／储存 PDF</button> <button class="btn secondary" type="button" onclick="downloadCSV()">下载 CSV</button></p>
+<p><button class="btn secondary" type="button" onclick="window.print()">列印／储存 PDF</button> <button class="btn secondary" type="button" onclick="downloadCSV()">下載 CSV</button></p>
 <form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prepareDelivery26()">
 <input type="hidden" name="_subject" value="Gary Adult English Proficiency Radar｜Student Result">
 <input type="hidden" name="_template" value="table">
-<input type="hidden" name="_autoresponse" value="已收到你的 Gary 成人英文程度雷达结果。这封信是你的结果副本，请保留作为后续学习与复测参考。">
+<input type="hidden" name="_autoresponse" value="已收到你的 Gary 成人英文程度雷达結果。这封信是你的結果副本，请保留作为后续學習与复测参考。">
 <input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/adult-english-radar/">
 <input type="hidden" name="student_name" id="sendName26">
 <input type="hidden" name="email" id="sendEmail26">
@@ -27,9 +27,9 @@ main{padding:30px 20px 64px}.panel{background:var(--card);border:2px solid var(-
 <input type="hidden" name="dimension_scores" id="sendScores26">
 <input type="hidden" name="priority_areas" id="sendPriority26">
 <input type="hidden" name="submitted_at" id="sendTime26">
-<button class="btn primary" type="submit">寄给我并同步给教练｜Email Me & Coach</button>
+<button class="btn primary" type="submit">寄给我并同步给教練｜Email Me & Coach</button>
 </form>
-<p class="foot">第一次启用 FormSubmit 时，教练收件信箱可能需要完成一次确认。</p>
+<p class="foot">第一次启用 FormSubmit 时，教練收件信箱可能需要完成一次確認。</p>
 </section>
 </main><script>
 const qs=[
