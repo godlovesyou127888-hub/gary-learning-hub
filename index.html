@@ -53,7 +53,7 @@ const sites=[
 {name:"Jasper｜Unit 6 英語練習室",category:"學科複習",audience:"Jasper",desc:"Unit 6 英語課程練習與複習。",url:"https://jasper-unit-practice.gary2049.chatgpt.site",status:"已確認網址"},
 {name:"Module 6 英語練習室",category:"學科複習",audience:"Rita",desc:"Module 6 英語課程練習與複習。",url:"https://rita-unit-practice.gary2049.chatgpt.site",status:"已確認網址"},
 {name:"yo-yo 國文複習所（舊版）",category:"學科複習",audience:"yo-yo",desc:"早期版本，保留供舊連結與內容查閱；新版請優先使用「yo-yo 國文複習站」。",url:"https://yo-yo-chinese-review.gary2049.chatgpt.site",status:"舊版保留"},
-{name:"Gary 英文卡關診斷中心",category:"成人英語",audience:"成人／上班族",desc:"10分鐘診斷 Input、Output、語言系統、學習流程與表現瓶頸，輸出主要卡點與下一步。",url:"https://gary-learning-hub.onrender.com/english-stuck-diagnosis/",status:"測試版"}];
+{name:"Gary 英文卡關診斷中心",category:"成人英語",audience:"成人／上班族",desc:"中英雙語20題、五構面、Likert五點量表；輸出主要卡點，並支援研究CSV匯出。",url:"https://gary-learning-hub.onrender.com/english-stuck-diagnosis/",status:"研究測試版"}];
 const q=document.getElementById("q"),cat=document.getElementById("cat"),state=document.getElementById("state"),sort=document.getElementById("sort"),grid=document.getElementById("grid"),stats=document.getElementById("stats"),quick=document.getElementById("quick");
 const categories=[...new Set(sites.map(x=>x.category))].sort();
 categories.forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c;cat.appendChild(o)});
