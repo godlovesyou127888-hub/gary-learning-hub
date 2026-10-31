@@ -5,30 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Gary Learning Hub｜所有學習網站總入口</title>
 <style>
-:root{--bg:#f6f7fb;--card:#fff;--text:#1f2937;--muted:#6b7280;--line:#e5e7eb;--accent:#2563eb;--warn:#92400e}
+:root{--bg:#f6f7fb;--card:#fff;--text:#1f2937;--muted:#6b7280;--line:#e5e7eb;--accent:#2563eb;--warn:#92400e;--soft:#eef4ff}
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC",Arial,sans-serif;background:var(--bg);color:var(--text)}
 header{background:#111827;color:white;padding:34px 18px}.wrap{max-width:1180px;margin:auto}h1{margin:0 0 10px;font-size:clamp(28px,5vw,44px)}.lead{margin:0;color:#d1d5db;line-height:1.7}
 .toolbar{background:white;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:4}.controls{display:flex;gap:10px;flex-wrap:wrap;padding:14px 18px}
 input,select,textarea{font:inherit;border:1px solid var(--line);border-radius:12px;padding:12px;background:white}input[type=search]{flex:1;min-width:240px}select{min-width:160px}
-.stats{padding:10px 18px;color:var(--muted);font-size:14px}main{padding:24px 18px 56px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.stats{padding:10px 18px;color:var(--muted);font-size:14px}.dashboard{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}.metric{background:white;border:1px solid var(--line);border-radius:16px;padding:16px}.metric b{display:block;font-size:28px;margin-bottom:4px}.quick{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 20px}.chip{border:1px solid var(--line);background:white;border-radius:999px;padding:9px 12px;cursor:pointer;font-weight:700;color:#374151}.chip.active{background:var(--accent);color:white;border-color:var(--accent)}main{padding:24px 18px 56px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;min-height:245px;box-shadow:0 8px 24px rgba(17,24,39,.04)}
 .meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}.tag{font-size:12px;border-radius:999px;padding:6px 9px;background:#eef2ff;color:#3730a3}.status{background:#ecfdf5;color:#065f46}.status.pending{background:#fff7ed;color:var(--warn)}
 h2{font-size:19px;margin:0 0 8px;line-height:1.35}.desc{color:var(--muted);line-height:1.65;flex:1}.actions{display:flex;gap:9px;margin-top:14px}
 a.btn,button.btn{display:inline-block;text-decoration:none;border:0;border-radius:12px;padding:11px 14px;font-weight:700;cursor:pointer}.primary{background:var(--accent);color:white}.disabled{background:#f3f4f6;color:#9ca3af;cursor:not-allowed}
 .section{margin-top:42px}.panel{background:white;border:1px solid var(--line);border-radius:18px;padding:20px}.note{color:var(--muted);font-size:14px;line-height:1.7}form{display:grid;gap:10px;max-width:720px}
-footer{padding:28px 18px 50px;color:var(--muted);text-align:center}@media(max-width:600px){header{padding-top:24px}.controls{padding:10px 12px}main{padding:18px 12px 44px}}
+footer{padding:28px 18px 50px;color:var(--muted);text-align:center}@media(max-width:700px){.dashboard{grid-template-columns:1fr}.controls{padding:10px 12px}.controls>*{width:100%;min-width:0}header{padding-top:24px}main{padding:18px 12px 44px}.card{min-height:auto}}
 </style>
 </head>
 <body>
-<header><div class="wrap"><div style="display:inline-block;margin-bottom:10px;padding:6px 10px;border-radius:999px;background:#1f2937;border:1px solid #374151;font-size:12px;">LEARNING HUB</div><h1>Gary Learning Hub</h1><p class="lead">所有學習網站總入口｜樂齡英語、英檢、文法、學科複習、AI 工具與雙語品格教育集中管理。</p></div></header>
-<div class="toolbar"><div class="wrap"><div class="controls"><input id="q" type="search" placeholder="搜尋網站名稱、用途或對象"><select id="cat"><option value="">全部分類</option></select><select id="state"><option value="">全部狀態</option><option value="ready">可直接開啟</option><option value="pending">待補網址</option></select></div><div class="stats wrap" id="stats"></div></div></div>
+<header><div class="wrap"><div style="display:inline-block;margin-bottom:10px;padding:6px 10px;border-radius:999px;background:#1f2937;border:1px solid #374151;font-size:12px;">LEARNING HUB</div><h1>Gary Learning Hub</h1><p class="lead">23 個內容網站的唯一入口｜樂齡英語、英檢、文法、學科複習、AI 工具、創意教學與雙語品格教育集中管理。</p></div></header>
+<div class="toolbar"><div class="wrap"><div class="controls"><input id="q" type="search" placeholder="搜尋：樂齡、TOEIC、Jasper、AI…"><select id="cat"><option value="">全部分類</option></select><select id="state"><option value="">全部存取</option><option value="public">一般開啟</option><option value="limited">限定／私人</option></select><select id="sort"><option value="original">建議順序</option><option value="category">依分類</option><option value="name">依名稱</option></select></div><div class="stats wrap" id="stats"></div></div></div>
 <main class="wrap">
-<section class="panel" style="margin-bottom:20px"><h2 style="margin-top:0">從這裡開始</h2><p class="note" style="font-size:16px">選擇學習主題，直接進入網站。可搜尋「樂齡、TOEIC、文法、AI」等關鍵字。本頁作為唯一中央入口，之後不再另外維護「網站群組」頁。</p></section>
-<div id="grid" class="grid"></div>
-<section class="section panel"><h2>中央入口規則</h2><p class="note">之後每個子網站只保留：① 回到 Gary Learning Hub、② 聯絡站長、③ 該站主要學習功能。新網站只需新增到這一頁一次。</p></section>
+<section class="dashboard"><div class="metric"><b>23</b><span>內容網站</span></div><div class="metric"><b>7</b><span>主要分類</span></div><div class="metric"><b>0</b><span>待補網址</span></div></section><section class="panel" style="margin-bottom:16px"><h2 style="margin-top:0">從這裡開始</h2><p class="note" style="font-size:16px">先選分類，再進入網站；或直接搜尋人名、考試、科目與工具名稱。這裡是唯一中央入口。</p><div id="quick" class="quick"></div></section><div id="grid" class="grid"></div>
+<section class="section panel"><h2>中央入口規則</h2><p class="note">① Gary Learning Hub 是唯一總入口。② 新網站只在這裡新增一次。③ 子網站只保留「回 Hub／聯絡站長／核心功能」。④ 舊版網站保留但清楚標示，避免和正式版本混淆。</p></section>
 <section class="section panel" id="contact"><h2>聯絡站長</h2><p class="note">此表單使用 FormSubmit。首次正式寄送前，站長可能需要完成服務驗證。</p><form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST"><input type="hidden" name="_subject" value="Gary Learning Hub 聯絡站長"><input type="hidden" name="_captcha" value="false"><input name="name" placeholder="姓名" required><input type="email" name="email" placeholder="Email" required><textarea name="message" rows="5" placeholder="留言內容" required></textarea><button class="btn primary" type="submit">送出給站長</button></form></section>
 </main>
-<footer>Gary Learning Hub｜GitHub 母站 V1</footer>
+<footer>Gary Learning Hub｜中央網站控制台 V2</footer>
 <script>
 const sites=[
 {name:"Gary 樂齡英語｜字母・音標・單字入門",category:"樂齡英語",audience:"零基礎／樂齡",desc:"A–Z、IPA、生活單字、中英短句、5題測驗、學習紀錄、PDF學習單。",url:"https://gary-learning-hub.onrender.com/senior-english-a-z/",status:"已遷入母站"},
@@ -53,10 +52,17 @@ const sites=[
 {name:"Gary 雅思考試的一天",category:"英語檢定",audience:"IELTS 學習者",desc:"IELTS 考試流程與學習情境網站。",url:"https://gary-ielts-day.gary2049.chatgpt.site",status:"已確認網址"},
 {name:"Jasper｜Unit 6 英語練習室",category:"學科複習",audience:"Jasper",desc:"Unit 6 英語課程練習與複習。",url:"https://jasper-unit-practice.gary2049.chatgpt.site",status:"已確認網址"},
 {name:"Module 6 英語練習室",category:"學科複習",audience:"Rita",desc:"Module 6 英語課程練習與複習。",url:"https://rita-unit-practice.gary2049.chatgpt.site",status:"已確認網址"},
-{name:"yo-yo 國文複習所",category:"學科複習",audience:"yo-yo",desc:"另一版國文複習網站，保留為獨立既有站。",url:"https://yo-yo-chinese-review.gary2049.chatgpt.site",status:"已確認網址"}];
-const q=document.getElementById("q"),cat=document.getElementById("cat"),state=document.getElementById("state"),grid=document.getElementById("grid"),stats=document.getElementById("stats");
-[...new Set(sites.map(x=>x.category))].sort().forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c;cat.appendChild(o)});
-function draw(){const keyword=q.value.trim().toLowerCase();const filtered=sites.filter(s=>{const hit=[s.name,s.category,s.audience,s.desc,s.status].join(" ").toLowerCase().includes(keyword);const hitCat=!cat.value||s.category===cat.value;const pending=!s.url;const hitState=!state.value||(state.value==="pending"?pending:!pending);return hit&&hitCat&&hitState});grid.innerHTML="";filtered.forEach(s=>{const article=document.createElement("article");article.className="card";const pending=!s.url;const button=pending?'<span class="btn disabled">待補網址／遷入</span>':`<a class="btn primary" href="${s.url}" target="_blank" rel="noopener">進入網站</a>`;article.innerHTML=`<div class="meta"><span class="tag">${s.category}</span><span class="tag">${s.audience}</span><span class="tag status ${pending?"pending":""}">${s.status}</span></div><h2>${s.name}</h2><div class="desc">${s.desc}</div><div class="actions">${button}</div>`;grid.appendChild(article)});const ready=sites.filter(s=>s.url).length,pending=sites.length-ready;stats.textContent=`目前收錄 ${sites.length} 站｜可直接開啟 ${ready} 站｜待補／遷入 ${pending} 站｜目前顯示 ${filtered.length} 站`}
-[q,cat,state].forEach(el=>el.addEventListener("input",draw));draw();
+{name:"yo-yo 國文複習所（舊版）",category:"學科複習",audience:"yo-yo",desc:"早期版本，保留供舊連結與內容查閱；新版請優先使用「yo-yo 國文複習站」。",url:"https://yo-yo-chinese-review.gary2049.chatgpt.site",status:"舊版保留"}];
+const q=document.getElementById("q"),cat=document.getElementById("cat"),state=document.getElementById("state"),sort=document.getElementById("sort"),grid=document.getElementById("grid"),stats=document.getElementById("stats"),quick=document.getElementById("quick");
+const categories=[...new Set(sites.map(x=>x.category))].sort();
+categories.forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c;cat.appendChild(o)});
+["全部",...categories].forEach(c=>{const b=document.createElement("button");b.className="chip"+(c==="全部"?" active":"");b.textContent=c==="全部"?"全部 23":c+" "+sites.filter(x=>x.category===c).length;b.onclick=()=>{cat.value=c==="全部"?"":c;[...quick.children].forEach(x=>x.classList.remove("active"));b.classList.add("active");draw()};quick.appendChild(b)});
+function isLimited(s){return /限定|私人/.test(s.status)}
+function draw(){const keyword=q.value.trim().toLowerCase();let filtered=sites.filter(s=>{const hit=[s.name,s.category,s.audience,s.desc,s.status].join(" ").toLowerCase().includes(keyword);const hitCat=!cat.value||s.category===cat.value;const hitState=!state.value||(state.value==="limited"?isLimited(s):!isLimited(s));return hit&&hitCat&&hitState});
+if(sort.value==="category")filtered.sort((a,b)=>a.category.localeCompare(b.category,"zh-Hant")||a.name.localeCompare(b.name,"zh-Hant"));if(sort.value==="name")filtered.sort((a,b)=>a.name.localeCompare(b.name,"zh-Hant"));
+grid.innerHTML="";filtered.forEach(s=>{const article=document.createElement("article");article.className="card";const limited=isLimited(s);const button=`<a class="btn primary" href="${s.url}" target="_blank" rel="noopener">${limited?"進入限定網站":"進入網站"}</a>`;article.innerHTML=`<div class="meta"><span class="tag">${s.category}</span><span class="tag">${s.audience}</span><span class="tag status">${s.status}</span></div><h2>${s.name}</h2><div class="desc">${s.desc}</div><div class="actions">${button}</div>`;grid.appendChild(article)});
+const limitedCount=sites.filter(isLimited).length;stats.textContent=`23 個內容網站｜7 個分類｜限定／私人 ${limitedCount} 站｜目前顯示 ${filtered.length} 站｜最後整理：2026-10-31`}
+[q,cat,state,sort].forEach(el=>el.addEventListener("input",draw));cat.addEventListener("change",()=>{[...quick.children].forEach(x=>x.classList.toggle("active",(cat.value===""&&x.textContent.startsWith("全部"))||x.textContent.startsWith(cat.value+" ")))});
+draw();
 </script>
 </body></html>
