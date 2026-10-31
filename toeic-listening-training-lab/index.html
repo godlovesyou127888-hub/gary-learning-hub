@@ -1,12 +1,75 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TOEIC Listening Training Lab</title><style>
-body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;background:#f6f4ee;color:#314247;line-height:1.75;font-size:18px}.wrap{max-width:1000px;margin:auto;padding:20px}header{background:linear-gradient(135deg,#5f7f7b,#789d98);color:white;padding:32px 18px}.panel{background:#fffdf8;border:2px solid #dce7e2;border-radius:18px;padding:20px;margin:16px 0}.btn{display:inline-block;padding:11px 15px;border-radius:10px;text-decoration:none;font-weight:800;border:0;cursor:pointer}.primary{background:#6f9993;color:#fff}.secondary{background:#fff;color:#314247;border:2px solid #dce7e2}.opt{display:block;padding:10px;border:1px solid #dce7e2;border-radius:10px;margin:6px 0;background:#fff}.path{background:#f1f7f4;border-left:5px solid #6f9993;padding:12px;margin:10px 0;border-radius:10px}.hidden{display:none}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}input{width:100%;padding:10px;box-sizing:border-box;border:1px solid #dce7e2;border-radius:10px}@media(max-width:760px){.grid{grid-template-columns:1fr}}
+body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;background:#f6f4ee;color:#314247;line-height:1.75;font-size:18px}.wrap{max-width:1000px;margin:auto;padding:20px}header{background:linear-gradient(135deg,#5f7f7b,#789d98);color:white;padding:32px 18px}.panel{background:#fffdf8;border:2px solid #dce7e2;border-radius:18px;padding:20px;margin:16px 0}.btn{display:inline-block;padding:11px 15px;border-radius:10px;text-decoration:none;font-weight:800;border:0;cursor:pointer}.primary{background:#6f9993;color:#fff}.secondary{background:#fff;color:#314247;border:2px solid #dce7e2}.opt{display:block;padding:10px;border:1px solid #dce7e2;border-radius:10px;margin:6px 0;background:#fff}.path{background:#f1f7f4;border-left:5px solid #6f9993;padding:12px;margin:10px 0;border-radius:10px}.hidden{display:none}.trainer{border:2px solid #dce7e2;border-radius:16px;padding:16px;background:#fff}.trainer textarea{width:100%;box-sizing:border-box;padding:10px;border:1px solid #dce7e2;border-radius:10px;font:inherit}.pill{display:inline-block;padding:5px 9px;border-radius:999px;background:#eef6f3;margin:3px}.bad{background:#fff1ef;border-left:5px solid #b86b61}.good{background:#eef8f1;border-left:5px solid #669477}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}input{width:100%;padding:10px;box-sizing:border-box;border:1px solid #dce7e2;border-radius:10px}@media(max-width:760px){.grid{grid-template-columns:1fr}}
 </style></head><body><div style="background:#314247;color:#fff;padding:10px 16px"><div class="wrap" style="padding:0"><b>T-PASS TOEIC Command Center｜Step 4｜Listening Track</b>　<a href="/tpass-toeic-command-center/" style="color:white">← 回 Command Center</a></div></div>
-<header><div class="wrap"><h1>TOEIC Listening Training Lab</h1><p>20 題四構面診斷 → 最低分構面 → 10 題再測 → 達標後進 Step 5。</p></div></header><main class="wrap">
-<section class="panel"><div class="grid"><input id="studentName" placeholder="姓名"><input id="studentEmail" type="email" placeholder="Email"></div><p>V1 使用文字模擬「聽到的句子／對話」來診斷辨識策略；不假裝等同真實音檔聽力測驗。</p></section>
+<header><div class="wrap"><h1>TOEIC Listening Training Lab</h1><p>TTS 真實播放 → 播放次數限制 → 語速控制 → Shadowing → 聽寫 → 錯詞分析，再接 20 題診斷與 10 題再測。</p></div></header><main class="wrap">
+<section class="panel"><div class="grid"><input id="studentName" placeholder="姓名"><input id="studentEmail" type="email" placeholder="Email"></div><p>V2 使用瀏覽器 TTS 播放英文句子，並加入聽寫與 Shadowing。TTS 與語音辨識依瀏覽器支援狀況運作，仍不等同 ETS 官方 TOEIC 音檔。</p></section>
+<section class="panel"><h2>Listening V2 實戰訓練</h2>
+<p>先聽，不先看文字。每題最多播放 2 次；可調整語速。完成聽寫後，再做 Shadowing。</p>
+<div class="trainer">
+<p><b id="practiceLabel">Practice 1 / 6</b></p>
+<p>語速：
+<select id="speed"><option value="0.8">0.8× 慢速</option><option value="1" selected>1.0× 正常</option><option value="1.2">1.2× 快速</option></select>
+　<span id="playCount" class="pill">播放 0 / 2</span></p>
+<p><button class="btn primary" type="button" onclick="playPractice()">▶ 播放 TTS</button>
+<button class="btn secondary" type="button" onclick="revealText()">顯示原文</button></p>
+<div id="practiceText" class="path hidden"></div>
+<label><b>聽寫 Dictation</b></label>
+<textarea id="dictationInput" rows="3" placeholder="請輸入你聽到的英文"></textarea>
+<p><button class="btn secondary" type="button" onclick="checkDictation()">檢查聽寫</button></p>
+<div id="dictationResult"></div>
+<hr>
+<p><b>Shadowing 跟讀</b></p>
+<p><button class="btn secondary" type="button" onclick="startShadowing()">🎙 開始跟讀辨識</button></p>
+<div id="shadowResult" class="path">若瀏覽器支援語音辨識，系統會比較你的跟讀文字與目標句；不支援時可自行跟讀並以原文核對。</div>
+<p><button class="btn primary" type="button" onclick="nextPractice()">下一題 →</button></p>
+</div>
+</section>
 <section class="panel"><h2>20 題 Listening Diagnostic</h2><div id="quiz"></div><button class="btn primary" onclick="grade()">完成診斷</button></section>
 <section id="result" class="panel hidden"><h2>診斷結果</h2><div id="summary"></div><div id="scores"></div><div id="detail"></div></section>
 <section id="retest" class="panel hidden"><h2>10 題弱點再測</h2><div id="retestIntro"></div><div id="retestQuiz"></div><button class="btn primary" onclick="gradeRetest()">完成再測</button><div id="retestResult"></div></section>
 </main><script>
+const PRACTICE=[
+"The shipment has been delayed until Friday afternoon.",
+"Please submit the revised report before noon tomorrow.",
+"The conference room has been moved from the third floor to the fifth floor.",
+"The service is complimentary for guests who book directly with the hotel.",
+"The technician will inspect the machine before ordering replacement parts.",
+"Because traffic is usually heavy on Fridays, I plan to leave the office early."
+];
+let practiceIndex=0,plays=0;
+function normalizeText(s){return String(s||"").toLowerCase().replace(/[^a-z0-9\s]/g,"").replace(/\s+/g," ").trim()}
+function currentPractice(){return PRACTICE[practiceIndex]}
+function renderPractice(){practiceLabel.textContent="Practice "+(practiceIndex+1)+" / "+PRACTICE.length;playCount.textContent="播放 "+plays+" / 2";practiceText.textContent=currentPractice();practiceText.classList.add("hidden");dictationInput.value="";dictationResult.innerHTML="";shadowResult.className="path";shadowResult.innerHTML="若瀏覽器支援語音辨識，系統會比較你的跟讀文字與目標句；不支援時可自行跟讀並以原文核對。"}
+function playPractice(){
+ if(plays>=2){alert("本題最多播放 2 次。請先完成聽寫與跟讀。");return}
+ if(!("speechSynthesis" in window)){alert("此瀏覽器不支援 TTS。");return}
+ speechSynthesis.cancel();
+ const u=new SpeechSynthesisUtterance(currentPractice());u.lang="en-US";u.rate=Number(speed.value)||1;speechSynthesis.speak(u);plays++;playCount.textContent="播放 "+plays+" / 2";
+}
+function revealText(){practiceText.classList.remove("hidden")}
+function compareWords(input,target){
+ const a=normalizeText(input).split(" ").filter(Boolean),b=normalizeText(target).split(" ").filter(Boolean);
+ const missing=b.filter(w=>!a.includes(w)),extra=a.filter(w=>!b.includes(w));
+ const overlap=b.filter(w=>a.includes(w)).length;const pct=Math.round(overlap/Math.max(1,b.length)*100);
+ return{missing,extra,pct};
+}
+function checkDictation(){
+ const r=compareWords(dictationInput.value,currentPractice());
+ dictationResult.innerHTML='<div class="path '+(r.pct>=80?'good':'bad')+'"><b>聽寫相似度 '+r.pct+'%</b><br>漏聽／錯詞：'+(r.missing.join(", ")||"無")+'<br>多寫詞：'+(r.extra.join(", ")||"無")+'</div>';
+ localStorage.setItem("toeic_listening_v2_last_dictation",JSON.stringify({sentence:currentPractice(),pct:r.pct,missing:r.missing,date:new Date().toISOString()}));
+}
+function startShadowing(){
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){shadowResult.className="path bad";shadowResult.innerHTML="此瀏覽器目前不支援 Speech Recognition。請播放後自行跟讀，再顯示原文核對。";return}
+ const rec=new SR();rec.lang="en-US";rec.interimResults=false;rec.maxAlternatives=1;
+ shadowResult.innerHTML="正在聆聽你的跟讀…";
+ rec.onresult=e=>{const heard=e.results[0][0].transcript,r=compareWords(heard,currentPractice());shadowResult.className="path "+(r.pct>=80?"good":"bad");shadowResult.innerHTML='<b>Shadowing 相似度 '+r.pct+'%</b><br>辨識結果：'+heard+'<br>可能漏讀／錯音詞：'+(r.missing.join(", ")||"無")+'<br><small>語音辨識結果僅供訓練參考，不等同發音評分。</small>';};
+ rec.onerror=()=>{shadowResult.className="path bad";shadowResult.innerHTML="語音辨識失敗，請再試一次或改用自行跟讀。"};
+ rec.start();
+}
+function nextPractice(){practiceIndex=(practiceIndex+1)%PRACTICE.length;plays=0;renderPractice();window.scrollTo({top:document.querySelector(".trainer").offsetTop-80,behavior:"smooth"})}
+renderPractice();
+
 const D=["關鍵字辨識","數字／時間資訊","同義改寫","語意推論"];
 const Q=[
 ["關鍵字辨識","You hear: 'The shipment has been delayed until Friday.' What is the key message?",["The shipment arrives today.","The shipment is delayed.","The shipment is cancelled.","The shipment is free."],1,"抓核心動詞 delayed。"],
