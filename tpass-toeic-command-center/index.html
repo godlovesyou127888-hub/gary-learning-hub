@@ -6,6 +6,9 @@
 <main class="wrap">
 <section class="panel"><h2>你的 TOEIC 路徑</h2><div class="progress"><div class="bar" id="bar"></div></div><p id="progressText" class="muted">0 / 6 完成</p><p><a class="btn secondary" href="https://t-pass-member-dashboard.gary2049.chatgpt.site" target="_blank" rel="noopener">T-PASS Member Dashboard</a></p><p class="muted">會員儀表板保留為進度入口；所有學習流程以本 Command Center 為主線。</p></section>
 
+<section class="panel" id="adaptiveCoach"><h2>Step 4 自適應推薦｜Adaptive Recommendation</h2>
+<div id="adaptiveRecommendation"><p class="muted">正在讀取 Step 1 診斷資料…</p></div>
+</section>
 <section class="steps">
 <article class="step"><span class="badge">FREE / SYSTEM</span><h2>Step 1｜診斷</h2><p>先找出真正弱點、詞素基礎與錯題根因，不先平均刷題。</p>
 <p><a class="btn primary" href="https://t-pass-ai-assessment.gary2049.chatgpt.site" target="_blank" rel="noopener">T-PASS AI 入學診斷</a>
@@ -21,19 +24,19 @@
 
 <article class="step"><span class="badge">SYSTEM / ADAPTIVE</span><h2>Step 4｜Adaptive Training Engine V1</h2>
 <p>依 Step 1 的最低分能力分流，只練最需要補強的軌道；達標後才進 Step 5。</p>
-<div class="panel" style="margin:10px 0;padding:14px">
+<div class="panel" id="track-foundation" style="margin:10px 0;padding:14px">
 <p><b>Foundation Track｜詞素／字彙基礎</b><br>適合字彙不足、拆字能力弱、閱讀卡詞。</p>
 <a class="btn secondary" href="/tpass-morpheme-v08/">TPASS 詞素診斷與訓練</a>
 </div>
-<div class="panel" style="margin:10px 0;padding:14px">
+<div class="panel" id="track-grammar" style="margin:10px 0;padding:14px">
 <p><b>Grammar Track｜Part 5 文法</b><br>適合文法、詞性、時態、關係詞與句型錯誤。</p>
 <a class="btn secondary" href="/toeic-part5-grammar-lab/">Part 5 Grammar Lab</a>
 </div>
-<div class="panel" style="margin:10px 0;padding:14px">
+<div class="panel" id="track-reading" style="margin:10px 0;padding:14px">
 <p><b>Reading Track｜Part 7 閱讀</b><br>適合定位、主旨、推論、同義改寫與跨句整合。</p>
 <a class="btn secondary" href="/toeic-part7-reading-lab/">Part 7 Reading Diagnostic</a>
 </div>
-<div class="panel" style="margin:10px 0;padding:14px">
+<div class="panel" id="track-listening" style="margin:10px 0;padding:14px">
 <p><b>Listening Track｜聽力辨識與跟讀</b><br>適合關鍵字辨識、連音、語速與資訊抓取。</p>
 <a class="btn secondary" href="/toeic-listening-training-lab/">Listening Training Lab</a>
 </div>
@@ -73,5 +76,50 @@ const saved=JSON.parse(localStorage.getItem(key)||"{}");
 boxes.forEach(b=>{b.checked=!!saved[b.dataset.step];b.addEventListener("change",save)});
 function save(){const d={};boxes.forEach(b=>d[b.dataset.step]=b.checked);localStorage.setItem(key,JSON.stringify(d));draw()}
 function draw(){const done=boxes.filter(b=>b.checked).length;bar.style.width=(done/boxes.length*100)+"%";progressText.textContent=done+" / "+boxes.length+" 完成"}
+function adaptiveRecommend(){
+  const box=document.getElementById("adaptiveRecommendation");
+  let radar=null,morph=null,doctor=null;
+  try{radar=JSON.parse(localStorage.getItem("toeic_weakness_radar_v1")||"null")}catch(e){}
+  try{morph=JSON.parse(localStorage.getItem("tpass_morpheme_v08_result")||"null")}catch(e){}
+  try{doctor=JSON.parse(localStorage.getItem("toeic_mistake_doctor_v1")||"null")}catch(e){}
+  const tracks={
+    Foundation:{label:"Foundation Track｜詞素／字彙基礎",url:"/tpass-morpheme-v08/",reason:[]},
+    Grammar:{label:"Grammar Track｜Part 5 文法",url:"/toeic-part5-grammar-lab/",reason:[]},
+    Reading:{label:"Reading Track｜Part 7 閱讀",url:"/toeic-part7-reading-lab/",reason:[]},
+    Listening:{label:"Listening Track｜聽力",url:"/toeic-listening-training-lab/",reason:[]}
+  };
+  let choice=null;
+  if(radar&&Array.isArray(radar.scores)&&radar.scores.length){
+    const top=radar.scores[0];
+    if(top.k==="Listening"){choice="Listening";tracks.Listening.reason.push("Weakness Radar 顯示聽力是目前最高弱點："+top.mean+"/5");}
+    else if(top.k==="Reading"){choice="Reading";tracks.Reading.reason.push("Weakness Radar 顯示閱讀是目前最高弱點："+top.mean+"/5");}
+    else if(top.k==="VocabGrammar"){choice="Foundation";tracks.Foundation.reason.push("Weakness Radar 顯示字彙／文法是目前最高弱點："+top.mean+"/5");}
+    else if(top.k==="Strategy"||top.k==="Performance"){choice="Reading";tracks.Reading.reason.push("策略／時間表現偏弱，先用 Reading Track 做定位與限時訓練。");}
+  }
+  if(!choice&&morph&&morph.total!=null){
+    const pct=Math.round(morph.total/18*100);
+    if(pct<80){choice="Foundation";tracks.Foundation.reason.push("TPASS 詞素診斷為 "+morph.total+"/18（"+pct+"%），未達 80% 完成線。");}
+  }
+  if(doctor&&doctor.top&&doctor.top.k){
+    const k=doctor.top.k;
+    if(!choice && (k==="Grammar"||k==="Collocation"||k==="Vocabulary")) choice=k==="Grammar"?"Grammar":"Foundation";
+    if(!choice && k==="Reading") choice="Reading";
+    if(!choice && k==="Listening") choice="Listening";
+    if(choice){
+      const target=choice==="Grammar"?tracks.Grammar:choice==="Reading"?tracks.Reading:choice==="Listening"?tracks.Listening:tracks.Foundation;
+      target.reason.push("Mistake Doctor 主要錯誤類型："+k);
+    }
+  }
+  document.querySelectorAll('[id^="track-"]').forEach(el=>{el.style.outline="";el.style.boxShadow=""});
+  if(!choice){
+    box.innerHTML='<div class="path"><b>尚無足夠 Step 1 診斷資料</b><br>請先完成 Weakness Radar；若字彙基礎不確定，再完成 TPASS 詞素診斷。完成後回到本頁，系統會自動推薦優先軌道。</div><p><a class="btn primary" href="/toeic-weakness-radar/">先做 Weakness Radar</a></p>';
+    return;
+  }
+  const t=tracks[choice];
+  const el=document.getElementById("track-"+choice.toLowerCase());
+  if(el){el.style.outline="4px solid #6f9993";el.style.boxShadow="0 0 0 6px rgba(111,153,147,.12)"}
+  box.innerHTML='<div class="path"><b>系統建議你現在先做：</b><br><span style="font-size:22px;font-weight:900">'+t.label+'</span><br>'+t.reason.join("<br>")+'</div><p><a class="btn primary" href="'+t.url+'">開始目前優先軌道 →</a></p><p class="muted">原則：一次只處理一個主要弱點；達到診斷 ≥80%、再測 ≥8/10、限時 ≥80% 後，再進 Step 5。</p>';
+}
+adaptiveRecommend();
 draw();
 </script></body></html>
