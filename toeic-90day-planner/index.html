@@ -16,7 +16,7 @@ main{padding:30px 20px 64px}.panel{background:var(--card);border:2px solid var(-
 @media(max-width:800px){.grid,.metricgrid,.weekgrid{grid-template-columns:1fr}.btn{width:100%;text-align:center;margin-bottom:8px}}
 </style>
 </head>
-<body><div style="background:#314247;color:#fff;padding:10px 16px;font-family:'Noto Sans TC','Microsoft JhengHei',sans-serif"><div style="max-width:1100px;margin:auto;display:flex;gap:10px;flex-wrap:wrap;align-items:center"><strong>T-PASS TOEIC Command Center｜Step 3｜90 天計畫</strong><a href="/tpass-toeic-command-center/" style="color:#fff;background:#6f9993;padding:7px 10px;border-radius:9px;text-decoration:none;font-weight:700">← 回 Command Center</a><a href="/tpass-toeic-command-center/#step4" style="color:#314247;background:#fffdf8;padding:7px 10px;border-radius:9px;text-decoration:none;font-weight:700">下一步：Step 4 自適應訓練 →</a></div></div>
+<body><div style="background:#314247;color:#fff;padding:10px 16px;font-family:'Noto Sans TC','Microsoft JhengHei',sans-serif"><div style="max-width:1100px;margin:auto;display:flex;gap:10px;flex-wrap:wrap;align-items:center"><strong>T-PASS TOEIC Command Center｜Step 3｜90 天計畫</strong><a href="/tpass-toeic-command-center/" style="color:#fff;background:#6f9993;padding:7px 10px;border-radius:9px;text-decoration:none;font-weight:700">← 回 Command Center</a><a href="/tpass-toeic-command-center/#step4" style="color:#314247;background:#fffdf8;padding:7px 10px;border-radius:9px;text-decoration:none;font-weight:700">下一步：Step 4 專項訓練 →</a></div></div>
 <header><div class="wrap">
 <h1>#30 TOEIC 90-Day Planner<br><span style="font-size:.58em">TOEIC 90-Day Score Improvement Plan</span></h1>
 <p class="lead">把 #28 弱點雷達與 #29 錯題醫生的結果，轉成 90 天提分路徑、每週任務、複測節點與進度追蹤。</p>
@@ -25,8 +25,8 @@ main{padding:30px 20px 64px}.panel{background:var(--card);border:2px solid var(-
 
 <main class="wrap">
 <section class="panel"><h2>建立你的 90 天計畫｜Build Your Plan</h2><div class="grid">
-<div class="field"><label>姓名｜Name</label><input id="studentName"></div>
-<div class="field"><label>Email</label><input id="studentEmail" type="email"></div>
+<div class="field"><label>姓名｜Name</label><input id="studentName" name="student_name" form="plannerDeliveryForm" required></div>
+<div class="field"><label>Email</label><input id="studentEmail" name="email" form="plannerDeliveryForm" type="email" required></div>
 <div class="field"><label>目前 TOEIC 分數｜Current Score</label><input id="currentScore" type="number" min="10" max="990" value="550"></div>
 <div class="field"><label>目標分數｜Target Score</label><input id="targetScore" type="number" min="10" max="990" value="750"></div>
 <div class="field"><label>主要弱點｜Primary Weakness</label><select id="weakness"><option>Listening 聽力</option><option>Reading 閱讀</option><option>Vocabulary & Grammar 字彙文法</option><option>Strategy 解題策略</option><option>Time & Performance 時間與表現</option></select></div>
@@ -34,7 +34,7 @@ main{padding:30px 20px 64px}.panel{background:var(--card);border:2px solid var(-
 <div class="field"><label>每日可投入時間｜Daily Minutes</label><select id="minutes"><option value="20">20 分鐘</option><option value="30" selected>30 分鐘</option><option value="45">45 分鐘</option><option value="60">60 分鐘</option></select></div>
 <div class="field"><label>每週可學習天數｜Days per Week</label><select id="days"><option value="5" selected>5 天</option><option value="6">6 天</option><option value="7">7 天</option></select></div>
 </div>
-<p><button class="btn primary" type="button" onclick="buildPlan()">產生 90 天 TOEIC 計畫｜Generate Plan</button></p></section>
+<div id="draftStatus" class="phase"><b>進度保護已開啟：</b>基本資料、計畫設定與本週勾選進度會自動保存。</div><p><button class="btn primary" type="button" onclick="buildPlan()">產生 90 天 TOEIC 計畫｜Generate Plan</button></p></section>
 
 <section id="plan" class="hidden">
 <section class="panel"><h2>計畫總覽｜Overview</h2><div class="metricgrid">
@@ -64,13 +64,12 @@ main{padding:30px 20px 64px}.panel{background:var(--card);border:2px solid var(-
 <section class="panel"><h2>學生收件＋教練收件｜Student & Coach Delivery</h2>
 <p class="muted">完成計畫後，可先列印／儲存 PDF。提交時，學生會收到自己的計畫副本，Gary 教練同步收到同一份摘要。</p>
 <p><button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF</button> <button class="btn secondary" type="button" onclick="downloadCSV()">下載 CSV</button></p>
-<form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prepareDelivery()">
+<p><button class="btn secondary" type="button" onclick="copyPlannerReport()">複製完整計畫</button></p><p class="muted">若 FormSubmit 顯示 Thanks 但沒有收到信，請先使用「複製完整計畫」保留三階段、13 週與本週任務。</p><form id="plannerDeliveryForm" action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prepareDelivery()">
 <input type="hidden" name="_subject" value="TOEIC 90-Day Planner｜Student Plan">
 <input type="hidden" name="_template" value="table">
 <input type="hidden" name="_autoresponse" value="已收到你的 TOEIC 90 天提分計畫。這封信是你的計畫副本，請保留作為 Day 1 紀錄，並在 Day 30、60、90 進行複測。">
 <input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-90day-planner/">
-<input type="hidden" name="student_name" id="sendName">
-<input type="hidden" name="email" id="sendEmail">
+<input type="hidden" name="_url" value="https://gary-learning-hub.onrender.com/toeic-90day-planner/">
 <input type="hidden" name="current_score" id="sendCurrent">
 <input type="hidden" name="target_score" id="sendTarget">
 <input type="hidden" name="score_gap" id="sendGap">
@@ -81,8 +80,11 @@ main{padding:30px 20px 64px}.panel{background:var(--card);border:2px solid var(-
 <input type="hidden" name="phase_1" id="sendP1">
 <input type="hidden" name="phase_2" id="sendP2">
 <input type="hidden" name="phase_3" id="sendP3">
+<input type="hidden" name="week_plan" id="sendWeeks">
+<input type="hidden" name="weekly_tasks" id="sendTasks">
+<input type="hidden" name="weekly_progress" id="sendProgress">
 <input type="hidden" name="submitted_at" id="sendTime">
-<button class="btn primary" type="submit">寄給我並同步給教練｜Email Me & Coach</button>
+<button class="btn secondary" type="submit">FormSubmit 備援寄送</button>
 </form>
 </section>
 </section>
@@ -101,17 +103,100 @@ const errorPlan={
 "Grammar 文法判斷":"每日做 5 題同類文法再測，要求說出規則。",
 "Collocation 搭配詞":"以完整詞組記憶，不單背單字。",
 "Reading 閱讀定位":"每題都標出證據句與同義改寫。",
-"Listening 聽力辨識":"錯題片段回聽三次並跟讀。",
+"Listening 聽力辨識":"錯題片段重新聆聽三次：抓大意、辨識關鍵詞、不看文字重聽並口頭摘要。",
 "Strategy 題型策略":"每個 Part 固定一套作答 SOP。",
 "Time 時間壓力":"每週至少兩次分段限時練習。",
 "Careless 粗心／看錯":"建立否定詞、數字、時態、單複數檢查清單。"
 };
+const PLANNER_DRAFT_KEY="toeic_90day_planner_v1_draft";
+function applyPriorDiagnostics(){
+ try{
+  const radar=JSON.parse(localStorage.getItem("toeic_weakness_radar_v1")||"null");
+  if(radar){
+   if(radar.name&&!studentName.value)studentName.value=radar.name;
+   if(radar.email&&!studentEmail.value)studentEmail.value=radar.email;
+   if(radar.current&&!currentScore.dataset.userEdited)currentScore.value=radar.current;
+   if(radar.target&&!targetScore.dataset.userEdited)targetScore.value=radar.target;
+   if(Array.isArray(radar.scores)&&radar.scores.length){
+    const map={Listening:"Listening 聽力",Reading:"Reading 閱讀",VocabGrammar:"Vocabulary & Grammar 字彙文法",Strategy:"Strategy 解題策略",Performance:"Time & Performance 時間與表現"};
+    const w=map[radar.scores[0].k];
+    if(w)weakness.value=w;
+   }
+  }
+  const doctor=JSON.parse(localStorage.getItem("toeic_mistake_doctor_v1")||"null");
+  if(doctor&&doctor.top&&doctor.top.k){
+   const map={Vocabulary:"Vocabulary 字彙不足",Grammar:"Grammar 文法判斷",Collocation:"Collocation 搭配詞",Reading:"Reading 閱讀定位",Listening:"Listening 聽力辨識",Strategy:"Strategy 題型策略",Time:"Time 時間壓力",Careless:"Careless 粗心／看錯"};
+   const e=map[doctor.top.k];
+   if(e)errorType.value=e;
+  }
+ }catch(e){}
+}
+function collectPlannerDraft(){
+ const taskChecks=[...document.querySelectorAll("#tasks input")].map(x=>x.checked);
+ return {
+  name:studentName.value||"",
+  email:studentEmail.value||"",
+  current:currentScore.value||"",
+  target:targetScore.value||"",
+  weakness:weakness.value,
+  errorType:errorType.value,
+  minutes:minutes.value,
+  days:days.value,
+  taskChecks,
+  hasPlan:!!last,
+  savedAt:new Date().toISOString()
+ };
+}
+function savePlannerDraft(){
+ try{
+  const d=collectPlannerDraft();
+  localStorage.setItem(PLANNER_DRAFT_KEY,JSON.stringify(d));
+  if(typeof draftStatus!=="undefined"&&draftStatus){
+   draftStatus.textContent="已自動保存｜"+new Date().toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit"});
+  }
+ }catch(e){}
+}
+function restorePlannerDraft(){
+ try{
+  const raw=localStorage.getItem(PLANNER_DRAFT_KEY);
+  if(!raw){applyPriorDiagnostics();return}
+  const d=JSON.parse(raw);
+  if(d.name)studentName.value=d.name;
+  if(d.email)studentEmail.value=d.email;
+  if(d.current)currentScore.value=d.current;
+  if(d.target)targetScore.value=d.target;
+  if(d.weakness)weakness.value=d.weakness;
+  if(d.errorType)errorType.value=d.errorType;
+  if(d.minutes)minutes.value=d.minutes;
+  if(d.days)days.value=d.days;
+  if(typeof draftStatus!=="undefined"&&draftStatus)draftStatus.textContent="已恢復上次設定。重新產生計畫後可接續本週勾選進度。";
+  if(d.hasPlan){
+   buildPlan(true);
+   setTimeout(()=>{
+    if(Array.isArray(d.taskChecks)){
+     [...document.querySelectorAll("#tasks input")].forEach((x,i)=>x.checked=!!d.taskChecks[i]);
+     updateProgress();
+    }
+   },0);
+  }
+ }catch(e){applyPriorDiagnostics();}
+}
+[studentName,studentEmail,currentScore,targetScore,weakness,errorType,minutes,days].forEach(el=>{
+ el.addEventListener("input",savePlannerDraft);
+ el.addEventListener("change",savePlannerDraft);
+});
+currentScore.addEventListener("input",()=>currentScore.dataset.userEdited="1");
+targetScore.addEventListener("input",()=>targetScore.dataset.userEdited="1");
+window.addEventListener("pagehide",savePlannerDraft);
+window.addEventListener("beforeunload",savePlannerDraft);
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")savePlannerDraft();});
+
 let last=null;
-function buildPlan(){
+function buildPlan(restoring=false){
  if(!studentName.value.trim()){alert("請先填寫姓名。");studentName.focus();return}
  if(!studentEmail.value||!studentEmail.checkValidity()){alert("請填寫有效 Email。");studentEmail.focus();return}
  const c=Number(currentScore.value),t=Number(targetScore.value),m=Number(minutes.value),d=Number(days.value);
- if(!c||!t||t<=c){alert("目標分數需高於目前分數。");return}
+ if(!c||!t||c<10||c>990||t<10||t>990||t<=c){alert("請確認目前分數與目標分數皆為 10–990，且目標分數高於目前分數。");return}
  const w=weakness.value,e=errorType.value,g=t-c;
  gap.textContent=g;weeklyMin.textContent=m*d;
  p1.innerHTML="<b>主軸：</b>"+weaknessPlan[w][0]+"。<br><b>錯題處方：</b>"+errorPlan[e];
@@ -122,19 +207,60 @@ function buildPlan(){
    const focus=phase===1?weaknessPlan[w][0]:phase===2?weaknessPlan[w][1]:weaknessPlan[w][2];
    return `<div class="week"><b>Week ${i+1}</b><br><span class="foot">Phase ${phase}</span><p>${focus}</p></div>`;
  }).join("");
- tasks.innerHTML=Array.from({length:d},(_,i)=>`<label class="task"><input type="checkbox" onchange="updateProgress()"><span>Day ${i+1}｜${m} 分鐘：${i%3===0?"弱點訓練":i%3===1?"錯題再測":"限時整合"}</span></label>`).join("");
+ tasks.innerHTML=Array.from({length:d},(_,i)=>`<label class="task"><input type="checkbox" onchange="updateProgress();savePlannerDraft()"><span>Day ${i+1}｜${m} 分鐘：${i%3===0?"弱點訓練":i%3===1?"錯題再測":"限時整合"}</span></label>`).join("");
  last={c,t,g,m,d,w,e};
- plan.classList.remove("hidden");plan.scrollIntoView({behavior:"smooth"});updateProgress();
- localStorage.setItem("toeic_90day_planner_v1",JSON.stringify({...last,name:studentName.value,email:studentEmail.value,date:new Date().toISOString()}));
+ plan.classList.remove("hidden");if(!restoring)plan.scrollIntoView({behavior:"smooth"});updateProgress();
+ localStorage.setItem("toeic_90day_planner_v1",JSON.stringify({...last,name:studentName.value,email:studentEmail.value,date:new Date().toISOString()}));savePlannerDraft();
 }
 function updateProgress(){
  const boxes=[...document.querySelectorAll("#tasks input")],done=boxes.filter(x=>x.checked).length;
  bar.style.width=(boxes.length?done/boxes.length*100:0)+"%";
  progressText.textContent=done+" / "+boxes.length+" 已完成";
 }
+function buildPlannerReport(){
+ if(!last)return "";
+ const weekLines=[...document.querySelectorAll("#weeks .week")].map(x=>x.innerText.trim());
+ const taskLines=[...document.querySelectorAll("#tasks .task")].map(x=>(x.querySelector("input").checked?"[完成] ":"[未完成] ")+x.innerText.trim());
+ return [
+  "學員："+studentName.value.trim(),
+  "學員 Email："+studentEmail.value.trim(),
+  "目前分數："+last.c,
+  "目標分數："+last.t,
+  "分數差距："+last.g,
+  "主要弱點："+last.w,
+  "主要錯誤類型："+last.e,
+  "每日投入："+last.m+" 分鐘",
+  "每週天數："+last.d+" 天",
+  "每週總分鐘："+(last.m*last.d),
+  "",
+  "Phase 1：",p1.innerText.trim(),
+  "",
+  "Phase 2：",p2.innerText.trim(),
+  "",
+  "Phase 3：",p3.innerText.trim(),
+  "",
+  "13 週計畫：",...weekLines,
+  "",
+  "本週任務：",...taskLines,
+  "",
+  "目前進度："+progressText.innerText.trim()
+ ].join("\n");
+}
+async function copyPlannerReport(){
+ if(!last){alert("請先產生 90 天計畫。");return}
+ const report=buildPlannerReport();
+ try{
+  await navigator.clipboard.writeText(report);
+  alert("完整 90 天計畫已複製。");
+ }catch(e){
+  const ta=document.createElement("textarea");
+  ta.value=report;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();
+  alert("完整 90 天計畫已複製。");
+ }
+}
 function prepareDelivery(){
  if(!last){alert("請先產生 90 天計畫。");return false}
- sendName.value=studentName.value.trim();sendEmail.value=studentEmail.value.trim();sendCurrent.value=last.c;sendTarget.value=last.t;sendGap.value=last.g;sendWeakness.value=last.w;sendError.value=last.e;sendMinutes.value=last.m;sendDays.value=last.d;sendP1.value=p1.innerText.trim();sendP2.value=p2.innerText.trim();sendP3.value=p3.innerText.trim();sendTime.value=new Date().toISOString();return true;
+sendCurrent.value=last.c;sendTarget.value=last.t;sendGap.value=last.g;sendWeakness.value=last.w;sendError.value=last.e;sendMinutes.value=last.m;sendDays.value=last.d;sendP1.value=p1.innerText.trim();sendP2.value=p2.innerText.trim();sendP3.value=p3.innerText.trim();sendWeeks.value=[...document.querySelectorAll("#weeks .week")].map(x=>x.innerText.trim()).join("\n---\n");sendTasks.value=[...document.querySelectorAll("#tasks .task")].map(x=>(x.querySelector("input").checked?"[完成] ":"[未完成] ")+x.innerText.trim()).join("\n");sendProgress.value=progressText.innerText.trim();sendTime.value=new Date().toISOString();return true;
 }
 function downloadCSV(){
  if(!last){alert("請先產生 90 天計畫。");return}
@@ -143,5 +269,6 @@ function downloadCSV(){
  const csv="\uFEFF"+Object.keys(d).map(esc).join(",")+"\n"+Object.values(d).map(esc).join(",");
  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.download="toeic_90day_planner.csv";a.click();
 }
+restorePlannerDraft();
 </script>
 </body></html>
