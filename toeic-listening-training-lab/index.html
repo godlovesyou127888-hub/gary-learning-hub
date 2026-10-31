@@ -2,7 +2,7 @@
 body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;background:#f6f4ee;color:#314247;line-height:1.75;font-size:18px}.wrap{max-width:1000px;margin:auto;padding:20px}header{background:linear-gradient(135deg,#5f7f7b,#789d98);color:white;padding:32px 18px}.panel{background:#fffdf8;border:2px solid #dce7e2;border-radius:18px;padding:20px;margin:16px 0}.btn{display:inline-block;padding:11px 15px;border-radius:10px;text-decoration:none;font-weight:800;border:0;cursor:pointer}.primary{background:#6f9993;color:#fff}.secondary{background:#fff;color:#314247;border:2px solid #dce7e2}.opt{display:block;padding:10px;border:1px solid #dce7e2;border-radius:10px;margin:6px 0;background:#fff}.path{background:#f1f7f4;border-left:5px solid #6f9993;padding:12px;margin:10px 0;border-radius:10px}.hidden{display:none}.trainer{border:2px solid #dce7e2;border-radius:16px;padding:16px;background:#fff}.trainer textarea{width:100%;box-sizing:border-box;padding:10px;border:1px solid #dce7e2;border-radius:10px;font:inherit}.pill{display:inline-block;padding:5px 9px;border-radius:999px;background:#eef6f3;margin:3px}.bad{background:#fff1ef;border-left:5px solid #b86b61}.good{background:#eef8f1;border-left:5px solid #669477}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}input{width:100%;padding:10px;box-sizing:border-box;border:1px solid #dce7e2;border-radius:10px}@media(max-width:760px){.grid{grid-template-columns:1fr}}
 </style></head><body><div style="background:#314247;color:#fff;padding:10px 16px"><div class="wrap" style="padding:0"><b>T-PASS TOEIC Command Center｜Step 4｜Listening Track</b>　<a href="/tpass-toeic-command-center/" style="color:white">← 回 Command Center</a></div></div>
 <header><div class="wrap"><h1>TOEIC Listening Training Lab</h1><p>TTS 真實播放 → 播放次數限制 → 語速控制 → 聽寫 → 錯詞分析，再接 20 題診斷與 10 題再測。</p></div></header><main class="wrap">
-<section class="panel"><div class="grid"><input id="studentName" placeholder="姓名"><input id="studentEmail" type="email" placeholder="Email"></div><p>V2 使用瀏覽器 TTS 播放英文句子，並加入聽寫與錯詞分析。可切換美式、英式、澳式口音；實際聲線取決於裝置／瀏覽器已安裝的 TTS voice。仍不等同 ETS 官方 TOEIC 音檔。</p></section>
+<section class="panel"><div class="grid"><input id="studentName" placeholder="姓名"><input id="studentEmail" type="email" placeholder="Email"></div><p>V2 使用瀏覽器 TTS 播放英文句子，並加入聽寫與錯詞分析。可切換美式、英式、澳式、印度英文口音；實際聲線取決於裝置／瀏覽器已安裝的 TTS voice。仍不等同 ETS 官方 TOEIC 音檔。</p></section>
 <section class="panel"><h2>Listening V2 實戰訓練</h2>
 <p>先聽，不先看文字。每題最多播放 2 次；可調整語速。完成聽寫後，再檢查漏聽與錯詞。</p>
 <div class="trainer">
@@ -10,7 +10,7 @@ body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;backgro
 <p>語速：
 <select id="speed"><option value="0.8">0.8× 慢速</option><option value="1" selected>1.0× 正常</option><option value="1.2">1.2× 快速</option></select>
 　口音：
-<select id="practiceAccent"><option value="en-US">美式 American</option><option value="en-GB">英式 British</option><option value="en-AU">澳式 Australian</option></select>
+<select id="practiceAccent"><option value="en-US">美式 American</option><option value="en-GB">英式 British</option><option value="en-AU">澳式 Australian</option><option value="en-IN">印度英文 Indian English</option></select>
 　<span id="playCount" class="pill">播放 0 / 2</span></p>
 <p><button class="btn primary" type="button" onclick="playPractice()">▶ 播放 TTS</button>
 <button class="btn secondary" type="button" onclick="revealText()">顯示原文</button></p>
