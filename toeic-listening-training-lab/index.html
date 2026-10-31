@@ -2,15 +2,17 @@
 body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;background:#f6f4ee;color:#314247;line-height:1.75;font-size:18px}.wrap{max-width:1000px;margin:auto;padding:20px}header{background:linear-gradient(135deg,#5f7f7b,#789d98);color:white;padding:32px 18px}.panel{background:#fffdf8;border:2px solid #dce7e2;border-radius:18px;padding:20px;margin:16px 0}.btn{display:inline-block;padding:11px 15px;border-radius:10px;text-decoration:none;font-weight:800;border:0;cursor:pointer}.primary{background:#6f9993;color:#fff}.secondary{background:#fff;color:#314247;border:2px solid #dce7e2}.opt{display:block;padding:10px;border:1px solid #dce7e2;border-radius:10px;margin:6px 0;background:#fff}.path{background:#f1f7f4;border-left:5px solid #6f9993;padding:12px;margin:10px 0;border-radius:10px}.hidden{display:none}.trainer{border:2px solid #dce7e2;border-radius:16px;padding:16px;background:#fff}.trainer textarea{width:100%;box-sizing:border-box;padding:10px;border:1px solid #dce7e2;border-radius:10px;font:inherit}.pill{display:inline-block;padding:5px 9px;border-radius:999px;background:#eef6f3;margin:3px}.bad{background:#fff1ef;border-left:5px solid #b86b61}.good{background:#eef8f1;border-left:5px solid #669477}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}input{width:100%;padding:10px;box-sizing:border-box;border:1px solid #dce7e2;border-radius:10px}@media(max-width:760px){.grid{grid-template-columns:1fr}}
 </style></head><body><div style="background:#314247;color:#fff;padding:10px 16px"><div class="wrap" style="padding:0"><b>T-PASS TOEIC Command Center｜Step 4｜Listening Track</b>　<a href="/tpass-toeic-command-center/" style="color:white">← 回 Command Center</a></div></div>
 <header><div class="wrap"><h1>TOEIC Listening Training Lab</h1><p>TTS 真實播放 → 播放次數限制 → 語速控制 → 聽寫 → 錯詞分析，再接 20 題診斷與 10 題再測。</p></div></header><main class="wrap">
-<section class="panel"><div class="grid"><input id="studentName" placeholder="姓名"><input id="studentEmail" type="email" placeholder="Email"></div><p>V2 使用瀏覽器 TTS 播放英文句子，並加入聽寫與錯詞分析。可切換美式、英式、澳式、印度英文口音；實際聲線取決於裝置／瀏覽器已安裝的 TTS voice。仍不等同 ETS 官方 TOEIC 音檔。</p></section>
+<section class="panel"><div class="grid"><input id="studentName" placeholder="姓名"><input id="studentEmail" type="email" placeholder="Email"></div><p>V2 使用瀏覽器 TTS 播放英文句子，並加入聽寫與錯詞分析。可切換美式、英式、澳式、印度英文口音，也可使用 Random Accent 隨機模式；同一題第二次播放會維持相同口音。實際聲線取決於裝置／瀏覽器已安裝的 TTS voice。仍不等同 ETS 官方 TOEIC 音檔。</p></section>
 <section class="panel"><h2>Listening V2 實戰訓練</h2>
 <p>先聽，不先看文字。每題最多播放 2 次；可調整語速。完成聽寫後，再檢查漏聽與錯詞。</p>
 <div class="trainer">
 <p><b id="practiceLabel">Practice 1 / 6</b></p>
 <p>語速：
 <select id="speed"><option value="0.8">0.8× 慢速</option><option value="1" selected>1.0× 正常</option><option value="1.2">1.2× 快速</option></select>
-　口音：
+　口音模式：
+<select id="practiceAccentMode"><option value="fixed">固定口音 Fixed</option><option value="random">隨機口音 Random Accent</option></select>
 <select id="practiceAccent"><option value="en-US">美式 American</option><option value="en-GB">英式 British</option><option value="en-AU">澳式 Australian</option><option value="en-IN">印度英文 Indian English</option></select>
+　<span id="practiceAccentNow" class="pill">目前：美式</span>
 　<span id="playCount" class="pill">播放 0 / 2</span></p>
 <p><button class="btn primary" type="button" onclick="playPractice()">▶ 播放 TTS</button>
 <button class="btn secondary" type="button" onclick="revealText()">顯示原文</button></p>
@@ -38,7 +40,22 @@ const PRACTICE=[
 "The technician will inspect the machine before ordering replacement parts.",
 "Because traffic is usually heavy on Fridays, I plan to leave the office early."
 ];
-let practiceIndex=0,plays=0;
+let practiceIndex=0,plays=0,practiceChosenAccent=null;
+const ACCENTS=[
+ {code:"en-US",label:"美式 American"},
+ {code:"en-GB",label:"英式 British"},
+ {code:"en-AU",label:"澳式 Australian"},
+ {code:"en-IN",label:"印度英文 Indian English"}
+];
+function randomAccent(){return ACCENTS[Math.floor(Math.random()*ACCENTS.length)]}
+function accentLabel(code){return (ACCENTS.find(x=>x.code===code)||ACCENTS[0]).label}
+function getPracticeAccent(){
+ if(practiceAccentMode.value==="random"){
+   if(!practiceChosenAccent)practiceChosenAccent=randomAccent().code;
+   return practiceChosenAccent;
+ }
+ return practiceAccent.value;
+}
 function normalizeText(s){return String(s||"").toLowerCase().replace(/[^a-z0-9\s]/g,"").replace(/\s+/g," ").trim()}
 function currentPractice(){return PRACTICE[practiceIndex]}
 function renderPractice(){practiceLabel.textContent="Practice "+(practiceIndex+1)+" / "+PRACTICE.length;playCount.textContent="播放 "+plays+" / 2";practiceText.textContent=currentPractice();practiceText.classList.add("hidden");dictationInput.value="";dictationResult.innerHTML=""}
@@ -46,7 +63,7 @@ function playPractice(){
  if(plays>=2){alert("本題最多播放 2 次。請先完成聽寫與跟讀。");return}
  if(!("speechSynthesis" in window)){alert("此瀏覽器不支援 TTS。");return}
  speechSynthesis.cancel();
- const u=new SpeechSynthesisUtterance(currentPractice());applyVoice(u,practiceAccent.value);u.rate=Number(speed.value)||1;speechSynthesis.speak(u);plays++;playCount.textContent="播放 "+plays+" / 2";
+ const chosen=getPracticeAccent();const u=new SpeechSynthesisUtterance(currentPractice());applyVoice(u,chosen);u.rate=Number(speed.value)||1;speechSynthesis.speak(u);plays++;practiceAccentNow.textContent="目前："+accentLabel(chosen);playCount.textContent="播放 "+plays+" / 2";
 }
 function revealText(){practiceText.classList.remove("hidden")}
 function compareWords(input,target){
@@ -139,8 +156,8 @@ const RETEST={
 ["The team booked a video room for clients overseas. What is likely true?",["A remote meeting is planned","The clients are next door","The meeting is cancelled","No internet is needed"],0,"海外客戶＋視訊室表示遠端會議。"]
 ]};
 
-const diagnosticPlays=Array(Q.length).fill(0);
-let retestPlays=Array(10).fill(0);
+const diagnosticPlays=Array(Q.length).fill(0);const diagnosticAccents=Array(Q.length).fill(null);
+let retestPlays=Array(10).fill(0);retestAccents=Array(10).fill(null);let retestAccents=Array(10).fill(null);
 
 function getVoiceForLocale(locale){
  const voices=speechSynthesis.getVoices();
@@ -160,7 +177,12 @@ function speakText(text,rate,locale){
 }
 function playDiagnostic(i){
  if(diagnosticPlays[i]>=2){alert("本題最多播放 2 次。");return}
- if(speakText(Q[i][1],diagnosticSpeed.value,diagnosticAccent.value)){diagnosticPlays[i]++;document.getElementById("dp"+i).textContent="播放 "+diagnosticPlays[i]+" / 2";}
+ let chosen=diagnosticAccent.value;
+ if(diagnosticAccentMode.value==="random"){
+   if(!diagnosticAccents[i])diagnosticAccents[i]=randomAccent().code;
+   chosen=diagnosticAccents[i];
+ }
+ if(speakText(Q[i][1],diagnosticSpeed.value,chosen)){diagnosticPlays[i]++;document.getElementById("dp"+i).textContent="播放 "+diagnosticPlays[i]+" / 2｜"+accentLabel(chosen);}
 }
 quiz.innerHTML=Q.map((q,i)=>'<div class="panel"><b>Q'+(i+1)+'｜'+q[0]+'</b><p><button class="btn primary" type="button" onclick="playDiagnostic('+i+')">▶ 播放題目音檔</button> <span id="dp'+i+'" class="pill">播放 0 / 2</span></p>'+q[2].map((o,j)=>'<label class="opt"><input type="radio" name="q'+i+'" value="'+j+'"> '+o+'</label>').join("")+'</div>').join("");
 
@@ -185,7 +207,12 @@ function grade(){
 function playRetest(i){
  if(retestPlays[i]>=2){alert("本題最多播放 2 次。");return}
  const q=RETEST[last.weak][i];
- if(speakText(q[0],diagnosticSpeed.value,diagnosticAccent.value)){retestPlays[i]++;document.getElementById("rp"+i).textContent="播放 "+retestPlays[i]+" / 2";}
+ let chosen=diagnosticAccent.value;
+ if(diagnosticAccentMode.value==="random"){
+   if(!retestAccents[i])retestAccents[i]=randomAccent().code;
+   chosen=retestAccents[i];
+ }
+ if(speakText(q[0],diagnosticSpeed.value,chosen)){retestPlays[i]++;document.getElementById("rp"+i).textContent="播放 "+retestPlays[i]+" / 2｜"+accentLabel(chosen);}
 }
 function buildRetest(){
  retestPlays=Array(10).fill(0);
