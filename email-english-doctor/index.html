@@ -1,1 +1,24 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Email English Doctor</title></head><body><h1>#38 Email English Doctor</h1><p>商務 Email 診斷與改寫工具。</p><p><a href="/">回 Gary Learning Hub</a></p></body></html>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Email English Doctor</title><style>
+body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;background:#f6f4ee;color:#314247;line-height:1.7}.wrap{max-width:900px;margin:auto;padding:20px}header{background:#6f9993;color:#fff;padding:28px 18px}.card{background:#fffdf8;border:1px solid #dce7e2;border-radius:16px;padding:20px;margin:18px 0}textarea,input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #cfdeda;border-radius:10px;font:inherit}.btn{padding:12px 16px;border:0;border-radius:10px;background:#6f9993;color:#fff;font-weight:700;cursor:pointer}.muted{color:#607377}.box{background:#f1f7f4;border-left:4px solid #6f9993;padding:12px;margin:10px 0}.hidden{display:none}
+</style></head><body><header><div class="wrap"><h1>#38 Email English Doctor</h1><p>貼入商務 Email → 診斷 → 中英解析 → 專業改寫</p></div></header><main class="wrap">
+<div class="card"><p><a href="/">← 回 Gary Learning Hub</a></p><label>姓名</label><input id="name"><label>Email</label><input id="email" type="email"><label>貼上你的英文 Email</label><textarea id="src" rows="10" placeholder="Paste your English email here..."></textarea><p><button class="btn" onclick="run()">開始診斷</button></p></div>
+<div id="result" class="card hidden"><h2>診斷結果</h2><div id="score"></div><div id="advice"></div><h2>專業改寫版</h2><textarea id="rewrite" rows="10" readonly></textarea><p><button class="btn" onclick="copyText()">複製改寫版</button></p></div>
+</main><script>
+function run(){
+ const n=document.getElementById("name").value.trim(),e=document.getElementById("email"),t=document.getElementById("src").value.trim();
+ if(!n){alert("請先填寫姓名。");return}
+ if(!e.value||!e.checkValidity()){alert("請填寫有效 Email。");return}
+ if(t.length<20){alert("請貼上較完整的英文 Email。");return}
+ let tone=85,clarity=85,professional=85,grammar=85,items=[];
+ if(/\b(send me|reply asap|why haven't you|you forgot|i want)\b/i.test(t)){tone-=25;items.push(["語氣 Tone","部分句子過於直接。","Some wording sounds too direct."])}
+ if(!/\b(please|could you|would you|thank|thanks)\b/i.test(t)){professional-=10;items.push(["禮貌 Professionalism","建議加入 please、could you 或 thank you。","Add polite markers such as please, could you, or thank you."])}
+ if(t.split(/[.!?]/).some(x=>x.trim().split(/\s+/).length>28)){clarity-=15;items.push(["清楚度 Clarity","有句子偏長，建議拆成兩句。","Some sentences are too long; split them for clarity."])}
+ if(/\bi am agree\b/i.test(t)){grammar-=20;items.push(["文法 Grammar","應寫 I agree，不是 I am agree。","Use I agree, not I am agree."])}
+ let r=t.replace(/\bSend me\b/gi,"Could you please send me").replace(/\bReply ASAP\b/gi,"Could you please reply at your earliest convenience").replace(/\bI want\b/gi,"I would like").replace(/\bI am agree\b/gi,"I agree");
+ if(!/\bthank|thanks\b/i.test(r))r+="\n\nThank you for your time and assistance.";
+ document.getElementById("score").innerHTML="<div class='box'><b>語氣 "+tone+"｜文法 "+grammar+"｜清楚度 "+clarity+"｜專業度 "+professional+"</b></div>";
+ document.getElementById("advice").innerHTML=(items.length?items.map(x=>"<div class='box'><b>"+x[0]+"</b><br>中文："+x[1]+"<br>English: "+x[2]+"</div>").join(""):"<div class='box'>目前未偵測到明顯高風險問題，可再優化精簡度與行動要求。</div>");
+ document.getElementById("rewrite").value=r;document.getElementById("result").classList.remove("hidden");document.getElementById("result").scrollIntoView({behavior:"smooth"});
+}
+function copyText(){navigator.clipboard.writeText(document.getElementById("rewrite").value);alert("已複製改寫版。")}
+</script></body></html>
