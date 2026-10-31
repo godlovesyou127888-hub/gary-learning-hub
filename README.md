@@ -85,3 +85,21 @@ Step 2「教練解讀」與 Step 6「教練校準」回到 Command Center 的付
 - 只有在教學價值明確時才做中英對照，例如：答案解析、商務句型、英文策略、專有名詞。
 - 一般導覽、操作說明與系統訊息以繁體中文為主，避免全頁雙語造成認知負擔。
 - 新增網站上線前，需做一次簡體中文掃描與 `zh-Hant` 檢查。
+
+## Assessment result data standard
+
+All question-based diagnostic, practice, and retest pages must preserve item-level responses. A score summary alone is not sufficient.
+
+For scored items, each saved/delivered result should include at minimum:
+- `question_id`
+- question/prompt or stable question reference
+- `student_answer` (and answer index when applicable)
+- `correct_answer` (and answer index when applicable)
+- `is_correct`
+- skill/dimension tag
+
+Where relevant, also preserve playback count, accent, speed, response time, explanation/error type, and retest responses.
+
+For self-report scales without a correct answer, preserve `question_id`, dimension, prompt, selected score, and response label. For Mistake Doctor-style user-entered error logs, preserve every entered item as an item-level record.
+
+Item-level data must be included in local result persistence and in coach/result delivery when that page provides email delivery. Do not claim a personalized wrong-answer analysis when only aggregate scores are available.
