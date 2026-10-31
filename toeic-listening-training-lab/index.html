@@ -32,8 +32,8 @@ body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;backgro
 <div id="draftStatus" class="path" style="margin-bottom:12px"><b>進度保護已開啟：</b>姓名、Email、播放次數與每題答案都會自動保存；重新整理或重新開啟本頁可恢復。</div><div id="quiz"></div><button class="btn primary" type="button" onclick="grade()">完成診斷</button></section>
 <section id="result" class="panel hidden"><h2>診斷結果</h2><div id="summary"></div><div id="scores"></div><div id="detail"></div>
 <p><button class="btn secondary" type="button" onclick="copyListeningReport()">複製完整結果</button></p>
-<p class="muted">若 FormSubmit 顯示 Thanks 但沒有收到信，請使用「複製完整結果」保留 20 題診斷與 10 題再測紀錄。</p>
-<form id="listeningDeliveryForm" action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prepareListeningDelivery()">
+<p class="muted">若寄送後仍未收到信，請使用「複製完整結果」保留 20 題診斷與 10 題再測紀錄。</p>
+<form id="listeningDeliveryForm" action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" onsubmit="return prepareListeningDelivery()">
 <input type="hidden" name="_subject" value="TOEIC Listening Training Lab｜Student Result">
 <input type="hidden" name="_template" value="table">
 <input type="hidden" name="_autoresponse" value="已收到你的 TOEIC Listening Training Lab 診斷結果。這封信是你的結果副本，請保留作為後續聽力訓練與再測參考。">
@@ -48,7 +48,7 @@ body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;backgro
 <input type="hidden" name="retest_responses" id="sendRetestResponses">
 <input type="hidden" name="retest_responses_json" id="sendRetestResponsesJson">
 <input type="hidden" name="submitted_at" id="sendTime">
-<button class="btn secondary" type="submit">FormSubmit 備援寄送</button>
+<button class="btn primary" type="submit">寄送完整 Listening 結果</button>
 </form></section>
 <section id="retest" class="panel hidden"><h2>10 題弱點再測</h2><div id="retestIntro"></div><div id="retestQuiz"></div><button class="btn primary" type="button" onclick="gradeRetest()">完成再測</button><div id="retestResult"></div></section>
 </main><script>
