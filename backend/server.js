@@ -42,11 +42,14 @@ async function init(){
   await pool.query(`CREATE INDEX IF NOT EXISTS idx_tpass_submissions_email_created ON tpass_submissions(student_email, created_at DESC);`);
   await pool.query(`CREATE INDEX IF NOT EXISTS idx_tpass_submissions_type_created ON tpass_submissions(assessment_type, created_at DESC);`);
 }
-await init();
-
-app.get("/health",(req,res)=>res.json({ok:true}));
+let dbReady=false;
+if(process.env.DATABASE_URL){
+  try{await init();dbReady=true;}catch(err){console.error("Database init failed",err);}
+}
+app.get("/health",(req,res)=>res.json({ok:true,database:dbReady?"ready":"not_configured"}));
 
 app.post("/api/submissions", async (req,res)=>{
+  if(!dbReady)return res.status(503).json({ok:false,error:"database_not_configured"});
   try{
     const b=req.body||{};
     if(!b.assessment_type || !b.source_page){
@@ -79,6 +82,7 @@ app.post("/api/submissions", async (req,res)=>{
 });
 
 app.patch("/api/submissions/:id/email-status", async (req,res)=>{
+  if(!dbReady)return res.status(503).json({ok:false,error:"database_not_configured"});
   try{
     const status=String(req.body?.status||"").slice(0,40);
     if(!status)return res.status(400).json({ok:false,error:"status required"});
@@ -92,6 +96,7 @@ app.patch("/api/submissions/:id/email-status", async (req,res)=>{
 });
 
 app.get("/api/submissions", async (req,res)=>{
+  if(!dbReady)return res.status(503).json({ok:false,error:"database_not_configured"});
   if(!process.env.ADMIN_TOKEN || req.headers.authorization!==`Bearer ${process.env.ADMIN_TOKEN}`){
     return res.status(401).json({ok:false,error:"unauthorized"});
   }
