@@ -3,7 +3,23 @@
 <section class="card"><div class="actions"><a class="btn outline" href="../">← 回樂齡多益首頁</a><a class="btn outline" href="../form-test/" target="_blank">表單測試</a></div></section>
 <section class="card"><h2>① 填寫基本資料</h2><div class="row"><input id="name" type="text" placeholder="姓名"><input id="email" type="email" placeholder="Email"></div><div class="helper">先做表單測試：<a href="../form-test/" target="_blank">開啟「FormSubmit 單獨測試頁」</a></div></section>
 <section id="quiz" class="card"></section>
-<section class="card"><h2>② 完成後保存與送出</h2><div class="actions"><button id="grade">完成診斷並送出</button><button id="pdf" class="secondary">下載／儲存 PDF</button><button id="dl" class="secondary">下載完整 JSON</button><button class="outline" onclick="reportProblem('Part 5')">問題回報</button></div><div id="result"></div><div id="status" class="status pending">尚未送出</div><div class="helper"><b>下一步：</b>確認送出成功後，進入 Listening 聽力診斷。</div><a class="btn secondary" href="../listening/">下一步：Listening</a></section>
+<section class="card"><h2>② 完成後保存與送出</h2><div class="actions"><button id="grade" type="button">① 完成診斷</button><button id="pdf" class="secondary">下載／儲存 PDF</button><button id="dl" class="secondary">下載完整 JSON</button><button class="outline" onclick="reportProblem('Part 5')">問題回報</button></div><div id="result"></div><div id="status" class="status pending">尚未送出</div><form id="nativeDeliveryForm" action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" target="_blank" style="margin-top:12px">
+<input type="hidden" name="_subject" id="nativeSubject">
+<input type="hidden" name="_template" value="table">
+<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/tpass-next/">
+<input type="hidden" name="_url" value="https://gary-learning-hub.onrender.com/tpass-next/">
+<input type="hidden" name="name" id="nativeName">
+<input type="hidden" name="email" id="nativeEmail">
+<input type="hidden" name="submission_id" id="nativeSubmissionId">
+<input type="hidden" name="assessment_type" id="nativeAssessmentType">
+<input type="hidden" name="total_score" id="nativeTotalScore">
+<input type="hidden" name="accuracy" id="nativeAccuracy">
+<input type="hidden" name="primary_weakness" id="nativePrimaryWeakness">
+<input type="hidden" name="secondary_weakness" id="nativeSecondaryWeakness">
+<input type="hidden" name="item_responses" id="nativeItemResponses">
+<input type="hidden" name="submitted_at" id="nativeSubmittedAt">
+<button class="btn" type="submit" id="nativeSubmitBtn" disabled>② 寄送 Part 5 結果</button>
+</form><div class="helper"><b>下一步：</b>確認送出成功後，進入 Listening 聽力診斷。</div><a class="btn secondary" href="../listening/">下一步：Listening</a></section>
 </main><script>
 s.textContent=baseStyles();
 const nameEl=document.getElementById("name");
@@ -27,6 +43,23 @@ const Q=[
 ["P5N-10","Neither the director nor the assistants ___ available yesterday.",["was","were","is","be"],1,"Agreement"]
 ];
 quizEl.innerHTML='<h2>Part 5｜10 題</h2>'+Q.map((q,i)=>'<div class="q"><b>'+(i+1)+'. '+q[1]+'</b>'+q[2].map((x,j)=>'<label><input type="radio" name="q'+i+'" value="'+j+'"><span>'+x+'</span></label>').join('')+'</div>').join('');
+function prepNativeDelivery(payload){
+  document.getElementById("nativeSubject").value="[T-PASS NEXT] "+payload.assessment_type+"｜"+payload.student_name;
+  document.getElementById("nativeName").value=payload.student_name||"";
+  document.getElementById("nativeEmail").value=payload.email||"";
+  document.getElementById("nativeSubmissionId").value=payload.submission_id||"";
+  document.getElementById("nativeAssessmentType").value=payload.assessment_type||"";
+  document.getElementById("nativeTotalScore").value=payload.total_score||"";
+  document.getElementById("nativeAccuracy").value=payload.accuracy||"";
+  document.getElementById("nativePrimaryWeakness").value=payload.primary_weakness||"";
+  document.getElementById("nativeSecondaryWeakness").value=payload.secondary_weakness||"";
+  document.getElementById("nativeItemResponses").value=compactResponses(payload);
+  document.getElementById("nativeSubmittedAt").value=payload.submitted_at||"";
+  document.getElementById("nativeSubmitBtn").disabled=false;
+  statusEl.textContent="✅ 診斷完成並已保存在本機。請按「② 寄送結果」完成 FormSubmit。";
+  statusEl.className="status ok";
+}
+
 let last=null;const key="tpass_next_part5_draft";const draft=loadLocal(key)||{};nameEl.value=draft.name||"";emailEl.value=draft.email||"";
 (draft.answers||[]).forEach((v,i)=>{if(v!=null){const el=document.querySelector('input[name=q'+i+'][value="'+v+'"]');if(el)el.checked=true}});
 document.addEventListener("change",()=>saveLocal(key,{name:nameEl.value,email:emailEl.value,answers:Q.map((q,i)=>document.querySelector('input[name=q'+i+']:checked')?.value??null)}));
@@ -36,7 +69,7 @@ const details=Q.map((q,i)=>({question_id:q[0],question:q[1],student_answer:q[2][
 const score=details.filter(x=>x.is_correct).length;const errs={};details.filter(x=>!x.is_correct).forEach(x=>errs[x.skill]=(errs[x.skill]||0)+1);
 const ranked=Object.entries(errs).sort((a,b)=>b[1]-a[1]);const primary=ranked[0]?.[0]||"無明顯弱點";const secondary=ranked[1]?.[0]||"";
 last={submission_id:uid("P5"),submitted_at:new Date().toISOString(),assessment_type:"樂齡多益 Part 5 文法診斷",source_page:location.href,student_name:nameEl.value.trim(),email:emailEl.value.trim(),total_score:score+"/10",accuracy:Math.round(score*10)+"%",primary_weakness:primary,secondary_weakness:secondary,summary:"Part 5 文法診斷",responses_json:details};
-saveLocal("tpass_next_part5_last",last);resultEl.innerHTML="<h2>結果："+score+"/10</h2><p>正確率："+last.accuracy+"</p><p>主要弱點："+primary+"</p>";submitResult(last,statusEl)};
+saveLocal("tpass_next_part5_last",last);resultEl.innerHTML="<h2>結果："+score+"/10</h2><p>正確率："+last.accuracy+"</p><p>主要弱點："+primary+"</p>";prepNativeDelivery(last)};
 pdfBtn.onclick=()=>openPdfReport(last||loadLocal("tpass_next_part5_last"));
 dlBtn.onclick=()=>downloadJSON("樂齡多益-Part5-"+Date.now()+".json",last||loadLocal("tpass_next_part5_last")||{note:"尚未完成診斷"});
 
