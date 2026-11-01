@@ -134,4 +134,5 @@ function downloadJSON(){
  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json;charset=utf-8"}));a.download="toeic_mock_test_lab_"+Date.now()+".json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),30000);document.getElementById("backupStatus").textContent="已啟動 JSON 下載，請確認檔案已保存且可以開啟，再勾選備份確認。";
 }
 render();
-</script></body></html>
+</script><script src="/assets/toeic-return.js?v=20261101"></script>
+</body></html>
