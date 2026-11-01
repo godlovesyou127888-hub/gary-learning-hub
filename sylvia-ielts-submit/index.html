@@ -18,8 +18,7 @@ h1{margin:0 0 6px}.muted{color:var(--muted)}input,textarea{width:100%;padding:11
 <a class="btn secondary" href="/sylvia-ielts-command-center/">IELTS Command Center</a>
 </div>
 
-<form id="ieltsForm" action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST">
-<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/sylvia-ielts-submit-complete/">
+<form id="ieltsForm" action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" target="_blank">
 <input type="hidden" name="_captcha" value="false">
 <input type="hidden" name="_template" value="table">
 <input type="hidden" id="subjectField" name="_subject">
@@ -37,6 +36,10 @@ h1{margin:0 0 6px}.muted{color:var(--muted)}input,textarea{width:100%;padding:11
 <p><button id="submitBtn" class="btn primary" type="submit">送出 Writing 作業給 Gary</button></p>
 </form>
 <div id="deliveryStatusBox" class="status">正在載入 IELTS Writing 作業資料…</div>
+  <div id="afterSubmitActions" style="display:none;margin-top:14px">
+    <a class="btn primary" href="/sylvia-ielts-command-center/">回 Sylvia IELTS 首頁</a>
+    <button id="retryBtn" class="btn secondary" type="button">再次寄送</button>
+  </div>
 </section>
 </main>
 
@@ -51,6 +54,8 @@ const subjectField=byId('subjectField');
 const submissionField=byId('submissionField');
 const sourceField=byId('sourceField');
 const ieltsForm=byId('ieltsForm');
+const afterSubmitActions=byId('afterSubmitActions');
+const retryBtn=byId('retryBtn');
 
 let data=null;
 try{data=JSON.parse(localStorage.getItem('sylvia_ielts_pending_delivery')||'null')}catch{}
@@ -83,8 +88,18 @@ ieltsForm.addEventListener('submit',()=>{
   localStorage.setItem('sylvia_ielts_last_submission',JSON.stringify(backup));
   localStorage.setItem('sylvia_ielts_backup_'+(data.submission_id||Date.now()),JSON.stringify(backup));
   submitBtn.disabled=true;
-  submitBtn.textContent='正在送出…';
-  deliveryStatusBox.innerHTML='正在直接送往 FormSubmit。若看到成功頁，表示 FormSubmit 已接受；Gary 是否收到仍以 Gmail 實收為準。';
+  submitBtn.textContent='已開啟 FormSubmit 寄送頁';
+  deliveryStatusBox.innerHTML='✅ 已使用「實際驗證可收信」的 FormSubmit 原生 POST 通道開啟寄送頁。看到 FormSubmit Thanks! 後，回到此頁可直接返回 IELTS 首頁。';
+  afterSubmitActions.style.display='flex';
+  afterSubmitActions.style.gap='8px';
+  afterSubmitActions.style.flexWrap='wrap';
+});
+
+retryBtn.addEventListener('click',()=>{
+  submitBtn.disabled=false;
+  submitBtn.textContent='送出 Writing 作業給 Gary';
+  afterSubmitActions.style.display='none';
+  deliveryStatusBox.innerHTML='可再次送出；本機備份仍保留。';
 });
 </script>
 </body></html>
