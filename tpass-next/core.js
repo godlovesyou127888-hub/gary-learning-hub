@@ -1,5 +1,5 @@
 
-const TPASS_ENDPOINT="https://script.google.com/macros/s/AKfycbzBBBM5A2MXBQTYnnJPYUcS_sve909wl-P_CuoW57lr/exec";
+const TPASS_ENDPOINT="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728";
 function uid(prefix="TPASS"){return prefix+"-"+Date.now()+"-"+Math.random().toString(36).slice(2,8).toUpperCase()}
 function saveLocal(key,data){localStorage.setItem(key,JSON.stringify(data))}
 function loadLocal(key){try{return JSON.parse(localStorage.getItem(key)||"null")}catch{return null}}
@@ -7,22 +7,67 @@ function downloadJSON(name,data){const a=document.createElement("a");a.href=URL.
 async function submitResult(payload,statusEl){
   const localKey="tpass_next_submission_"+payload.submission_id;
   saveLocal(localKey,payload);
-  statusEl.textContent="本机已保存，正在传送线上资料…";
+  statusEl.textContent="本機已保存，正在送出 FormSubmit…";
   statusEl.className="status pending";
+
   try{
-    const body=new URLSearchParams();
-    Object.entries(payload).forEach(([k,v])=>body.append(k,typeof v==="string"?v:JSON.stringify(v)));
-    const r=await fetch(TPASS_ENDPOINT,{method:"POST",body,mode:"cors"});
-    if(!r.ok)throw new Error("HTTP "+r.status);
-    const txt=await r.text();
-    statusEl.textContent="✅ 已送出。Submission ID："+payload.submission_id;
+    let iframe=document.getElementById("tpassFormSubmitFrame");
+    if(!iframe){
+      iframe=document.createElement("iframe");
+      iframe.id="tpassFormSubmitFrame";
+      iframe.name="tpassFormSubmitFrame";
+      iframe.style.display="none";
+      document.body.appendChild(iframe);
+    }
+
+    const form=document.createElement("form");
+    form.method="POST";
+    form.action=TPASS_ENDPOINT;
+    form.target="tpassFormSubmitFrame";
+    form.style.display="none";
+
+    const fields={
+      _subject:"[T-PASS NEXT] "+(payload.assessment_type||"Assessment")+"｜"+(payload.student_name||"Student")+"｜"+payload.submission_id,
+      _template:"table",
+      _captcha:"false",
+      _autoresponse:"已收到你的 T-PASS NEXT 結果。請保留此信作為學習紀錄副本。",
+      submission_id:payload.submission_id||"",
+      submitted_at:payload.submitted_at||"",
+      assessment_type:payload.assessment_type||"",
+      source_page:payload.source_page||"",
+      student_name:payload.student_name||"",
+      email:payload.email||"",
+      current_score:payload.current_score||"",
+      target_score:payload.target_score||"",
+      total_score:payload.total_score||"",
+      accuracy:payload.accuracy||"",
+      primary_weakness:payload.primary_weakness||"",
+      secondary_weakness:payload.secondary_weakness||"",
+      summary:typeof payload.summary==="string"?payload.summary:JSON.stringify(payload.summary||{}),
+      responses_json:typeof payload.responses_json==="string"?payload.responses_json:JSON.stringify(payload.responses_json||[])
+    };
+
+    Object.entries(fields).forEach(([name,value])=>{
+      const input=document.createElement("input");
+      input.type="hidden";
+      input.name=name;
+      input.value=value;
+      form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+    form.submit();
+    setTimeout(()=>form.remove(),1500);
+
+    const sent={...payload,delivery_status:"submitted_to_formsubmit"};
+    saveLocal(localKey,sent);
+    statusEl.textContent="✅ 已送出 FormSubmit。Submission ID："+payload.submission_id+"。完整資料亦已保存在本機。";
     statusEl.className="status ok";
-    saveLocal(localKey,{...payload,delivery_status:"sent",delivery_response:txt});
     return true;
   }catch(err){
-    statusEl.textContent="⚠️ 线上传送失败，但完整资料已保存在本机。请按「下载完整结果 JSON」。";
-    statusEl.className="status fail";
     saveLocal(localKey,{...payload,delivery_status:"failed",delivery_error:String(err)});
+    statusEl.textContent="⚠️ FormSubmit 送出失敗，但完整資料已保存在本機。請下載完整結果 JSON。";
+    statusEl.className="status fail";
     return false;
   }
 }
