@@ -2,7 +2,7 @@
 <section class="hero"><h1 id="pageTitle">Google Apps Script 單獨測試</h1><p id="pageLead">不做測驗，只確認資料能不能真正送達。</p></section>
 <section class="card"><h2 id="stepTitle">只做這一步</h2><p class="muted" id="stepText">填姓名與 Email → 按「送出測試」→ 會開啟 Google Apps Script 新頁面。看到成功頁面才算送達。</p>
 <form id="deliveryForm" action="https://script.google.com/macros/s/AKfycbwyb8pphHtOR_oyMu5ICKAYaGZxmWad_3CjX_BchY0PF71tIiuB8KM85utE6Qj27AWK/exec" method="POST" target="_self">
-<input type="hidden" name="test_type" id="typeField" value="T-PASS NEXT Google Apps Script Direct POST"><input type="hidden" name="delivery_token" id="tokenField"><input type="hidden" name="submission_id" id="submissionField"><input type="hidden" name="source_page" id="sourceField"><input type="hidden" name="assessment_type" id="assessmentTypeField"><input type="hidden" name="student_name" id="studentNameField"><input type="hidden" name="current_score" id="currentScoreField"><input type="hidden" name="target_score" id="targetScoreField"><input type="hidden" name="total_score" id="totalScoreField"><input type="hidden" name="accuracy" id="accuracyField"><input type="hidden" name="primary_weakness" id="primaryWeaknessField"><input type="hidden" name="secondary_weakness" id="secondaryWeaknessField"><input type="hidden" name="summary" id="summaryField"><input type="hidden" name="responses_json" id="responsesJsonField"><input type="hidden" name="submitted_at" id="submittedAtField">
+<input type="hidden" name="test_type" id="typeField" value="T-PASS NEXT Google Apps Script Direct POST"><input type="hidden" name="delivery_token" id="tokenField"><input type="hidden" name="submission_id" id="submissionField"><input type="hidden" name="source_page" id="sourceField"><input type="hidden" name="assessment_type" id="assessmentTypeField"><input type="hidden" name="student_name" id="studentNameField"><input type="hidden" name="current_score" id="currentScoreField"><input type="hidden" name="listening_score" id="listeningScoreField"><input type="hidden" name="reading_score" id="readingScoreField"><input type="hidden" name="mock_records_json" id="mockRecordsField"><input type="hidden" name="target_score" id="targetScoreField"><input type="hidden" name="total_score" id="totalScoreField"><input type="hidden" name="accuracy" id="accuracyField"><input type="hidden" name="primary_weakness" id="primaryWeaknessField"><input type="hidden" name="secondary_weakness" id="secondaryWeaknessField"><input type="hidden" name="summary" id="summaryField"><input type="hidden" name="responses_json" id="responsesJsonField"><input type="hidden" name="submitted_at" id="submittedAtField">
 <div class="row"><input id="nameField" name="name" required placeholder="姓名"><input id="emailField" name="email" type="email" required placeholder="Email"></div>
 <label style="display:block;margin-top:12px">送出內容
 <textarea id="messageField" name="test_message" required style="width:100%;min-height:220px;padding:12px;border:2px solid #cfe0d1;border-radius:12px;font-size:16px"></textarea>
@@ -101,6 +101,9 @@ function setAssessmentMode(){
   assessmentTypeField.value=data.assessment_type||"";
   studentNameField.value=data.student_name||"";
   currentScoreField.value=data.current_score||"";
+  listeningScoreField.value=data.listening_score||"";
+  readingScoreField.value=data.reading_score||"";
+  mockRecordsField.value=JSON.stringify(Array.isArray(data.mock_records)?data.mock_records:[]);
   targetScoreField.value=data.target_score||"";
   totalScoreField.value=data.total_score||"";
   accuracyField.value=data.accuracy||"";
@@ -110,7 +113,7 @@ function setAssessmentMode(){
   responsesJsonField.value=JSON.stringify(Array.isArray(data.responses_json)?data.responses_json:[]);
   submittedAtField.value=data.submitted_at||data._saved_at||new Date().toISOString();
   
-  messageField.value=buildMailMessage(data)+(tokenField.value?"\n\nDelivery Token："+tokenField.value:"");
+  messageField.value=buildMailMessage(data)+(data.assessment_type==="TOEIC Mock Test Lab"?"\nListening："+data.listening_score+"\nReading："+data.reading_score+"\n完整模考紀錄 JSON："+JSON.stringify(data.mock_records):"")+(tokenField.value?"\n\nDelivery Token："+tokenField.value:"");
 
   const st=tokenField.value?getDeliveryStatus(tokenField.value):null;
   const statusText=st?.status==="gmail_verified"
@@ -159,7 +162,8 @@ function setAssessmentMode(){
 
   // Reliability rule: do not intercept, delay, fetch, disable, or redirect this submit.
   // The browser performs one plain native POST directly to Google Apps Script.
-  deliveryForm.addEventListener("submit",()=>{
+  deliveryForm.addEventListener("submit",e=>{
+    if(data.assessment_type==="TOEIC Mock Test Lab" && (!validateDeliveryPayload({...data,student_name:nameField.value.trim(),email:emailField.value.trim()}).ok || !messageField.value.includes("完整模考紀錄 JSON：") || !messageField.value.includes("Listening：") || !messageField.value.includes("Reading："))){e.preventDefault();lifecycleBox.textContent="資料不完整，已阻止寄送。";return;}
     lifecycleBox.innerHTML="<b>寄送狀態：</b>正在送往 Google Apps Script<br><span style='font-size:14px'>資料會先寫入 Google Sheet，再由 Gmail 原生寄出。</span>";
   });
 
