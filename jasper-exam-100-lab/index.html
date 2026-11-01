@@ -1,0 +1,22 @@
+<!doctype html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Jasper Exam 100 Lab：考前滿分模式、弱點診斷、隨機題組、錯題重練、進度追蹤與教練交付。">
+<title>Jasper Exam 100 Lab</title><link rel="stylesheet" href="style.css"></head><body>
+<header><nav><a href="/">← Gary Learning Hub</a><a href="/roadmap/">101 Roadmap</a></nav>
+<div class="hero"><p class="eyebrow">JASPER EXAM 100 LAB · MVP V1</p><h1>目標不是多做題，<br>是把錯題清到接近 100 分。</h1><p class="lead">考前只做三件事：找弱點、練同類題、重做錯題。每次練習都留下紀錄。</p>
+<div class="pills"><span>考前診斷</span><span>隨機題組</span><span>錯題重練</span><span>100分進度</span><span>Coach Delivery</span></div></div></header>
+<main>
+<section class="card"><p class="eyebrow">01 · DIAGNOSE</p><h2>先確認這次考試最危險的地方</h2>
+<div class="grid"><label>姓名<input id="student" value="Jasper"></label><label>Email<input id="email" type="email"></label><label>考試名稱<input id="examName" placeholder="例如：Unit 6 英語測驗"></label><label>考試日期<input id="examDate" type="date"></label></div>
+<label>目前最擔心的單元<select id="weakArea"><option>Vocabulary 單字</option><option>Grammar 文法</option><option>Reading 閱讀</option><option>Spelling 拼字</option><option>Sentence Pattern 句型</option></select></label>
+<label>目標<input id="target" type="number" min="60" max="100" value="100"></label></section>
+
+<section class="card"><p class="eyebrow">02 · PRACTICE</p><h2>10 題考前題組</h2><div id="quiz"></div>
+<button id="submitQuiz">完成 10 題</button><p id="quizStatus" role="status"></p></section>
+
+<section class="card"><p class="eyebrow">03 · MISTAKE LOOP</p><h2>只重做剛才錯的題目</h2><div id="mistakeQuiz"></div>
+<button id="submitMistakes">完成錯題重練</button><p id="mistakeStatus" role="status"></p></section>
+
+<section class="card"><p class="eyebrow">04 · PROGRESS</p><h2>離 100 分還差多少？</h2><div id="summary"></div><div id="history"></div>
+<div class="actions"><button id="download">下載 JSON</button><button id="print" class="secondary">列印／PDF</button><button id="sendCoach">寄送完整結果給 Gary 教練</button></div><p id="deliveryStatus" role="status"></p></section>
+</main><footer>Gary · Jasper Exam 100 Lab MVP V1</footer><script src="app.js"></script></body></html>
