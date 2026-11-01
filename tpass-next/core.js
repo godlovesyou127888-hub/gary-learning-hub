@@ -22,24 +22,33 @@ function compactResponses(payload){
     return q+"｜學生:"+sa+"｜正解:"+ca+"｜"+ok+(skill?"｜"+skill:"")+plays;
   }).join("\n");
 }
+function buildMailMessage(payload){
+  const lines=[
+    "Submission ID："+(payload.submission_id||""),
+    "Submitted At："+(payload.submitted_at||""),
+    "測驗："+(payload.assessment_type||""),
+    "姓名："+(payload.student_name||""),
+    "Email："+(payload.email||""),
+    payload.current_score?"目前分數："+payload.current_score:"",
+    payload.target_score?"目標分數："+payload.target_score:"",
+    "測驗結果："+(payload.total_score||""),
+    "正確率："+(payload.accuracy||""),
+    "主要弱點："+(payload.primary_weakness||""),
+    payload.secondary_weakness?"次要弱點："+payload.secondary_weakness:"",
+    "",
+    "逐題紀錄：",
+    compactResponses(payload)
+  ];
+  return lines.filter((x,i)=>x!=="" || (i>0 && lines[i-1]!=="" )).join("\n");
+}
 function formFields(payload){
   return {
-    _subject:"[T-PASS NEXT] "+(payload.assessment_type||"Assessment")+"｜"+(payload.student_name||"Student")+"｜"+payload.submission_id,
+    _subject:"[T-PASS NEXT] "+(payload.assessment_type||"Assessment")+"｜"+(payload.student_name||"Student"),
     _template:"table",
-    _captcha:"false",
-    submission_id:payload.submission_id||"",
-    submitted_at:payload.submitted_at||"",
-    assessment_type:payload.assessment_type||"",
+    form_type:"T-PASS NEXT Assessment",
     name:payload.student_name||"",
-    student_email:payload.email||"",
-    current_score:payload.current_score||"",
-    target_score:payload.target_score||"",
-    total_score:payload.total_score||"",
-    accuracy:payload.accuracy||"",
-    primary_weakness:payload.primary_weakness||"",
-    secondary_weakness:payload.secondary_weakness||"",
-    summary:typeof payload.summary==="string"?payload.summary:"診斷完成",
-    item_responses:compactResponses(payload)
+    email:payload.email||"",
+    message:buildMailMessage(payload)
   };
 }
 function submitResult(payload,statusEl){
