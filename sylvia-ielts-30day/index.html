@@ -31,7 +31,7 @@ canvas{width:100%;height:280px;border:1px solid var(--line);border-radius:12px;b
 <div class="card"><span class="badge">Submissions</span><div class="kpi" id="submissionCount">0</div><div class="muted">已交作文數</div></div>
 <div class="card"><span class="badge">Latest Band</span><div class="kpi" id="latestBand">—</div><div class="muted">Gary 評分後更新</div></div>
 </div>
-<div class="card"><h2>今日任務｜Today</h2><div id="todayCard"></div><button class="action" onclick="go('submit')">開始作答</button></div>
+<div class="card"><h2>今日任務｜Today</h2><div id="todayCard"></div><button type="button" class="action" onclick="go('submit')">開始作答</button></div>
 <div class="card"><h2>明日自動派課｜Adaptive Next Assignment</h2><div id="adaptiveAssignment" class="muted">完成一次 Gary 批改後，系統會依最低評分構面自動派發下一個專項任務。</div></div>
 <div class="card"><h2>30 天完成度</h2><div class="progress"><div id="progressBar" style="width:0%"></div></div><p id="progressText"></p></div>
 <div class="card"><h2>Writing Band 進步曲線</h2><canvas id="chart" width="900" height="280"></canvas><p class="muted">尚未有 Gary 分數時不會畫點；每次回填分數後自動更新。</p></div>
@@ -94,9 +94,26 @@ canvas{width:100%;height:280px;border:1px solid var(--line);border-radius:12px;b
 </main><div class="footer">Sylvia IELTS Writing Sprint V2｜Gary 老師客製化一對一陪跑</div>
 
 <script>
-const tabs=[['dashboard','首頁'],['submit','每日作答'],['records','作業紀錄'],['grading','Gary評分'],['errors','錯誤累積'],['plan','30天計畫'] ];
-tabs.forEach((x,i)=>{const b=document.createElement('button');b.textContent=x[1];b.dataset.id=x[0];if(i===0)b.classList.add('on');b.onclick=()=>go(x[0]);nav.appendChild(b)});
-function go(id){document.querySelectorAll('section').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.id===id));scrollTo(0,0)}
+window.go=function(id){
+  document.querySelectorAll('main section').forEach(s=>s.classList.remove('on'));
+  const target=document.getElementById(id);
+  if(target)target.classList.add('on');
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.id===id));
+  window.scrollTo(0,0);
+};
+document.addEventListener('DOMContentLoaded',()=>{
+  const tabs=[['dashboard','首頁'],['submit','每日作答'],['records','作業紀錄'],['grading','Gary評分'],['errors','錯誤累積'],['plan','30天計畫']];
+  const navEl=document.getElementById('nav');
+  tabs.forEach((x,i)=>{
+    const b=document.createElement('button');
+    b.type='button';b.textContent=x[1];b.dataset.id=x[0];
+    if(i===0)b.classList.add('on');
+    b.addEventListener('click',()=>window.go(x[0]));
+    navEl.appendChild(b);
+  });
+});
+</script>
+<script>
 const prompts=[
 ['Task 1','The line graph shows employment in four sectors between 1960 and 2020. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.'],
 ['Task 2','Some people believe schools should focus mainly on academic subjects, while others think practical life skills are equally important. Discuss both views and give your own opinion.'],
@@ -148,7 +165,7 @@ function downloadSubmission(){const r=buildRecord();if(!r)return;downloadJSON('S
 function submitToGary(){const r=buildRecord();if(!r)return;records.push(r);saveRecords();
 const msg=['Submission ID：'+r.id,'Submitted At：'+new Date().toISOString(),'學員：Sylvia','Email：'+studentEmail.value.trim(),'IELTS Writing：'+r.task,'Day：'+r.day,'日期：'+r.date,'字數：'+r.words,'作答時間：'+(r.minutes||'未填')+' 分鐘','','題目：',r.question,'','作文：',r.essay,'','自我檢查：'+(r.self_checks.join('；')||'未勾選'),'最不確定：'+(r.self_concern||'未填')].join('\n');
 const payload={submission_id:r.id,submitted_at:new Date().toISOString(),assessment_type:'Sylvia IELTS Writing '+r.task,source_page:location.href,student_name:'Sylvia',email:studentEmail.value.trim(),total_score:'Pending Gary Review',accuracy:'',primary_weakness:r.self_concern||'Pending Review',preformatted_message:msg,responses_json:[{question_id:'Essay',student_answer:r.essay,correct_answer:'',is_correct:true,dimension:r.task}]};
-localStorage.setItem('sylvia_ielts_pending_delivery',JSON.stringify({...payload,_saved_at:new Date().toISOString()}));deliveryStatus.textContent='✅ IELTS Writing 作業已保存在本機，正在前往 IELTS 專用寄送頁。實際收件仍以 Gary Gmail 為準。';location.href='/sylvia-ielts-submit/'
+localStorage.setItem('sylvia_ielts_pending_delivery',JSON.stringify({...payload,_saved_at:new Date().toISOString()}));deliveryStatus.textContent='✅ IELTS Writing 作業已保存在本機，正在前往 IELTS 專用寄送頁。實際收件仍以 Gary Gmail 為準。';location.href='/sylvia-ielts-submit/'}
 function adaptiveTaskFor(r){
  if(!r||!r.prescription)return null;
  const b=(r.prescription.bottleneck||'').toUpperCase();
