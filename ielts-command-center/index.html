@@ -27,6 +27,15 @@ footer{text-align:center;padding:30px;color:var(--muted)}
 .applyform{display:grid;gap:10px;margin-top:14px}.applyform input,.applyform select,.applyform textarea{width:100%;padding:10px 11px;border:1px solid #d0d5dd;border-radius:10px;font:inherit;background:#fff}
 .boundary{padding:12px 14px;border-radius:12px;background:#fff;border:1px dashed #fdba74}
 @media(max-width:820px){.offergrid{grid-template-columns:1fr}}
+
+.masterjourney{background:#111827;color:#fff;border-radius:22px;padding:22px;margin-bottom:26px}
+.masterjourney h2{margin:4px 0 8px}.journeygrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+.journey{background:#fff;color:var(--ink);border-radius:16px;padding:16px;position:relative}.journey .num{font-size:12px;font-weight:900;color:var(--p);letter-spacing:.12em}
+.journey h3{margin:6px 0}.journey p{font-size:14px;color:var(--muted)}.journey .btn{margin:3px 2px 3px 0}
+.journey.coachgate{background:#fff7ed}.journey.retest{background:#ecfdf3}.journey.full{grid-column:span 2}
+.routeRule{margin-top:16px;background:#ffffff14;border:1px solid #ffffff2a;border-radius:14px;padding:14px}
+@media(max-width:900px){.journeygrid{grid-template-columns:repeat(2,1fr)}.journey.full{grid-column:span 2}}
+@media(max-width:600px){.journeygrid{grid-template-columns:1fr}.journey.full{grid-column:span 1}}
 </style></head><body>
 <header><nav><a href="/">← Gary Learning Hub</a><a href="/roadmap/">101 Roadmap</a><a href="/sylvia-ielts-command-center/">Sylvia 個人儀表板</a></nav>
 <div class="hero">
@@ -37,6 +46,42 @@ footer{text-align:center;padding:30px;color:var(--muted)}
 </div></header>
 
 <main>
+<section class="masterjourney" id="official-ielts-flow">
+<p class="eyebrow">OFFICIAL IELTS LEARNING JOURNEY</p>
+<h2>Gary IELTS 正式考試流程｜只走這一條主線</h2>
+<p>所有 IELTS 網站已重新分工：先用 Mini Test 找方向，再用 Full Mock 決定真正最低科；只有被診斷叫到的專項才打開。</p>
+<div class="journeygrid">
+<article class="journey full"><div class="num">STEP 1 · BASELINE</div><h3>四科 Mini Test｜先取得基準</h3><p>不要一開始就做大量題庫。先用短版測驗建立 Listening／Reading／Writing／Speaking 基準。</p>
+<a class="btn secondary" href="/ielts-listening-mini-test/">Listening 1｜P1+P4</a>
+<a class="btn secondary" href="/ielts-listening-mini-test-2/">Listening 2｜P2+P3</a>
+<a class="btn secondary" href="/ielts-academic-reading-mini-test/">Reading Mini</a>
+<a class="btn secondary" href="/ielts-writing-mini-test/">Writing Mini</a>
+<a class="btn secondary" href="/ielts-speaking-mini-test/">Speaking Mini</a></article>
+
+<article class="journey"><div class="num">STEP 2 · VERIFY</div><h3>Full Mock｜四科整合驗證</h3><p>把四科 Band 放在同一張表，比較 Overall、最低科目與錯誤類型。</p><a class="btn" href="/ielts-mock-test-lab/">IELTS Mock Test Lab</a></article>
+
+<article class="journey coachgate"><div class="num">STEP 3 · FREE COACH 1X</div><h3>免費一次 Gary 一對一策略諮詢</h3><p>完成 Mock 後自動帶入 Overall、四科 Band、最低科目與主要錯誤。每位學員限一次。</p><a class="btn" href="#free-consultation">申請免費一次策略諮詢</a></article>
+
+<article class="journey full"><div class="num">STEP 4 · TARGETED TRAINING</div><h3>只開最低科目的專項工具</h3><p><b>Listening：</b>Accent Lab｜<b>Reading：</b>Speed Lab｜<b>Writing：</b>Task 1、Task 2、Band 7 Sentence、Vocabulary｜<b>Speaking：</b>Daily 5。</p>
+<a class="btn secondary" href="/ielts-listening-accent-lab/">Listening Accent</a>
+<a class="btn secondary" href="/ielts-reading-speed-lab/">Reading Speed</a>
+<a class="btn secondary" href="/ielts-task1-graph-lab/">Writing Task 1</a>
+<a class="btn secondary" href="/ielts-task2-idea-builder/">Writing Task 2</a>
+<a class="btn secondary" href="/ielts-band7-sentence-lab/">Band 7 Sentence</a>
+<a class="btn secondary" href="/ielts-vocabulary-collocation-lab/">Vocabulary</a>
+<a class="btn secondary" href="/ielts-speaking-daily-5/">Speaking Daily 5</a></article>
+
+<article class="journey"><div class="num">STEP 5 · 30 DAYS</div><h3>30 天集中訓練</h3><p>把最低科目做成每天可執行的小任務；標準練習交給系統。</p><a class="btn" href="/sylvia-ielts-30day/">30-Day Writing Sprint</a></article>
+
+<article class="journey"><div class="num">STEP 6 · ERROR LOOP</div><h3>Error Tracker｜只留下重複錯誤</h3><p>錯題不是收藏，而是去重、排序，安排 1／3／7 天再練。</p><a class="btn" href="/sylvia-ielts-error-tracker/">IELTS Error Tracker</a></article>
+
+<article class="journey retest"><div class="num">STEP 7 · RETEST</div><h3>再做 Full Mock｜驗證是否真的進步</h3><p>回到同一個 Mock Lab，比較前後 Band、正確率、時間與最低科是否改變。</p><a class="btn" href="/ielts-mock-test-lab/">再次 Mock</a></article>
+
+<article class="journey coachgate"><div class="num">STEP 8 · PAID COACH</div><h3>Gary 一對一付費校準</h3><p>只在關鍵轉折點介入：換策略、考前調整、下一個 30 天週期。</p><a class="btn" href="#paid-coaching">申請教練校準</a></article>
+</div>
+<div class="routeRule"><b>唯一規則：</b>學員不自行選網站。先看 Mock 的最低科目，再由系統或 Gary 指向下一個網站。Sylvia／Kate 個人站保留作個人化訓練與案例，不列為一般學員必走流程。</div>
+</section>
+
 <section class="section card" id="ielts-flow">
 <p class="eyebrow">IELTS MASTER FLOW</p>
 <h2>IELTS 英文檢定正式流程</h2>
