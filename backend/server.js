@@ -41,6 +41,23 @@ async function init(){
   `);
   await pool.query(`CREATE INDEX IF NOT EXISTS idx_tpass_submissions_email_created ON tpass_submissions(student_email, created_at DESC);`);
   await pool.query(`CREATE INDEX IF NOT EXISTS idx_tpass_submissions_type_created ON tpass_submissions(assessment_type, created_at DESC);`);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS ielts_contact_tickets (
+      ticket_id UUID PRIMARY KEY,
+      public_token TEXT NOT NULL UNIQUE,
+      source_subject TEXT NOT NULL,
+      topic TEXT NOT NULL,
+      student_name TEXT,
+      student_email TEXT,
+      message TEXT NOT NULL,
+      snapshot JSONB NOT NULL DEFAULT '{}'::jsonb,
+      status TEXT NOT NULL DEFAULT '待回覆',
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      handled_at TIMESTAMPTZ
+    );
+  `);
+  await pool.query(`CREATE INDEX IF NOT EXISTS idx_ielts_contact_status_created ON ielts_contact_tickets(status, created_at DESC);`);
 }
 let dbReady=false;
 if(process.env.DATABASE_URL){
@@ -93,6 +110,81 @@ app.patch("/api/submissions/:id/email-status", async (req,res)=>{
     console.error(err);
     res.status(500).json({ok:false,error:"update_failed"});
   }
+});
+
+app.post("/api/ielts-contact-tickets", async (req,res)=>{
+  if(!dbReady)return res.status(503).json({ok:false,error:"database_not_configured"});
+  try{
+    const b=req.body||{};
+    if(!b.topic || !b.message)return res.status(400).json({ok:false,error:"topic and message are required"});
+    const ticketId=crypto.randomUUID();
+    const publicToken=crypto.randomBytes(24).toString("hex");
+    const snapshot=(b.snapshot && typeof b.snapshot==="object")?b.snapshot:{};
+    await pool.query(`
+      INSERT INTO ielts_contact_tickets
+      (ticket_id,public_token,source_subject,topic,student_name,student_email,message,snapshot)
+      VALUES($1,$2,$3,$4,$5,$6,$7,$8::jsonb)
+    `,[
+      ticketId, publicToken, String(b.source_subject||"General"), String(b.topic),
+      b.student_name?String(b.student_name):null,
+      b.student_email?String(b.student_email):null,
+      String(b.message), JSON.stringify(snapshot)
+    ]);
+    res.status(201).json({ok:true,ticket_id:ticketId,public_token:publicToken,status:"待回覆",created_at:new Date().toISOString()});
+  }catch(err){
+    console.error(err);
+    res.status(500).json({ok:false,error:"ticket_create_failed"});
+  }
+});
+
+app.post("/api/ielts-contact-tickets/statuses", async (req,res)=>{
+  if(!dbReady)return res.status(503).json({ok:false,error:"database_not_configured"});
+  try{
+    const tickets=Array.isArray(req.body?.tickets)?req.body.tickets.slice(0,50):[];
+    const items=[];
+    for(const t of tickets){
+      if(!t?.ticket_id || !t?.public_token)continue;
+      const r=await pool.query(`
+        SELECT ticket_id,source_subject,topic,status,created_at,updated_at,handled_at
+        FROM ielts_contact_tickets WHERE ticket_id=$1 AND public_token=$2
+      `,[String(t.ticket_id),String(t.public_token)]);
+      if(r.rowCount)items.push(r.rows[0]);
+    }
+    res.json({ok:true,items});
+  }catch(err){
+    console.error(err);
+    res.status(500).json({ok:false,error:"ticket_status_lookup_failed"});
+  }
+});
+
+app.get("/api/ielts-contact-tickets", async (req,res)=>{
+  if(!dbReady)return res.status(503).json({ok:false,error:"database_not_configured"});
+  if(!process.env.ADMIN_TOKEN || req.headers.authorization!==`Bearer ${process.env.ADMIN_TOKEN}`){
+    return res.status(401).json({ok:false,error:"unauthorized"});
+  }
+  const limit=Math.min(Math.max(Number(req.query.limit)||100,1),200);
+  const r=await pool.query(`
+    SELECT ticket_id,source_subject,topic,student_name,student_email,message,snapshot,status,created_at,updated_at,handled_at
+    FROM ielts_contact_tickets ORDER BY created_at DESC LIMIT $1
+  `,[limit]);
+  res.json({ok:true,items:r.rows});
+});
+
+app.patch("/api/ielts-contact-tickets/:id/status", async (req,res)=>{
+  if(!dbReady)return res.status(503).json({ok:false,error:"database_not_configured"});
+  if(!process.env.ADMIN_TOKEN || req.headers.authorization!==`Bearer ${process.env.ADMIN_TOKEN}`){
+    return res.status(401).json({ok:false,error:"unauthorized"});
+  }
+  const status=String(req.body?.status||"");
+  if(!["待回覆","已處理"].includes(status))return res.status(400).json({ok:false,error:"invalid_status"});
+  const r=await pool.query(`
+    UPDATE ielts_contact_tickets
+    SET status=$1, updated_at=NOW(), handled_at=CASE WHEN $1='已處理' THEN NOW() ELSE NULL END
+    WHERE ticket_id=$2
+    RETURNING ticket_id,status,updated_at,handled_at
+  `,[status,req.params.id]);
+  if(!r.rowCount)return res.status(404).json({ok:false,error:"not_found"});
+  res.json({ok:true,...r.rows[0]});
 });
 
 app.get("/api/submissions", async (req,res)=>{
