@@ -1,0 +1,44 @@
+<!doctype html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sylvia IELTS Listening Lab</title>
+<style>
+:root{--p:#9a3412;--p2:#ea580c;--bg:#fff8f4;--card:#fff;--text:#292524;--muted:#78716c;--line:#fed7aa}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+header{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;padding:22px 16px}.wrap{max-width:980px;margin:auto}h1{margin:0}.sub{opacity:.92}
+main{padding:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}@media(max-width:720px){.grid,.grid3{grid-template-columns:1fr}}
+.kpi{font-size:30px;font-weight:900;color:var(--p)}.tip{border-left:4px solid var(--p);background:#fff7ed;padding:12px;border-radius:8px}.muted{color:var(--muted)}
+input,select{width:100%;padding:10px;border:1px solid #fdba74;border-radius:10px;font:inherit}.btn{border:0;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}.primary{background:var(--p);color:#fff}.secondary{background:#fff;color:var(--p);border:1px solid #fdba74}
+table{width:100%;border-collapse:collapse}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left}.footer{text-align:center;color:var(--muted);padding:20px;font-size:13px}
+</style></head><body>
+<header><div class="wrap"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"><a class="btn secondary" href="/sylvia-ielts-command-center/">IELTS Command Center</a><a class="btn secondary" href="/sylvia-ielts-30day/">Writing</a><a class="btn secondary" href="/sylvia-ielts-speaking/">Speaking</a></div><h1>Sylvia IELTS Listening Lab</h1><div class="sub">Listening Band → 錯誤類型 → 診斷處方 → 下一次專項</div></div></header>
+<main class="wrap">
+<div class="grid3">
+<div class="card"><div class="muted">Latest Band</div><div class="kpi" id="latestBand">—</div></div>
+<div class="card"><div class="muted">Attempts</div><div class="kpi" id="attemptCount">0</div></div>
+<div class="card"><div class="muted">Main Weakness</div><div class="kpi" id="mainWeak" style="font-size:20px">—</div></div>
+</div>
+<div class="card"><h2>新增 Listening 模考／練習紀錄</h2><div class="grid">
+<label>日期<input id="date" type="date"></label><label>Listening Band<input id="band" type="number" min="0" max="9" step=".5"></label>
+<label>正確題數（40）<input id="correct" type="number" min="0" max="40"></label>
+<label>主要弱點<select id="weak"><option>數字／日期／拼字</option><option>同義改寫辨識</option><option>Section 3 多人對話</option><option>Section 4 學術獨白</option><option>Map / Plan</option><option>Multiple Choice</option><option>注意力中斷</option><option>口音辨識</option></select></label>
+<label>次要弱點<input id="secondary" placeholder="可留空"></label>
+</div><p><button class="btn primary" onclick="saveAttempt()">儲存並產生處方</button></p><div id="prescription" class="tip muted">填寫一次紀錄後會自動產生下一次唯一任務。</div></div>
+<div class="card"><h2>快速聽力微訓練</h2><p class="muted">使用瀏覽器語音做短句聽辨，重點是抓關鍵資訊，不替代正式 IELTS 音檔。</p>
+<div class="tip" id="microSentence">The appointment has been moved to Thursday afternoon at three fifteen.</div>
+<p><button class="btn primary" onclick="speak()">播放句子</button></p></div>
+<div class="card"><h2>歷次紀錄</h2><div style="overflow:auto"><table><thead><tr><th>日期</th><th>Band</th><th>正確</th><th>主要弱點</th></tr></thead><tbody id="history"></tbody></table></div></div>
+</main><div class="footer">Sylvia IELTS Listening Lab V1｜Adaptive Coaching</div>
+<script>
+let records=JSON.parse(localStorage.getItem('sylvia_ielts_listening_records')||'[]');date.value=new Date().toISOString().slice(0,10);
+function taskFor(w){const m={
+'數字／日期／拼字':'下一次只練 20 題數字、日期、姓名與拼字；每題錯誤都要分類是聽錯、拼錯或格式錯。',
+'同義改寫辨識':'下一次做 15 題 paraphrase 對照；聽前先預測題幹可能出現的同義表達。',
+'Section 3 多人對話':'下一次只練 Section 3；每題先標記說話者與立場，特別注意轉折。',
+'Section 4 學術獨白':'下一次只練 Section 4；先預測空格詞性，再用 signposting 抓段落轉換。',
+'Map / Plan':'下一次只練地圖題；先確認起點、方向詞與地標，再跟著路線走。',
+'Multiple Choice':'下一次只練選擇題；聽前比較三個選項差異，避免只等關鍵字。',
+'注意力中斷':'下一次做 10 分鐘不中斷訓練；漏一題立刻放掉，禁止回想上一題。',
+'口音辨識':'下一次同一題用英／澳口音各聽一次，整理 10 個最常辨識錯的音。'};return m[w]||'下一次只做一回 Listening，並把所有錯題分類。'}
+function saveAttempt(){const b=Number(band.value);if(!b){alert('請填 Listening Band');return}const r={id:'LS-'+Date.now(),date:date.value,band:b,correct:Number(correct.value)||null,weak:weak.value,secondary:secondary.value.trim(),prescription:taskFor(weak.value)};records.push(r);localStorage.setItem('sylvia_ielts_listening_records',JSON.stringify(records));render();prescription.innerHTML='<b>目前最大瓶頸：</b>'+r.weak+'<br><b>下一次只練：</b>'+r.prescription}
+function render(){attemptCount.textContent=records.length;const r=records[records.length-1];latestBand.textContent=r?r.band.toFixed(1):'—';mainWeak.textContent=r?r.weak:'—';history.innerHTML=records.map(x=>'<tr><td>'+x.date+'</td><td>'+x.band.toFixed(1)+'</td><td>'+(x.correct??'—')+'</td><td>'+x.weak+'</td></tr>').join('');if(r)prescription.innerHTML='<b>目前最大瓶頸：</b>'+r.weak+'<br><b>下一次只練：</b>'+r.prescription}render();
+function speak(){if(!('speechSynthesis'in window)){alert('此瀏覽器不支援語音播放');return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(microSentence.textContent);u.lang='en-GB';u.rate=.92;speechSynthesis.speak(u)}
+</script></body></html>
