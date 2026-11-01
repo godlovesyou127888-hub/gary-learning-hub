@@ -181,8 +181,9 @@ function renderDeliveryMonitor(){
       const st=getDeliveryStatus(r.token)||{};
       const reg=registryMatch(r.token);
       const verified=Boolean(reg)||st.status==="gmail_verified";
-      const submitted=verified||r.status==="submitted_to_formsubmit";
-      const state=verified?"Gmail 已確認收到":(submitted?"已送往 FormSubmit":"已產生資料");
+      const attempted=r.status==="attempted_to_formsubmit"||r.status==="submitted_to_formsubmit";
+      const submitted=verified||attempted;
+      const state=verified?"Gmail 已確認收到":(attempted?"已嘗試送往 FormSubmit｜Gmail 待驗收":"已產生資料");
       const cls=submitted?"delivery-ok":"delivery-pending";
       const t=r.saved?new Date(r.saved).toLocaleString("zh-TW"):"—";
       const verifiedAt=reg?.verified_at?new Date(reg.verified_at).toLocaleString("zh-TW"):(st.gmail_verified_at?new Date(st.gmail_verified_at).toLocaleString("zh-TW"):"");
