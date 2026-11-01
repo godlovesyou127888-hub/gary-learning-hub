@@ -1,118 +1,155 @@
-<!doctype html>
-<html lang="zh-Hant">
-<head>
+<!doctype html><html lang="zh-Hant"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sylvia IELTS 30-Day Sprint</title>
+<title>Sylvia IELTS Writing Sprint V2</title>
+<script src="/tpass-next/core.js?v=20261101"></script>
 <style>
-:root{--p:#5b5bd6;--p2:#7c3aed;--bg:#f6f7fb;--card:#fff;--text:#1f2937;--muted:#667085;--line:#e5e7eb}
-*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
-header{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;padding:24px 16px;position:sticky;top:0;z-index:5}
-.wrap{max-width:980px;margin:auto}h1{margin:0 0 4px;font-size:28px}.sub{opacity:.9;font-size:14px}
-nav{display:flex;gap:8px;overflow:auto;margin-top:14px}nav button{border:0;border-radius:999px;padding:8px 12px;background:#ffffff22;color:#fff;white-space:nowrap}nav button.on{background:#fff;color:var(--p);font-weight:700}
-main{padding:18px}section{display:none}section.on{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 6px 18px #1018280a}
+:root{--p:#5b5bd6;--p2:#7c3aed;--bg:#f6f7fb;--card:#fff;--text:#1f2937;--muted:#667085;--line:#e5e7eb;--ok:#067647;--warn:#b54708}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+header{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;padding:22px 16px;position:sticky;top:0;z-index:5}.wrap{max-width:1000px;margin:auto}
+h1{margin:0;font-size:27px}.sub{opacity:.92;font-size:14px}nav{display:flex;gap:8px;overflow:auto;margin-top:12px}
+nav button{border:0;border-radius:999px;padding:8px 12px;background:#ffffff22;color:#fff;white-space:nowrap}nav button.on{background:#fff;color:var(--p);font-weight:800}
+main{padding:18px}section{display:none}section.on{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 5px 16px #1018280a}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}@media(max-width:720px){.grid,.grid3{grid-template-columns:1fr}h1{font-size:23px}}
-.kpi{font-size:26px;font-weight:800;color:var(--p)}.badge{display:inline-block;background:#eef0ff;color:var(--p);border-radius:999px;padding:4px 8px;font-size:12px;font-weight:700}
+.kpi{font-size:27px;font-weight:900;color:var(--p)}.badge{display:inline-block;background:#eef0ff;color:var(--p);border-radius:999px;padding:4px 8px;font-size:12px;font-weight:800}
+.tip{border-left:4px solid var(--p);background:#f5f3ff;padding:10px 12px;border-radius:8px}.ok{background:#ecfdf3;border-left-color:#12b76a}.warn{background:#fff7ed;border-left-color:#f79009}.muted{color:var(--muted)}
+textarea,input,select{width:100%;padding:10px;border:1px solid #d0d5dd;border-radius:10px;font:inherit;background:#fff}textarea{min-height:220px}
+button.action{border:0;border-radius:10px;padding:10px 14px;background:var(--p);color:#fff;font-weight:800;cursor:pointer}.ghost{border:1px solid #c7c9ff;border-radius:10px;padding:9px 12px;background:#fff;color:var(--p);font-weight:700;cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#fafbff}.status{padding:10px 12px;border-radius:10px;background:#f2f4f7;margin-top:10px}
+canvas{width:100%;height:280px;border:1px solid var(--line);border-radius:12px;background:white}.day{display:flex;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line)}
 .progress{height:12px;background:#eceef4;border-radius:999px;overflow:hidden}.progress div{height:100%;background:linear-gradient(90deg,var(--p),var(--p2))}
-.tip{border-left:4px solid var(--p);background:#f5f3ff;padding:10px 12px;border-radius:8px}.muted{color:var(--muted)}
-.day{display:flex;gap:10px;padding:10px 0;border-bottom:1px dashed var(--line)}.day input{margin-top:6px;transform:scale(1.15)}
-textarea,input,select{width:100%;padding:10px;border:1px solid #d0d5dd;border-radius:10px;font:inherit;background:#fff}textarea{min-height:100px}
-button.action{border:0;border-radius:10px;padding:10px 14px;background:var(--p);color:#fff;font-weight:700}button.ghost{border:1px solid #c7c9ff;border-radius:10px;padding:9px 12px;background:#fff;color:var(--p)}
-table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#fafbff}
 .footer{text-align:center;color:var(--muted);padding:20px;font-size:13px}
-</style>
-</head>
-<body>
-<header><div class="wrap">
-<h1>Sylvia IELTS 30-Day Sprint</h1>
-<div class="sub">Gary 老師客製化考前衝刺系統｜目標：穩定 Band 7 → 7.5+</div>
-<nav id="nav"></nav></div></header>
+</style></head><body>
+<header><div class="wrap"><h1>Sylvia IELTS Writing Sprint V2</h1><div class="sub">每日題目 → 線上作答 → 一鍵送 Gary → 分數/錯誤紀錄 → 30 天進步曲線</div><nav id="nav"></nav></div></header>
 <main class="wrap">
-<section id="home" class="on">
+
+<section id="dashboard" class="on">
 <div class="grid3">
-<div class="card"><span class="badge">Writing Target</span><div class="kpi">7.0–7.5+</div><div class="muted">Task 2 較成熟；Task 1 聚焦精準度與 Overview。</div></div>
-<div class="card"><span class="badge">30-Day Progress</span><div class="kpi" id="done">0 / 30</div><div class="progress"><div id="bar" style="width:0%"></div></div></div>
-<div class="card"><span class="badge">Main Focus</span><div class="kpi" style="font-size:20px">Accuracy → Depth → Timing</div></div>
+<div class="card"><span class="badge">Target</span><div class="kpi">Band 7.5+</div><div class="muted">Writing 目標：穩定、限時、可複製。</div></div>
+<div class="card"><span class="badge">Submissions</span><div class="kpi" id="submissionCount">0</div><div class="muted">已交作文數</div></div>
+<div class="card"><span class="badge">Latest Band</span><div class="kpi" id="latestBand">—</div><div class="muted">Gary 評分後更新</div></div>
 </div>
-<div class="card"><h2>Gary 老師診斷｜Personal Diagnosis</h2>
-<div class="grid"><div class="tip"><b>Strengths 優勢</b><br>Task 2 結構清楚、文法穩定、主題字彙足夠。</div><div class="tip"><b>Main Bottlenecks 主要瓶頸</b><br>Task 1 地圖位置判讀；Task 2 論證深度。</div></div></div>
-<div class="card"><h2>今日唯一任務｜Today’s One Task</h2><p id="today"></p><button class="action" onclick="go('plan')">查看 30 天計畫</button></div>
+<div class="card"><h2>今日任務｜Today</h2><div id="todayCard"></div><button class="action" onclick="go('submit')">開始作答</button></div>
+<div class="card"><h2>30 天完成度</h2><div class="progress"><div id="progressBar" style="width:0%"></div></div><p id="progressText"></p></div>
+<div class="card"><h2>Writing Band 進步曲線</h2><canvas id="chart" width="900" height="280"></canvas><p class="muted">尚未有 Gary 分數時不會畫點；每次回填分數後自動更新。</p></div>
 </section>
 
-<section id="plan"><div class="card"><h2>30 天衝刺計畫｜30-Day Plan</h2><p class="muted">勾選後會儲存在此瀏覽器。</p><div id="days"></div></div></section>
-
-<section id="task1">
-<div class="card"><h2>Task 1 六大題型｜6 Core Types</h2>
-<table><tr><th>Type</th><th>Overview 核心</th><th>高分動作</th></tr>
-<tr><td>Line Graph</td><td>最大升降、交叉、峰值</td><td>Group similar trends</td></tr>
-<tr><td>Bar Chart</td><td>最高最低、群組差異</td><td>Compare, don’t list</td></tr>
-<tr><td>Pie Chart</td><td>最大比例與結構變化</td><td>Use proportions precisely</td></tr>
-<tr><td>Table</td><td>極值、趨勢、例外</td><td>Select key figures</td></tr>
-<tr><td>Map</td><td>用途轉型＋保留項</td><td>Location + change verb + comparison</td></tr>
-<tr><td>Process</td><td>起點終點、階段數</td><td>Use passive voice selectively</td></tr></table></div>
-<div class="card"><h2>Task 1 20-Minute SOP</h2><div class="grid">
-<div class="tip"><b>2 min</b><br>看題、單位、時態、最大特徵</div><div class="tip"><b>3 min</b><br>Overview＋分組</div>
-<div class="tip"><b>12–13 min</b><br>完成全文</div><div class="tip"><b>2–3 min</b><br>查數字、複數、時態、拼字</div></div></div>
-<div class="card"><h2>Overview Trainer</h2><p class="muted">只寫 2 句；不得堆具體數字。</p>
-<textarea id="overview" placeholder="Write your 2-sentence overview..."></textarea><button class="ghost" onclick="save('overview')">儲存 Save</button></div>
+<section id="submit">
+<div class="card"><h2>每日題目｜Daily Question</h2>
+<div class="grid"><label>Day<select id="daySelect"></select></label><label>Task<select id="taskType"><option>Task 1</option><option>Task 2</option></select></label></div>
+<div id="questionBox" class="tip" style="margin-top:12px"></div></div>
+<div class="card"><h2>基本資料</h2><div class="grid">
+<label>姓名<input id="studentName" value="Sylvia"></label>
+<label>Email<input id="studentEmail" type="email" placeholder="Sylvia 的 Email"></label>
+<label>日期<input id="submitDate" type="date"></label>
+<label>限時分鐘<input id="timeSpent" type="number" min="1" max="90" placeholder="Task 1 建議 20；Task 2 建議 40"></label>
+</div></div>
+<div class="card"><h2>作文作答｜Essay</h2><textarea id="essay" placeholder="Write your answer here..."></textarea>
+<div class="grid3"><div class="tip"><b id="wordCount">0</b><br>words</div><div class="tip"><b id="minTarget">150</b><br>minimum target</div><div class="tip"><b id="timeTarget">20</b><br>recommended minutes</div></div>
+</div>
+<div class="card"><h2>自我檢查｜Self Check</h2>
+<div id="checkItems"></div>
+<label>我這次最不確定的地方<input id="selfConcern" placeholder="例如：Overview / examples / grammar"></label>
+<p><button class="ghost" onclick="downloadSubmission()">先下載 JSON 備份</button> <button class="action" onclick="submitToGary()">一鍵送出給 Gary</button></p>
+<div id="deliveryStatus" class="status">尚未送出。</div></div>
 </section>
 
-<section id="task2">
-<div class="card"><h2>Task 2 五大題型｜5 Core Types</h2>
-<table><tr><th>Type</th><th>第一個判斷</th></tr>
-<tr><td>Opinion</td><td>立場是否清楚且一致？</td></tr><tr><td>Discussion</td><td>是否需要 both views + own view？</td></tr>
-<tr><td>Advantages / Disadvantages</td><td>是否問 outweigh？</td></tr><tr><td>Problems / Solutions</td><td>問題與解法是否都要寫？</td></tr>
-<tr><td>Two-part Question</td><td>總共有幾個問題一定要回答？</td></tr></table></div>
-<div class="card"><h2>Band 7 → 8 Argument Builder</h2><div class="tip"><b>Point → Why → Effect → Example → Link</b></div>
-<label>Point 主張</label><textarea id="a1"></textarea><label>Why 為什麼</label><textarea id="a2"></textarea>
-<label>Effect 結果</label><textarea id="a3"></textarea><label>Example 例證</label><textarea id="a4"></textarea>
-<label>Link 回扣題目</label><textarea id="a5"></textarea><button class="ghost" onclick="saveArgs()">儲存 Save</button></div>
+<section id="records">
+<div class="card"><h2>作業紀錄｜Submission History</h2><div style="overflow:auto"><table><thead><tr><th>日期</th><th>Task</th><th>Day</th><th>字數</th><th>時間</th><th>Band</th><th>主要錯誤</th></tr></thead><tbody id="historyBody"></tbody></table></div></div>
+</section>
+
+<section id="grading">
+<div class="card"><h2>Gary 批改分數回填｜Teacher Score Entry</h2>
+<p class="muted">選擇一次已交作業，輸入四項 IELTS 分數；系統自動算平均並更新曲線。</p>
+<label>選擇作業<select id="gradeRecord"></select></label>
+<div class="grid">
+<label id="c1Label">TA / TR<input id="g1" type="number" min="0" max="9" step=".5"></label>
+<label>CC<input id="g2" type="number" min="0" max="9" step=".5"></label>
+<label>LR<input id="g3" type="number" min="0" max="9" step=".5"></label>
+<label>GRA<input id="g4" type="number" min="0" max="9" step=".5"></label>
+</div>
+<label>主要錯誤／扣分點<input id="gradeErrors" placeholder="例如：Overview 不精準；論證未展開"></label>
+<label>Gary 老師一句建議<input id="teacherNote" placeholder="下一篇唯一要修正的重點"></label>
+<p><button class="action" onclick="saveGrade()">儲存分數並更新曲線</button></p><div id="gradeResult" class="status"></div>
+</div>
 </section>
 
 <section id="errors">
-<div class="card"><h2>Sylvia Personal Error List V1</h2>
-<table><tr><th>Category</th><th>Risk</th><th>Correct Rule</th></tr>
-<tr><td>Task 1 Overview</td><td>空泛 Overview</td><td>直接寫 rise / fall / highest / fastest / overall change</td></tr>
-<tr><td>Map Precision</td><td>把不確定變化寫成 converted into</td><td>was redeveloped / was added nearby / now contains</td></tr>
-<tr><td>Numbers</td><td>15 millions</td><td>15 million; millions of people</td></tr>
-<tr><td>Verb Form</td><td>it rising</td><td>it rose</td></tr>
-<tr><td>Task 2 Development</td><td>Point + Explain 就停</td><td>Point → Why → Effect → Link</td></tr>
-<tr><td>Collocation</td><td>academic loss</td><td>learning loss</td></tr>
-<tr><td>Academic Tone</td><td>solve this issue 太絕對</td><td>could alleviate this problem</td></tr></table></div>
-<div class="card"><h2>新增錯誤｜Add New Error</h2><input id="newErr" placeholder="輸入新錯誤"><button class="action" onclick="addErr()">加入</button><div id="errList"></div></div>
+<div class="card"><h2>Personal Error List｜個人錯誤累積</h2><div id="errorSummary"></div></div>
+<div class="card"><h2>既有高頻錯誤</h2>
+<table><tr><th>Risk</th><th>Correct Rule</th></tr>
+<tr><td>15 millions</td><td>15 million；只有 millions of people</td></tr>
+<tr><td>Task 1 空泛 Overview</td><td>直接寫最大升降、最高最低、主要轉型</td></tr>
+<tr><td>Map 過度推論 converted into</td><td>不確定時用 was redeveloped / now contains / added nearby</td></tr>
+<tr><td>Task 2 只寫 Point + Explain</td><td>Point → Why → Effect → Example → Link</td></tr>
+<tr><td>academic loss</td><td>learning loss</td></tr>
+<tr><td>solve this issue 太絕對</td><td>could alleviate this problem</td></tr></table></div>
 </section>
 
-<section id="mock"><div class="card"><h2>60-Minute Writing Mock Score Sheet</h2>
-<div class="grid">
-<label>T1 TA<input type="number" id="s1" step=".5" min="0" max="9"></label><label>T1 CC<input type="number" id="s2" step=".5" min="0" max="9"></label>
-<label>T1 LR<input type="number" id="s3" step=".5" min="0" max="9"></label><label>T1 GRA<input type="number" id="s4" step=".5" min="0" max="9"></label>
-<label>T2 TR<input type="number" id="s5" step=".5" min="0" max="9"></label><label>T2 CC<input type="number" id="s6" step=".5" min="0" max="9"></label>
-<label>T2 LR<input type="number" id="s7" step=".5" min="0" max="9"></label><label>T2 GRA<input type="number" id="s8" step=".5" min="0" max="9"></label>
-</div><br><button class="action" onclick="calc()">計算加權 Writing Band</button><div class="kpi" id="score"></div>
-<p class="muted">練習估算：Task 2 約以 Task 1 兩倍權重計算。</p></div></section>
+<section id="plan"><div class="card"><h2>30 天衝刺表</h2><div id="planList"></div></div></section>
+</main><div class="footer">Sylvia IELTS Writing Sprint V2｜Gary 老師客製化一對一陪跑</div>
 
-<section id="check"><div class="card"><h2>考場最後 5 分鐘 Checklist</h2>
-<h3>Task 1</h3>
-<div class="day"><input type="checkbox"><div>Overview 有 2–3 個最大特徵？</div></div><div class="day"><input type="checkbox"><div>有比較／分組，而不是逐項列資料？</div></div>
-<div class="day"><input type="checkbox"><div>數字、單位、位置正確？</div></div><div class="day"><input type="checkbox"><div>million、時態、主謂一致正確？</div></div>
-<h3>Task 2</h3>
-<div class="day"><input type="checkbox"><div>每一問都有回答？</div></div><div class="day"><input type="checkbox"><div>立場前後一致？</div></div>
-<div class="day"><input type="checkbox"><div>每個 Body 有完整因果鏈？</div></div><div class="day"><input type="checkbox"><div>避免 always / completely / solve 等過度絕對字？</div></div>
-<div class="day"><input type="checkbox"><div>拼字、冠詞、單複數、動詞形式檢查？</div></div>
-</div></section>
-
-</main><div class="footer">Sylvia IELTS 30-Day Sprint V1｜Gary 老師客製化訓練系統</div>
 <script>
-const tabs=[['home','首頁'],['plan','30天計畫'],['task1','Task 1'],['task2','Task 2'],['errors','錯誤清單'],['mock','模考評分'],['check','Checklist']];
-const nav=document.getElementById('nav');tabs.forEach((x,i)=>{let b=document.createElement('button');b.textContent=x[1];b.dataset.id=x[0];if(i==0)b.classList.add('on');b.onclick=()=>go(x[0]);nav.appendChild(b)});
-function go(id){document.querySelectorAll('section').forEach(x=>x.classList.remove('on'));document.getElementById(id).classList.add('on');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.id==id));scrollTo(0,0)}
+const tabs=[['dashboard','首頁'],['submit','每日作答'],['records','作業紀錄'],['grading','Gary評分'],['errors','錯誤累積'],['plan','30天計畫']];
+tabs.forEach((x,i)=>{const b=document.createElement('button');b.textContent=x[1];b.dataset.id=x[0];if(i===0)b.classList.add('on');b.onclick=()=>go(x[0]);nav.appendChild(b)});
+function go(id){document.querySelectorAll('section').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.id===id));scrollTo(0,0)}
+const prompts=[
+['Task 1','The line graph shows employment in four sectors between 1960 and 2020. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.'],
+['Task 2','Some people believe schools should focus mainly on academic subjects, while others think practical life skills are equally important. Discuss both views and give your own opinion.'],
+['Task 1','The bar chart compares the proportions of adults participating in five leisure activities in two different years. Summarise the main features and make relevant comparisons.'],
+['Task 2','Many employees now work from home. Do the advantages of this development outweigh the disadvantages?'],
+['Task 1','The maps show a town centre before and after redevelopment. Summarise the main changes and make comparisons where relevant.'],
+['Task 2','Some people think university education should be free for everyone. To what extent do you agree or disagree?'],
+['Task 1','The table shows the average weekly hours spent on four activities by different age groups. Summarise the key features.'],
+['Task 2','In many cities, traffic congestion is becoming worse. What are the causes, and what solutions can be taken?'],
+['Task 1','The pie charts show household expenditure in a country in 2000 and 2025. Summarise the main features.'],
+['Task 2','Some people prefer to live in the same place all their lives, while others prefer to move frequently. Discuss both views and give your opinion.'],
+['Task 1','The process diagram shows how recycled paper is produced. Summarise the stages.'],
+['Task 2','Children are spending more time using digital devices. What problems can this cause, and how can these problems be reduced?'],
+['Task 1','The line graph compares international student numbers in three countries over a 20-year period. Summarise the main features.'],
+['Task 2','Governments should spend more money on public transport than on roads. To what extent do you agree or disagree?'],
+['Task 1','The maps show changes to a farm between 1950 and today. Summarise the main developments.'],
+['Task 2','Some people think longer school holidays are beneficial, while others favour shorter breaks. Discuss the value of long holidays and arguments for shorter ones.'],
+['Task 1','The bar chart shows the percentage of people using four forms of transport in three cities. Summarise the main features.'],
+['Task 2','People today are living longer than in the past. What advantages and disadvantages does this bring to society?'],
+['Task 1','The table compares average monthly spending by students in four categories. Summarise the key information.'],
+['Task 2','Some employers value experience more than qualifications. Why might this be the case? Is this a positive or negative development?'],
+['Task 1','The process shows how coffee beans are grown, processed and prepared for sale. Summarise the process.'],
+['Task 2','More people are choosing to study online rather than attend classes in person. Do the advantages outweigh the disadvantages?'],
+['Task 1','The line graph shows changes in the population of three age groups from 1990 to 2040. Summarise the main features.'],
+['Task 2','Some people believe advertising encourages unnecessary consumption. To what extent do you agree or disagree?'],
+['Task 1','The maps show a school campus in 2000 and today. Summarise the changes.'],
+['Task 2','Many young people change jobs frequently. Why is this happening, and is it a positive or negative trend?'],
+['Task 1','The charts compare energy production from five sources in two years. Summarise the main features.'],
+['Task 2','Some people think governments should restrict private car use in city centres. Discuss both views and give your opinion.'],
+['Task 1','The table and chart show tourism numbers and visitor spending in three countries. Summarise the key features.'],
+['Task 2','Modern technology has changed the way people communicate. Has this had more positive or negative effects?']
+];
 const plan=[
-"建立 Personal Error List；重寫目前 Task 1 Overview 2 次","Task 1 Line Graph：Introduction + Overview ×3","Task 2 Opinion：2 個 Body Point，各做 Point→Why→Effect→Link","Task 1 Bar Chart：20 分鐘完整一篇","Task 2 Two-part Question：40 分鐘完整一篇","錯誤日：只重寫本週錯句","60 分鐘 Writing Mock #1","Task 1 Pie Chart：Overview ×3","Task 2 Discussion：雙方各 2 個理由","Task 1 Table：資料分組","Task 2 Problems/Solutions：原因與解法一一對應","Task 1 Map：位置語言＋change verbs","Task 2 Advantages/Disadvantages：避免失衡","60 分鐘 Writing Mock #2","Task 1 Process：被動語態與順序語言","Task 1 六題型 30 秒判題","Task 2 五題型 30 秒判題","Task 2 每個理由補一層 consequence","Task 1 20 分鐘限時 #1","Task 2 40 分鐘限時 #1","60 分鐘 Writing Mock #3","錯誤清單 V2：刪除已穩定修正項目","Task 1 20 分鐘限時 #2","Task 2 40 分鐘限時 #2","60 分鐘 Writing Mock #4","只練 Introduction + Overview / Thesis","只練 Body Paragraph Development","60 分鐘 Writing Mock #5","考場 Checklist＋高頻錯誤總複習","輕量複習：不學新模板、不背新難字"];
-let days=document.getElementById('days');plan.forEach((t,i)=>{let k='d'+(i+1),d=document.createElement('div');d.className='day';d.innerHTML=`<input type="checkbox" id="${k}"><div><b>Day ${i+1}</b><br>${t}</div>`;days.appendChild(d);let c=d.querySelector('input');c.checked=localStorage.getItem(k)=='1';c.onchange=()=>{localStorage.setItem(k,c.checked?'1':'0');prog()}});
-function prog(){let c=0;plan.forEach((_,i)=>{if(localStorage.getItem('d'+(i+1))=='1')c++});done.textContent=c+' / 30';bar.style.width=(c/30*100)+'%';today.textContent=c<30?'Day '+(c+1)+': '+plan[c]:'30 天完成：請做完整模考並回看錯誤清單。'}prog();
-function save(id){localStorage.setItem(id,document.getElementById(id).value);alert('已儲存')}overview.value=localStorage.getItem('overview')||'';
-function saveArgs(){['a1','a2','a3','a4','a5'].forEach(id=>localStorage.setItem(id,document.getElementById(id).value));alert('已儲存')}['a1','a2','a3','a4','a5'].forEach(id=>document.getElementById(id).value=localStorage.getItem(id)||'');
-function renderErr(){let a=JSON.parse(localStorage.getItem('errs')||'[]');errList.innerHTML=a.map((x,i)=>`<div class="day"><div>${i+1}. ${x}</div></div>`).join('')}
-function addErr(){let v=newErr.value.trim();if(!v)return;let a=JSON.parse(localStorage.getItem('errs')||'[]');a.push(v);localStorage.setItem('errs',JSON.stringify(a));newErr.value='';renderErr()}renderErr();
-function calc(){let v=[];for(let i=1;i<=8;i++)v.push(parseFloat(document.getElementById('s'+i).value)||0);let t1=(v[0]+v[1]+v[2]+v[3])/4,t2=(v[4]+v[5]+v[6]+v[7])/4;let s=Math.round(((t1+2*t2)/3)*2)/2;score.textContent='Estimated Writing Band: '+s.toFixed(1)}
-</script>
-</body></html>
+'建立錯誤清單＋Task 1 Overview','Task 2 Opinion 論證鏈','Task 1 Bar 20分鐘','Task 2 Two-part 40分鐘','Task 1 Map 精準位置','60分鐘 Writing Mock #1','錯誤重寫日','Task 1 Pie Overview','Task 2 Discussion','Task 1 Table 分組','Task 2 Problem/Solution','Task 1 Process','Task 2 Advantages/Disadvantages','60分鐘 Writing Mock #2','Map change verbs','Task 2 thesis 練習','Task 1 Overview speed','Task 2 consequence 深化','Task 1 限時 #1','Task 2 限時 #1','60分鐘 Writing Mock #3','錯誤清單 V2','Task 1 限時 #2','Task 2 限時 #2','60分鐘 Writing Mock #4','Introduction/Overview/Thesis','Body Development','60分鐘 Writing Mock #5','Checklist＋高頻錯誤','輕量複習，不學新模板'
+];
+let records=JSON.parse(localStorage.getItem('sylvia_ielts_v2_records')||'[]');
+studentEmail.value=localStorage.getItem('sylvia_email')||'';submitDate.value=new Date().toISOString().slice(0,10);
+prompts.forEach((_,i)=>daySelect.add(new Option('Day '+(i+1),i)));
+plan.forEach((x,i)=>{planList.innerHTML+=`<div class="day"><div><b>Day ${i+1}</b><br>${x}</div></div>`});
+function wc(t){return (t.trim().match(/\b[\w’-]+\b/g)||[]).length}
+function setPrompt(){const i=+daySelect.value;taskType.value=prompts[i][0];questionBox.innerHTML='<b>'+prompts[i][0]+'</b><br>'+prompts[i][1];minTarget.textContent=taskType.value==='Task 1'?'150':'250';timeTarget.textContent=taskType.value==='Task 1'?'20':'40';timeSpent.placeholder=taskType.value==='Task 1'?'20':'40';renderChecks()}
+function renderChecks(){const a=taskType.value==='Task 1'?['Introduction 已改寫題目','Overview 有 2–3 個最大特徵','Body 有分組／比較','數字／位置／單位已核對','時態、單複數、拼字已檢查']:['每一問都有回答','立場前後一致','每個 Body 有 Point→Why→Effect','至少有適當例證或後果','避免過度絕對字','文法／冠詞／拼字已檢查'];checkItems.innerHTML=a.map((x,i)=>`<label style="display:block;margin:8px 0"><input type="checkbox" class="selfCheck" value="${x}" style="width:auto"> ${x}</label>`).join('')}
+daySelect.onchange=setPrompt;taskType.onchange=()=>{minTarget.textContent=taskType.value==='Task 1'?'150':'250';timeTarget.textContent=taskType.value==='Task 1'?'20':'40';renderChecks()};essay.oninput=()=>wordCount.textContent=wc(essay.value);setPrompt();
+function buildRecord(){const txt=essay.value.trim();if(!studentName.value.trim()||!studentEmail.value||!studentEmail.checkValidity()){alert('請填姓名與有效 Email');return null}if(!txt){alert('請先完成作文');return null}
+localStorage.setItem('sylvia_email',studentEmail.value.trim());const checks=[...document.querySelectorAll('.selfCheck:checked')].map(x=>x.value);
+return {id:'SYL-'+Date.now(),date:submitDate.value||new Date().toISOString().slice(0,10),day:+daySelect.value+1,task:taskType.value,question:prompts[+daySelect.value][1],essay:txt,words:wc(txt),minutes:Number(timeSpent.value)||null,self_checks:checks,self_concern:selfConcern.value.trim(),band:null,scores:null,errors:'',teacher_note:''}}
+function downloadSubmission(){const r=buildRecord();if(!r)return;downloadJSON('Sylvia-IELTS-'+r.task.replace(' ','')+'-Day'+r.day+'.json',r)}
+function submitToGary(){const r=buildRecord();if(!r)return;records.push(r);saveRecords();
+const msg=['Submission ID：'+r.id,'Submitted At：'+new Date().toISOString(),'學員：Sylvia','Email：'+studentEmail.value.trim(),'IELTS Writing：'+r.task,'Day：'+r.day,'日期：'+r.date,'字數：'+r.words,'作答時間：'+(r.minutes||'未填')+' 分鐘','','題目：',r.question,'','作文：',r.essay,'','自我檢查：'+(r.self_checks.join('；')||'未勾選'),'最不確定：'+(r.self_concern||'未填')].join('\n');
+const payload={submission_id:r.id,submitted_at:new Date().toISOString(),assessment_type:'Sylvia IELTS Writing '+r.task,source_page:location.href,student_name:'Sylvia',email:studentEmail.value.trim(),total_score:'Pending Gary Review',accuracy:'',primary_weakness:r.self_concern||'Pending Review',preformatted_message:msg,responses_json:[{question_id:'Essay',student_answer:r.essay,correct_answer:'',is_correct:true,dimension:r.task}]};
+savePendingDelivery(payload);deliveryStatus.textContent='✅ 作文已保存在本機，正在前往已驗證成功的寄送頁。實際收件仍以 Gary Gmail 為準。';location.href='/tpass-next/form-test/?mode=assessment&src=sylvia-ielts-v2'}
+function saveRecords(){localStorage.setItem('sylvia_ielts_v2_records',JSON.stringify(records));renderAll()}
+function renderAll(){submissionCount.textContent=records.length;const graded=records.filter(r=>r.band!=null);latestBand.textContent=graded.length?graded[graded.length-1].band.toFixed(1):'—';progressBar.style.width=Math.min(100,records.length/30*100)+'%';progressText.textContent=records.length+' / 30 次作答';
+todayCard.innerHTML='<b>Day '+Math.min(records.length+1,30)+'</b><br>'+plan[Math.min(records.length,29)]+'<br><span class="muted">'+prompts[Math.min(records.length,29)][0]+'：'+prompts[Math.min(records.length,29)][1]+'</span>';
+historyBody.innerHTML=records.map(r=>`<tr><td>${r.date}</td><td>${r.task}</td><td>${r.day}</td><td>${r.words}</td><td>${r.minutes||'—'}</td><td>${r.band==null?'待批改':r.band.toFixed(1)}</td><td>${r.errors||'—'}</td></tr>`).join('');
+gradeRecord.innerHTML=records.map((r,i)=>`<option value="${i}">${r.date}｜${r.task}｜Day ${r.day}</option>`).join('');renderErrors();drawChart()}
+function saveGrade(){if(!records.length){alert('尚無作業');return}const i=+gradeRecord.value;const vals=[g1,g2,g3,g4].map(x=>Number(x.value));if(vals.some(x=>!x)){alert('請填四項分數');return}const band=Math.round((vals.reduce((a,b)=>a+b,0)/4)*2)/2;records[i].scores={c1:vals[0],cc:vals[1],lr:vals[2],gra:vals[3]};records[i].band=band;records[i].errors=gradeErrors.value.trim();records[i].teacher_note=teacherNote.value.trim();saveRecords();gradeResult.textContent='✅ 已儲存：Band '+band.toFixed(1)+'；進步曲線已更新。'}
+function renderErrors(){const m={};records.forEach(r=>(r.errors||'').split(/[；,，;、]/).map(x=>x.trim()).filter(Boolean).forEach(x=>m[x]=(m[x]||0)+1));const arr=Object.entries(m).sort((a,b)=>b[1]-a[1]);errorSummary.innerHTML=arr.length?'<table><tr><th>錯誤／扣分點</th><th>出現次數</th></tr>'+arr.map(x=>'<tr><td>'+x[0]+'</td><td>'+x[1]+'</td></tr>').join('')+'</table>':'<p class="muted">尚無 Gary 批改錯誤資料。</p>'}
+function drawChart(){const c=chart,ctx=c.getContext('2d'),W=c.width,H=c.height;ctx.clearRect(0,0,W,H);ctx.strokeStyle='#e5e7eb';ctx.fillStyle='#667085';ctx.font='13px sans-serif';for(let b=5;b<=9;b++){const y=H-30-(b-5)*(H-50)/4;ctx.beginPath();ctx.moveTo(45,y);ctx.lineTo(W-20,y);ctx.stroke();ctx.fillText(b.toFixed(1),8,y+4)}const pts=records.filter(r=>r.band!=null);if(!pts.length)return;ctx.strokeStyle='#5b5bd6';ctx.lineWidth=3;ctx.beginPath();pts.forEach((r,i)=>{const x=50+i*((W-80)/Math.max(1,pts.length-1));const y=H-30-(r.band-5)*(H-50)/4;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.stroke();pts.forEach((r,i)=>{const x=50+i*((W-80)/Math.max(1,pts.length-1));const y=H-30-(r.band-5)*(H-50)/4;ctx.fillStyle='#7c3aed';ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fill();ctx.fillStyle='#1f2937';ctx.fillText(r.band.toFixed(1),x-10,y-10)})}
+renderAll();
+</script></body></html>
