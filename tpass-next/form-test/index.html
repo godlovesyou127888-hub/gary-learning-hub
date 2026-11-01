@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>結果寄送｜多益</title><script src="../core.js?v=20261101-bridge-v5"></script><style id="s"></style></head><body><main class="wrap">
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>結果寄送｜多益</title><script src="../core.js?v=20261101-bridge-v7"></script><style id="s"></style></head><body><main class="wrap">
 <section class="hero"><h1 id="pageTitle">FormSubmit 單獨測試</h1><p id="pageLead">不做測驗，只確認資料能不能真正送達。</p></section>
 <section class="card"><h2 id="stepTitle">只做這一步</h2><p class="muted" id="stepText">填姓名與 Email → 按「送出測試」→ 會開啟 FormSubmit 新頁面。看到成功頁才算送達。</p>
 <form id="deliveryForm" action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" target="_blank">
@@ -14,81 +14,117 @@
 <div class="helper" id="deliveryMeta">尚未載入資料。</div><div class="helper" id="lifecycleBox"><b>寄送狀態：</b>尚未建立。</div><div class="helper" id="helper">送出後請回來告訴我：<b>成功</b>、<b>失敗</b>，或直接貼錯誤畫面。</div>
 </section></main><script>
 s.textContent=baseStyles();
+
 const p=new URLSearchParams(location.search);
-if(p.get("mode")==="assessment"){
-  const deliveryToken=p.get("token")||"";
+const mode=p.get("mode")||"standalone";
+const deliveryToken=p.get("token")||"";
+const src=p.get("src")||"";
+const isAssessment=mode==="assessment";
+const isSylviaIELTS=src==="sylvia-ielts-v2";
+
+function setStandaloneMode(){
+  pageTitle.textContent="FormSubmit 單獨測試";
+  pageLead.textContent="不做測驗，只確認資料能不能真正送達。";
+  stepTitle.textContent="只做這一步";
+  stepText.textContent="填姓名與 Email → 按「送出測試」→ 會開啟 FormSubmit 新頁面。看到成功頁才算送達。";
+  submitBtn.textContent="送出測試";
+  typeField.value="T-PASS NEXT FormSubmit Direct POST";
+  messageField.value="如果收到這筆資料，代表 FormSubmit 原生 POST 通道正常。";
+  deliveryMeta.innerHTML="<b>模式：</b>FormSubmit 單獨通道測試";
+  lifecycleBox.innerHTML="<b>寄送狀態：</b>等待手動送出";
+  helper.innerHTML="這個模式只測試 FormSubmit 通道，不代表任何正式測驗資料已載入。";
+}
+
+function setAssessmentMode(){
   const data=deliveryToken?loadTokenizedDelivery(deliveryToken):loadPendingDelivery();
-  const src=p.get("src")||"";
-  const isSylviaIELTS=src==="sylvia-ielts-v2";
+
   if(isSylviaIELTS){
     deliveryForm.target="_self";
     nextField.value="https://gary-learning-hub.onrender.com/sylvia-ielts-command-center/";
     pageTitle.textContent="Sylvia IELTS｜寄送 Writing 作業";
     pageLead.textContent="完成寄送後會回到 Sylvia IELTS Command Center。";
     stepTitle.textContent="最後一步：寄送 Writing 作業";
-    stepText.textContent="確認資料後按「寄送 Writing 作業」；完成後回到 IELTS 首頁。";
+    stepText.textContent="確認資料後按「寄送 Writing 作業」。";
     submitBtn.textContent="寄送 Writing 作業";
     typeField.value="Sylvia IELTS Writing via Proven Bridge";
   }else{
+    deliveryForm.target="_self";
+    nextField.value="https://gary-learning-hub.onrender.com/toeic-submit-complete/";
     pageTitle.textContent="多益｜寄送診斷結果";
-  pageLead.textContent="這一頁使用已實測成功的 FormSubmit 原生寄送方式。";
-  stepTitle.textContent="最後一步：寄送結果";
-  stepText.textContent="先確認下方資料來源與 Submission ID，再按「寄送診斷結果」。";
-  submitBtn.textContent="寄送診斷結果";
-    pageLead.textContent="這一頁使用已實測成功的 FormSubmit 原生寄送方式。";
+    pageLead.textContent="已載入本次測驗資料；確認後送出，完成後可回 TOEIC Command Center。";
     stepTitle.textContent="最後一步：寄送結果";
-    stepText.textContent="先確認下方資料來源與 Submission ID，再按「寄送診斷結果」。";
+    stepText.textContent="確認姓名、Email、Submission ID 與 Delivery Token，再按「寄送診斷結果」。";
     submitBtn.textContent="寄送診斷結果";
     typeField.value="T-PASS NEXT Formal Assessment via Proven Bridge";
   }
 
-  if(data){
-    const age=pendingAgeMinutes(data);
-    tokenField.value=deliveryToken||data._delivery_token||"";
-    submissionField.value=data.submission_id||"";
-    sourceField.value=data.source_page||"";
-    if(deliveryToken){const st=getDeliveryStatus(deliveryToken);lifecycleBox.innerHTML="<b>寄送狀態：</b>"+(st?.status==="submitted_to_formsubmit"?"已送往 FormSubmit":"已產生資料")+"<br><span style=\"font-size:14px\">Gmail 是否收到仍需 Gary 人工驗收。</span>";}
-    nameField.value=data.student_name||"";
-    emailField.value=data.email||"";
-    subjectField.value="[T-PASS NEXT] "+(data.assessment_type||"Assessment")+"｜"+(data.student_name||"Student");
-    messageField.value=buildMailMessage(data)+(deliveryToken?"\n\nDelivery Token："+deliveryToken:"");
-
-    const srcLabel=(p.get("src")||"未標示");
-    const stale=age!=null && age>120;
-    deliveryMeta.innerHTML="<b>資料來源：</b>"+srcLabel+
-      "<br><b>測驗：</b>"+(data.assessment_type||"")+
-      "<br><b>Submission ID：</b>"+(data.submission_id||"未提供")+
-      (deliveryToken?"<br><b>Delivery Token：</b>"+deliveryToken:"")+
-      "<br><b>資料時間：</b>"+(data._saved_at||data.submitted_at||"未提供")+
-      "<br><b>內容長度：</b>"+messageField.value.length+" 字元"+
-      (stale?"<br><b style='color:#b42318'>⚠ 這筆資料已超過 120 分鐘，建議回原測驗頁重新準備。</b>":"");
-
-    if(stale){
-      submitBtn.disabled=true;
-      submitBtn.textContent="資料過期，請回原站重新準備";
-    }
-  }else{
-    messageField.value="找不到待寄送的診斷資料，請回上一頁重新完成診斷。";
+  if(!data){
+    nameField.value="";
+    emailField.value="";
+    messageField.value="找不到待寄送的測驗資料。請回原測驗頁重新按一次「準備並前往寄送頁」。";
     submitBtn.disabled=true;
-    deliveryMeta.innerHTML="<b style='color:#b42318'>找不到待寄送資料。</b>";
+    deliveryMeta.innerHTML="<b style='color:#b42318'>❌ 找不到待寄送資料</b><br>可能原因：網址缺少 token、資料已被清除，或不是從原測驗頁進入。";
+    lifecycleBox.innerHTML="<b>寄送狀態：</b>資料未載入";
+    helper.innerHTML='<a class="btn outline" href="/tpass-toeic-command-center/">← 回到 TOEIC Command Center</a>';
+    return;
+  }
+
+  const age=pendingAgeMinutes(data);
+  const stale=age!=null && age>120;
+
+  tokenField.value=deliveryToken||data._delivery_token||"";
+  submissionField.value=data.submission_id||"";
+  sourceField.value=data.source_page||"";
+  nameField.value=data.student_name||"";
+  emailField.value=data.email||"";
+  subjectField.value="[T-PASS NEXT] "+(data.assessment_type||"Assessment")+"｜"+(data.student_name||"Student");
+  messageField.value=buildMailMessage(data)+(tokenField.value?"\n\nDelivery Token："+tokenField.value:"");
+
+  const st=tokenField.value?getDeliveryStatus(tokenField.value):null;
+  const statusText=st?.status==="gmail_verified"
+    ?"Gmail 已確認收到"
+    :st?.status==="submitted_to_formsubmit"
+      ?"已送往 FormSubmit"
+      :"已產生資料";
+
+  lifecycleBox.innerHTML="<b>寄送狀態：</b>"+statusText+
+    "<br><span style='font-size:14px'>Gmail 是否收到仍以實際收件為最終驗收。</span>";
+
+  deliveryMeta.innerHTML=
+    "<b>資料來源：</b>"+(src||"未標示")+
+    "<br><b>測驗：</b>"+(data.assessment_type||"")+
+    "<br><b>Submission ID：</b>"+(data.submission_id||"未提供")+
+    (tokenField.value?"<br><b>Delivery Token：</b>"+tokenField.value:"")+
+    "<br><b>資料時間：</b>"+(data._saved_at||data.submitted_at||"未提供")+
+    "<br><b>內容長度：</b>"+messageField.value.length+" 字元";
+
+  if(stale){
+    submitBtn.disabled=true;
+    submitBtn.textContent="資料超過 120 分鐘，請重新產生";
+    deliveryMeta.innerHTML+="<br><b style='color:#b42318'>⚠ 資料已過期，請回原測驗頁重新準備寄送。</b>";
+    return;
   }
 
   let submitted=false;
-  submitBtn.addEventListener("click",()=>{
-    if(submitted)return;
+  deliveryForm.addEventListener("submit",(e)=>{
+    if(submitted){
+      e.preventDefault();
+      return;
+    }
     submitted=true;
-    if(deliveryToken){markTokenizedDeliverySubmitted(deliveryToken);lifecycleBox.innerHTML="<b>寄送狀態：</b>已送往 FormSubmit<br><span style=\"font-size:14px\">Gmail 是否收到仍需 Gary 人工驗收。</span>";}
-    submitBtn.textContent="已送出，請勿重複點擊";
-    setTimeout(()=>{submitBtn.disabled=true;},0);
-  });
-  helper.innerHTML="看到 FormSubmit <b>Thanks!</b> 後，仍以 Gmail 實際收件為最終驗收。";
-}else{
-    messageField.value="找不到待寄送的診斷資料，請回上一頁重新完成診斷。";
+    if(tokenField.value) markTokenizedDeliverySubmitted(tokenField.value);
+    submitBtn.textContent="正在送出…";
     submitBtn.disabled=true;
-  }
-  helper.innerHTML="看到 FormSubmit <b>Thanks!</b> 後，回來告訴我「已寄送」，我會直接查 Gmail 驗收。";
+    lifecycleBox.innerHTML="<b>寄送狀態：</b>已送往 FormSubmit<br><span style='font-size:14px'>完成後仍以 Gmail 實際收件為最終驗收。</span>";
+  });
+
+  helper.innerHTML="送出後會進入完成頁，再按「回到 TOEIC Command Center」繼續下一步。";
+}
+
+if(isAssessment){
+  setAssessmentMode();
 }else{
-  messageField.value="如果收到這筆資料，代表 FormSubmit 原生 POST 通道正常。";
+  setStandaloneMode();
 }
 </script><script src="/assets/toeic-return.js?v=20261101"></script>
 </body></html>
