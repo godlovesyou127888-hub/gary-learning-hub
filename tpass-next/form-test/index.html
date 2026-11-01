@@ -2,6 +2,7 @@
 <section class="hero"><h1 id="pageTitle">FormSubmit 單獨測試</h1><p id="pageLead">不做測驗，只確認資料能不能真正送達。</p></section>
 <section class="card"><h2 id="stepTitle">只做這一步</h2><p class="muted" id="stepText">填姓名與 Email → 按「送出測試」→ 會開啟 FormSubmit 新頁面。看到成功頁才算送達。</p>
 <form action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" target="_blank">
+<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-submit-complete/">
 <input type="hidden" name="_subject" id="subjectField" value="[T-PASS NEXT] FormSubmit 單獨測試">
 <input type="hidden" name="_template" value="table"><input type="hidden" name="_captcha" value="false">
 <input type="hidden" name="test_type" id="typeField" value="T-PASS NEXT FormSubmit Direct POST"><input type="hidden" name="delivery_token" id="tokenField"><input type="hidden" name="submission_id" id="submissionField"><input type="hidden" name="source_page" id="sourceField">
@@ -72,4 +73,5 @@ if(p.get("mode")==="assessment"){
 }else{
   messageField.value="如果收到這筆資料，代表 FormSubmit 原生 POST 通道正常。";
 }
-</script></body></html>
+</script><script src="/assets/toeic-return.js?v=20261101"></script>
+</body></html>
