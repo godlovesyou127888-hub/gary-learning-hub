@@ -151,7 +151,7 @@ document.getElementById("jsonVerifyFile").addEventListener("change",async functi
    /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(obj.email||""),
    Number.isInteger(Number(obj.target_score))&&Number(obj.target_score)>=10&&Number(obj.target_score)<=990,
    Array.isArray(obj.records)&&obj.records.length>0,
-   Array.isArray(obj.records)&&obj.records.every(x=>x&&/^\\d{4}-\\d{2}-\\d{2}$/.test(x.date||"")&&Number(x.listening)>=5&&Number(x.listening)<=495&&Number(x.reading)>=5&&Number(x.reading)<=495&&Number(x.total)===Number(x.listening)+Number(x.reading)&&String(x.loss||"").trim()),
+   Array.isArray(obj.records)&&obj.records.every(x=>x&&/^\d{4}-\d{2}-\d{2}$/.test(x.date||"")&&Number(x.listening)>=5&&Number(x.listening)<=495&&Number(x.reading)>=5&&Number(x.reading)<=495&&Number(x.total)===Number(x.listening)+Number(x.reading)&&String(x.loss||"").trim()),
    typeof obj.analysis==="string"&&obj.analysis.trim().length>0
   ];
   status.textContent=checks.every(Boolean)?"JSON 檔案驗收通過：已從實際下載檔讀回、解析成功，且所有必要欄位與分數加總有效。":"JSON 檔案可解析，但欄位驗收未通過（"+checks.filter(x=>!x).length+" 項失敗）。請檢查並重新下載。";
