@@ -1,0 +1,53 @@
+<!doctype html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gary｜Sylvia IELTS Coach Desk</title>
+<style>
+:root{--p:#111827;--bg:#f6f7fb;--card:#fff;--line:#e5e7eb;--text:#1f2937;--muted:#667085;--ok:#067647;--warn:#b54708}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
+header{background:var(--p);color:#fff;padding:24px 16px}.wrap{max-width:1150px;margin:auto}main{padding:18px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+input{width:100%;padding:10px;border:1px solid #d0d5dd;border-radius:10px;font:inherit}.btn{border:0;border-radius:10px;padding:9px 13px;font-weight:800;cursor:pointer}.primary{background:#111827;color:#fff}.ok{background:#ecfdf3;color:#067647}.warn{background:#fff7ed;color:#b54708}.muted{color:var(--muted)}
+table{width:100%;border-collapse:collapse;min-width:1000px}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:14px}th{background:#f9fafb}.status{font-weight:800}.scroll{overflow:auto}
+</style></head><body>
+<header><div class="wrap"><h1>Gary｜Sylvia IELTS Coach Desk</h1><div>聯絡 Ticket 管理｜待回覆 → 已處理</div></div></header>
+<main class="wrap">
+<div class="card"><a href="/sylvia-ielts-command-center/">← 回 Sylvia IELTS Command Center</a></div>
+<div class="card">
+<h2>管理員登入</h2>
+<p class="muted">使用 tpass-results-api 的 ADMIN_TOKEN。Token 只保存在此瀏覽器的 sessionStorage，不寫進網站程式。</p>
+<div style="display:grid;grid-template-columns:1fr auto;gap:10px"><input id="token" type="password" placeholder="ADMIN_TOKEN"><button class="btn primary" onclick="loadTickets()">載入 Ticket</button></div>
+<div id="loginStatus" class="muted" style="margin-top:8px"></div>
+</div>
+<div class="card"><h2>聯絡紀錄</h2><div id="summary" class="muted">尚未載入。</div><div id="tickets" class="scroll"></div></div>
+</main>
+<script>
+const API='https://tpass-results-api.onrender.com';
+token.value=sessionStorage.getItem('sylvia_ielts_admin_token')||'';
+async function loadTickets(){
+ const t=token.value.trim();if(!t){loginStatus.textContent='請輸入 ADMIN_TOKEN';return}
+ sessionStorage.setItem('sylvia_ielts_admin_token',t);
+ loginStatus.textContent='讀取中…';
+ try{
+  const res=await fetch(API+'/api/ielts-contact-tickets?limit=200',{headers:{Authorization:'Bearer '+t}});
+  const data=await res.json();if(!data.ok)throw new Error(data.error||'讀取失敗');
+  loginStatus.textContent='已連線';
+  render(data.items||[]);
+ }catch(e){loginStatus.textContent='無法登入或讀取 Ticket：'+e.message;tickets.innerHTML=''}
+}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function render(items){
+ const pending=items.filter(x=>x.status==='待回覆').length,done=items.filter(x=>x.status==='已處理').length;
+ summary.innerHTML='<b>待回覆 '+pending+'</b>｜已處理 '+done+'｜總計 '+items.length;
+ if(!items.length){tickets.innerHTML='<p class="muted">尚無 Ticket。</p>';return}
+ tickets.innerHTML='<table><thead><tr><th>時間</th><th>來源</th><th>問題</th><th>學員</th><th>訊息</th><th>四科快照／瓶頸</th><th>狀態</th><th>操作</th></tr></thead><tbody>'+
+ items.map(x=>{
+  const s=x.snapshot||{};
+  return '<tr><td>'+new Date(x.created_at).toLocaleString()+'</td><td>'+esc(x.source_subject)+'</td><td>'+esc(x.topic)+'</td><td>'+esc(x.student_name)+'<br>'+esc(x.student_email)+'</td><td>'+esc(x.message)+'</td><td>L '+esc(s.listening)+'｜R '+esc(s.reading)+'｜W '+esc(s.writing)+'｜S '+esc(s.speaking)+'<br><b>'+esc(s.bottleneck)+'</b><br>'+esc(s.today_task)+'</td><td class="status">'+esc(x.status)+'</td><td><button class="btn '+(x.status==='待回覆'?'ok':'warn')+'" onclick="setStatus(\''+x.ticket_id+'\',\''+(x.status==='待回覆'?'已處理':'待回覆')+'\')">'+(x.status==='待回覆'?'標記已處理':'改回待回覆')+'</button></td></tr>'
+ }).join('')+'</tbody></table>';
+}
+async function setStatus(id,status){
+ const t=token.value.trim();
+ const res=await fetch(API+'/api/ielts-contact-tickets/'+id+'/status',{method:'PATCH',headers:{'Content-Type':'application/json',Authorization:'Bearer '+t},body:JSON.stringify({status})});
+ const data=await res.json();if(!data.ok){alert('更新失敗：'+(data.error||'unknown'));return}loadTickets();
+}
+if(token.value)loadTickets();
+</script></body></html>
