@@ -73,6 +73,7 @@ canvas{width:100%;height:280px;border:1px solid var(--line);border-radius:12px;b
 </div>
 <label>主要錯誤／扣分點<input id="gradeErrors" placeholder="例如：Overview 不精準；論證未展開"></label>
 <label>Gary 老師一句建議<input id="teacherNote" placeholder="下一篇唯一要修正的重點"></label>
+<div class="card" style="margin-top:12px;background:#fafaff"><h3 style="margin-top:0">自動診斷處方｜Auto Prescription</h3><div id="autoPrescription" class="muted">填入四項分數後，系統會自動判斷最低分構面與下一篇唯一訓練任務。</div></div>
 <p><button class="action" onclick="saveGrade()">儲存分數並更新曲線</button></p><div id="gradeResult" class="status"></div>
 </div>
 </section>
@@ -165,8 +166,34 @@ historyBody.innerHTML=records.map(r=>`<tr><td>${r.date}</td><td>${r.task}</td><t
 gradeRecord.innerHTML=records.map((r,i)=>`<option value="${i}">${r.date}｜${r.task}｜Day ${r.day}</option>`).join('');updateGradeLabels();renderLatestReview();renderErrors();drawChart()}
 function updateGradeLabels(){if(!records.length){return}const r=records[+gradeRecord.value||0];const t2=r&&r.task==='Task 2';c1Label.textContent=t2?'T2 TR｜Task Response 任務回應':'T1 TA｜Task Achievement 任務完成度';ccLabel.textContent=(t2?'T2':'T1')+' CC｜Coherence & Cohesion 連貫與銜接';lrLabel.textContent=(t2?'T2':'T1')+' LR｜Lexical Resource 字彙資源';graLabel.textContent=(t2?'T2':'T1')+' GRA｜Grammatical Range & Accuracy 文法多樣性與正確性'}
 gradeRecord.addEventListener('change',updateGradeLabels);
-function renderLatestReview(){const graded=records.filter(r=>r.band!=null);if(!graded.length){latestReviewContent.innerHTML='尚未有 Gary 老師批改紀錄。完成作業並由老師回填分數後，這裡會自動顯示最新結果。';return}const r=graded[graded.length-1],s=r.scores||{},firstLabel=r.task==='Task 2'?'TR 任務回應':'TA 任務完成度';latestReviewContent.innerHTML=`<div class="grid3"><div class="tip"><b>${r.date}｜${r.task}｜Day ${r.day}</b><br><span class="kpi">Band ${r.band.toFixed(1)}</span></div><div class="tip"><b>四項分數</b><br>${firstLabel}：${s.c1??'—'}<br>CC 連貫與銜接：${s.cc??'—'}<br>LR 字彙資源：${s.lr??'—'}<br>GRA 文法：${s.gra??'—'}</div><div class="tip"><b>主要扣分點</b><br>${r.errors||'尚未填寫'}<br><br><b>下一篇唯一修正重點</b><br>${r.teacher_note||'尚未填寫'}</div></div>`}
-function saveGrade(){if(!records.length){alert('尚無作業');return}const i=+gradeRecord.value;const vals=[g1,g2,g3,g4].map(x=>Number(x.value));if(vals.some(x=>!x)){alert('請填四項分數');return}const band=Math.round((vals.reduce((a,b)=>a+b,0)/4)*2)/2;records[i].scores={c1:vals[0],cc:vals[1],lr:vals[2],gra:vals[3]};records[i].band=band;records[i].errors=gradeErrors.value.trim();records[i].teacher_note=teacherNote.value.trim();saveRecords();gradeResult.textContent='✅ 已儲存：Band '+band.toFixed(1)+'；進步曲線已更新。'}
+function renderLatestReview(){const graded=records.filter(r=>r.band!=null);if(!graded.length){latestReviewContent.innerHTML='尚未有 Gary 老師批改紀錄。完成作業並由老師回填分數後，這裡會自動顯示最新結果。';return}const r=graded[graded.length-1],s=r.scores||{},firstLabel=r.task==='Task 2'?'TR 任務回應':'TA 任務完成度';latestReviewContent.innerHTML=`<div class="grid3"><div class="tip"><b>${r.date}｜${r.task}｜Day ${r.day}</b><br><span class="kpi">Band ${r.band.toFixed(1)}</span></div><div class="tip"><b>四項分數</b><br>${firstLabel}：${s.c1??'—'}<br>CC 連貫與銜接：${s.cc??'—'}<br>LR 字彙資源：${s.lr??'—'}<br>GRA 文法：${s.gra??'—'}</div><div class="tip"><b>主要扣分點</b><br>${r.errors||'尚未填寫'}<br><br><b>Gary 老師建議</b><br>${r.teacher_note||'尚未填寫'}</div></div>${r.prescription?`<div class="tip ok" style="margin-top:12px"><b>Band → 下一級個人處方</b><br><b>目前最大瓶頸：</b>${r.prescription.bottleneck}（${r.prescription.score.toFixed(1)}）<br><b>下一篇只練：</b>${r.prescription.task}</div>`:''}`}
+function prescriptionFor(r,vals){
+ const t2=r.task==='Task 2';
+ const labels=t2?['TR 任務回應','CC 連貫與銜接','LR 字彙資源','GRA 文法多樣性與正確性']:['TA 任務完成度','CC 連貫與銜接','LR 字彙資源','GRA 文法多樣性與正確性'];
+ const tasks=t2?[
+  '每個 Body 強制加入 Point → Why → Effect → Link，避免理由只停在表面。',
+  '每段只保留一個中心句，使用指代與語意銜接，減少模板式 First/Second/Furthermore。',
+  '只修正不自然搭配與重複字；每篇挑 5 個高價值 collocations 精準使用，不追求難字。',
+  '每段至少加入 1 個正確複句；完稿後專查冠詞、單複數、動詞形式與主謂一致。'
+ ]:[
+  '先用 2 句 Overview 抓 2–3 個最大特徵；Body 只選重要資料做比較，不逐項列數據。',
+  '依趨勢或區域分組資料；每段只處理同一類變化，避免流水帳。',
+  '集中練 rise/fall/peak/remain/replace 等精準描述詞與數字搭配，不堆高級字。',
+  '完稿後專查時態、million 用法、主謂一致與比較句；先求零低級錯誤。'
+ ];
+ const min=Math.min(...vals), idx=vals.indexOf(min);
+ const nextBand=min>=7.5?'維持高分穩定度，下一篇以限時＋零低級錯誤為主。':tasks[idx];
+ return {bottleneck:labels[idx],score:min,task:nextBand};
+}
+function updatePrescriptionPreview(){
+ if(!records.length)return;
+ const vals=[g1,g2,g3,g4].map(x=>Number(x.value));
+ if(vals.some(x=>!x)){autoPrescription.textContent='填入四項分數後，系統會自動判斷最低分構面與下一篇唯一訓練任務。';return}
+ const r=records[+gradeRecord.value||0],p=prescriptionFor(r,vals);
+ autoPrescription.innerHTML='<b>目前最大瓶頸：</b>'+p.bottleneck+'（'+p.score.toFixed(1)+'）<br><b>下一篇只練：</b>'+p.task;
+}
+[g1,g2,g3,g4].forEach(x=>x.addEventListener('input',updatePrescriptionPreview));
+function saveGrade(){if(!records.length){alert('尚無作業');return}const i=+gradeRecord.value;const vals=[g1,g2,g3,g4].map(x=>Number(x.value));if(vals.some(x=>!x)){alert('請填四項分數');return}const band=Math.round((vals.reduce((a,b)=>a+b,0)/4)*2)/2;const p=prescriptionFor(records[i],vals);records[i].scores={c1:vals[0],cc:vals[1],lr:vals[2],gra:vals[3]};records[i].band=band;records[i].errors=gradeErrors.value.trim();records[i].teacher_note=teacherNote.value.trim();records[i].prescription=p;saveRecords();gradeResult.innerHTML='✅ 已儲存：Band '+band.toFixed(1)+'；進步曲線已更新。<br><b>最大瓶頸：</b>'+p.bottleneck+'<br><b>下一篇只練：</b>'+p.task}
 function renderErrors(){const m={};records.forEach(r=>(r.errors||'').split(/[；,，;、]/).map(x=>x.trim()).filter(Boolean).forEach(x=>m[x]=(m[x]||0)+1));const arr=Object.entries(m).sort((a,b)=>b[1]-a[1]);errorSummary.innerHTML=arr.length?'<table><tr><th>錯誤／扣分點</th><th>出現次數</th></tr>'+arr.map(x=>'<tr><td>'+x[0]+'</td><td>'+x[1]+'</td></tr>').join('')+'</table>':'<p class="muted">尚無 Gary 批改錯誤資料。</p>'}
 function drawChart(){const c=chart,ctx=c.getContext('2d'),W=c.width,H=c.height;ctx.clearRect(0,0,W,H);ctx.strokeStyle='#e5e7eb';ctx.fillStyle='#667085';ctx.font='13px sans-serif';for(let b=5;b<=9;b++){const y=H-30-(b-5)*(H-50)/4;ctx.beginPath();ctx.moveTo(45,y);ctx.lineTo(W-20,y);ctx.stroke();ctx.fillText(b.toFixed(1),8,y+4)}const pts=records.filter(r=>r.band!=null);if(!pts.length)return;ctx.strokeStyle='#5b5bd6';ctx.lineWidth=3;ctx.beginPath();pts.forEach((r,i)=>{const x=50+i*((W-80)/Math.max(1,pts.length-1));const y=H-30-(r.band-5)*(H-50)/4;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.stroke();pts.forEach((r,i)=>{const x=50+i*((W-80)/Math.max(1,pts.length-1));const y=H-30-(r.band-5)*(H-50)/4;ctx.fillStyle='#7c3aed';ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fill();ctx.fillStyle='#1f2937';ctx.fillText(r.band.toFixed(1),x-10,y-10)})}
 renderAll();
