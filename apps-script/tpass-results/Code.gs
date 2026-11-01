@@ -122,6 +122,26 @@ function detectBrand_(p) {
   const source = String((p && p.source_page) || '').toLowerCase();
   const assessment = String((p && p.assessment_type) || '').toLowerCase();
 
+  if (source.indexOf('/english-speaking-confidence-lab/') !== -1 ||
+      assessment.indexOf('english speaking confidence lab') !== -1) {
+    return {
+      displayName: 'English Speaking Confidence Lab',
+      emailPrefix: 'English Speaking Confidence Lab',
+      returnLabel: 'English Speaking Confidence Lab',
+      returnUrl: 'https://gary-learning-hub.onrender.com/english-speaking-confidence-lab/'
+    };
+  }
+
+  if (source.indexOf('/interview-english-coach/') !== -1 ||
+      assessment.indexOf('interview english coach') !== -1) {
+    return {
+      displayName: 'Interview English Coach',
+      emailPrefix: 'Interview English Coach',
+      returnLabel: 'Interview English Coach',
+      returnUrl: 'https://gary-learning-hub.onrender.com/interview-english-coach/'
+    };
+  }
+
   if (source.indexOf('/presentation-english-coach/') !== -1 ||
       assessment.indexOf('presentation english coach') !== -1) {
     return {
