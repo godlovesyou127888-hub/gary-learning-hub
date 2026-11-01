@@ -77,6 +77,25 @@ function validateDeliveryPayload(payload){
   if(!String(payload.submission_id||"").trim())missing.push("submission_id");
   return {ok:missing.length===0,missing};
 }
+function cleanupOldDeliveries(maxAgeDays=7){
+  const cutoff=Date.now()-maxAgeDays*86400000;
+  const remove=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(!k||!k.startsWith("tpass_next_delivery_DLV-"))continue;
+    try{
+      const d=JSON.parse(localStorage.getItem(k)||"null");
+      const t=new Date(d?._saved_at||d?.submitted_at||0).getTime();
+      if(!t||t<cutoff){
+        remove.push(k);
+        const token=d?._delivery_token||k.replace("tpass_next_delivery_","");
+        remove.push(deliveryStatusKey(token));
+      }
+    }catch{remove.push(k)}
+  }
+  [...new Set(remove)].forEach(k=>localStorage.removeItem(k));
+  return remove.length;
+}
 function downloadJSON(name,data){
   const a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:"application/json"}));
