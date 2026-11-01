@@ -68,6 +68,15 @@ function pendingAgeMinutes(payload){
   const ms=Date.now()-new Date(t).getTime();
   return Number.isFinite(ms)?Math.max(0,Math.round(ms/60000)):null;
 }
+function validateDeliveryPayload(payload){
+  const missing=[];
+  if(!payload) return {ok:false,missing:["payload"]};
+  if(!String(payload.student_name||"").trim())missing.push("student_name");
+  if(!String(payload.email||"").trim())missing.push("email");
+  if(!String(payload.assessment_type||"").trim())missing.push("assessment_type");
+  if(!String(payload.submission_id||"").trim())missing.push("submission_id");
+  return {ok:missing.length===0,missing};
+}
 function downloadJSON(name,data){
   const a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:"application/json"}));
