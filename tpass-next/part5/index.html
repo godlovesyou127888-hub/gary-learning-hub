@@ -3,7 +3,14 @@
 <section class="card"><div class="actions"><a class="btn outline" href="../">← 回樂齡多益首頁</a><a class="btn outline" href="../form-test/" target="_blank">表單測試</a></div></section>
 <section class="card"><h2>① 填寫基本資料</h2><div class="row"><input id="name" type="text" placeholder="姓名"><input id="email" type="email" placeholder="Email"></div><div class="helper">先做表單測試：<a href="../form-test/" target="_blank">開啟「FormSubmit 單獨測試頁」</a></div></section>
 <section id="quiz" class="card"></section>
-<section class="card"><h2>② 完成後保存與送出</h2><div class="actions"><button id="grade" type="button">① 完成診斷</button><button id="pdf" class="secondary">下載／儲存 PDF</button><button id="dl" class="secondary">下載完整 JSON</button><button class="outline" onclick="reportProblem('Part 5')">問題回報</button></div><div id="result"></div><div id="status" class="status pending">尚未送出</div><a class="btn" id="deliveryBridgeBtn" href="../form-test/?mode=assessment" style="display:none;margin-top:12px">② 前往寄送結果</a><div class="helper"><b>下一步：</b>確認送出成功後，進入 Listening 聽力診斷。</div><a class="btn secondary" href="../listening/">下一步：Listening</a></section>
+<section class="card"><h2>② 完成後保存與送出</h2><div class="actions"><button id="grade" type="button">① 完成診斷</button><button id="pdf" class="secondary">下載／儲存 PDF</button><button id="dl" class="secondary">下載完整 JSON</button><button class="outline" onclick="reportProblem('Part 5')">問題回報</button></div><div id="result"></div><div id="status" class="status pending">尚未送出</div>
+<div id="deliveryOptions" style="display:none;margin-top:12px">
+  <div class="helper"><b>寄送前提醒：</b>請先下載 PDF 或 JSON，確保結果已備份。</div>
+  <div class="actions">
+    <a class="btn" id="deliveryBridgeBtn" href="../form-test/?mode=assessment">A｜使用網站表單寄送</a>
+    <button class="btn secondary" type="button" id="studentShareBtn">B｜使用學生 Email 寄送</button>
+  </div>
+</div><div class="helper"><b>下一步：</b>確認送出成功後，進入 Listening 聽力診斷。</div><a class="btn secondary" href="../listening/">下一步：Listening</a></section>
 </main><script>
 s.textContent=baseStyles();
 const nameEl=document.getElementById("name");
@@ -29,10 +36,23 @@ const Q=[
 quizEl.innerHTML='<h2>Part 5｜10 題</h2>'+Q.map((q,i)=>'<div class="q"><b>'+(i+1)+'. '+q[1]+'</b>'+q[2].map((x,j)=>'<label><input type="radio" name="q'+i+'" value="'+j+'"><span>'+x+'</span></label>').join('')+'</div>').join('');
 function prepNativeDelivery(payload){
   savePendingDelivery(payload);
-  const btn=document.getElementById("deliveryBridgeBtn");
-  if(btn)btn.style.display="block";
-  statusEl.textContent="✅ 診斷完成並已保存在本機。請按「② 前往寄送結果」，使用已驗證成功的寄送頁送出。";
+  const box=document.getElementById("deliveryOptions");
+  if(box)box.style.display="block";
+  statusEl.textContent="✅ 診斷完成並已保存在本機。請先下載 PDF 或 JSON，再選擇寄送方式。";
   statusEl.className="status ok";
+}
+async function shareWithStudentEmail(){
+  const payload=loadPendingDelivery();
+  if(!payload){alert("找不到診斷結果，請先完成診斷。");return}
+  const text=buildMailMessage(payload)+"\n\n完整結果已另存 PDF／JSON。";
+  try{
+    if(navigator.share){
+      await navigator.share({title:"T-PASS 診斷結果",text});
+    }else{
+      await navigator.clipboard.writeText(text);
+      alert("結果內容已複製。請開啟學生自己的 Email，貼上後寄出。");
+    }
+  }catch(e){}
 }
 
 let last=null;const key="tpass_next_part5_draft";const draft=loadLocal(key)||{};nameEl.value=draft.name||"";emailEl.value=draft.email||"";
@@ -47,6 +67,7 @@ last={submission_id:uid("P5"),submitted_at:new Date().toISOString(),assessment_t
 saveLocal("tpass_next_part5_last",last);resultEl.innerHTML="<h2>結果："+score+"/10</h2><p>正確率："+last.accuracy+"</p><p>主要弱點："+primary+"</p>";prepNativeDelivery(last)};
 pdfBtn.onclick=()=>openPdfReport(last||loadLocal("tpass_next_part5_last"));
 dlBtn.onclick=()=>downloadJSON("樂齡多益-Part5-"+Date.now()+".json",last||loadLocal("tpass_next_part5_last")||{note:"尚未完成診斷"});
+document.getElementById("studentShareBtn").onclick=shareWithStudentEmail;
 
 window.addEventListener("error",e=>{
   statusEl.textContent="⚠️ 程式錯誤："+(e.message||"unknown")+"。請截圖回報。";
