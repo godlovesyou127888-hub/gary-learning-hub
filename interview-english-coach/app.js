@@ -22,7 +22,7 @@ $("quizForm").addEventListener("submit",e=>{
   const dims={};Object.keys(D.dimensions).forEach(k=>dims[k]={right:0,total:0});
   let total=0;
   D.questions.forEach((q,i)=>{dims[q.d].total++;if(state.answers[i]===q.a){dims[q.d].right++;total++}});
-  state.diagnosis={total,dims,completedAt:new Date().toISOString()};save();renderDiagnosis();renderSummary();
+  state.diagnosis={total,dims,completedAt:new Date().toISOString()};save();renderDiagnosis();renderSummary();if(window.prepareInterviewDelivery)window.prepareInterviewDelivery();
 });
 function renderDiagnosis(){
   if(!state.diagnosis)return;
@@ -51,7 +51,7 @@ $("savePractice").addEventListener("click",()=>{
   const i=Number($("promptSelect").value),p=D.prompts[i],scores={};D.rubric.forEach(r=>scores[r.key]=Number($("r-"+r.key).value));
   const avg=Object.values(scores).reduce((a,b)=>a+b,0)/Object.values(scores).length;
   state.practices.push({id:"INT-"+Date.now(),promptIndex:i,question:p.q,category:p.cat,star:{situation:$("situation").value.trim(),task:$("task").value.trim(),action:$("action").value.trim(),result:$("result").value.trim()},answer,scores,average:Number(avg.toFixed(1)),createdAt:new Date().toISOString()});
-  save();$("practiceStatus").textContent=`已儲存。自評平均 ${avg.toFixed(1)} / 5。`;renderSummary();renderHistory();
+  save();$("practiceStatus").textContent=`已儲存。自評平均 ${avg.toFixed(1)} / 5。`;renderSummary();renderHistory();if(window.prepareInterviewDelivery)window.prepareInterviewDelivery();
 });
 function renderSummary(){
   const d=state.diagnosis,p=state.practices;
