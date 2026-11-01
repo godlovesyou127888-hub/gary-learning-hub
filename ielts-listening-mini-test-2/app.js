@@ -34,5 +34,87 @@ $("submitTest").onclick=()=>{const r=getResponses();if(Object.values(r).some(v=>
 $("submitRetry").onclick=()=>{if(!latest){$("retryStatus").textContent="請先完成 Mini Test 2。";return}if(!retryItems.length){$("retryStatus").textContent="沒有錯題需要重練。";return}let ok=0;for(const id of retryItems){const el=$("r-"+id);if(!el||!el.value.trim()){$("retryStatus").textContent="請完成所有錯題。";return}if(correct(id,el.value))ok++}latest.retryScore=Math.round(ok/retryItems.length*100);localStorage.setItem(KEY,JSON.stringify(state));$("retryStatus").textContent="錯題重練正確率："+latest.retryScore+"%"};
 function payload(){return{site_version:"IELTS Listening Mini Test 2 MVP V1",exported_at:new Date().toISOString(),latest_attempt:latest||state.attempts[0]||null,attempts:state.attempts}}
 $("download").onclick=()=>{const p=payload(),u=URL.createObjectURL(new Blob([JSON.stringify(p,null,2)],{type:"application/json"})),a=document.createElement("a");a.href=u;a.download="ielts-listening-mini-2-"+Date.now()+".json";a.click();setTimeout(()=>URL.revokeObjectURL(u),500)};$("print").onclick=()=>window.print();
-$("sendCoach").onclick=()=>{const p=payload(),a=p.latest_attempt;if(!a){$("deliveryStatus").textContent="請先完成 Mini Test 2。";return}if(a.email&&!/^[^s@]+@[^s@]+.[^s@]+$/.test(a.email)){$("deliveryStatus").textContent="Email 格式不正確。";return}const body={submission_id:"IELTS-LMINI2-"+Date.now(),submitted_at:new Date().toISOString(),assessment_type:"IELTS Listening Mini Test 2｜原創Part 2+3",source_page:location.href,student_name:a.student||"IELTS Student",email:a.email,current_score:a.score+"/10",target_score:"IELTS Listening 7.0",total_score:a.score+"/10",accuracy:a.accuracy+"%",primary_weakness:a.weakness,secondary_weakness:"",summary:["IELTS Listening Mini Test 2","分數："+a.score+"/10","正確率："+a.accuracy+"%","Mini Band 參考："+a.bandEstimate,"優先弱點："+a.weakness,"Part 2 播放："+a.plays[2]+" 次","Part 3 播放："+a.plays[3]+" 次"].join("\n"),responses_json:JSON.stringify(p)};$("deliveryStatus").textContent="正在寄送完整結果給 Gary 教練。看到 Email 狀態：sent 才算完成。";const form=document.createElement("form");form.method="POST";form.action=DELIVERY_URL;form.target="_self";form.style.display="none";Object.entries(body).forEach(([k,v])=>{const i=document.createElement("input");i.type="hidden";i.name=k;i.value=String(v??"");form.appendChild(i)});document.body.appendChild(form);form.submit()};
+$("sendCoach").onclick=()=>{
+ const p=payload(),a=p.latest_attempt;
+ if(!a){$("deliveryStatus").textContent="請先完成測驗並取得結果。";return}
+ if(!a.email||!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(a.email)){$("deliveryStatus").textContent="請填寫可接收結果的有效 Email。";return}
+ const submissionId="IELTS-LMINI2-"+Date.now();
+ const wrongDetails=(a.wrong||[]).map(id=>({
+   question:id.toUpperCase(),
+   student_answer:a.responses?.[id]??"",
+   correct_answer:answers[id]?.a??"",
+   explanation:answers[id]?.why??""
+ }));
+ const itemResults=Object.keys(answers).map(id=>({
+   question:id.toUpperCase(),
+   student_answer:a.responses?.[id]??"",
+   correct_answer:answers[id].a,
+   correct:correct(id,a.responses?.[id]??""),
+   type:answers[id].type,
+   explanation:answers[id].why
+ }));
+ const fullDelivery={
+   submission_id:submissionId,
+   submitted_at:new Date().toISOString(),
+   assessment:"IELTS Listening Mini Test 2｜原創Part 2+3正式交付",
+   source_page:location.href,
+   student_name:a.student||"IELTS Student",
+   student_email:a.email,
+   test_date:a.date||"",
+   mode:a.mode,
+   score:a.score,
+   total_questions:10,
+   accuracy:a.accuracy,
+   mini_band_reference:a.bandEstimate,
+   primary_weakness:a.weakness,
+   play_counts:a.plays,
+   wrong_questions:a.wrong||[],
+   wrong_details:wrongDetails,
+   retry_score:a.retryScore??null,
+   item_results:itemResults,
+   attempt:a
+ };
+ const body={
+   submission_id:submissionId,
+   submitted_at:fullDelivery.submitted_at,
+   assessment_type:"IELTS Listening Mini Test 2｜原創Part 2+3正式交付",
+   source_page:location.href,
+   student_name:fullDelivery.student_name,
+   email:a.email,
+   current_score:a.score+"/10",
+   target_score:"IELTS Listening 7.0",
+   total_score:a.score+"/10",
+   accuracy:a.accuracy+"%",
+   primary_weakness:a.weakness,
+   secondary_weakness:(a.wrong||[]).slice(0,2).join(", "),
+   summary:[
+     "IELTS Listening Mini Test 2",
+     "Submission ID："+submissionId,
+     "模式："+a.mode,
+     "分數："+a.score+"/10",
+     "正確率："+a.accuracy+"%",
+     "Mini Band 參考："+a.bandEstimate,
+     "優先弱點："+a.weakness,
+     "播放次數："+Object.entries(a.plays||{}).map(([k,v])=>"Part "+k+" "+v+" 次").join("；"),
+     "錯題："+((a.wrong||[]).map(x=>x.toUpperCase()).join(", ")||"無"),
+     "錯題重練："+(a.retryScore==null?"尚未":a.retryScore+"%")
+   ].join("\n"),
+   responses_json:JSON.stringify(fullDelivery)
+ };
+ try{
+   localStorage.setItem("ielts_listening_delivery_last_v1",JSON.stringify({
+     submission_id:submissionId,
+     assessment:"IELTS Listening Mini Test 2",
+     created_at:body.submitted_at,
+     status:"submitted_to_gateway",
+     score:a.score,
+     email:a.email
+   }));
+ }catch{}
+ $("deliveryStatus").textContent="正在寄送完整模考資料給 Gary 教練。Submission ID："+submissionId+"。需以 Gmail 實收確認才算正式完成。";
+ const form=document.createElement("form");
+ form.method="POST";form.action=DELIVERY_URL;form.target="_self";form.style.display="none";
+ Object.entries(body).forEach(([k,v])=>{const i=document.createElement("input");i.type="hidden";i.name=k;i.value=String(v??"");form.appendChild(i)});
+ document.body.appendChild(form);form.submit()
+};
 })();
