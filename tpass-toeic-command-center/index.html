@@ -142,6 +142,11 @@ boxes.forEach(b=>{b.checked=!!saved[b.dataset.step];b.addEventListener("change",
 function save(){const d={};boxes.forEach(b=>d[b.dataset.step]=b.checked);localStorage.setItem(key,JSON.stringify(d));draw()}
 function draw(){const done=boxes.filter(b=>b.checked).length;bar.style.width=(done/boxes.length*100)+"%";progressText.textContent=done+" / "+boxes.length+" 完成"}
 
+let gmailVerificationRegistry={verified:[]};
+async function loadGmailVerificationRegistry(){
+  try{const r=await fetch("/tpass-next/gmail-verification.json?v="+Date.now(),{cache:"no-store"});if(r.ok)gmailVerificationRegistry=await r.json();}catch(e){}
+}
+function registryMatch(token){return (gmailVerificationRegistry.verified||[]).find(x=>x.delivery_token===token)||null;}
 function renderDeliveryMonitor(){
   const body=document.getElementById("deliveryMonitorBody");
   if(!body)return;
@@ -173,14 +178,15 @@ function renderDeliveryMonitor(){
   body.innerHTML='<div style="overflow:auto"><table class="delivery-table"><thead><tr><th>來源</th><th>Delivery Token</th><th>時間</th><th>目前狀態</th><th>Gmail 驗收</th></tr></thead><tbody>'+
     latest.map(r=>{
       const st=getDeliveryStatus(r.token)||{};
-      const verified=st.status==="gmail_verified";
+      const reg=registryMatch(r.token);
+      const verified=Boolean(reg)||st.status==="gmail_verified";
       const submitted=verified||r.status==="submitted_to_formsubmit";
       const state=verified?"Gmail 已確認收到":(submitted?"已送往 FormSubmit":"已產生資料");
       const cls=submitted?"delivery-ok":"delivery-pending";
       const t=r.saved?new Date(r.saved).toLocaleString("zh-TW"):"—";
-      const verifiedAt=st.gmail_verified_at?new Date(st.gmail_verified_at).toLocaleString("zh-TW"):"";
+      const verifiedAt=reg?.verified_at?new Date(reg.verified_at).toLocaleString("zh-TW"):(st.gmail_verified_at?new Date(st.gmail_verified_at).toLocaleString("zh-TW"):"");
       const action=verified
-        ? '<div><b class="delivery-ok">已確認收到</b><br><span class="delivery-muted">'+verifiedAt+'</span><br><button class="btn secondary" type="button" data-unverify="'+r.token+'">取消驗收</button></div>'
+        ? '<div><b class="delivery-ok">已確認收到</b><br><span class="delivery-muted">'+verifiedAt+'</span>'+(reg?'<br><span class="delivery-muted">Gmail 自動比對登錄</span>':'<br><button class="btn secondary" type="button" data-unverify="'+r.token+'">取消驗收</button>')+'</div>'
         : '<button class="btn secondary" type="button" data-verify="'+r.token+'">標記 Gmail 已收到</button>';
       return '<tr><td>'+r.assessment+'</td><td><code>'+r.token+'</code></td><td>'+t+'</td><td class="delivery-state '+cls+'">'+state+'</td><td>'+action+'</td></tr>';
     }).join("")+
@@ -195,7 +201,7 @@ function renderDeliveryMonitor(){
     renderDeliveryMonitor();
   }));
 }
-document.getElementById("refreshDeliveryMonitor")?.addEventListener("click",renderDeliveryMonitor);
-renderDeliveryMonitor();
+document.getElementById("refreshDeliveryMonitor")?.addEventListener("click",async()=>{await loadGmailVerificationRegistry();renderDeliveryMonitor();});
+loadGmailVerificationRegistry().then(renderDeliveryMonitor);
 draw();
 </script></body></html>
