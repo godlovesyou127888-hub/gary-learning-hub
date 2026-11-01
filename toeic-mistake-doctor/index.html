@@ -45,7 +45,7 @@ main{padding:30px 20px 64px}.panel{background:var(--card);border:2px solid var(-
 <input type="hidden" name="_subject" value="TOEIC Mistake Doctor｜Student Result">
 <input type="hidden" name="_template" value="table">
 <input type="hidden" name="_autoresponse" value="已收到你的 TOEIC Mistake Doctor 錯題診斷結果。這封信是你的結果副本，請保留作為後續訂正與再測參考。">
-<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-mistake-doctor/">
+<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-submit-complete/">
 <input type="hidden" name="_url" value="https://gary-learning-hub.onrender.com/toeic-mistake-doctor/">
 <input type="hidden" name="current_score" id="sendCurrent">
 <input type="hidden" name="target_score" id="sendTarget">
@@ -230,4 +230,5 @@ function downloadCSV(){
  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\uFEFF"+lines.join("\n")],{type:"text/csv;charset=utf-8"}));a.download="toeic_mistake_doctor.csv";a.click();
 }
 </script>
+<script src="/assets/toeic-return.js?v=20261101"></script>
 </body></html>
