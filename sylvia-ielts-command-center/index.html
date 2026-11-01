@@ -55,7 +55,7 @@ input{width:100%;padding:10px;border:1px solid #d0d5dd;border-radius:10px;font:i
 <section class="card" id="contact" style="margin-top:14px">
 <h2>聯絡站長｜Contact Gary</h2>
 <p class="muted">如果遇到網站操作、作業送出、分數紀錄、模考安排或 IELTS 學習問題，可直接填寫下列表單。</p>
-<form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" style="display:grid;gap:10px">
+<form id="contactForm" action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" style="display:grid;gap:10px">
 <input type="hidden" id="contactSubject" name="_subject" value="[Sylvia IELTS][General] 聯絡站長">
 <input type="hidden" name="_captcha" value="false">
 <input type="hidden" name="source" value="Sylvia IELTS Command Center">
@@ -65,6 +65,8 @@ input{width:100%;padding:10px;border:1px solid #d0d5dd;border-radius:10px;font:i
 <input type="hidden" id="statusSpeaking" name="Speaking_Band">
 <input type="hidden" id="statusBottleneck" name="Current_Bottleneck">
 <input type="hidden" id="statusTodayTask" name="Today_Only_Task">
+<input type="hidden" id="ticketIdField" name="Ticket_ID">
+<input type="hidden" id="ticketStatusField" name="Ticket_Status">
 <label>姓名<input name="name" value="Sylvia" required></label>
 <label>Email<input type="email" name="email" placeholder="你的 Email" required></label>
 <label>問題類型<select id="contactTopic" name="topic"><option value="作業批改">作業批改</option><option value="成績／進度">成績／進度</option><option value="模考／考試日期">模考／考試日期</option><option value="網站操作">網站操作</option><option value="課程／學習問題">課程／學習問題</option><option value="其他">其他</option></select></label>
@@ -72,6 +74,12 @@ input{width:100%;padding:10px;border:1px solid #d0d5dd;border-radius:10px;font:i
 <label>留言<textarea name="message" rows="6" placeholder="請描述問題或需求..." required style="width:100%;padding:10px;border:1px solid #d0d5dd;border-radius:10px;font:inherit"></textarea></label>
 <button class="btn primary" type="submit">送出給站長</button>
 </form>
+</section>
+<section class="card" id="contactHistory" style="margin-top:14px">
+<h2>聯絡紀錄｜Contact Tickets</h2>
+<p class="muted">送出問題後，狀態會先顯示「待回覆」；Gary 處理後會更新為「已處理」。</p>
+<p><button class="btn secondary" type="button" onclick="refreshContactTickets()">重新整理狀態</button></p>
+<div id="ticketList" class="muted">尚無聯絡紀錄。</div>
 </section>
 </main>
 <div class="footer">Sylvia IELTS Command Center V1｜Gary Adaptive Coaching</div>
@@ -123,4 +131,55 @@ if(sourceParam&&validSources.includes(sourceParam)){
 }
 contactTopic.addEventListener('change',updateContactSubject);
 updateContactSubject();
+
+const CONTACT_API='https://tpass-results-api.onrender.com';
+let contactTickets=[];
+try{contactTickets=JSON.parse(localStorage.getItem('sylvia_ielts_contact_tickets')||'[]')}catch{contactTickets=[]}
+
+function renderContactTickets(items){
+  if(!items.length){ticketList.innerHTML='尚無聯絡紀錄。';return}
+  ticketList.innerHTML='<div style="overflow:auto"><table style="width:100%;border-collapse:collapse"><thead><tr><th style="text-align:left;padding:8px">日期</th><th style="text-align:left;padding:8px">來源</th><th style="text-align:left;padding:8px">問題</th><th style="text-align:left;padding:8px">狀態</th></tr></thead><tbody>'+
+    items.map(x=>'<tr><td style="padding:8px;border-top:1px solid #e5e7eb">'+new Date(x.created_at).toLocaleString()+'</td><td style="padding:8px;border-top:1px solid #e5e7eb">'+(x.source_subject||'General')+'</td><td style="padding:8px;border-top:1px solid #e5e7eb">'+(x.topic||'—')+'</td><td style="padding:8px;border-top:1px solid #e5e7eb"><b>'+(x.status||'待回覆')+'</b></td></tr>').join('')+
+    '</tbody></table></div>';
+}
+
+async function refreshContactTickets(){
+  if(!contactTickets.length){renderContactTickets([]);return}
+  try{
+    const res=await fetch(CONTACT_API+'/api/ielts-contact-tickets/statuses',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tickets:contactTickets.map(x=>({ticket_id:x.ticket_id,public_token:x.public_token}))})});
+    const data=await res.json();
+    if(data.ok)renderContactTickets(data.items||[]);
+    else throw new Error(data.error||'status lookup failed');
+  }catch(e){
+    renderContactTickets(contactTickets.map(x=>({ticket_id:x.ticket_id,source_subject:x.source_subject,topic:x.topic,status:x.status||'待回覆',created_at:x.created_at})));
+  }
+}
+
+contactForm.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const submitBtn=contactForm.querySelector('button[type="submit"]');
+  submitBtn.disabled=true;submitBtn.textContent='建立聯絡紀錄中…';
+  const message=contactForm.elements.message.value.trim();
+  const email=contactForm.elements.email.value.trim();
+  const name=contactForm.elements.name.value.trim();
+  const topic=contactTopic.value;
+  try{
+    const res=await fetch(CONTACT_API+'/api/ielts-contact-tickets',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      source_subject:sourceLabel,topic,student_name:name,student_email:email,message,
+      snapshot:{listening:statusListening.value,reading:statusReading.value,writing:statusWriting.value,speaking:statusSpeaking.value,bottleneck:statusBottleneck.value,today_task:statusTodayTask.value}
+    })});
+    const data=await res.json();
+    if(!data.ok)throw new Error(data.error||'ticket create failed');
+    const localTicket={ticket_id:data.ticket_id,public_token:data.public_token,status:data.status,created_at:data.created_at,source_subject:sourceLabel,topic};
+    contactTickets.unshift(localTicket);
+    localStorage.setItem('sylvia_ielts_contact_tickets',JSON.stringify(contactTickets.slice(0,50)));
+    ticketIdField.value=data.ticket_id;
+    ticketStatusField.value=data.status;
+  }catch(err){
+    ticketIdField.value='TRACKING_UNAVAILABLE';
+    ticketStatusField.value='Email only';
+  }
+  contactForm.submit();
+});
+refreshContactTickets();
 </script></body></html>
