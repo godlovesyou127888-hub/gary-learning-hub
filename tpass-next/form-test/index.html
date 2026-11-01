@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>結果寄送｜多益</title><script src="../core.js?v=20261101-bridge-v4"></script><style id="s"></style></head><body><main class="wrap">
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>結果寄送｜多益</title><script src="../core.js?v=20261101-bridge-v5"></script><style id="s"></style></head><body><main class="wrap">
 <section class="hero"><h1 id="pageTitle">FormSubmit 單獨測試</h1><p id="pageLead">不做測驗，只確認資料能不能真正送達。</p></section>
 <section class="card"><h2 id="stepTitle">只做這一步</h2><p class="muted" id="stepText">填姓名與 Email → 按「送出測試」→ 會開啟 FormSubmit 新頁面。看到成功頁才算送達。</p>
 <form action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" target="_blank">
@@ -10,7 +10,7 @@
 <textarea id="messageField" name="test_message" required style="width:100%;min-height:220px;padding:12px;border:2px solid #cfe0d1;border-radius:12px;font-size:16px"></textarea>
 </label>
 <button id="submitBtn" type="submit">送出測試</button></form>
-<div class="helper" id="deliveryMeta">尚未載入資料。</div><div class="helper" id="helper">送出後請回來告訴我：<b>成功</b>、<b>失敗</b>，或直接貼錯誤畫面。</div>
+<div class="helper" id="deliveryMeta">尚未載入資料。</div><div class="helper" id="lifecycleBox"><b>寄送狀態：</b>尚未建立。</div><div class="helper" id="helper">送出後請回來告訴我：<b>成功</b>、<b>失敗</b>，或直接貼錯誤畫面。</div>
 </section></main><script>
 s.textContent=baseStyles();
 const p=new URLSearchParams(location.search);
@@ -26,6 +26,7 @@ if(p.get("mode")==="assessment"){
 
   if(data){
     const age=pendingAgeMinutes(data);
+    if(deliveryToken){const st=getDeliveryStatus(deliveryToken);lifecycleBox.innerHTML="<b>寄送狀態：</b>"+(st?.status==="submitted_to_formsubmit"?"已送往 FormSubmit":"已產生資料")+"<br><span style=\"font-size:14px\">Gmail 是否收到仍需 Gary 人工驗收。</span>";}
     nameField.value=data.student_name||"";
     emailField.value=data.email||"";
     subjectField.value="[T-PASS NEXT] "+(data.assessment_type||"Assessment")+"｜"+(data.student_name||"Student");
@@ -55,7 +56,7 @@ if(p.get("mode")==="assessment"){
   submitBtn.addEventListener("click",()=>{
     if(submitted)return;
     submitted=true;
-    if(deliveryToken)markTokenizedDeliverySubmitted(deliveryToken);
+    if(deliveryToken){markTokenizedDeliverySubmitted(deliveryToken);lifecycleBox.innerHTML="<b>寄送狀態：</b>已送往 FormSubmit<br><span style=\"font-size:14px\">Gmail 是否收到仍需 Gary 人工驗收。</span>";}
     submitBtn.textContent="已送出，請勿重複點擊";
     setTimeout(()=>{submitBtn.disabled=true;},0);
   });
