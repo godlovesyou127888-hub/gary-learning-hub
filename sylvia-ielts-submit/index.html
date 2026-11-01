@@ -18,20 +18,19 @@ h1{margin:0 0 6px}.muted{color:var(--muted)}input,textarea{width:100%;padding:11
 <a class="btn secondary" href="/sylvia-ielts-command-center/">IELTS Command Center</a>
 </div>
 
-<form id="ieltsForm" action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" target="_blank">
-<input type="hidden" name="_captcha" value="false">
-<input type="hidden" name="_template" value="table">
-<input type="hidden" id="subjectField" name="_subject">
+<form id="ieltsForm" action="https://script.google.com/macros/s/AKfycbwenIqOvRJDaFiR6V0uert6-EPkcj9uVELDM5IWUga4_-3BPSVfF1VuLtyktgHDhDzx/exec" method="POST" target="_blank">
 <input type="hidden" id="submissionField" name="submission_id">
-<input type="hidden" id="sourceField" name="source_page">
+<input type="hidden" id="taskTypeField" name="task_type">
+<input type="hidden" id="questionField" name="question">
+<input type="hidden" id="submissionField" name="submission_id">
 <input type="hidden" name="form_type" value="Sylvia IELTS Writing Submission">
 
 <div class="grid">
-<label>姓名<input id="nameField" name="name" required></label>
-<label>Email<input id="emailField" name="email" type="email" required></label>
+<label>姓名<input id="nameField" name="student_name" required></label>
+<label>Email<input id="emailField" name="student_email" type="email" required></label>
 </div>
 <label style="display:block;margin-top:12px">Writing 作業內容
-<textarea id="messageField" name="test_message" required></textarea></label>
+<textarea id="messageField" name="essay" required></textarea></label>
 
 <p><button id="submitBtn" class="btn primary" type="submit">送出 Writing 作業給 Gary</button></p>
 </form>
@@ -50,9 +49,9 @@ const submitBtn=byId('submitBtn');
 const nameField=byId('nameField');
 const emailField=byId('emailField');
 const messageField=byId('messageField');
-const subjectField=byId('subjectField');
 const submissionField=byId('submissionField');
-const sourceField=byId('sourceField');
+const taskTypeField=byId('taskTypeField');
+const questionField=byId('questionField');
 const ieltsForm=byId('ieltsForm');
 const afterSubmitActions=byId('afterSubmitActions');
 const retryBtn=byId('retryBtn');
@@ -67,12 +66,12 @@ if(!data){
   nameField.value=data.student_name||'Sylvia';
   emailField.value=data.student_email||data.email||'';
   messageField.value=data.preformatted_message||data.essay||'';
-  subjectField.value='[Sylvia IELTS][Writing]['+(data.task_type||'Assignment')+'] '+(data.submission_id||'');
-  submissionField.value=data.submission_id||'';
-  sourceField.value=data.source_page||location.href;
-  deliveryStatusBox.innerHTML='✅ 已載入作業'
+    submissionField.value=data.submission_id||'';
+  taskTypeField.value=data.task_type||'IELTS Writing';
+  questionField.value=data.question||'';
+    deliveryStatusBox.innerHTML='✅ 已載入作業'
     +(data.submission_id?'<br><b>Submission ID：</b>'+data.submission_id:'')
-    +'<br>按下送出後，將直接交給 FormSubmit；完成後回到 IELTS 專用完成頁。';
+    +'<br>按下送出後，將直接交給 Google Apps Script；完成後回到 IELTS 專用完成頁。';
 }
 
 ieltsForm.addEventListener('submit',()=>{
@@ -88,8 +87,8 @@ ieltsForm.addEventListener('submit',()=>{
   localStorage.setItem('sylvia_ielts_last_submission',JSON.stringify(backup));
   localStorage.setItem('sylvia_ielts_backup_'+(data.submission_id||Date.now()),JSON.stringify(backup));
   submitBtn.disabled=true;
-  submitBtn.textContent='已開啟 FormSubmit 寄送頁';
-  deliveryStatusBox.innerHTML='✅ 已使用「實際驗證可收信」的 FormSubmit 原生 POST 通道開啟寄送頁。看到 FormSubmit Thanks! 後，回到此頁可直接返回 IELTS 首頁。';
+  submitBtn.textContent='已開啟 Google Apps Script 寄送頁';
+  deliveryStatusBox.innerHTML='✅ 已使用 IELTS 專用 Google Apps Script 寄送。新分頁顯示「IELTS Writing 已成功送出」後，回到此頁可直接返回 IELTS 首頁。';
   afterSubmitActions.style.display='flex';
   afterSubmitActions.style.gap='8px';
   afterSubmitActions.style.flexWrap='wrap';
