@@ -20,6 +20,7 @@ function saveTokenizedDelivery(payload){
   const token="DLV-"+Date.now()+"-"+Math.random().toString(36).slice(2,8).toUpperCase();
   const enriched={...payload,_saved_at:new Date().toISOString(),_delivery_token:token};
   localStorage.setItem("tpass_next_delivery_"+token,JSON.stringify(enriched));
+  setDeliveryStatus(token,"payload_created");
   return token;
 }
 function loadTokenizedDelivery(token){
@@ -33,6 +34,19 @@ function markTokenizedDeliverySubmitted(token){
     const d=JSON.parse(localStorage.getItem(key)||"null");
     if(d)localStorage.setItem(key,JSON.stringify({...d,_submitted_at:new Date().toISOString()}));
   }catch{}
+  setDeliveryStatus(token,"submitted_to_formsubmit");
+}
+function deliveryStatusKey(token){return "tpass_next_delivery_status_"+token}
+function setDeliveryStatus(token,status){
+  if(!token)return;
+  const current=getDeliveryStatus(token)||{};
+  const next={...current,token,status,updated_at:new Date().toISOString()};
+  localStorage.setItem(deliveryStatusKey(token),JSON.stringify(next));
+  return next;
+}
+function getDeliveryStatus(token){
+  if(!token)return null;
+  try{return JSON.parse(localStorage.getItem(deliveryStatusKey(token))||"null")}catch{return null}
 }
 function pendingAgeMinutes(payload){
   const t=payload?._saved_at||payload?.submitted_at;
