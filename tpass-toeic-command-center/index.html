@@ -1,6 +1,8 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>T-PASS TOEIC Command Center</title><style>
 :root{--bg:#f6f4ee;--card:#fffdf8;--text:#314247;--muted:#687b80;--line:#dce7e2;--a:#6f9993;--a2:#8fb1ab;--lock:#9a6b3d}
 *{box-sizing:border-box}body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--text);font-size:18px;line-height:1.75}header{background:linear-gradient(135deg,#5f7f7b,#789d98);color:#fff;padding:40px 18px}.wrap{max-width:1100px;margin:auto}.lead{max-width:850px}.panel,.step{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:20px;margin:16px 0}.steps{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.step h2{margin-top:0}.badge{display:inline-block;padding:5px 9px;border-radius:999px;font-size:13px;font-weight:800;background:#e9f3ef;color:#456a64}.paid{background:#fff4e7;color:#8b5b2d}.btn{display:inline-block;padding:11px 15px;border-radius:11px;text-decoration:none;font-weight:800;margin:4px 5px 4px 0}.primary{background:linear-gradient(135deg,var(--a),var(--a2));color:#fff}.secondary{background:#fff;border:2px solid var(--line);color:#3d5653}.locked{background:#f5efe7;color:#8b5b2d;border:2px solid #ead9c6}.progress{height:16px;background:#e7efec;border-radius:999px;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,var(--a),var(--a2));width:0}.check{display:flex;gap:10px;align-items:center;margin:9px 0}.check input{width:22px;height:22px}.muted{color:var(--muted)}@media(max-width:760px){.steps{grid-template-columns:1fr}.btn{display:block;text-align:center}}
+
+.strategy-case{grid-column:1/-1}.strategy-case-layout{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}.strategy-case-layout>*{min-width:0}.case-card{background:#edf4ef;border:2px solid #c9dcd1;border-radius:16px;padding:22px}.case-card h3{font-size:26px;margin:16px 0 8px}.case-score{font-size:clamp(32px,5vw,48px);font-weight:800;line-height:1.3;color:#315c4c;margin:16px 0}.case-score small{display:block;font-size:22px;margin-top:8px}.case-note{font-size:16px;line-height:1.8;color:#465c55;border-top:1px solid #c9dcd1;padding-top:14px}.case-card summary{cursor:pointer;font-weight:700;min-height:44px;padding:8px 0}.case-card details p{font-size:16px}.case-card a:focus-visible,.case-card summary:focus-visible{outline:3px solid #315c4c;outline-offset:4px}@media(max-width:760px){.strategy-case-layout{grid-template-columns:1fr}.case-card{padding:18px}}
 </style></head><body>
 <header><div class="wrap"><h1>T-PASS TOEIC Command Center</h1><p class="lead">一條路徑完成：診斷 → 教練解讀 → 90 天計畫 → 專項訓練 → 模考 → 教練校準。標準化工具交給系統；真正需要判斷與策略調整的地方，由教練介入。</p><p><a class="btn secondary" href="/">← Gary Learning Hub</a></p></div></header>
 <main class="wrap">
@@ -15,7 +17,31 @@
 <p class="muted">建議順序：入學診斷 → 詞素診斷 → 弱點雷達 → 錯題醫生。</p>
 <label class="check"><input type="checkbox" data-step="1">我已完成初始診斷</label></article>
 
-<article class="step" id="step2"><span class="badge paid">PAID / COACH</span><h2>Step 2｜教練解讀</h2><p>Gary 根據診斷結果判斷：真正瓶頸、優先順序、哪些教材暫時不要做。</p><p><a class="btn locked" href="#coach-apply">預約 Gary 教練解讀</a></p><p class="muted">包含於 T-PASS 90 教練版。建議 30–45 分鐘，用來判斷真正瓶頸、優先順序與下一步。</p><label class="check"><input type="checkbox" data-step="2">我已完成教練解讀</label></article>
+<article class="step strategy-case" id="step2" aria-labelledby="strategy-title">
+<div class="strategy-case-layout">
+<div>
+<span class="badge paid">PAID / COACH</span>
+<h2 id="strategy-title">Step 2｜付費策略診斷與教練解讀</h2>
+<p>像我這樣的起點，也有機會進步嗎？先讓 Gary 根據你的診斷結果，判斷目前的瓶頸與優先順序。</p>
+<h3>這次解讀幫你釐清什麼？</h3>
+<ul><li>目前最需要處理的失分原因</li><li>接下來優先練什麼、哪些教材暫時不要做</li><li>下一次如何透過練習與模考驗證進步</li></ul>
+<p><a class="btn locked" href="#coach-apply">預約 Gary 策略診斷</a></p>
+<p class="muted">包含於 T-PASS 90 教練版，建議 30–45 分鐘。先提出申請，由 Gary 確認適合的安排與費用。</p>
+<label class="check"><input type="checkbox" data-step="2">我已完成教練解讀</label>
+</div>
+<aside class="case-card" id="case-290-705" aria-labelledby="case-title">
+<span class="badge">2014 年歷史教學案例・匿名呈現</span>
+<h3 id="case-title">從 290 分到 705 分</h3>
+<p class="case-score" aria-label="多益成績從290分到705分，增加415分">290 <span aria-hidden="true">→</span> 705 <small>增加 415 分</small></p>
+<p><strong>起點分數，並不等於最後的可能。</strong></p>
+<p>Gary 過往教學簡報收錄了一位學員由 290 分進步至 705 分的案例。這段歷史紀錄，讓低起點學員看見進步的可能。</p>
+<p>你的起點、可用時間與考試目標各有不同。策略診斷會從你目前的作答證據出發，討論適合你的下一步。</p>
+<details><summary>案例來源與資料範圍</summary><p>來源：Gary 提供的《多益5-7-9方程式》簡報第16頁，內含日期為 2014年4月26日的文章截圖。分數與差額依該歷史資料整理。</p><p>目前資料未附完整前後測成績單、測驗日期與訓練紀錄，因此不宣稱特定期間內的提分效果。</p></details>
+<p class="case-note">個別成果依起點、投入與學習條件而異。本案例不代表平均成果或分數保證，亦非目前 AI 平台或 T-PASS 90 方案的實測成果。</p>
+<a class="btn secondary" href="#coach-apply">找出我目前的失分原因</a>
+</aside>
+</div>
+</article>
 
 <article class="step" id="step3"><span class="badge">SYSTEM</span><h2>Step 3｜90 天計畫</h2><p>把診斷轉成三階段、13 週的 TOEIC 提分計畫。</p><p><a class="btn primary" href="/toeic-90day-planner/">開啟 90-Day Planner</a></p><label class="check"><input type="checkbox" data-step="3">我已建立 90 天計畫</label></article>
 
