@@ -1,0 +1,64 @@
+<!doctype html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Sylvia IELTS｜Writing 作業寄送</title>
+<style>
+:root{--p:#5b5bd6;--p2:#7c3aed;--bg:#f6f7fb;--card:#fff;--text:#1f2937;--muted:#667085;--line:#e5e7eb}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+.wrap{max-width:860px;margin:auto;padding:18px}.hero{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;border-radius:20px;padding:24px;margin:10px 0 16px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px}
+h1{margin:0 0 6px}.muted{color:var(--muted)}input,textarea{width:100%;padding:11px;border:1px solid #d0d5dd;border-radius:10px;font:inherit}textarea{min-height:260px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:700px){.grid{grid-template-columns:1fr}}
+.btn{border:0;border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}.primary{background:var(--p);color:#fff}.secondary{background:#fff;color:var(--p);border:1px solid #c7c9ff}
+.status{padding:12px;border-radius:10px;background:#f5f3ff;margin-top:12px}
+</style></head><body>
+<main class="wrap">
+<section class="hero"><h1>Sylvia IELTS｜Writing 作業寄送</h1><p>這是 IELTS 專用寄送頁，不屬於 TOEIC / T-PASS 流程。</p></section>
+<section class="card">
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+<a class="btn secondary" href="/sylvia-ielts-30day/">← 回 Writing Sprint</a>
+<a class="btn secondary" href="/sylvia-ielts-command-center/">IELTS Command Center</a>
+</div>
+<form id="ieltsForm" action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST">
+<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/sylvia-ielts-command-center/">
+<input type="hidden" name="_template" value="table">
+<input type="hidden" name="_captcha" value="false">
+<input type="hidden" id="subjectField" name="_subject">
+<input type="hidden" id="submissionField" name="submission_id">
+<input type="hidden" id="sourceField" name="source_page">
+<input type="hidden" name="form_type" value="Sylvia IELTS Writing Submission">
+<div class="grid">
+<label>姓名<input id="nameField" name="name" required></label>
+<label>Email<input id="emailField" name="email" type="email" required></label>
+</div>
+<label style="display:block;margin-top:12px">Writing 作業內容
+<textarea id="messageField" name="test_message" required></textarea></label>
+<p><button id="submitBtn" class="btn primary" type="submit">寄送 Writing 作業給 Gary</button></p>
+</form>
+<div id="status" class="status">正在載入 IELTS Writing 作業資料…</div>
+</section></main>
+<script>
+let data=null;
+try{data=JSON.parse(localStorage.getItem('sylvia_ielts_pending_delivery')||'null')}catch{}
+if(!data){
+  status.innerHTML='❌ 找不到待寄送的 IELTS Writing 作業。請回 Writing Sprint 重新按「一鍵送出給 Gary」。';
+  submitBtn.disabled=true;
+}else{
+  const age=data._saved_at?Math.max(0,Math.round((Date.now()-new Date(data._saved_at).getTime())/60000)):null;
+  nameField.value=data.student_name||'Sylvia';
+  emailField.value=data.email||'';
+  submissionField.value=data.submission_id||'';
+  sourceField.value=data.source_page||'';
+  subjectField.value='[Sylvia IELTS][Writing]['+(data.assessment_type||'Assignment')+'] '+(data.student_name||'Sylvia');
+  messageField.value=data.preformatted_message||'';
+  status.innerHTML='✅ 已載入 IELTS Writing 作業'
+    +(data.submission_id?'<br><b>Submission ID：</b>'+data.submission_id:'')
+    +(age!=null?'<br><b>資料建立：</b>'+age+' 分鐘前':'')
+    +'<br>送出成功後會回到 Sylvia IELTS Command Center。';
+  if(age!=null&&age>120){submitBtn.disabled=true;submitBtn.textContent='資料已超過 120 分鐘，請重新產生';}
+}
+ieltsForm.addEventListener('submit',()=>{
+  submitBtn.disabled=true;
+  submitBtn.textContent='正在寄送…';
+  localStorage.setItem('sylvia_ielts_last_submission',JSON.stringify({submission_id:submissionField.value,submitted_at:new Date().toISOString(),status:'submitted_to_formsubmit'}));
+});
+</script></body></html>
