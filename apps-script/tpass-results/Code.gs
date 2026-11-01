@@ -122,6 +122,16 @@ function detectBrand_(p) {
   const source = String((p && p.source_page) || '').toLowerCase();
   const assessment = String((p && p.assessment_type) || '').toLowerCase();
 
+  if (source.indexOf('/sylvia-ielts-error-tracker/') !== -1 ||
+      assessment.indexOf('sylvia ielts error tracker') !== -1) {
+    return {
+      displayName: 'Sylvia IELTS Error Tracker',
+      emailPrefix: 'Sylvia IELTS Error Tracker',
+      returnLabel: 'Sylvia IELTS Error Tracker',
+      returnUrl: 'https://gary-learning-hub.onrender.com/sylvia-ielts-error-tracker/'
+    };
+  }
+
   if (source.indexOf('/english-speaking-confidence-lab/') !== -1 ||
       assessment.indexOf('english speaking confidence lab') !== -1) {
     return {
