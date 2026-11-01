@@ -1,0 +1,29 @@
+<!doctype html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Kate IELTS Writing Lab：Task 1 / Task 2 寫作訓練、論證與文法診斷、改寫、保存與教練交付。">
+<title>Kate IELTS Writing Lab</title><link rel="stylesheet" href="style.css"></head><body>
+<header><nav><a href="/">← Gary Learning Hub</a><a href="/roadmap/">101 Roadmap</a></nav>
+<div class="hero"><p class="eyebrow">KATE IELTS WRITING LAB · MVP V1</p><h1>先找出失分原因，<br>再把一段寫到更接近 Band 7。</h1><p class="lead">Task 1／Task 2 寫作訓練：論證、結構、字彙、文法與高分改寫集中在同一個練習站。</p>
+<div class="pills"><span>Task 1 / 2</span><span>四構面診斷</span><span>改寫練習</span><span>教練交付</span></div></div></header>
+<main>
+<section class="card"><p class="eyebrow">01 · WRITE</p><h2>輸入題目與作文</h2>
+<div class="grid"><label>題型<select id="taskType"><option>Task 1</option><option selected>Task 2</option></select></label><label>姓名<input id="student" value="Kate"></label><label>Email<input id="email" type="email" placeholder="student@example.com"></label><label>日期<input id="date" type="date"></label></div>
+<label>題目<textarea id="question" rows="4" maxlength="2000" placeholder="貼上 IELTS 題目"></textarea></label>
+<label>作文<textarea id="essay" rows="14" maxlength="8000" placeholder="貼上或輸入完整作文"></textarea></label>
+<p id="wordCount" class="note">0 words</p><button id="analyze">開始自我診斷</button><p id="writeStatus" role="status"></p></section>
+
+<section class="card" id="diagnosis"><p class="eyebrow">02 · DIAGNOSE</p><h2>四構面自我檢查</h2>
+<div id="rubric" class="rubric"></div><label>主要問題<select id="mainIssue"></select></label>
+<label>Gary 教練重點／自己的觀察<textarea id="coachNote" rows="4" maxlength="2200"></textarea></label>
+<button id="saveDiagnosis">儲存診斷</button><p id="diagnosisStatus" role="status"></p></section>
+
+<section class="card"><p class="eyebrow">03 · REWRITE</p><h2>做一個真正有價值的改寫</h2>
+<label>選擇要改寫的段落<textarea id="originalParagraph" rows="6" maxlength="3000"></textarea></label>
+<label>改寫後版本<textarea id="rewrittenParagraph" rows="6" maxlength="3000"></textarea></label>
+<div class="grid"><label>這次改寫重點<select id="rewriteFocus"><option>論點展開</option><option>段落連貫</option><option>字彙精準</option><option>文法正確</option><option>Task 1 比較與概述</option></select></label><label>自評<select id="rewriteScore"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select></label></div>
+<button id="saveRewrite">儲存改寫</button><p id="rewriteStatus" role="status"></p></section>
+
+<section class="card"><p class="eyebrow">04 · REVIEW</p><h2>學習紀錄</h2><div id="summary"></div><details><summary>查看歷次診斷與改寫</summary><div id="history"></div></details>
+<div class="actions"><button id="download">下載 JSON</button><button id="print" class="secondary">列印／PDF</button><button id="sendCoach">寄送完整結果給 Gary 教練</button></div>
+<p id="deliveryStatus" role="status"></p></section>
+</main><footer>Gary · Kate IELTS Writing Lab MVP V1</footer><script src="app.js"></script></body></html>
