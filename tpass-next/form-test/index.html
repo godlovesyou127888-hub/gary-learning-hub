@@ -35,6 +35,14 @@ function setStandaloneMode(){
   helper.innerHTML="這個模式只測試 FormSubmit 通道，不代表任何正式測驗資料已載入。";
 }
 
+function safeSourceLink(data){
+  try{
+    const u=new URL(data?.source_page||"",location.origin);
+    if(u.origin===location.origin)return '<a class="btn outline" href="'+u.href+'">← 回原測驗重新產生</a>';
+  }catch(e){}
+  return '<a class="btn outline" href="/tpass-toeic-command-center/">← 回到 TOEIC Command Center</a>';
+}
+
 function setAssessmentMode(){
   const data=deliveryToken?loadTokenizedDelivery(deliveryToken):loadPendingDelivery();
 
@@ -75,6 +83,7 @@ function setAssessmentMode(){
     submitBtn.disabled=true;
     deliveryMeta.innerHTML="<b style='color:#b42318'>❌ 寄送資料不完整</b><br>缺少欄位："+validation.missing.join("、");
     lifecycleBox.innerHTML="<b>寄送狀態：</b>資料驗證失敗";
+    helper.innerHTML=safeSourceLink(data);
     return;
   }
   const age=pendingAgeMinutes(data);
@@ -110,6 +119,7 @@ function setAssessmentMode(){
     submitBtn.disabled=true;
     submitBtn.textContent="資料超過 120 分鐘，請重新產生";
     deliveryMeta.innerHTML+="<br><b style='color:#b42318'>⚠ 資料已過期，請回原測驗頁重新準備寄送。</b>";
+    helper.innerHTML=safeSourceLink(data);
     return;
   }
 
