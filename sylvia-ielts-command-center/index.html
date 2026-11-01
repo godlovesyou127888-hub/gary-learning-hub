@@ -61,7 +61,8 @@ input{width:100%;padding:10px;border:1px solid #d0d5dd;border-radius:10px;font:i
 <input type="hidden" name="source" value="Sylvia IELTS Command Center">
 <label>姓名<input name="name" value="Sylvia" required></label>
 <label>Email<input type="email" name="email" placeholder="你的 Email" required></label>
-<label>問題類型<select name="topic"><option>Listening</option><option>Reading</option><option>Writing</option><option>Speaking</option><option>模考／考試日期</option><option>網站操作</option><option>其他</option></select></label>
+<label>問題類型<select id="contactTopic" name="topic"><option>Listening</option><option>Reading</option><option>Writing</option><option>Speaking</option><option>模考／考試日期</option><option>網站操作</option><option>其他</option></select></label>
+<div id="sourceHint" class="muted"></div>
 <label>留言<textarea name="message" rows="6" placeholder="請描述問題或需求..." required style="width:100%;padding:10px;border:1px solid #d0d5dd;border-radius:10px;font:inherit"></textarea></label>
 <button class="btn primary" type="submit">送出給站長</button>
 </form>
@@ -92,4 +93,12 @@ const ex=localStorage.getItem('sylvia_ielts_exam_date')||'';const md=localStorag
 function dayDiff(v){if(!v)return null;const a=new Date();a.setHours(0,0,0,0);const b=new Date(v+'T00:00:00');return Math.ceil((b-a)/86400000)}
 function renderDates(){const d=dayDiff(examDate.value);daysLeft.textContent=d==null?'—':Math.max(0,d);const m=dayDiff(mockDate.value);mockDays.textContent=m==null?'—':m;mockCountdown.textContent=m==null?'尚未設定下次模考。':m>=0?'距離下次模考還有 '+m+' 天。':'模考日期已過 '+Math.abs(m)+' 天，請重新設定。'}
 examDate.onchange=()=>{localStorage.setItem('sylvia_ielts_exam_date',examDate.value);renderDates()};mockDate.onchange=()=>{localStorage.setItem('sylvia_ielts_mock_date',mockDate.value);renderDates()};renderDates();
+
+const sourceParam=new URLSearchParams(location.search).get('source');
+const validSources=['Listening','Reading','Writing','Speaking'];
+if(sourceParam&&validSources.includes(sourceParam)){
+  contactTopic.value=sourceParam;
+  sourceHint.textContent='已自動辨識來源：'+sourceParam+' Lab';
+  if(location.hash==='#contact') setTimeout(()=>document.getElementById('contact')?.scrollIntoView({behavior:'smooth',block:'start'}),80);
+}
 </script></body></html>
