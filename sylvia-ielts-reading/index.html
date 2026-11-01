@@ -1,0 +1,49 @@
+<!doctype html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sylvia IELTS Reading Lab</title>
+<style>
+:root{--p:#1d4ed8;--p2:#2563eb;--bg:#f6f8fc;--card:#fff;--text:#1f2937;--muted:#667085;--line:#dfe5ef}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+header{background:linear-gradient(135deg,var(--p),var(--p2));color:white;padding:22px 16px}.wrap{max-width:980px;margin:auto}h1{margin:0}.sub{opacity:.9}
+main{padding:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}@media(max-width:720px){.grid,.grid3{grid-template-columns:1fr}}
+.kpi{font-size:30px;font-weight:900;color:var(--p)}.tip{border-left:4px solid var(--p);background:#eff6ff;padding:12px;border-radius:8px}.muted{color:var(--muted)}
+input,select{width:100%;padding:10px;border:1px solid #cfd6e4;border-radius:10px;font:inherit}.btn{border:0;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}.primary{background:var(--p);color:#fff}.secondary{background:#fff;color:var(--p);border:1px solid #bfcaf0}
+table{width:100%;border-collapse:collapse}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left}.footer{text-align:center;color:var(--muted);padding:20px;font-size:13px}
+</style></head><body>
+<header><div class="wrap"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"><a class="btn secondary" href="/sylvia-ielts-command-center/">IELTS Command Center</a><a class="btn secondary" href="/sylvia-ielts-30day/">Writing</a><a class="btn secondary" href="/sylvia-ielts-speaking/">Speaking</a></div><h1>Sylvia IELTS Reading Lab</h1><div class="sub">Reading Band → 錯誤類型 → 診斷處方 → 下一次專項</div></div></header>
+<main class="wrap">
+<div class="grid3">
+<div class="card"><div class="muted">Latest Band</div><div class="kpi" id="latestBand">—</div></div>
+<div class="card"><div class="muted">Attempts</div><div class="kpi" id="attemptCount">0</div></div>
+<div class="card"><div class="muted">Main Weakness</div><div class="kpi" id="mainWeak" style="font-size:20px">—</div></div>
+</div>
+<div class="card"><h2>新增 Reading 模考／練習紀錄</h2><div class="grid">
+<label>日期<input id="date" type="date"></label>
+<label>Reading Band<input id="band" type="number" min="0" max="9" step=".5"></label>
+<label>正確題數（40）<input id="correct" type="number" min="0" max="40"></label>
+<label>作答時間（分鐘）<input id="minutes" type="number" min="1" max="120" value="60"></label>
+<label>主要弱點<select id="weak"><option>定位速度</option><option>同義改寫辨識</option><option>True/False/Not Given</option><option>Matching Headings</option><option>Matching Information</option><option>Sentence Completion</option><option>時間管理</option><option>字彙</option></select></label>
+<label>次要弱點<input id="secondary" placeholder="可留空"></label>
+</div><p><button class="btn primary" onclick="saveAttempt()">儲存並產生處方</button></p><div id="prescription" class="tip muted">填寫一次紀錄後會自動產生下一次唯一任務。</div></div>
+<div class="card"><h2>Reading 診斷原則</h2><table><tr><th>弱點</th><th>下一次只練</th></tr>
+<tr><td>定位速度</td><td>每篇先做題幹關鍵字＋段落定位，不急著細讀全文。</td></tr>
+<tr><td>同義改寫</td><td>每題圈出題幹字，再找文章中的 paraphrase。</td></tr>
+<tr><td>T/F/NG</td><td>只判斷「相同／相反／未提及」，禁止靠常識。</td></tr>
+<tr><td>Matching Headings</td><td>先讀段落首尾句，抓中心概念，不被例子干擾。</td></tr>
+<tr><td>時間管理</td><td>20-20-20 分鐘分配，卡題超過 90 秒先跳過。</td></tr></table></div>
+<div class="card"><h2>歷次紀錄</h2><div style="overflow:auto"><table><thead><tr><th>日期</th><th>Band</th><th>正確</th><th>時間</th><th>主要弱點</th></tr></thead><tbody id="history"></tbody></table></div></div>
+</main><div class="footer">Sylvia IELTS Reading Lab V1｜Adaptive Coaching</div>
+<script>
+let records=JSON.parse(localStorage.getItem('sylvia_ielts_reading_records')||'[]');date.value=new Date().toISOString().slice(0,10);
+function taskFor(w){const m={
+'定位速度':'下一次只做 1 篇 Reading：先花 2 分鐘掃題幹關鍵字，再定位段落；每題記錄定位花費時間。',
+'同義改寫辨識':'下一次做 10 題 paraphrase 對照：每題寫出「題幹字 → 文章同義表達」。',
+'True/False/Not Given':'下一次只做 12 題 T/F/NG；每題必須標記 Same / Opposite / Not stated。',
+'Matching Headings':'下一次只做 8 個段落標題；每段先用 8–12 個字寫中心句，再選 heading。',
+'Matching Information':'下一次只練段落資訊定位；先找專有名詞、數字與概念詞，再決定段落。',
+'Sentence Completion':'下一次只練句子填空；先判斷詞性與字數限制，再回文定位。',
+'時間管理':'下一次完整 Reading 嚴格 60 分鐘：20-20-20；90 秒未解就標記跳題。',
+'字彙':'下一次從錯題整理 15 個高頻 academic words + paraphrases，再做一篇 20 分鐘限時。'};return m[w]||'下一次只做一篇限時 Reading，並把所有錯題分類。'}
+function saveAttempt(){const b=Number(band.value);if(!b){alert('請填 Reading Band');return}const r={id:'RD-'+Date.now(),date:date.value,band:b,correct:Number(correct.value)||null,minutes:Number(minutes.value)||60,weak:weak.value,secondary:secondary.value.trim(),prescription:taskFor(weak.value)};records.push(r);localStorage.setItem('sylvia_ielts_reading_records',JSON.stringify(records));render();prescription.innerHTML='<b>目前最大瓶頸：</b>'+r.weak+'<br><b>下一次只練：</b>'+r.prescription}
+function render(){attemptCount.textContent=records.length;const r=records[records.length-1];latestBand.textContent=r?r.band.toFixed(1):'—';mainWeak.textContent=r?r.weak:'—';history.innerHTML=records.map(x=>'<tr><td>'+x.date+'</td><td>'+x.band.toFixed(1)+'</td><td>'+(x.correct??'—')+'</td><td>'+x.minutes+'</td><td>'+x.weak+'</td></tr>').join('');if(r)prescription.innerHTML='<b>目前最大瓶頸：</b>'+r.weak+'<br><b>下一次只練：</b>'+r.prescription}render();
+</script></body></html>
