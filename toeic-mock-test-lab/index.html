@@ -6,7 +6,7 @@
 </style><script src="/tpass-next/core.js?v=20261101-bridge-v4"></script></head><body><div style="background:#314247;color:#fff;padding:10px 16px;font-family:'Noto Sans TC','Microsoft JhengHei',sans-serif"><div style="max-width:1100px;margin:auto;display:flex;gap:10px;flex-wrap:wrap;align-items:center"><strong>T-PASS TOEIC Command Center｜Step 5｜模考驗證</strong><a href="/tpass-toeic-command-center/" style="color:#fff;background:#6f9993;padding:7px 10px;border-radius:9px;text-decoration:none;font-weight:700">← 回 Command Center</a><a href="/tpass-toeic-command-center/#step6" style="color:#314247;background:#fffdf8;padding:7px 10px;border-radius:9px;text-decoration:none;font-weight:700">下一步：Step 6 教練校準 →</a></div></div>
 <header><div class="wrap"><h1>#31 TOEIC Mock Test Lab</h1><p>模考驗證：記錄分數、比較變化、找出主要失分，再回到診斷與計畫校準。</p><p><a class="btn secondary" href="/">← Gary Learning Hub</a> <a class="btn secondary" href="/toeic-90day-planner/">#30 90-Day Planner</a></p></div></header>
 <main class="wrap">
-<section class="panel backup-notice" role="note" aria-labelledby="backupTitle"><h2 id="backupTitle">先保留備份，再送出模考結果</h2><p><strong>Golden Bridge → FormSubmit → Gmail 流程已完成實際收件驗證。</strong>完成紀錄後仍建議下載 CSV／完整 JSON，或將結果儲存為 PDF，保留自己的學習紀錄。</p><p>正式送出後會進入寄送頁，完成後再回到 TOEIC Command Center。Gary 端仍以 Gmail 實際收件作為最終驗收依據。</p></section>
+<section class="panel backup-notice" role="note" aria-labelledby="backupTitle"><h2 id="backupTitle">先保留備份，再送出模考結果</h2><p><strong>Gmail 完整收件驗收尚未通過；本版已增加必要欄位驗證。</strong>完成紀錄後仍建議下載 CSV／完整 JSON，或將結果儲存為 PDF，保留自己的學習紀錄。</p><p>正式送出後會進入寄送頁，完成後再回到 TOEIC Command Center。Gary 端仍以 Gmail 實際收件作為最終驗收依據。</p></section>
 <section class="panel"><h2>基本資料</h2><div class="grid">
 <div class="field"><label>姓名</label><input id="studentName"></div>
 <div class="field"><label>Email</label><input id="studentEmail" type="email"></div>
@@ -47,6 +47,7 @@ function addMock(){
  if(!studentEmail.value||!studentEmail.checkValidity()){alert("請填寫有效 Email。");return}
  const d=mockDate.value,l=Number(listeningScore.value),r=Number(readingScore.value);
  if(!d||!l||!r){alert("請完整填寫日期、Listening 與 Reading 分數。");return}
+ if(!Number.isInteger(l)||!Number.isInteger(r)||l<5||r<5||l>495||r>495||l%5!==0||r%5!==0){alert("Listening 和 Reading 必須為 5–495 的五分倍數。");return}
  records.push({date:d,total:l+r,listening:l,reading:r,finished:finishedReading.value,loss:lossType.value});
  records.sort((a,b)=>a.date.localeCompare(b.date));save();document.getElementById("backupConfirmed").checked=false;document.getElementById("deliveryStatus").textContent="紀錄已更新，請重新下載備份。尚未寄送給教練。";render();
  listeningScore.value="";readingScore.value="";
@@ -106,6 +107,9 @@ function prepareMockGoldenDelivery(){
    current_score:String(latest.total),
    target_score:String(targetScore.value||""),
    total_score:String(latest.total),
+   listening_score:String(latest.listening),
+   reading_score:String(latest.reading),
+   mock_records:records.map(x=>({...x})),
    accuracy:"",
    primary_weakness:topLoss,
    preformatted_message:msg,
@@ -117,9 +121,11 @@ function prepareMockGoldenDelivery(){
      dimension:x.loss
    }))
  };
+ const check=validateDeliveryPayload(payload);
+ if(!check.ok){deliveryStatus.textContent="資料不完整，禁止送出："+check.missing.join("、");return;}
  const token=saveTokenizedDelivery(payload);
  localStorage.setItem("toeic_mock_test_last_delivery",JSON.stringify({...payload,_delivery_token:token}));
- deliveryStatus.textContent="✅ 模考結果已保存，正在前往已驗證成功的寄送頁。";
+ deliveryStatus.textContent="✅ 模考結果已保存，正在前往待驗收的寄送頁。";
  location.href="/tpass-next/form-test/?mode=assessment&src=mock-test-v4&token="+encodeURIComponent(token);
 }
 mockGoldenDeliveryBtn.onclick=prepareMockGoldenDelivery;
