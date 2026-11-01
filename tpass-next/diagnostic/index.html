@@ -3,22 +3,14 @@
 <section class="card"><div class="actions"><a class="btn outline" href="../">← 回樂齡多益首頁</a><a class="btn outline" href="../form-test/" target="_blank">表單測試</a></div></section>
 <section class="card"><h2>① 基本資料</h2><div class="row"><input id="name" type="text" placeholder="姓名"><input id="email" type="email" placeholder="Email"><input id="current" type="text" inputmode="numeric" placeholder="目前 TOEIC 分數"><input id="target" type="text" inputmode="numeric" placeholder="目標分數"></div><div class="helper">表單可先單獨測試：<a href="../form-test/" target="_blank">開啟 FormSubmit 測試頁</a></div></section>
 <section id="quiz" class="card"></section>
-<section class="card"><h2>② 完成後保存與送出</h2><div class="actions"><button id="grade" type="button">① 完成 T-PASS 診斷</button><button id="pdf" class="secondary">下載／儲存 PDF</button><button id="dl" class="secondary">下載完整 JSON</button><button class="outline" onclick="reportProblem('T-PASS 核心診斷')">問題回報</button></div><div id="result"></div><div id="status" class="status pending">尚未送出</div><form id="nativeDiagnosticDeliveryForm" action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" target="_blank" style="margin-top:12px">
+<section class="card"><h2>② 完成後保存與送出</h2><div class="actions"><button id="grade" type="button">① 完成 T-PASS 診斷</button><button id="pdf" class="secondary">下載／儲存 PDF</button><button id="dl" class="secondary">下載完整 JSON</button><button class="outline" onclick="reportProblem('T-PASS 核心診斷')">問題回報</button></div><div id="result"></div><div id="status" class="status pending">尚未送出</div><form id="nativeDeliveryForm" action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" target="_blank" style="margin-top:12px">
 <input type="hidden" name="_subject" id="nativeSubject">
 <input type="hidden" name="_template" value="table">
-<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/tpass-next/">
-<input type="hidden" name="_url" value="https://gary-learning-hub.onrender.com/tpass-next/">
+<input type="hidden" name="form_type" value="T-PASS NEXT Assessment">
 <input type="hidden" name="name" id="nativeName">
 <input type="hidden" name="email" id="nativeEmail">
-<input type="hidden" name="submission_id" id="nativeSubmissionId">
-<input type="hidden" name="assessment_type" id="nativeAssessmentType">
-<input type="hidden" name="total_score" id="nativeTotalScore">
-<input type="hidden" name="accuracy" id="nativeAccuracy">
-<input type="hidden" name="primary_weakness" id="nativePrimaryWeakness">
-<input type="hidden" name="secondary_weakness" id="nativeSecondaryWeakness">
-<input type="hidden" name="item_responses" id="nativeItemResponses">
-<input type="hidden" name="submitted_at" id="nativeSubmittedAt">
-<button class="btn" type="submit" id="nativeSubmitBtn" disabled>② 寄送 T-PASS 結果</button>
+<input type="hidden" name="message" id="nativeMessage">
+<button class="btn" type="submit" id="nativeSubmitBtn" disabled>② 寄送結果</button>
 </form><div class="helper"><b>下一步：</b>完成並確認 FormSubmit 成功後，進入 Part 5 文法診斷。</div><a class="btn secondary" href="../part5/">下一步：Part 5</a></section>
 </main><script>
 s.textContent=baseStyles();
@@ -51,16 +43,9 @@ function prepNativeDelivery(payload){
   document.getElementById("nativeSubject").value="[T-PASS NEXT] "+payload.assessment_type+"｜"+payload.student_name;
   document.getElementById("nativeName").value=payload.student_name||"";
   document.getElementById("nativeEmail").value=payload.email||"";
-  document.getElementById("nativeSubmissionId").value=payload.submission_id||"";
-  document.getElementById("nativeAssessmentType").value=payload.assessment_type||"";
-  document.getElementById("nativeTotalScore").value=payload.total_score||"";
-  document.getElementById("nativeAccuracy").value=payload.accuracy||"";
-  document.getElementById("nativePrimaryWeakness").value=payload.primary_weakness||"";
-  document.getElementById("nativeSecondaryWeakness").value=payload.secondary_weakness||"";
-  document.getElementById("nativeItemResponses").value=compactResponses(payload);
-  document.getElementById("nativeSubmittedAt").value=payload.submitted_at||"";
+  document.getElementById("nativeMessage").value=buildMailMessage(payload);
   document.getElementById("nativeSubmitBtn").disabled=false;
-  statusEl.textContent="✅ 診斷完成並已保存在本機。請按「② 寄送結果」完成 FormSubmit。";
+  statusEl.textContent="✅ 診斷完成並已保存在本機。請按「② 寄送結果」完成 Email 傳送。";
   statusEl.className="status ok";
 }
 
