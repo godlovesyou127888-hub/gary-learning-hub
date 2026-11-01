@@ -79,6 +79,22 @@ function validateDeliveryPayload(payload){
   if(!String(payload.email||"").trim())missing.push("email");
   if(!String(payload.assessment_type||"").trim())missing.push("assessment_type");
   if(!String(payload.submission_id||"").trim())missing.push("submission_id");
+  if(payload.assessment_type==="TOEIC Mock Test Lab"){
+    const validPart=x=>String(x??"").trim()!==""&&Number.isInteger(Number(x))&&Number(x)>=5&&Number(x)<=495&&Number(x)%5===0;
+    const validTotal=x=>String(x??"").trim()!==""&&Number.isInteger(Number(x))&&Number(x)>=10&&Number(x)<=990&&Number(x)%5===0;
+    if(!validTotal(payload.target_score))missing.push("target_score");
+    if(!validTotal(payload.current_score))missing.push("current_score");
+    if(!validPart(payload.listening_score))missing.push("listening_score");
+    if(!validPart(payload.reading_score))missing.push("reading_score");
+    if(validPart(payload.listening_score)&&validPart(payload.reading_score)&&Number(payload.current_score)!==Number(payload.listening_score)+Number(payload.reading_score))missing.push("score_sum_mismatch");
+    if(!String(payload.primary_weakness||"").trim())missing.push("primary_weakness");
+    if(!Array.isArray(payload.mock_records)||!payload.mock_records.length)missing.push("mock_records");
+    else {
+      if(payload.mock_records.some(x=>!x||!/^\\d{4}-\\d{2}-\\d{2}$/.test(x.date||"")||!validPart(x.listening)||!validPart(x.reading)||Number(x.total)!==Number(x.listening)+Number(x.reading)||!String(x.loss||"").trim()))missing.push("mock_records_invalid");
+      const latest=payload.mock_records[payload.mock_records.length-1];
+      if(Number(latest.total)!==Number(payload.current_score)||Number(latest.listening)!==Number(payload.listening_score)||Number(latest.reading)!==Number(payload.reading_score))missing.push("latest_record_mismatch");
+    }
+  }
   return {ok:missing.length===0,missing};
 }
 function cleanupOldDeliveries(maxAgeDays=7){
