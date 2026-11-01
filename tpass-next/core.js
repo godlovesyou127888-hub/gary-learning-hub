@@ -6,10 +6,21 @@ function uid(prefix="TPASS"){
 function saveLocal(key,data){localStorage.setItem(key,JSON.stringify(data))}
 function loadLocal(key){try{return JSON.parse(localStorage.getItem(key)||"null")}catch{return null}}
 function savePendingDelivery(payload){
-  localStorage.setItem("tpass_next_pending_delivery",JSON.stringify(payload));
+  const enriched={...payload,_saved_at:new Date().toISOString()};
+  localStorage.setItem("tpass_next_pending_delivery",JSON.stringify(enriched));
+  return enriched;
 }
 function loadPendingDelivery(){
   try{return JSON.parse(localStorage.getItem("tpass_next_pending_delivery")||"null")}catch{return null}
+}
+function clearPendingDelivery(){
+  localStorage.removeItem("tpass_next_pending_delivery");
+}
+function pendingAgeMinutes(payload){
+  const t=payload?._saved_at||payload?.submitted_at;
+  if(!t)return null;
+  const ms=Date.now()-new Date(t).getTime();
+  return Number.isFinite(ms)?Math.max(0,Math.round(ms/60000)):null;
 }
 function downloadJSON(name,data){
   const a=document.createElement("a");
