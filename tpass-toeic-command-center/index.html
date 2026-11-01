@@ -6,7 +6,7 @@
 .testimonial-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.testimonial-grid .case-score{font-size:32px}.testimonial-grid .badge{font-size:16px}#student-testimonials{margin-top:30px;padding-top:20px;border-top:2px solid var(--line)}#testimonials-title{font-size:28px}@media(max-width:760px){.testimonial-grid{grid-template-columns:1fr}}
 .flow-testimonial{margin:16px 0;padding:12px 16px;border-left:4px solid #6f9993;background:#edf4ef;border-radius:0 10px 10px 0}.flow-testimonial p{margin:0 0 6px}.flow-testimonial strong{display:block;color:#315c4c}.flow-testimonial a{display:inline-block;min-height:44px;padding:8px 0;color:#315c4c;text-underline-offset:3px}.flow-testimonial a:focus-visible{outline:3px solid #315c4c;outline-offset:3px}
 .delivery-monitor{grid-column:1/-1}.delivery-table{width:100%;border-collapse:collapse;margin-top:10px}.delivery-table th,.delivery-table td{padding:10px;border-bottom:1px solid var(--line);text-align:left;font-size:14px}.delivery-state{font-weight:800}.delivery-ok{color:#2f7d4f}.delivery-pending{color:#8b5b2d}.delivery-muted{color:var(--muted)}.delivery-empty{padding:12px;background:#f7faf8;border-radius:10px}
-</style><script src="/tpass-next/core.js?v=20261101-bridge-v5"></script></head><body>
+</style><script src="/tpass-next/core.js?v=20261101-bridge-v6"></script></head><body>
 <header><div class="wrap"><h1>T-PASS TOEIC Command Center</h1><p class="lead">一條路徑完成：診斷 → 教練解讀 → 90 天計畫 → 專項訓練 → 模考 → 教練校準。標準化工具交給系統；真正需要判斷與策略調整的地方，由教練介入。</p><p><a class="btn secondary" href="/">← Gary Learning Hub</a></p></div></header>
 <main class="wrap">
 <section class="panel"><h2>你的 TOEIC 路徑</h2><div class="progress"><div class="bar" id="bar"></div></div><p id="progressText" class="muted">0 / 6 完成</p><p><a class="btn secondary" href="https://t-pass-member-dashboard.gary2049.chatgpt.site" target="_blank" rel="noopener">T-PASS Member Dashboard</a></p><p class="muted">會員儀表板保留為進度入口；所有學習流程以本 Command Center 為主線。</p></section>
@@ -172,13 +172,28 @@ function renderDeliveryMonitor(){
   body.className="";
   body.innerHTML='<div style="overflow:auto"><table class="delivery-table"><thead><tr><th>來源</th><th>Delivery Token</th><th>時間</th><th>目前狀態</th><th>Gmail 驗收</th></tr></thead><tbody>'+
     latest.map(r=>{
-      const submitted=r.status==="submitted_to_formsubmit";
-      const state=submitted?"已送往 FormSubmit":"已產生資料";
+      const st=getDeliveryStatus(r.token)||{};
+      const verified=st.status==="gmail_verified";
+      const submitted=verified||r.status==="submitted_to_formsubmit";
+      const state=verified?"Gmail 已確認收到":(submitted?"已送往 FormSubmit":"已產生資料");
       const cls=submitted?"delivery-ok":"delivery-pending";
       const t=r.saved?new Date(r.saved).toLocaleString("zh-TW"):"—";
-      return '<tr><td>'+r.assessment+'</td><td><code>'+r.token+'</code></td><td>'+t+'</td><td class="delivery-state '+cls+'">'+state+'</td><td class="delivery-muted">待人工驗收</td></tr>';
+      const verifiedAt=st.gmail_verified_at?new Date(st.gmail_verified_at).toLocaleString("zh-TW"):"";
+      const action=verified
+        ? '<div><b class="delivery-ok">已確認收到</b><br><span class="delivery-muted">'+verifiedAt+'</span><br><button class="btn secondary" type="button" data-unverify="'+r.token+'">取消驗收</button></div>'
+        : '<button class="btn secondary" type="button" data-verify="'+r.token+'">標記 Gmail 已收到</button>';
+      return '<tr><td>'+r.assessment+'</td><td><code>'+r.token+'</code></td><td>'+t+'</td><td class="delivery-state '+cls+'">'+state+'</td><td>'+action+'</td></tr>';
     }).join("")+
     '</tbody></table></div>';
+
+  body.querySelectorAll("[data-verify]").forEach(btn=>btn.addEventListener("click",()=>{
+    markGmailVerified(btn.getAttribute("data-verify"));
+    renderDeliveryMonitor();
+  }));
+  body.querySelectorAll("[data-unverify]").forEach(btn=>btn.addEventListener("click",()=>{
+    clearGmailVerified(btn.getAttribute("data-unverify"));
+    renderDeliveryMonitor();
+  }));
 }
 document.getElementById("refreshDeliveryMonitor")?.addEventListener("click",renderDeliveryMonitor);
 renderDeliveryMonitor();
