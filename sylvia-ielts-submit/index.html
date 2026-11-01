@@ -54,7 +54,7 @@ h1{margin:0 0 6px}.muted{color:var(--muted)}input,textarea{width:100%;padding:11
 <b>Email：</b><span id="emailState">已送往 Email 通道，實際收件以 Gmail 驗證為準。</span>
 </div>
 <p style="margin-top:16px"><a class="btn primary" href="/sylvia-ielts-command-center/">回 Sylvia IELTS 首頁</a></p>
-<p><a class="btn secondary" href="/sylvia-ielts-30day/">回 Writing Sprint</a></p>
+<p><button id="retryEmailBtn" class="btn secondary" type="button">重新寄送 Email</button> <a class="btn secondary" href="/sylvia-ielts-30day/">回 Writing Sprint</a></p>
 </section>
 </main>
 
@@ -110,6 +110,7 @@ async function storePrimary(){
 }
 
 function sendEmailSecondary(){
+  emailState.textContent='正在送往 FormSubmit Email 通道…';
   subjectField.value='[Sylvia IELTS][Writing]['+(data.task_type||'Assignment')+'] '+(data.submission_id||'');
   submissionField.value=data.submission_id||'';
   sourceField.value=data.source_page||location.href;
@@ -118,6 +119,24 @@ function sendEmailSecondary(){
   emailMessage.value=messageField.value.trim();
   emailForm.submit();
 }
+
+emailSink.addEventListener('load',async()=>{
+  if(!submitted||!data)return;
+  emailState.textContent='FormSubmit 已回應；實際收件仍以 Gary Gmail 為準。';
+  try{
+    await fetch(API+'/api/ielts-writing-submissions/'+encodeURIComponent(data.submission_id)+'/email-status',{
+      method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({status:'submitted_to_formsubmit'})
+    });
+  }catch{}
+});
+
+retryEmailBtn.addEventListener('click',()=>{
+  if(!data)return;
+  retryEmailBtn.disabled=true;
+  retryEmailBtn.textContent='重新寄送中…';
+  sendEmailSecondary();
+  setTimeout(()=>{retryEmailBtn.disabled=false;retryEmailBtn.textContent='重新寄送 Email';},1800);
+});
 
 ieltsForm.addEventListener('submit',async e=>{
   e.preventDefault();
