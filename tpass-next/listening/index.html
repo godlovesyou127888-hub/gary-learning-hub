@@ -6,6 +6,17 @@
 <section class="card"><h2>② 完成後保存與送出</h2><div class="actions"><button id="grade">完成聽力診斷並送出</button><button id="pdf" class="secondary">下載／儲存 PDF</button><button id="dl" class="secondary">下載完整 JSON</button><button class="outline" onclick="reportProblem('Listening')">問題回報</button></div><div id="result"></div><div id="status" class="status pending">尚未送出</div><div class="helper"><b>下一步：</b>三項診斷完成後，回首頁進行 Gary 教練解讀與 90-Day Planner。</div><a class="btn secondary" href="../">回流程首頁</a></section>
 </main><script>
 s.textContent=baseStyles();
+const nameEl=document.getElementById("name");
+const emailEl=document.getElementById("email");
+const gradeBtn=document.getElementById("grade");
+const pdfBtn=document.getElementById("pdf");
+const dlBtn=document.getElementById("dl");
+const resultEl=document.getElementById("result");
+const statusEl=document.getElementById("status");
+const quizEl=document.getElementById("quiz");
+const soundTestBtn=document.getElementById("soundTest");
+const soundStatusEl=document.getElementById("soundStatus");
+const speedEl=document.getElementById("speed");
 const Q=[
 ["LN-1","The meeting has been moved to three thirty.",["2:30","3:30","3:13","4:30"],1,"Time"],
 ["LN-2","Please leave the package at the front desk.",["front desk","warehouse","parking lot","meeting room"],0,"Key Detail"],
@@ -20,29 +31,34 @@ const Q=[
 ];
 const plays=Array(Q.length).fill(0);
 function speakText(text,idx=null){
-  if(!("speechSynthesis" in window)){soundStatus.textContent="此瀏覽器不支援語音播放，請改用 Safari。";soundStatus.className="status fail";return}
+  if(!("speechSynthesis" in window)){soundStatusEl.textContent="此瀏覽器不支援語音播放，請改用 Safari。";soundStatusEl.className="status fail";return}
   try{
     if(idx!==null)plays[idx]++;
     speechSynthesis.cancel();speechSynthesis.resume();
-    const u=new SpeechSynthesisUtterance(text);u.lang="en-US";u.rate=Number(speed.value||0.82);u.pitch=1;
+    const u=new SpeechSynthesisUtterance(text);u.lang="en-US";u.rate=Number(speedEl.value||0.82);u.pitch=1;
     const voices=speechSynthesis.getVoices();const v=voices.find(x=>/en-US/i.test(x.lang))||voices.find(x=>/^en/i.test(x.lang));if(v)u.voice=v;
-    u.onstart=()=>{soundStatus.textContent="🔊 正在播放";soundStatus.className="status ok"};
-    u.onend=()=>{soundStatus.textContent="✅ 播放完成";soundStatus.className="status ok"};
-    u.onerror=()=>{soundStatus.textContent="⚠️ 播放失敗。請用 Safari 開啟或重新整理後再試。";soundStatus.className="status fail"};
+    u.onstart=()=>{soundStatusEl.textContent="🔊 正在播放";soundStatusEl.className="status ok"};
+    u.onend=()=>{soundStatusEl.textContent="✅ 播放完成";soundStatusEl.className="status ok"};
+    u.onerror=()=>{soundStatusEl.textContent="⚠️ 播放失敗。請用 Safari 開啟或重新整理後再試。";soundStatusEl.className="status fail"};
     setTimeout(()=>speechSynthesis.speak(u),80);
-  }catch(e){soundStatus.textContent="⚠️ 播放失敗："+e.message;soundStatus.className="status fail"}
+  }catch(e){soundStatusEl.textContent="⚠️ 播放失敗："+e.message;soundStatusEl.className="status fail"}
 }
-soundTest.onclick=()=>speakText("This is the T-PASS listening sound test.");
+soundTestBtn.onclick=()=>speakText("This is the T-PASS listening sound test.");
 document.addEventListener("touchstart",()=>{try{speechSynthesis.resume()}catch(e){}},{once:true});
-quiz.innerHTML='<h2>Listening｜10 題</h2>'+Q.map((q,i)=>'<div class="q"><b>'+(i+1)+'. Listening</b><button class="audioBtn" type="button" onclick="speakText(Q['+i+'][1],'+i+')">▶ 播放題目</button>'+q[2].map((x,j)=>'<label><input type="radio" name="q'+i+'" value="'+j+'"><span>'+x+'</span></label>').join('')+'</div>').join('');
+quizEl.innerHTML='<h2>Listening｜10 題</h2>'+Q.map((q,i)=>'<div class="q"><b>'+(i+1)+'. Listening</b><button class="audioBtn" type="button" onclick="speakText(Q['+i+'][1],'+i+')">▶ 播放題目</button>'+q[2].map((x,j)=>'<label><input type="radio" name="q'+i+'" value="'+j+'"><span>'+x+'</span></label>').join('')+'</div>').join('');
 let last=null;
-grade.onclick=()=>{if(!name.value.trim()||!email.value.trim()){alert("請先填姓名與 Email。");return}
+gradeBtn.onclick=()=>{if(!nameEl.value.trim()||!emailEl.value.trim()){alert("請先填姓名與 Email。");return}
 const ans=Q.map((q,i)=>document.querySelector('input[name=q'+i+']:checked'));if(ans.some(x=>!x)){alert("請先完成全部 10 題。");return}
-const details=Q.map((q,i)=>({question_id:q[0],student_answer:q[2][+ans[i].value],correct_answer:q[2][q[3]],is_correct:+ans[i].value===q[3],dimension:q[4],plays:plays[i],accent:"en-US",speed:Number(speed.value||0.82)}));
+const details=Q.map((q,i)=>({question_id:q[0],student_answer:q[2][+ans[i].value],correct_answer:q[2][q[3]],is_correct:+ans[i].value===q[3],dimension:q[4],plays:plays[i],accent:"en-US",speed:Number(speedEl.value||0.82)}));
 const score=details.filter(x=>x.is_correct).length;const errs={};details.filter(x=>!x.is_correct).forEach(x=>errs[x.dimension]=(errs[x.dimension]||0)+1);const ranked=Object.entries(errs).sort((a,b)=>b[1]-a[1]);
 const primary=ranked[0]?.[0]||"無明顯弱點";const secondary=ranked[1]?.[0]||"";
-last={submission_id:uid("LST"),submitted_at:new Date().toISOString(),assessment_type:"樂齡多益 Listening 聽力診斷",source_page:location.href,student_name:name.value.trim(),email:email.value.trim(),total_score:score+"/10",accuracy:Math.round(score*10)+"%",primary_weakness:primary,secondary_weakness:secondary,summary:"Listening 聽力診斷",responses_json:details};
-saveLocal("tpass_next_listening_last",last);result.innerHTML="<h2>結果："+score+"/10</h2><p>正確率："+last.accuracy+"</p><p>主要弱點："+primary+"</p>";submitResult(last,status)};
-pdf.onclick=()=>openPdfReport(last||loadLocal("tpass_next_listening_last"));
-dl.onclick=()=>downloadJSON("樂齡多益-Listening-"+Date.now()+".json",last||loadLocal("tpass_next_listening_last")||{note:"尚未完成診斷"});
+last={submission_id:uid("LST"),submitted_at:new Date().toISOString(),assessment_type:"樂齡多益 Listening 聽力診斷",source_page:location.href,student_name:nameEl.value.trim(),email:emailEl.value.trim(),total_score:score+"/10",accuracy:Math.round(score*10)+"%",primary_weakness:primary,secondary_weakness:secondary,summary:"Listening 聽力診斷",responses_json:details};
+saveLocal("tpass_next_listening_last",last);resultEl.innerHTML="<h2>結果："+score+"/10</h2><p>正確率："+last.accuracy+"</p><p>主要弱點："+primary+"</p>";submitResult(last,statusEl)};
+pdfBtn.onclick=()=>openPdfReport(last||loadLocal("tpass_next_listening_last"));
+dlBtn.onclick=()=>downloadJSON("樂齡多益-Listening-"+Date.now()+".json",last||loadLocal("tpass_next_listening_last")||{note:"尚未完成診斷"});
+
+window.addEventListener("error",e=>{
+  statusEl.textContent="⚠️ 程式錯誤："+(e.message||"unknown")+"。請截圖回報。";
+  statusEl.className="status fail";
+});
 </script></body></html>
