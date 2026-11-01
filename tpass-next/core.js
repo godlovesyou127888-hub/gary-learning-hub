@@ -34,7 +34,7 @@ function markTokenizedDeliverySubmitted(token){
     const d=JSON.parse(localStorage.getItem(key)||"null");
     if(d)localStorage.setItem(key,JSON.stringify({...d,_submitted_at:new Date().toISOString()}));
   }catch{}
-  setDeliveryStatus(token,"submitted_to_formsubmit");
+  setDeliveryStatus(token,"attempted_to_formsubmit");
 }
 function deliveryStatusKey(token){return "tpass_next_delivery_status_"+token}
 function setDeliveryStatus(token,status){
@@ -50,7 +50,7 @@ function getDeliveryStatus(token){
 }
 function wasDeliverySubmitted(token){
   const st=getDeliveryStatus(token);
-  return st?.status==="submitted_to_formsubmit"||st?.status==="gmail_verified";
+  return st?.status==="gmail_verified";
 }
 function markGmailVerified(token){
   if(!token)return null;
@@ -62,7 +62,7 @@ function markGmailVerified(token){
 function clearGmailVerified(token){
   if(!token)return null;
   const current=getDeliveryStatus(token)||{};
-  const next={...current,token,status:current.status==="gmail_verified"?"submitted_to_formsubmit":(current.status||"payload_created"),gmail_verified_at:null,updated_at:new Date().toISOString()};
+  const next={...current,token,status:current.status==="gmail_verified"?"attempted_to_formsubmit":(current.status||"payload_created"),gmail_verified_at:null,updated_at:new Date().toISOString()};
   localStorage.setItem(deliveryStatusKey(token),JSON.stringify(next));
   return next;
 }
