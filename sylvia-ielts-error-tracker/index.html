@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Sylvia IELTS 四科長期錯誤追蹤、去重、優先排序、間隔複習與教練交付。"><title>Sylvia IELTS Error Tracker｜長期錯誤追蹤</title><link rel="stylesheet" href="style.css"></head><body>
+<a class="skipLink" href="#dashboard">跳到主要內容</a>
+<header><div class="wrap"><div class="topnav"><a href="/sylvia-ielts-command-center/">← IELTS Command Center</a><a href="/sylvia-ielts-30day/">Writing</a><a href="/sylvia-ielts-speaking/">Speaking</a><a href="/sylvia-ielts-reading/">Reading</a><a href="/sylvia-ielts-listening/">Listening</a></div><p class="eyebrow">SYLVIA IELTS ERROR TRACKER · V1.0 QA</p><h1>不是記更多錯題，<br>是找出一直重複的錯誤。</h1><p class="lead">把 Writing／Speaking／Reading／Listening 的錯誤集中成一個長期錯誤庫，優先處理「高頻 × 高影響」項目。</p><div class="pills"><span>四科匯入</span><span>去重合併</span><span>Priority Score</span><span>1/3/7 天複習</span></div></div></header>
+<main class="wrap">
+<section class="grid3" id="dashboard">
+<div class="card kpiCard"><span>Active Errors</span><b id="activeCount">0</b><small>目前未掌握</small></div>
+<div class="card kpiCard"><span>Due Today</span><b id="dueCount">0</b><small>今天該複習</small></div>
+<div class="card kpiCard"><span>Mastered</span><b id="masteredCount">0</b><small>已封存</small></div>
+</section>
+
+<section class="card"><h2>01｜同步 Sylvia 四科紀錄</h2><p class="note">只讀取這個瀏覽器內既有 Sylvia IELTS localStorage；不會刪除原始資料。</p><div class="actions"><button id="syncBtn">同步四科錯誤</button><button id="seedBtn" class="secondary">加入示範錯誤</button></div><p id="syncStatus" role="status" aria-live="polite"></p></section>
+
+<section class="card"><h2>02｜新增／校準錯誤</h2><div class="grid2">
+<label>技能<select id="skill"><option>Writing</option><option>Speaking</option><option>Reading</option><option>Listening</option></select></label>
+<label>錯誤類型<select id="type"><option>Task Response</option><option>Coherence</option><option>Grammar</option><option>Vocabulary</option><option>Fluency</option><option>Pronunciation</option><option>Timing</option><option>Comprehension</option><option>Other</option></select></label>
+<label>嚴重度<select id="severity"><option value="1">1｜小錯</option><option value="2">2｜中低</option><option value="3" selected>3｜中等</option><option value="4">4｜高</option><option value="5">5｜高風險</option></select></label>
+<label>來源<input id="source" placeholder="例如：Writing Day 6 / Speaking Part 2"></label>
+</div>
+<label>錯誤／問題描述<textarea id="problem" rows="3" maxlength="1000" placeholder="例如：Task 2 只有觀點，沒有展開原因與例子。"></textarea></label>
+<label>修正方式<textarea id="fix" rows="3" maxlength="1000" placeholder="例如：每段固定 Point → Why → Example。"></textarea></label>
+<label>自己的正確示例<textarea id="example" rows="3" maxlength="1500" placeholder="寫一個你能重複使用的正確版本。"></textarea></label>
+<div class="actions"><button id="addBtn">加入錯誤庫</button><button id="clearForm" class="secondary">清空欄位</button></div><p id="formStatus" role="status" aria-live="polite"></p></section>
+
+<section class="card"><h2>03｜今天只修最重要的錯誤</h2><div class="toolbar"><select id="filterSkill"><option value="">全部技能</option><option>Writing</option><option>Speaking</option><option>Reading</option><option>Listening</option></select><select id="filterStatus"><option value="active">Active</option><option value="due">Due Today</option><option value="mastered">Mastered</option><option value="all">全部</option></select><input id="search" type="search" placeholder="搜尋錯誤或修正方式"></div><div id="priorityBox" class="priorityBox"></div><div class="tableWrap"><table><thead><tr><th>Priority</th><th>技能／類型</th><th>錯誤</th><th>頻率</th><th>嚴重度</th><th>下次複習</th><th>操作</th></tr></thead><tbody id="errorBody"></tbody></table></div></section>
+
+<section class="card"><h2>04｜複習與掌握</h2><div id="reviewBox" class="reviewBox">目前沒有選取錯誤。</div></section>
+
+<section class="card"><h2>05｜保存與教練交付</h2><div id="summary"></div><div class="actions"><button id="downloadJson">下載 JSON</button><button id="downloadCsv" class="secondary">下載 CSV</button><button id="print" class="secondary">列印／PDF</button></div><div id="delivery"></div><p id="deliveryStatus" role="status" aria-live="polite"></p></section>
+
+<section class="card dangerZone"><h2>資料管理</h2><button id="reset" class="danger">清除此裝置的 Error Tracker</button><p class="note">不會刪除 Writing／Speaking／Reading／Listening 原始紀錄。</p></section>
+</main><footer>Sylvia IELTS Error Tracker V1.0｜Gary Adaptive Coaching</footer><script src="app.js"></script><script src="delivery.js"></script></body></html>
