@@ -1,7 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sylvia IELTS Writing Sprint V2</title>
-<script src="/tpass-next/core.js?v=20261101"></script>
 <style>
 :root{--p:#5b5bd6;--p2:#7c3aed;--bg:#f6f7fb;--card:#fff;--text:#1f2937;--muted:#667085;--line:#e5e7eb;--ok:#067647;--warn:#b54708}
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
@@ -144,11 +143,12 @@ daySelect.onchange=setPrompt;taskType.onchange=()=>{minTarget.textContent=taskTy
 function buildRecord(){const txt=essay.value.trim();if(!studentName.value.trim()||!studentEmail.value||!studentEmail.checkValidity()){alert('請填姓名與有效 Email');return null}if(!txt){alert('請先完成作文');return null}
 localStorage.setItem('sylvia_email',studentEmail.value.trim());const checks=[...document.querySelectorAll('.selfCheck:checked')].map(x=>x.value);
 return {id:'SYL-'+Date.now(),date:submitDate.value||new Date().toISOString().slice(0,10),day:+daySelect.value+1,task:taskType.value,question:prompts[+daySelect.value][1],essay:txt,words:wc(txt),minutes:Number(timeSpent.value)||null,self_checks:checks,self_concern:selfConcern.value.trim(),band:null,scores:null,errors:'',teacher_note:''}}
+function downloadJSON(name,data){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function downloadSubmission(){const r=buildRecord();if(!r)return;downloadJSON('Sylvia-IELTS-'+r.task.replace(' ','')+'-Day'+r.day+'.json',r)}
 function submitToGary(){const r=buildRecord();if(!r)return;records.push(r);saveRecords();
 const msg=['Submission ID：'+r.id,'Submitted At：'+new Date().toISOString(),'學員：Sylvia','Email：'+studentEmail.value.trim(),'IELTS Writing：'+r.task,'Day：'+r.day,'日期：'+r.date,'字數：'+r.words,'作答時間：'+(r.minutes||'未填')+' 分鐘','','題目：',r.question,'','作文：',r.essay,'','自我檢查：'+(r.self_checks.join('；')||'未勾選'),'最不確定：'+(r.self_concern||'未填')].join('\n');
 const payload={submission_id:r.id,submitted_at:new Date().toISOString(),assessment_type:'Sylvia IELTS Writing '+r.task,source_page:location.href,student_name:'Sylvia',email:studentEmail.value.trim(),total_score:'Pending Gary Review',accuracy:'',primary_weakness:r.self_concern||'Pending Review',preformatted_message:msg,responses_json:[{question_id:'Essay',student_answer:r.essay,correct_answer:'',is_correct:true,dimension:r.task}]};
-savePendingDelivery(payload);deliveryStatus.textContent='✅ 作文已保存在本機，正在前往已驗證成功的寄送頁。實際收件仍以 Gary Gmail 為準。';location.href='/tpass-next/form-test/?mode=assessment&src=sylvia-ielts-v2'}
+localStorage.setItem('sylvia_ielts_pending_delivery',JSON.stringify({...payload,_saved_at:new Date().toISOString()}));deliveryStatus.textContent='✅ IELTS Writing 作業已保存在本機，正在前往 IELTS 專用寄送頁。實際收件仍以 Gary Gmail 為準。';location.href='/sylvia-ielts-submit/'
 function adaptiveTaskFor(r){
  if(!r||!r.prescription)return null;
  const b=(r.prescription.bottleneck||'').toUpperCase();
