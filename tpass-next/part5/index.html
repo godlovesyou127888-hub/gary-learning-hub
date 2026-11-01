@@ -1,4 +1,9 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>T-PASS NEXT｜Part 5</title><script src="../core.js"></script><style id="s"></style></head><body><main class="wrap"><div class="card"><h1>T-PASS NEXT｜Part 5 文法診斷</h1><p class="muted">新版獨立站。10 題；逐題記錄；本機先保存，再尝试線上送出。</p><div class="row"><input id="name" placeholder="姓名"><input id="email" type="email" placeholder="Email"></div></div><div id="quiz" class="card"></div><div class="card"><button id="grade">完成診斷并保存</button><button id="dl" class="secondary">下載完整結果 JSON</button><div id="result"></div><div id="status" class="status pending">尚未送出</div></div></main><script>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>樂齡多益｜Part 5 文法診斷</title><script src="../core.js"></script><style id="s"></style></head><body><main class="wrap">
+<section class="hero"><h1>樂齡多益｜Part 5 文法診斷</h1><p>10 題、逐題記錄、先保存再送出。大字版手機介面。</p></section>
+<section class="card"><h2>① 填寫基本資料</h2><div class="row"><input id="name" type="text" placeholder="姓名"><input id="email" type="email" placeholder="Email"></div><div class="helper">先做表單測試：<a href="../form-test/" target="_blank">開啟「FormSubmit 單獨測試頁」</a></div></section>
+<section id="quiz" class="card"></section>
+<section class="card"><h2>② 完成後保存與送出</h2><div class="actions"><button id="grade">完成診斷並送出</button><button id="pdf" class="secondary">下載／儲存 PDF</button><button id="dl" class="secondary">下載完整 JSON</button><button class="outline" onclick="reportProblem('Part 5')">問題回報</button></div><div id="result"></div><div id="status" class="status pending">尚未送出</div></section>
+</main><script>
 s.textContent=baseStyles();
 const Q=[
 ["P5N-1","The manager asked the team to submit the report ___ Friday.",["at","by","from","during"],1,"Preposition"],
@@ -12,12 +17,17 @@ const Q=[
 ["P5N-9","Please review the contract ___ before signing it.",["care","careful","carefully","caring"],2,"Part of Speech"],
 ["P5N-10","Neither the director nor the assistants ___ available yesterday.",["was","were","is","be"],1,"Agreement"]
 ];
-quiz.innerHTML=Q.map((q,i)=>'<div class="q"><b>'+(i+1)+'. '+q[1]+'</b>'+q[2].map((x,j)=>'<label><input type="radio" name="q'+i+'" value="'+j+'"> '+x+'</label>').join('')+'</div>').join('');
-let last=null; const key="tpass_next_part5_draft"; const draft=loadLocal(key)||{}; name.value=draft.name||"";email.value=draft.email||"";
-document.addEventListener("change",()=>saveLocal(key,{name:name.value,email:email.value,answers:Q.map((q,i)=>document.querySelector('input[name=q'+i+']:checked')?.value??null)}));
+quiz.innerHTML='<h2>Part 5｜10 題</h2>'+Q.map((q,i)=>'<div class="q"><b>'+(i+1)+'. '+q[1]+'</b>'+q[2].map((x,j)=>'<label><input type="radio" name="q'+i+'" value="'+j+'"><span>'+x+'</span></label>').join('')+'</div>').join('');
+let last=null;const key="tpass_next_part5_draft";const draft=loadLocal(key)||{};name.value=draft.name||"";email.value=draft.email||"";
 (draft.answers||[]).forEach((v,i)=>{if(v!=null){const el=document.querySelector('input[name=q'+i+'][value="'+v+'"]');if(el)el.checked=true}});
-grade.onclick=async()=>{if(!name.value.trim()||!email.value.trim()){alert("請填写姓名与 Email");return}const ans=Q.map((q,i)=>document.querySelector('input[name=q'+i+']:checked'));if(ans.some(x=>!x)){alert("請完成全部 10 題");return}
-const details=Q.map((q,i)=>({question_id:q[0],question:q[1],student_answer:q[2][+ans[i].value],correct_answer:q[2][q[3]],is_correct:+ans[i].value===q[3],skill:q[4]}));const score=details.filter(x=>x.is_correct).length;const errs={};details.filter(x=>!x.is_correct).forEach(x=>errs[x.skill]=(errs[x.skill]||0)+1);const primary=Object.entries(errs).sort((a,b)=>b[1]-a[1])[0]?.[0]||"無明顯弱點";
-last={submission_id:uid("P5"),submitted_at:new Date().toISOString(),assessment_type:"T-PASS NEXT Part 5",source_page:location.href,student_name:name.value.trim(),email:email.value.trim(),total_score:score+"/10",accuracy:Math.round(score*10)+"%",primary_weakness:primary,secondary_weakness:"",summary:"Part 5 新版診斷",responses_json:details};result.innerHTML="<h2>"+score+"/10</h2><p>主要弱點："+primary+"</p>";await submitResult(last,status)};
-dl.onclick=()=>{if(!last)last=loadLocal(key);downloadJSON("tpass-next-part5-"+Date.now()+".json",last||{note:"尚未完成診斷"})};
+document.addEventListener("change",()=>saveLocal(key,{name:name.value,email:email.value,answers:Q.map((q,i)=>document.querySelector('input[name=q'+i+']:checked')?.value??null)}));
+grade.onclick=()=>{if(!name.value.trim()||!email.value.trim()){alert("請先填姓名與 Email。");return}
+const ans=Q.map((q,i)=>document.querySelector('input[name=q'+i+']:checked'));if(ans.some(x=>!x)){alert("請先完成全部 10 題。");return}
+const details=Q.map((q,i)=>({question_id:q[0],question:q[1],student_answer:q[2][+ans[i].value],correct_answer:q[2][q[3]],is_correct:+ans[i].value===q[3],skill:q[4]}));
+const score=details.filter(x=>x.is_correct).length;const errs={};details.filter(x=>!x.is_correct).forEach(x=>errs[x.skill]=(errs[x.skill]||0)+1);
+const ranked=Object.entries(errs).sort((a,b)=>b[1]-a[1]);const primary=ranked[0]?.[0]||"無明顯弱點";const secondary=ranked[1]?.[0]||"";
+last={submission_id:uid("P5"),submitted_at:new Date().toISOString(),assessment_type:"樂齡多益 Part 5 文法診斷",source_page:location.href,student_name:name.value.trim(),email:email.value.trim(),total_score:score+"/10",accuracy:Math.round(score*10)+"%",primary_weakness:primary,secondary_weakness:secondary,summary:"Part 5 文法診斷",responses_json:details};
+saveLocal("tpass_next_part5_last",last);result.innerHTML="<h2>結果："+score+"/10</h2><p>正確率："+last.accuracy+"</p><p>主要弱點："+primary+"</p>";submitResult(last,status)};
+pdf.onclick=()=>openPdfReport(last||loadLocal("tpass_next_part5_last"));
+dl.onclick=()=>downloadJSON("樂齡多益-Part5-"+Date.now()+".json",last||loadLocal("tpass_next_part5_last")||{note:"尚未完成診斷"});
 </script></body></html>
