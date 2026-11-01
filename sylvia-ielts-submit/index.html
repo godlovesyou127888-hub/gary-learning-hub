@@ -61,7 +61,27 @@ h1{margin:0 0 6px}.muted{color:var(--muted)}input,textarea{width:100%;padding:11
 <script>
 const API='https://tpass-results-api.onrender.com';
 let data=null,submitted=false,emailSubmitted=false;
-const deliveryStatusBox=document.getElementById('deliveryStatusBox');
+const byId=id=>document.getElementById(id);
+const deliveryStatusBox=byId('deliveryStatusBox');
+const submitBtn=byId('submitBtn');
+const nameField=byId('nameField');
+const emailField=byId('emailField');
+const messageField=byId('messageField');
+const ieltsForm=byId('ieltsForm');
+const emailForm=byId('emailForm');
+const emailSink=byId('emailSink');
+const subjectField=byId('subjectField');
+const submissionField=byId('submissionField');
+const sourceField=byId('sourceField');
+const emailName=byId('emailName');
+const emailEmail=byId('emailEmail');
+const emailMessage=byId('emailMessage');
+const sendCard=byId('sendCard');
+const completeCard=byId('completeCard');
+const completeSummary=byId('completeSummary');
+const retryEmailBtn=byId('retryEmailBtn');
+function setEmailState(text){const el=byId('emailState');if(el)el.textContent=text}
+function getEmailState(){const el=byId('emailState');return el?el.textContent:'Email 狀態待確認'}
 try{data=JSON.parse(localStorage.getItem('sylvia_ielts_pending_delivery')||'null')}catch{}
 
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
@@ -118,7 +138,7 @@ async function storePrimary(timeoutMs=8000){
 
 function sendEmailSecondary(){
   emailSubmitted=true;
-  emailState.textContent='正在送往 FormSubmit Email 通道…';
+  setEmailState('正在送往 FormSubmit Email 通道…');
   subjectField.value='[Sylvia IELTS][Writing]['+(data.task_type||'Assignment')+'] '+(data.submission_id||'');
   submissionField.value=data.submission_id||'';
   sourceField.value=data.source_page||location.href;
@@ -130,7 +150,7 @@ function sendEmailSecondary(){
 
 emailSink.addEventListener('load',async()=>{
   if(!submitted||!emailSubmitted||!data)return;
-  emailState.textContent='FormSubmit 已回應；實際收件仍以 Gary Gmail 為準。';
+  setEmailState('FormSubmit 已回應；實際收件仍以 Gary Gmail 為準。');
   try{
     await fetch(API+'/api/ielts-writing-submissions/'+encodeURIComponent(data.submission_id)+'/email-status',{
       method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({status:'submitted_to_formsubmit'})
@@ -189,13 +209,13 @@ ieltsForm.addEventListener('submit',e=>{
     localStorage.removeItem('sylvia_ielts_outbox_'+data.submission_id);
     if(document.getElementById('completeCard')&&!completeCard.classList.contains('hidden')){
       const box=completeCard.querySelector('.status.success');
-      if(box)box.innerHTML='<b>主要保存：</b>已寫入 IELTS 資料庫。<br><b>Email：</b><span id="emailState">'+emailState.textContent+'</span>';
+      if(box)box.innerHTML='<b>主要保存：</b>已寫入 IELTS 資料庫。<br><b>Email：</b><span id="emailState">'+getEmailState()+'</span>';
     }
   }).catch(err=>{
     const latest=JSON.parse(localStorage.getItem('sylvia_ielts_last_submission')||'{}');
     localStorage.setItem('sylvia_ielts_last_submission',JSON.stringify({...latest,database_status:'queued_for_retry',database_error:String(err.message||err)}));
     const box=completeCard.querySelector('.status.success');
-    if(box)box.innerHTML='<b>主要保存：</b>已保存在本機待補同步；不影響本次 Email 送出。<br><b>Email：</b><span id="emailState">'+emailState.textContent+'</span>';
+    if(box)box.innerHTML='<b>主要保存：</b>已保存在本機待補同步；不影響本次 Email 送出。<br><b>Email：</b><span id="emailState">'+getEmailState()+'</span>';
   });
 });
 
