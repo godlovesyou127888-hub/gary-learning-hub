@@ -17,14 +17,19 @@ input{width:100%;padding:10px;border:1px solid #d0d5dd;border-radius:10px;font:i
 <div class="actions" style="margin-top:14px">
 <a class="btn secondary" href="/sylvia-ielts-30day/">Writing Lab</a>
 <a class="btn secondary" href="/sylvia-ielts-speaking/">Speaking Lab</a>
+<a class="btn secondary" href="/sylvia-ielts-reading/">Reading Lab</a>
+<a class="btn secondary" href="/sylvia-ielts-listening/">Listening Lab</a>
 <a class="btn secondary" href="https://gary-ielts-day.gary2049.chatgpt.site" target="_blank" rel="noopener">雅思考試的一天 ↗</a>
 </div></div></header>
 
 <main class="wrap">
 <div class="grid3">
+<div class="card"><div class="label">Listening Band</div><div class="kpi" id="listeningBand">—</div><div class="muted">取 Listening Lab 最新紀錄</div></div>
+<div class="card"><div class="label">Reading Band</div><div class="kpi" id="readingBand">—</div><div class="muted">取 Reading Lab 最新紀錄</div></div>
 <div class="card"><div class="label">Writing Band</div><div class="kpi" id="writingBand">—</div><div class="muted">取 Writing Lab 最新 Gary 評分</div></div>
 <div class="card"><div class="label">Speaking Band</div><div class="kpi" id="speakingBand">—</div><div class="muted">取 Speaking Lab 最新 Gary 評分</div></div>
 <div class="card"><div class="label">Days to Exam</div><div class="kpi" id="daysLeft">—</div><div class="muted">距離 IELTS 考試剩餘天數</div></div>
+<div class="card"><div class="label">Next Mock</div><div class="kpi" id="mockDays">—</div><div class="muted">距離下次模考天數</div></div>
 </div>
 
 <div class="grid" style="margin-top:14px">
@@ -40,8 +45,10 @@ input{width:100%;padding:10px;border:1px solid #d0d5dd;border-radius:10px;font:i
 <div class="card" style="margin-top:14px"><h2>目前策略</h2><div id="strategyBox" class="warn tip">原則：不平均分配時間。優先處理最低 Band 構面，直到連續兩次穩定提升，再轉下一個瓶頸。</div></div>
 
 <div class="card" style="margin-top:14px"><h2>快速入口</h2><div class="actions">
-<a class="btn primary" href="/sylvia-ielts-30day/">進入 Writing Lab</a>
-<a class="btn primary" href="/sylvia-ielts-speaking/">進入 Speaking Lab</a>
+<a class="btn primary" href="/sylvia-ielts-listening/">Listening Lab</a>
+<a class="btn primary" href="/sylvia-ielts-reading/">Reading Lab</a>
+<a class="btn primary" href="/sylvia-ielts-30day/">Writing Lab</a>
+<a class="btn primary" href="/sylvia-ielts-speaking/">Speaking Lab</a>
 <a class="btn secondary" href="/roadmap/">查看 101 Website Roadmap</a>
 </div></div>
 </main>
@@ -49,12 +56,14 @@ input{width:100%;padding:10px;border:1px solid #d0d5dd;border-radius:10px;font:i
 <script>
 function load(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch{return []}}
 function latestGraded(arr){const g=arr.filter(x=>x.band!=null);return g.length?g[g.length-1]:null}
-const wr=load('sylvia_ielts_v2_records'),sp=load('sylvia_ielts_speaking_records');
-const w=latestGraded(wr),s=latestGraded(sp);
-writingBand.textContent=w?w.band.toFixed(1):'—';speakingBand.textContent=s?s.band.toFixed(1):'—';
+const lr=load('sylvia_ielts_listening_records'),rr=load('sylvia_ielts_reading_records'),wr=load('sylvia_ielts_v2_records'),sp=load('sylvia_ielts_speaking_records');
+const l=lr.length?lr[lr.length-1]:null,r=rr.length?rr[rr.length-1]:null,w=latestGraded(wr),s=latestGraded(sp);
+listeningBand.textContent=l?Number(l.band).toFixed(1):'—';readingBand.textContent=r?Number(r.band).toFixed(1):'—';writingBand.textContent=w?w.band.toFixed(1):'—';speakingBand.textContent=s?s.band.toFixed(1):'—';
 
 function sourcePriority(){
  const items=[];
+ if(l)items.push({area:'Listening',band:Number(l.band),b:l.weak||'Listening',task:l.prescription||'完成一回 Listening 並分類錯題。',link:'/sylvia-ielts-listening/'});
+ if(r)items.push({area:'Reading',band:Number(r.band),b:r.weak||'Reading',task:r.prescription||'完成一回 Reading 並分類錯題。',link:'/sylvia-ielts-reading/'});
  if(w&&w.prescription)items.push({area:'Writing',band:w.band,b:w.prescription.bottleneck,task:w.next_assignment?.title? w.next_assignment.title+'：'+w.next_assignment.task : w.prescription.task,link:'/sylvia-ielts-30day/'});
  if(s&&s.prescription)items.push({area:'Speaking',band:s.band,b:s.prescription.bottleneck,task:s.next_assignment?.title? s.next_assignment.title+'：'+s.next_assignment.task : s.prescription.task,link:'/sylvia-ielts-speaking/'});
  if(!items.length)return null;
@@ -66,6 +75,6 @@ if(p){bottleneck.innerHTML='<b>'+p.area+'｜'+p.b+'</b><br>目前整體 Band：'
 
 const ex=localStorage.getItem('sylvia_ielts_exam_date')||'';const md=localStorage.getItem('sylvia_ielts_mock_date')||'';examDate.value=ex;mockDate.value=md;
 function dayDiff(v){if(!v)return null;const a=new Date();a.setHours(0,0,0,0);const b=new Date(v+'T00:00:00');return Math.ceil((b-a)/86400000)}
-function renderDates(){const d=dayDiff(examDate.value);daysLeft.textContent=d==null?'—':Math.max(0,d);const m=dayDiff(mockDate.value);mockCountdown.textContent=m==null?'尚未設定下次模考。':m>=0?'距離下次模考還有 '+m+' 天。':'模考日期已過 '+Math.abs(m)+' 天，請重新設定。'}
+function renderDates(){const d=dayDiff(examDate.value);daysLeft.textContent=d==null?'—':Math.max(0,d);const m=dayDiff(mockDate.value);mockDays.textContent=m==null?'—':m;mockCountdown.textContent=m==null?'尚未設定下次模考。':m>=0?'距離下次模考還有 '+m+' 天。':'模考日期已過 '+Math.abs(m)+' 天，請重新設定。'}
 examDate.onchange=()=>{localStorage.setItem('sylvia_ielts_exam_date',examDate.value);renderDates()};mockDate.onchange=()=>{localStorage.setItem('sylvia_ielts_mock_date',mockDate.value);renderDates()};renderDates();
 </script></body></html>
