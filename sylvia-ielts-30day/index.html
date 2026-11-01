@@ -19,10 +19,14 @@ canvas{width:100%;height:280px;border:1px solid var(--line);border-radius:12px;b
 .progress{height:12px;background:#eceef4;border-radius:999px;overflow:hidden}.progress div{height:100%;background:linear-gradient(90deg,var(--p),var(--p2))}
 .footer{text-align:center;color:var(--muted);padding:20px;font-size:13px}
 </style></head><body>
-<header><div class="wrap"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"><a href="https://gary-ielts-day.gary2049.chatgpt.site" target="_blank" rel="noopener" style="display:inline-block;background:#fff;color:#5b5bd6;text-decoration:none;font-weight:800;padding:9px 13px;border-radius:999px">雅思考試的一天 ↗</a><button type="button" onclick="go('contact')" style="background:#ffffff22;color:#fff;font-weight:800;padding:9px 13px;border:1px solid #ffffff55;border-radius:999px;cursor:pointer">聯絡站長</button></div><h1>Sylvia IELTS Writing Sprint V2</h1><div class="sub">每日題目 → 線上作答 → 一鍵送 Gary → 分數/錯誤紀錄 → 30 天進步曲線</div><nav id="nav"></nav></div></header>
+<header><div class="wrap"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"><a href="https://gary-ielts-day.gary2049.chatgpt.site" target="_blank" rel="noopener" style="display:inline-block;background:#fff;color:#5b5bd6;text-decoration:none;font-weight:800;padding:9px 13px;border-radius:999px">雅思考試的一天 ↗</a><button type="button" onclick="go('dashboard');setTimeout(()=>document.getElementById('latestReviewCard')?.scrollIntoView({behavior:'smooth',block:'start'}),80)" style="background:#fff;color:#5b5bd6;font-weight:800;padding:9px 13px;border:0;border-radius:999px;cursor:pointer">我的最新批改</button><button type="button" onclick="go('contact')" style="background:#ffffff22;color:#fff;font-weight:800;padding:9px 13px;border:1px solid #ffffff55;border-radius:999px;cursor:pointer">聯絡站長</button></div><h1>Sylvia IELTS Writing Sprint V2</h1><div class="sub">每日題目 → 線上作答 → 一鍵送 Gary → 分數/錯誤紀錄 → 30 天進步曲線</div><nav id="nav"></nav></div></header>
 <main class="wrap">
 
 <section id="dashboard" class="on">
+<div class="card" id="latestReviewCard">
+<h2>我的最新批改｜My Latest Feedback</h2>
+<div id="latestReviewContent" class="muted">尚未有 Gary 老師批改紀錄。完成作業並由老師回填分數後，這裡會自動顯示最新結果。</div>
+</div>
 <div class="grid3">
 <div class="card"><span class="badge">Target</span><div class="kpi">Band 7.5+</div><div class="muted">Writing 目標：穩定、限時、可複製。</div></div>
 <div class="card"><span class="badge">Submissions</span><div class="kpi" id="submissionCount">0</div><div class="muted">已交作文數</div></div>
@@ -62,10 +66,10 @@ canvas{width:100%;height:280px;border:1px solid var(--line);border-radius:12px;b
 <p class="muted">選擇一次已交作業，輸入四項 IELTS 分數；系統自動算平均並更新曲線。</p>
 <label>選擇作業<select id="gradeRecord"></select></label>
 <div class="grid">
-<label id="c1Label">TA / TR<input id="g1" type="number" min="0" max="9" step=".5"></label>
-<label>CC<input id="g2" type="number" min="0" max="9" step=".5"></label>
-<label>LR<input id="g3" type="number" min="0" max="9" step=".5"></label>
-<label>GRA<input id="g4" type="number" min="0" max="9" step=".5"></label>
+<label><span id="c1Label">T1 TA｜Task Achievement 任務完成度</span><input id="g1" type="number" min="0" max="9" step=".5"></label>
+<label><span id="ccLabel">T1 CC｜Coherence & Cohesion 連貫與銜接</span><input id="g2" type="number" min="0" max="9" step=".5"></label>
+<label><span id="lrLabel">T1 LR｜Lexical Resource 字彙資源</span><input id="g3" type="number" min="0" max="9" step=".5"></label>
+<label><span id="graLabel">T1 GRA｜Grammatical Range & Accuracy 文法多樣性與正確性</span><input id="g4" type="number" min="0" max="9" step=".5"></label>
 </div>
 <label>主要錯誤／扣分點<input id="gradeErrors" placeholder="例如：Overview 不精準；論證未展開"></label>
 <label>Gary 老師一句建議<input id="teacherNote" placeholder="下一篇唯一要修正的重點"></label>
@@ -158,7 +162,10 @@ function saveRecords(){localStorage.setItem('sylvia_ielts_v2_records',JSON.strin
 function renderAll(){submissionCount.textContent=records.length;const graded=records.filter(r=>r.band!=null);latestBand.textContent=graded.length?graded[graded.length-1].band.toFixed(1):'—';progressBar.style.width=Math.min(100,records.length/30*100)+'%';progressText.textContent=records.length+' / 30 次作答';
 todayCard.innerHTML='<b>Day '+Math.min(records.length+1,30)+'</b><br>'+plan[Math.min(records.length,29)]+'<br><span class="muted">'+prompts[Math.min(records.length,29)][0]+'：'+prompts[Math.min(records.length,29)][1]+'</span>';
 historyBody.innerHTML=records.map(r=>`<tr><td>${r.date}</td><td>${r.task}</td><td>${r.day}</td><td>${r.words}</td><td>${r.minutes||'—'}</td><td>${r.band==null?'待批改':r.band.toFixed(1)}</td><td>${r.errors||'—'}</td></tr>`).join('');
-gradeRecord.innerHTML=records.map((r,i)=>`<option value="${i}">${r.date}｜${r.task}｜Day ${r.day}</option>`).join('');renderErrors();drawChart()}
+gradeRecord.innerHTML=records.map((r,i)=>`<option value="${i}">${r.date}｜${r.task}｜Day ${r.day}</option>`).join('');updateGradeLabels();renderLatestReview();renderErrors();drawChart()}
+function updateGradeLabels(){if(!records.length){return}const r=records[+gradeRecord.value||0];const t2=r&&r.task==='Task 2';c1Label.textContent=t2?'T2 TR｜Task Response 任務回應':'T1 TA｜Task Achievement 任務完成度';ccLabel.textContent=(t2?'T2':'T1')+' CC｜Coherence & Cohesion 連貫與銜接';lrLabel.textContent=(t2?'T2':'T1')+' LR｜Lexical Resource 字彙資源';graLabel.textContent=(t2?'T2':'T1')+' GRA｜Grammatical Range & Accuracy 文法多樣性與正確性'}
+gradeRecord.addEventListener('change',updateGradeLabels);
+function renderLatestReview(){const graded=records.filter(r=>r.band!=null);if(!graded.length){latestReviewContent.innerHTML='尚未有 Gary 老師批改紀錄。完成作業並由老師回填分數後，這裡會自動顯示最新結果。';return}const r=graded[graded.length-1],s=r.scores||{},firstLabel=r.task==='Task 2'?'TR 任務回應':'TA 任務完成度';latestReviewContent.innerHTML=`<div class="grid3"><div class="tip"><b>${r.date}｜${r.task}｜Day ${r.day}</b><br><span class="kpi">Band ${r.band.toFixed(1)}</span></div><div class="tip"><b>四項分數</b><br>${firstLabel}：${s.c1??'—'}<br>CC 連貫與銜接：${s.cc??'—'}<br>LR 字彙資源：${s.lr??'—'}<br>GRA 文法：${s.gra??'—'}</div><div class="tip"><b>主要扣分點</b><br>${r.errors||'尚未填寫'}<br><br><b>下一篇唯一修正重點</b><br>${r.teacher_note||'尚未填寫'}</div></div>`}
 function saveGrade(){if(!records.length){alert('尚無作業');return}const i=+gradeRecord.value;const vals=[g1,g2,g3,g4].map(x=>Number(x.value));if(vals.some(x=>!x)){alert('請填四項分數');return}const band=Math.round((vals.reduce((a,b)=>a+b,0)/4)*2)/2;records[i].scores={c1:vals[0],cc:vals[1],lr:vals[2],gra:vals[3]};records[i].band=band;records[i].errors=gradeErrors.value.trim();records[i].teacher_note=teacherNote.value.trim();saveRecords();gradeResult.textContent='✅ 已儲存：Band '+band.toFixed(1)+'；進步曲線已更新。'}
 function renderErrors(){const m={};records.forEach(r=>(r.errors||'').split(/[；,，;、]/).map(x=>x.trim()).filter(Boolean).forEach(x=>m[x]=(m[x]||0)+1));const arr=Object.entries(m).sort((a,b)=>b[1]-a[1]);errorSummary.innerHTML=arr.length?'<table><tr><th>錯誤／扣分點</th><th>出現次數</th></tr>'+arr.map(x=>'<tr><td>'+x[0]+'</td><td>'+x[1]+'</td></tr>').join('')+'</table>':'<p class="muted">尚無 Gary 批改錯誤資料。</p>'}
 function drawChart(){const c=chart,ctx=c.getContext('2d'),W=c.width,H=c.height;ctx.clearRect(0,0,W,H);ctx.strokeStyle='#e5e7eb';ctx.fillStyle='#667085';ctx.font='13px sans-serif';for(let b=5;b<=9;b++){const y=H-30-(b-5)*(H-50)/4;ctx.beginPath();ctx.moveTo(45,y);ctx.lineTo(W-20,y);ctx.stroke();ctx.fillText(b.toFixed(1),8,y+4)}const pts=records.filter(r=>r.band!=null);if(!pts.length)return;ctx.strokeStyle='#5b5bd6';ctx.lineWidth=3;ctx.beginPath();pts.forEach((r,i)=>{const x=50+i*((W-80)/Math.max(1,pts.length-1));const y=H-30-(r.band-5)*(H-50)/4;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.stroke();pts.forEach((r,i)=>{const x=50+i*((W-80)/Math.max(1,pts.length-1));const y=H-30-(r.band-5)*(H-50)/4;ctx.fillStyle='#7c3aed';ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fill();ctx.fillStyle='#1f2937';ctx.fillText(r.band.toFixed(1),x-10,y-10)})}
