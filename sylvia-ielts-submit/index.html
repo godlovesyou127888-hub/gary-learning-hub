@@ -3,183 +3,88 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>Sylvia IELTS｜Writing 作業寄送</title>
 <style>
-:root{--p:#5b5bd6;--p2:#7c3aed;--bg:#f6f7fb;--card:#fff;--text:#1f2937;--muted:#667085;--line:#e5e7eb;--ok:#067647;--warn:#b54708}
+:root{--p:#5b5bd6;--p2:#7c3aed;--bg:#f6f7fb;--text:#1f2937;--muted:#667085;--line:#e5e7eb}
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
 .wrap{max-width:860px;margin:auto;padding:18px}.hero{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;border-radius:20px;padding:24px;margin:10px 0 16px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px}
 h1{margin:0 0 6px}.muted{color:var(--muted)}input,textarea{width:100%;padding:11px;border:1px solid #d0d5dd;border-radius:10px;font:inherit}textarea{min-height:260px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:700px){.grid{grid-template-columns:1fr}}
-.btn{border:0;border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}.primary{background:var(--p);color:#fff}.secondary{background:#fff;color:var(--p);border:1px solid #c7c9ff}.success{background:#ecfdf3;color:var(--ok);border:1px solid #abefc6}
-.status{padding:12px;border-radius:10px;background:#f5f3ff;margin-top:12px}.hidden{display:none}.error{background:#fff7ed;color:var(--warn)}
+.btn{border:0;border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}.primary{background:var(--p);color:#fff}.secondary{background:#fff;color:var(--p);border:1px solid #c7c9ff}.status{padding:12px;border-radius:10px;background:#f5f3ff;margin-top:12px}
 </style></head><body>
 <main class="wrap">
-<section class="hero"><h1>Sylvia IELTS｜Writing 作業寄送</h1><p>IELTS 專用流程：先安全保存，再寄 Email，最後回 IELTS Command Center。</p></section>
-
-<section class="card" id="sendCard">
+<section class="hero"><h1>Sylvia IELTS｜Writing 作業寄送</h1><p>IELTS 專用流程：本機先備份，再以原生表單直接寄給 Gary。</p></section>
+<section class="card">
 <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
 <a class="btn secondary" href="/sylvia-ielts-30day/">← 回 Writing Sprint</a>
 <a class="btn secondary" href="/sylvia-ielts-command-center/">IELTS Command Center</a>
 </div>
 
-<form id="ieltsForm">
+<form id="ieltsForm" action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST">
+<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/sylvia-ielts-submit-complete/">
+<input type="hidden" name="_captcha" value="false">
+<input type="hidden" name="_template" value="table">
+<input type="hidden" id="subjectField" name="_subject">
+<input type="hidden" id="submissionField" name="submission_id">
+<input type="hidden" id="sourceField" name="source_page">
+<input type="hidden" name="form_type" value="Sylvia IELTS Writing Submission">
+
 <div class="grid">
-<label>姓名<input id="nameField" required></label>
-<label>Email<input id="emailField" type="email" required></label>
+<label>姓名<input id="nameField" name="name" required></label>
+<label>Email<input id="emailField" name="email" type="email" required></label>
 </div>
 <label style="display:block;margin-top:12px">Writing 作業內容
-<textarea id="messageField" required></textarea></label>
+<textarea id="messageField" name="test_message" required></textarea></label>
+
 <p><button id="submitBtn" class="btn primary" type="submit">送出 Writing 作業給 Gary</button></p>
 </form>
-
 <div id="deliveryStatusBox" class="status">正在載入 IELTS Writing 作業資料…</div>
-
-
-</section>
-
-<section class="card hidden" id="completeCard">
-<h2>✅ Writing 作業已送出</h2>
-<p id="completeSummary"></p>
-<div class="status success">
-<b>主要保存：</b>已寫入 IELTS 資料庫。<br>
-<b>Email：</b><span id="emailState">已送往 Email 通道，實際收件以 Gmail 驗證為準。</span>
-</div>
-<p style="margin-top:16px"><a class="btn primary" href="/sylvia-ielts-command-center/">回 Sylvia IELTS 首頁</a></p>
-<p><button id="retryEmailBtn" class="btn secondary" type="button">重新寄送 Email</button> <a class="btn secondary" href="/sylvia-ielts-30day/">回 Writing Sprint</a></p>
 </section>
 </main>
 
 <script>
-const API='https://tpass-results-api.onrender.com';
-let data=null,submitted=false,emailSubmitted=false;
 const byId=id=>document.getElementById(id);
 const deliveryStatusBox=byId('deliveryStatusBox');
 const submitBtn=byId('submitBtn');
 const nameField=byId('nameField');
 const emailField=byId('emailField');
 const messageField=byId('messageField');
+const subjectField=byId('subjectField');
+const submissionField=byId('submissionField');
+const sourceField=byId('sourceField');
 const ieltsForm=byId('ieltsForm');
-const sendCard=byId('sendCard');
-const completeCard=byId('completeCard');
-const completeSummary=byId('completeSummary');
-const retryEmailBtn=byId('retryEmailBtn');
-function setEmailState(text){const el=byId('emailState');if(el)el.textContent=text}
-function getEmailState(){const el=byId('emailState');return el?el.textContent:'Email 狀態待確認'}
+
+let data=null;
 try{data=JSON.parse(localStorage.getItem('sylvia_ielts_pending_delivery')||'null')}catch{}
 
-function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-
 if(!data){
-  deliveryStatusBox.classList.add('error');
-  deliveryStatusBox.innerHTML='❌ 找不到待寄送的 IELTS Writing 作業。請回 Writing Sprint 重新按「一鍵送出給 Gary」。';
+  deliveryStatusBox.innerHTML='❌ 找不到待寄送作業。請回 Writing Sprint 重新按「一鍵送出給 Gary」。';
   submitBtn.disabled=true;
 }else{
-  const age=data._saved_at?Math.max(0,Math.round((Date.now()-new Date(data._saved_at).getTime())/60000)):null;
   nameField.value=data.student_name||'Sylvia';
   emailField.value=data.student_email||data.email||'';
-  messageField.value=data.preformatted_message||'';
-  deliveryStatusBox.innerHTML='✅ 已載入 IELTS Writing 作業'
-    +(data.submission_id?'<br><b>Submission ID：</b>'+esc(data.submission_id):'')
-    +(age!=null?'<br><b>資料建立：</b>'+age+' 分鐘前':'')
-    +'<br>送出後會停留在本站完成畫面，並提供「回 Sylvia IELTS 首頁」按鈕。';
-  if(age!=null&&age>120){
-    submitBtn.disabled=true;
-    submitBtn.textContent='資料已超過 120 分鐘，請重新產生';
-  }
+  messageField.value=data.preformatted_message||data.essay||'';
+  subjectField.value='[Sylvia IELTS][Writing]['+(data.task_type||'Assignment')+'] '+(data.submission_id||'');
+  submissionField.value=data.submission_id||'';
+  sourceField.value=data.source_page||location.href;
+  deliveryStatusBox.innerHTML='✅ 已載入作業'
+    +(data.submission_id?'<br><b>Submission ID：</b>'+data.submission_id:'')
+    +'<br>按下送出後，將直接交給 FormSubmit；完成後回到 IELTS 專用完成頁。';
 }
 
-async function submitServerSide(timeoutMs=30000){
-  const payload={
-    submission_id:data.submission_id,
-    student_name:nameField.value.trim(),
-    student_email:emailField.value.trim(),
-    task_type:data.task_type||'',
-    day_number:data.day_number||null,
-    question:data.question||'',
-    essay:data.essay||'',
-    word_count:data.word_count||null,
-    minutes:data.minutes||null,
-    self_checks:Array.isArray(data.self_checks)?data.self_checks:[],
-    self_concern:data.self_concern||'',
-    source_page:data.source_page||'',
-    preformatted_message:messageField.value.trim()
-  };
-  const controller=new AbortController();
-  const timer=setTimeout(()=>controller.abort(),timeoutMs);
-  try{
-    const res=await fetch(API+'/api/ielts-writing-submit',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(payload),
-      signal:controller.signal
-    });
-    const out=await res.json().catch(()=>({}));
-    if(!res.ok||!out.ok)throw new Error(out.error||('HTTP '+res.status));
-    return out;
-  }finally{clearTimeout(timer)}
-}
-
-ieltsForm.addEventListener('submit',async e=>{
-  e.preventDefault();
-  if(submitted||!data)return;
-  submitted=true;
-  submitBtn.disabled=true;
-  submitBtn.textContent='正在送出…';
-  deliveryStatusBox.className='status';
-  deliveryStatusBox.innerHTML='正在保存 IELTS 作業並由伺服器寄送 Email…';
-
-  const outboxRecord={
+ieltsForm.addEventListener('submit',()=>{
+  if(!data)return;
+  const backup={
     ...data,
     student_name:nameField.value.trim(),
     student_email:emailField.value.trim(),
     preformatted_message:messageField.value.trim(),
-    queued_at:new Date().toISOString()
+    submitted_at:new Date().toISOString(),
+    delivery_status:'native_formsubmit_post'
   };
-  localStorage.setItem('sylvia_ielts_outbox_'+data.submission_id,JSON.stringify(outboxRecord));
-
-  try{
-    const result=await submitServerSide();
-    localStorage.setItem('sylvia_ielts_last_submission',JSON.stringify(result));
-    if(result.stored)localStorage.removeItem('sylvia_ielts_outbox_'+data.submission_id);
-
-    sendCard.classList.add('hidden');
-    completeCard.classList.remove('hidden');
-    completeSummary.innerHTML='<b>Submission ID：</b>'+esc(data.submission_id||'—')+
-      '<br><b>學生：</b>'+esc(nameField.value.trim())+
-      '<br><b>Task：</b>'+esc(data.task_type||'Writing');
-
-    const box=completeCard.querySelector('.status.success');
-    if(box){
-      box.innerHTML='<b>主要保存：</b>'+(result.stored?'✅ 已寫入 IELTS 資料庫':'❌ 尚未保存')+
-        '<br><b>Email：</b>'+(result.emailAccepted?'✅ FormSubmit 伺服器端已接受寄送':'⚠️ Email 通道未確認接受，可按下方重新寄送');
-    }
-    setEmailState(result.emailAccepted?'伺服器端已接受寄送；最終仍以 Gary Gmail 實收為準。':'尚未確認接受');
-  }catch(err){
-    submitted=false;
-    submitBtn.disabled=false;
-    submitBtn.textContent='重新送出 Writing 作業';
-    deliveryStatusBox.className='status error';
-    deliveryStatusBox.innerHTML='❌ 本次未完成：'+esc(err.message||err)+'<br>資料仍保留在本機，請重新送出。';
-  }
+  localStorage.setItem('sylvia_ielts_last_submission',JSON.stringify(backup));
+  localStorage.setItem('sylvia_ielts_backup_'+(data.submission_id||Date.now()),JSON.stringify(backup));
+  submitBtn.disabled=true;
+  submitBtn.textContent='正在送出…';
+  deliveryStatusBox.innerHTML='正在直接送往 FormSubmit。若看到成功頁，表示 FormSubmit 已接受；Gary 是否收到仍以 Gmail 實收為準。';
 });
-
-retryEmailBtn.addEventListener('click',async()=>{
-  if(!data)return;
-  retryEmailBtn.disabled=true;
-  retryEmailBtn.textContent='重新寄送中…';
-  try{
-    const result=await submitServerSide();
-    const box=completeCard.querySelector('.status.success');
-    if(box){
-      box.innerHTML='<b>主要保存：</b>'+(result.stored?'✅ 已寫入 IELTS 資料庫':'❌ 尚未保存')+
-        '<br><b>Email：</b>'+(result.emailAccepted?'✅ FormSubmit 伺服器端已接受寄送':'⚠️ Email 通道仍未確認接受');
-    }
-    setEmailState(result.emailAccepted?'伺服器端已接受寄送；最終仍以 Gary Gmail 實收為準。':'尚未確認接受');
-  }catch(err){
-    setEmailState('重新寄送失敗：'+String(err.message||err));
-  }finally{
-    retryEmailBtn.disabled=false;
-    retryEmailBtn.textContent='重新寄送 Email';
-  }
-});
-
 </script>
 </body></html>
