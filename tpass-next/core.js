@@ -48,6 +48,10 @@ function getDeliveryStatus(token){
   if(!token)return null;
   try{return JSON.parse(localStorage.getItem(deliveryStatusKey(token))||"null")}catch{return null}
 }
+function wasDeliverySubmitted(token){
+  const st=getDeliveryStatus(token);
+  return st?.status==="submitted_to_formsubmit"||st?.status==="gmail_verified";
+}
 function markGmailVerified(token){
   if(!token)return null;
   const current=getDeliveryStatus(token)||{};
