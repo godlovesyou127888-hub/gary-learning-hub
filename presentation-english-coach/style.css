@@ -3,3 +3,7 @@
 .progressWrap{height:14px;background:#e8eee5;border-radius:999px;overflow:hidden;margin-top:12px}.progressBar{height:100%;width:0;background:var(--green);transition:width .2s ease}.deliveryBox{border:1px solid var(--line);border-radius:14px;padding:16px;background:#f7fbf6;margin-top:14px}.deliveryBox .statusLine{font-size:16px;color:var(--muted);margin-top:8px}.warning{color:#8b3a2b;font-weight:700}.success{color:#245a86;font-weight:700}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.progressBar{transition:none}}
 
 .metric span{display:block;font-size:14px;color:var(--muted)}.metric.weak{border:2px solid #b45f4c;background:#fff4f1}.metric.strong{border:2px solid #5f8fb8;background:#f0f7fd}
+
+.skipLink{position:absolute;left:-9999px;top:8px;background:#fff;color:var(--green);padding:10px 14px;border:2px solid var(--green);border-radius:8px;z-index:99}.skipLink:focus{left:12px}
+@media(max-width:520px){nav{gap:8px}nav a{padding:6px 0}.pills span{font-size:15px}.english{font-size:22px}.question legend{font-size:19px}.choice{padding:12px 8px}.actions{gap:8px}}
+@media(hover:none){.choice:hover{background:transparent}}
