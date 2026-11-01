@@ -3,22 +3,7 @@
 <section class="card"><div class="actions"><a class="btn outline" href="../">← 回樂齡多益首頁</a><a class="btn outline" href="../form-test/" target="_blank">表單測試</a></div></section>
 <section class="card"><h2>① 先測試聲音</h2><button id="soundTest" class="audioBtn">▶ 播放測試音</button><label>播放速度<select id="speed" style="font-size:18px;padding:10px;border-radius:10px;margin-left:8px"><option value="0.75">慢速 0.75×</option><option value="0.82" selected>標準慢速 0.82×</option><option value="0.95">接近正常 0.95×</option></select></label><div id="soundStatus" class="helper">若沒有聲音，請先把手機靜音關閉、音量調高；仍無聲音時建議用 Safari 開啟。</div><div class="row"><input id="name" type="text" placeholder="姓名"><input id="email" type="email" placeholder="Email"></div><div class="helper">表單可先單獨測試：<a href="../form-test/" target="_blank">開啟 FormSubmit 測試頁</a></div></section>
 <section id="quiz" class="card"></section>
-<section class="card"><h2>② 完成後保存與送出</h2><div class="actions"><button id="grade" type="button">① 完成聽力診斷</button><button id="pdf" class="secondary">下載／儲存 PDF</button><button id="dl" class="secondary">下載完整 JSON</button><button class="outline" onclick="reportProblem('Listening')">問題回報</button></div><div id="result"></div><div id="status" class="status pending">尚未送出</div><form id="nativeDeliveryForm" action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" target="_blank" style="margin-top:12px">
-<input type="hidden" name="_subject" value="[T-PASS NEXT] Assessment Result">
-<input type="hidden" name="_template" value="table">
-<input type="hidden" name="_captcha" value="false">
-<input type="hidden" name="test_type" value="T-PASS NEXT Formal Assessment">
-<label style="display:block;margin-top:10px">姓名
-<input name="name" id="nativeName" readonly>
-</label>
-<label style="display:block;margin-top:10px">Email
-<input name="email" id="nativeEmail" type="email" readonly>
-</label>
-<label style="display:block;margin-top:10px">結果摘要
-<textarea name="test_message" id="nativeMessage" readonly style="width:100%;min-height:180px;padding:12px;border:2px solid #cfe0d1;border-radius:12px;font-size:16px"></textarea>
-</label>
-<button class="btn" type="submit" id="nativeSubmitBtn" disabled>② 寄送結果</button>
-</form><div class="helper"><b>下一步：</b>三項診斷完成後，回首頁進行 Gary 教練解讀與 90-Day Planner。</div><a class="btn secondary" href="../">回流程首頁</a></section>
+<section class="card"><h2>② 完成後保存與送出</h2><div class="actions"><button id="grade" type="button">① 完成聽力診斷</button><button id="pdf" class="secondary">下載／儲存 PDF</button><button id="dl" class="secondary">下載完整 JSON</button><button class="outline" onclick="reportProblem('Listening')">問題回報</button></div><div id="result"></div><div id="status" class="status pending">尚未送出</div><a class="btn" id="deliveryBridgeBtn" href="../form-test/?mode=assessment" style="display:none;margin-top:12px">② 前往寄送結果</a><div class="helper"><b>下一步：</b>三項診斷完成後，回首頁進行 Gary 教練解讀與 90-Day Planner。</div><a class="btn secondary" href="../">回流程首頁</a></section>
 </main><script>
 s.textContent=baseStyles();
 const nameEl=document.getElementById("name");
@@ -62,11 +47,10 @@ soundTestBtn.onclick=()=>speakText("This is the T-PASS listening sound test.");
 document.addEventListener("touchstart",()=>{try{speechSynthesis.resume()}catch(e){}},{once:true});
 quizEl.innerHTML='<h2>Listening｜10 題</h2>'+Q.map((q,i)=>'<div class="q"><b>'+(i+1)+'. Listening</b><button class="audioBtn" type="button" onclick="speakText(Q['+i+'][1],'+i+')">▶ 播放題目</button>'+q[2].map((x,j)=>'<label><input type="radio" name="q'+i+'" value="'+j+'"><span>'+x+'</span></label>').join('')+'</div>').join('');
 function prepNativeDelivery(payload){
-    document.getElementById("nativeName").value=payload.student_name||"";
-  document.getElementById("nativeEmail").value=payload.email||"";
-  document.getElementById("nativeMessage").value=buildMailMessage(payload);
-  document.getElementById("nativeSubmitBtn").disabled=false;
-  statusEl.textContent="✅ 診斷完成並已保存在本機。請按「② 寄送結果」完成 Email 傳送。";
+  savePendingDelivery(payload);
+  const btn=document.getElementById("deliveryBridgeBtn");
+  if(btn)btn.style.display="block";
+  statusEl.textContent="✅ 診斷完成並已保存在本機。請按「② 前往寄送結果」，使用已驗證成功的寄送頁送出。";
   statusEl.className="status ok";
 }
 
