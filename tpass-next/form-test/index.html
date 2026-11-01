@@ -113,6 +113,13 @@ function setAssessmentMode(){
     return;
   }
 
+  if(tokenField.value && wasDeliverySubmitted(tokenField.value)){
+    submitBtn.disabled=true;
+    submitBtn.textContent="這筆資料已送出";
+    helper.innerHTML='這個 Delivery Token 已有送出紀錄。若需重新測驗，請回原測驗頁重新產生一筆新資料。 <a class="btn outline" href="/tpass-toeic-command-center/">回 Command Center</a>';
+    return;
+  }
+
   let submitted=false;
   deliveryForm.addEventListener("submit",(e)=>{
     if(submitted){
