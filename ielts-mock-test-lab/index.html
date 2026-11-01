@@ -1,0 +1,41 @@
+<!doctype html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="IELTS Mock Test Lab：Listening、Reading、Writing、Speaking 四科模考、Overall Band、弱點診斷、趨勢比較與 Gary 教練校準。">
+<title>IELTS Mock Test Lab</title><link rel="stylesheet" href="style.css"></head><body>
+<header><nav><a href="/ielts-command-center/">← IELTS Command Center</a><a href="/roadmap/">101 Roadmap</a></nav>
+<div class="hero"><p class="eyebrow">IELTS MOCK TEST LAB · MVP V1</p><h1>不是做完模考，<br>而是用模考决定下一步。</h1><p class="lead">一次整合 Listening、Reading、Writing、Speaking 四科结果，计算 Overall Band、找最低科目、比较上次变化，并交给 Gary 校准。</p>
+<div class="pills"><span>四科模考</span><span>Overall Band</span><span>最弱科目</span><span>趋势比较</span><span>Coach Delivery</span></div></div></header>
+<main>
+<section class="card"><p class="eyebrow">01 · MOCK PROFILE</p><h2>这次模考基本资料</h2>
+<div class="grid"><label>姓名<input id="student" placeholder="Student"></label><label>Email<input id="email" type="email"></label><label>模考名称<input id="mockName" placeholder="例如：Mock 1 / Cambridge 19 Test 2"></label><label>模考日期<input id="mockDate" type="date"></label></div></section>
+
+<section class="card"><p class="eyebrow">02 · FOUR SKILLS</p><h2>输入四科成绩</h2>
+<div class="grid">
+<label>Listening Band<input id="listening" type="number" min="0" max="9" step="0.5" placeholder="6.5"></label>
+<label>Reading Band<input id="reading" type="number" min="0" max="9" step="0.5" placeholder="6.5"></label>
+<label>Writing Band<input id="writing" type="number" min="0" max="9" step="0.5" placeholder="6.0"></label>
+<label>Speaking Band<input id="speaking" type="number" min="0" max="9" step="0.5" placeholder="6.0"></label>
+</div>
+<div class="grid">
+<label>Listening 正确题数（可选）<input id="listeningRaw" type="number" min="0" max="40"></label>
+<label>Reading 正确题数（可选）<input id="readingRaw" type="number" min="0" max="40"></label>
+</div>
+</section>
+
+<section class="card"><p class="eyebrow">03 · ERROR PROFILE</p><h2>记录这次真正的失分原因</h2>
+<div class="grid">
+<label>Listening 主要错误<select id="lError"><option>口音辨识</option><option>定位</option><option>拼字</option><option>单复数</option><option>数字／日期</option><option>注意力</option></select></label>
+<label>Reading 主要错误<select id="rError"><option>定位速度</option><option>同义替换</option><option>推论</option><option>题型策略</option><option>时间管理</option><option>字汇</option></select></label>
+<label>Writing 主要错误<select id="wError"><option>Task Response</option><option>Coherence & Cohesion</option><option>Lexical Resource</option><option>Grammar Range & Accuracy</option></select></label>
+<label>Speaking 主要错误<select id="sError"><option>Fluency & Coherence</option><option>Lexical Resource</option><option>Grammar Range & Accuracy</option><option>Pronunciation</option></select></label>
+</div>
+<label>Gary 教练备注／自己的观察<textarea id="note" rows="4" maxlength="2200"></textarea></label>
+<button id="saveMock">储存这次模考</button><p id="saveStatus" role="status"></p></section>
+
+<section class="card"><p class="eyebrow">04 · RESULT</p><h2>模考诊断</h2><div id="summary"></div><div id="comparison"></div></section>
+
+<section class="card"><p class="eyebrow">05 · NEXT ACTION</p><h2>下一步只练最弱的一科</h2><div id="nextAction" class="prescription">完成一次模考后，这里会自动给出下一步。</div></section>
+
+<section class="card"><p class="eyebrow">06 · REVIEW & DELIVERY</p><h2>历史与教练交付</h2><details><summary>查看历次模考</summary><div id="history"></div></details>
+<div class="actions"><button id="download">下载 JSON</button><button id="print" class="secondary">列印／PDF</button><button id="sendCoach">寄送完整结果给 Gary 教练</button></div><p id="deliveryStatus" role="status"></p></section>
+</main><footer>Gary · IELTS Mock Test Lab MVP V1</footer><script src="app.js"></script></body></html>
