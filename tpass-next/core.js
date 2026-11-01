@@ -5,6 +5,12 @@ function uid(prefix="TPASS"){
 }
 function saveLocal(key,data){localStorage.setItem(key,JSON.stringify(data))}
 function loadLocal(key){try{return JSON.parse(localStorage.getItem(key)||"null")}catch{return null}}
+function savePendingDelivery(payload){
+  localStorage.setItem("tpass_next_pending_delivery",JSON.stringify(payload));
+}
+function loadPendingDelivery(){
+  try{return JSON.parse(localStorage.getItem("tpass_next_pending_delivery")||"null")}catch{return null}
+}
 function downloadJSON(name,data){
   const a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:"application/json"}));
