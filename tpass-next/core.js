@@ -16,6 +16,24 @@ function loadPendingDelivery(){
 function clearPendingDelivery(){
   localStorage.removeItem("tpass_next_pending_delivery");
 }
+function saveTokenizedDelivery(payload){
+  const token="DLV-"+Date.now()+"-"+Math.random().toString(36).slice(2,8).toUpperCase();
+  const enriched={...payload,_saved_at:new Date().toISOString(),_delivery_token:token};
+  localStorage.setItem("tpass_next_delivery_"+token,JSON.stringify(enriched));
+  return token;
+}
+function loadTokenizedDelivery(token){
+  if(!token)return null;
+  try{return JSON.parse(localStorage.getItem("tpass_next_delivery_"+token)||"null")}catch{return null}
+}
+function markTokenizedDeliverySubmitted(token){
+  if(!token)return;
+  const key="tpass_next_delivery_"+token;
+  try{
+    const d=JSON.parse(localStorage.getItem(key)||"null");
+    if(d)localStorage.setItem(key,JSON.stringify({...d,_submitted_at:new Date().toISOString()}));
+  }catch{}
+}
 function pendingAgeMinutes(payload){
   const t=payload?._saved_at||payload?.submitted_at;
   if(!t)return null;
