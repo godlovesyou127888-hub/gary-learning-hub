@@ -1,11 +1,8 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>結果寄送｜多益</title><script src="../core.js?v=20261101-bridge-v10"></script><style id="s"></style></head><body><main class="wrap">
-<section class="hero"><h1 id="pageTitle">FormSubmit 單獨測試</h1><p id="pageLead">不做測驗，只確認資料能不能真正送達。</p></section>
-<section class="card"><h2 id="stepTitle">只做這一步</h2><p class="muted" id="stepText">填姓名與 Email → 按「送出測試」→ 會開啟 FormSubmit 新頁面。看到成功頁才算送達。</p>
-<form id="deliveryForm" action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" target="_self">
-<input type="hidden" name="_next" id="nextField" value="https://gary-learning-hub.onrender.com/toeic-submit-complete/">
-<input type="hidden" name="_subject" id="subjectField" value="[T-PASS NEXT] FormSubmit 單獨測試">
-<input type="hidden" name="_template" value="table"><input type="hidden" name="_url" id="urlField">
-<input type="hidden" name="test_type" id="typeField" value="T-PASS NEXT FormSubmit Direct POST"><input type="hidden" name="delivery_token" id="tokenField"><input type="hidden" name="submission_id" id="submissionField"><input type="hidden" name="source_page" id="sourceField">
+<section class="hero"><h1 id="pageTitle">Google Apps Script 單獨測試</h1><p id="pageLead">不做測驗，只確認資料能不能真正送達。</p></section>
+<section class="card"><h2 id="stepTitle">只做這一步</h2><p class="muted" id="stepText">填姓名與 Email → 按「送出測試」→ 會開啟 Google Apps Script 新頁面。看到成功頁面才算送達。</p>
+<form id="deliveryForm" action="https://script.google.com/macros/s/AKfycbxfJeht3GH_5FxDhb48_sl4IPAFU6PppiSMaibF_ScJPqA-WSR7Wrqk2ey-lNp4F7B_/exec" method="POST" target="_self">
+<input type="hidden" name="test_type" id="typeField" value="T-PASS NEXT Google Apps Script Direct POST"><input type="hidden" name="delivery_token" id="tokenField"><input type="hidden" name="submission_id" id="submissionField"><input type="hidden" name="source_page" id="sourceField">
 <div class="row"><input id="nameField" name="name" required placeholder="姓名"><input id="emailField" name="email" type="email" required placeholder="Email"></div>
 <label style="display:block;margin-top:12px">送出內容
 <textarea id="messageField" name="test_message" required style="width:100%;min-height:220px;padding:12px;border:2px solid #cfe0d1;border-radius:12px;font-size:16px"></textarea>
@@ -23,16 +20,16 @@ const isAssessment=mode==="assessment";
 const isSylviaIELTS=src==="sylvia-ielts-v2";
 
 function setStandaloneMode(){
-  pageTitle.textContent="FormSubmit 單獨測試";
+  pageTitle.textContent="Google Apps Script 單獨測試";
   pageLead.textContent="不做測驗，只確認資料能不能真正送達。";
   stepTitle.textContent="只做這一步";
-  stepText.textContent="填姓名與 Email → 按「送出測試」→ 本頁直接前往 FormSubmit → 完成人機驗證 → 看到成功頁。";
+  stepText.textContent="填姓名與 Email → 按「送出測試」→ 本頁直接前往 Google Apps Script → 等待寄送完成 → 看到成功頁面。";
   submitBtn.textContent="送出測試";
-  typeField.value="T-PASS NEXT FormSubmit Direct POST";
-  messageField.value="如果收到這筆資料，代表 FormSubmit 原生 POST 通道正常。";
-  deliveryMeta.innerHTML="<b>模式：</b>FormSubmit 單獨通道測試";
+  typeField.value="T-PASS NEXT Google Apps Script Direct POST";
+  messageField.value="如果收到這筆資料，代表 Google Apps Script Google Apps Script 寄送通道正常。";
+  deliveryMeta.innerHTML="<b>模式：</b>Google Apps Script 單獨通道測試";
   lifecycleBox.innerHTML="<b>寄送狀態：</b>等待手動送出";
-  helper.innerHTML="這個模式只測試 FormSubmit 通道，不代表任何正式測驗資料已載入。";
+  helper.innerHTML="這個模式只測試 Google Apps Script 通道，不代表任何正式測驗資料已載入。";
 }
 
 function safeSourceLink(data){
@@ -48,7 +45,7 @@ function setAssessmentMode(){
 
   if(isSylviaIELTS){
     deliveryForm.target="_self";
-    nextField.value="https://gary-learning-hub.onrender.com/sylvia-ielts-command-center/";
+    
     pageTitle.textContent="Sylvia IELTS｜寄送 Writing 作業";
     pageLead.textContent="完成寄送後會回到 Sylvia IELTS Command Center。";
     stepTitle.textContent="最後一步：寄送 Writing 作業";
@@ -57,12 +54,12 @@ function setAssessmentMode(){
     typeField.value="Sylvia IELTS Writing via Proven Bridge";
   }else{
     deliveryForm.target="_self";
-    nextField.disabled=false;
-    nextField.value="https://gary-learning-hub.onrender.com/toeic-submit-complete/";
+    
+    
     pageTitle.textContent="多益｜寄送診斷結果";
-    pageLead.textContent="已載入本次測驗資料；本頁將直接交給 FormSubmit 處理，不再經過新分頁或 JavaScript 轉送。";
+    pageLead.textContent="已載入本次測驗資料；本頁將直接交給 Google Apps Script 處理，不再經過新分頁或 JavaScript 轉送。";
     stepTitle.textContent="最後一步：寄送結果";
-    stepText.textContent="確認資料後按「寄送診斷結果」。頁面會直接前往 FormSubmit；請完成人機驗證並看到成功頁。";
+    stepText.textContent="確認資料後按「寄送診斷結果」。頁面會直接前往 Google Apps Script；請等待寄送完成並看到成功頁面。";
     submitBtn.textContent="寄送診斷結果";
     typeField.value="T-PASS NEXT Formal Assessment via Proven Bridge";
   }
@@ -90,20 +87,20 @@ function setAssessmentMode(){
   const age=pendingAgeMinutes(data);
   const stale=age!=null && age>120;
 
-  urlField.value=location.href.split("#")[0];
+  
   tokenField.value=deliveryToken||data._delivery_token||"";
   submissionField.value=data.submission_id||"";
   sourceField.value=data.source_page||"";
   nameField.value=data.student_name||"";
   emailField.value=data.email||"";
-  subjectField.value="[T-PASS NEXT] "+(data.assessment_type||"Assessment")+"｜"+(data.student_name||"Student");
+  
   messageField.value=buildMailMessage(data)+(tokenField.value?"\n\nDelivery Token："+tokenField.value:"");
 
   const st=tokenField.value?getDeliveryStatus(tokenField.value):null;
   const statusText=st?.status==="gmail_verified"
     ?"Gmail 已確認收到"
     :st?.status==="attempted_to_formsubmit"
-      ?"已嘗試送往 FormSubmit（可重試）"
+      ?"已嘗試送往 Google Apps Script（可重試）"
       :"已產生資料";
 
   lifecycleBox.innerHTML="<b>寄送狀態：</b>"+statusText+
@@ -145,12 +142,12 @@ function setAssessmentMode(){
   syncNetworkState();
 
   // Reliability rule: do not intercept, delay, fetch, disable, or redirect this submit.
-  // The browser performs one plain native POST directly to FormSubmit.
+  // The browser performs one plain native POST directly to Google Apps Script.
   deliveryForm.addEventListener("submit",()=>{
-    lifecycleBox.innerHTML="<b>寄送狀態：</b>瀏覽器正在直接送往 FormSubmit<br><span style='font-size:14px'>下一頁請完成人機驗證；Gmail 實際收到才算成功。</span>";
+    lifecycleBox.innerHTML="<b>寄送狀態：</b>正在送往 Google Apps Script<br><span style='font-size:14px'>資料會先寫入 Google Sheet，再由 Gmail 原生寄出。</span>";
   });
 
-  helper.innerHTML='按下寄送後，本頁會直接進入 FormSubmit。請不要關閉頁面；完成人機驗證並看到成功頁後，再回 Command Center。';
+  helper.innerHTML='按下寄送後，本頁會直接進入 Google Apps Script。請不要關閉頁面；等待寄送完成並看到成功頁面後，再回 Command Center。';
 }
 
 if(isAssessment){
