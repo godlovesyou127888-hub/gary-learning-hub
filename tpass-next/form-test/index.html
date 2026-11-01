@@ -1,12 +1,38 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FormSubmit 測試｜樂齡多益</title><script src="../core.js"></script><style id="s"></style></head><body><main class="wrap">
-<section class="hero"><h1>FormSubmit 單獨測試</h1><p>不做測驗，只確認資料能不能真正送達。</p></section>
-<section class="card"><h2>只做這一步</h2><p class="muted">填姓名與 Email → 按「送出測試」→ 會開啟 FormSubmit 新頁面。看到成功頁才算送達。</p>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>結果寄送｜樂齡多益</title><script src="../core.js"></script><style id="s"></style></head><body><main class="wrap">
+<section class="hero"><h1 id="pageTitle">FormSubmit 單獨測試</h1><p id="pageLead">不做測驗，只確認資料能不能真正送達。</p></section>
+<section class="card"><h2 id="stepTitle">只做這一步</h2><p class="muted" id="stepText">填姓名與 Email → 按「送出測試」→ 會開啟 FormSubmit 新頁面。看到成功頁才算送達。</p>
 <form action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" target="_blank">
-<input type="hidden" name="_subject" value="[T-PASS NEXT] FormSubmit 單獨測試">
+<input type="hidden" name="_subject" id="subjectField" value="[T-PASS NEXT] FormSubmit 單獨測試">
 <input type="hidden" name="_template" value="table"><input type="hidden" name="_captcha" value="false">
-<input type="hidden" name="test_type" value="T-PASS NEXT FormSubmit Direct POST">
-<div class="row"><input name="name" required placeholder="姓名"><input name="email" type="email" required placeholder="Email"></div>
-<input name="test_message" value="如果收到這筆資料，代表 FormSubmit 原生 POST 通道正常。" readonly>
-<button type="submit">送出測試</button></form>
-<div class="helper">送出後請回來告訴我：<b>成功</b>、<b>失敗</b>，或直接貼錯誤畫面。</div>
-</section></main><script>s.textContent=baseStyles();</script></body></html>
+<input type="hidden" name="test_type" id="typeField" value="T-PASS NEXT FormSubmit Direct POST">
+<div class="row"><input id="nameField" name="name" required placeholder="姓名"><input id="emailField" name="email" type="email" required placeholder="Email"></div>
+<label style="display:block;margin-top:12px">送出內容
+<textarea id="messageField" name="test_message" required style="width:100%;min-height:220px;padding:12px;border:2px solid #cfe0d1;border-radius:12px;font-size:16px"></textarea>
+</label>
+<button id="submitBtn" type="submit">送出測試</button></form>
+<div class="helper" id="helper">送出後請回來告訴我：<b>成功</b>、<b>失敗</b>，或直接貼錯誤畫面。</div>
+</section></main><script>
+s.textContent=baseStyles();
+const p=new URLSearchParams(location.search);
+if(p.get("mode")==="assessment"){
+  const data=loadPendingDelivery();
+  pageTitle.textContent="樂齡多益｜寄送診斷結果";
+  pageLead.textContent="這一頁就是已實測成功的 FormSubmit 寄送頁。";
+  stepTitle.textContent="最後一步：寄送結果";
+  stepText.textContent="請確認姓名、Email 與結果摘要，再按「寄送診斷結果」。";
+  submitBtn.textContent="寄送診斷結果";
+  typeField.value="T-PASS NEXT Formal Assessment via Proven Bridge";
+  if(data){
+    nameField.value=data.student_name||"";
+    emailField.value=data.email||"";
+    subjectField.value="[T-PASS NEXT] "+(data.assessment_type||"Assessment")+"｜"+(data.student_name||"Student");
+    messageField.value=buildMailMessage(data);
+  }else{
+    messageField.value="找不到待寄送的診斷資料，請回上一頁重新完成診斷。";
+    submitBtn.disabled=true;
+  }
+  helper.innerHTML="看到 FormSubmit <b>Thanks!</b> 後，回來告訴我「已寄送」，我會直接查 Gmail 驗收。";
+}else{
+  messageField.value="如果收到這筆資料，代表 FormSubmit 原生 POST 通道正常。";
+}
+</script></body></html>
