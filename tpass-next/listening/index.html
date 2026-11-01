@@ -1,4 +1,9 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>T-PASS NEXT｜Listening</title><script src="../core.js"></script><style id="s"></style></head><body><main class="wrap"><div class="card"><h1>T-PASS NEXT｜Listening 聽力診斷</h1><p class="muted">新版獨立站。使用瀏覽器語音播放 10 題；記錄答案与播放次数。</p><div class="row"><input id="name" placeholder="姓名"><input id="email" type="email" placeholder="Email"></div></div><div id="quiz" class="card"></div><div class="card"><button id="grade">完成聽力診斷并保存</button><button id="dl" class="secondary">下載完整結果 JSON</button><div id="result"></div><div id="status" class="status pending">尚未送出</div></div></main><script>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>樂齡多益｜Listening 聽力診斷</title><script src="../core.js"></script><style id="s"></style></head><body><main class="wrap">
+<section class="hero"><h1>樂齡多益｜Listening 聽力診斷</h1><p>10 題、大按鈕播放、記錄播放次數。先測聲音，再開始作答。</p></section>
+<section class="card"><h2>① 先測試聲音</h2><button id="soundTest" class="audioBtn">▶ 播放測試音</button><div id="soundStatus" class="helper">若沒有聲音，請先把手機靜音關閉、音量調高；仍無聲音時建議用 Safari 開啟。</div><div class="row"><input id="name" type="text" placeholder="姓名"><input id="email" type="email" placeholder="Email"></div><div class="helper">表單可先單獨測試：<a href="../form-test/" target="_blank">開啟 FormSubmit 測試頁</a></div></section>
+<section id="quiz" class="card"></section>
+<section class="card"><h2>② 完成後保存與送出</h2><div class="actions"><button id="grade">完成聽力診斷並送出</button><button id="pdf" class="secondary">下載／儲存 PDF</button><button id="dl" class="secondary">下載完整 JSON</button><button class="outline" onclick="reportProblem('Listening')">問題回報</button></div><div id="result"></div><div id="status" class="status pending">尚未送出</div></section>
+</main><script>
 s.textContent=baseStyles();
 const Q=[
 ["LN-1","The meeting has been moved to three thirty.",["2:30","3:30","3:13","4:30"],1,"Time"],
@@ -13,10 +18,30 @@ const Q=[
 ["LN-10","Her flight was delayed because of heavy rain.",["traffic","snow","rain","maintenance"],2,"Cause"]
 ];
 const plays=Array(Q.length).fill(0);
-function speak(i){plays[i]++;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(Q[i][1]);u.lang="en-US";u.rate=.9;speechSynthesis.speak(u)}
-quiz.innerHTML=Q.map((q,i)=>'<div class="q"><b>'+(i+1)+'. Listening</b><p><button type="button" onclick="speak('+i+')">▶ 播放題目</button></p>'+q[2].map((x,j)=>'<label><input type="radio" name="q'+i+'" value="'+j+'"> '+x+'</label>').join('')+'</div>').join('');
-let last=null;grade.onclick=async()=>{if(!name.value.trim()||!email.value.trim()){alert("請填写姓名与 Email");return}const ans=Q.map((q,i)=>document.querySelector('input[name=q'+i+']:checked'));if(ans.some(x=>!x)){alert("請完成全部 10 題");return}
-const details=Q.map((q,i)=>({question_id:q[0],student_answer:q[2][+ans[i].value],correct_answer:q[2][q[3]],is_correct:+ans[i].value===q[3],dimension:q[4],plays:plays[i],accent:"en-US",speed:.9}));const score=details.filter(x=>x.is_correct).length;const errs={};details.filter(x=>!x.is_correct).forEach(x=>errs[x.dimension]=(errs[x.dimension]||0)+1);const primary=Object.entries(errs).sort((a,b)=>b[1]-a[1])[0]?.[0]||"無明顯弱點";
-last={submission_id:uid("LST"),submitted_at:new Date().toISOString(),assessment_type:"T-PASS NEXT Listening",source_page:location.href,student_name:name.value.trim(),email:email.value.trim(),total_score:score+"/10",accuracy:Math.round(score*10)+"%",primary_weakness:primary,secondary_weakness:"",summary:"Listening 新版診斷",responses_json:details};result.innerHTML="<h2>"+score+"/10</h2><p>主要弱點："+primary+"</p>";await submitResult(last,status)};
-dl.onclick=()=>downloadJSON("tpass-next-listening-"+Date.now()+".json",last||{note:"尚未完成診斷"});
+function speakText(text,idx=null){
+  if(!("speechSynthesis" in window)){soundStatus.textContent="此瀏覽器不支援語音播放，請改用 Safari。";soundStatus.className="status fail";return}
+  try{
+    if(idx!==null)plays[idx]++;
+    speechSynthesis.cancel();speechSynthesis.resume();
+    const u=new SpeechSynthesisUtterance(text);u.lang="en-US";u.rate=.82;u.pitch=1;
+    const voices=speechSynthesis.getVoices();const v=voices.find(x=>/en-US/i.test(x.lang))||voices.find(x=>/^en/i.test(x.lang));if(v)u.voice=v;
+    u.onstart=()=>{soundStatus.textContent="🔊 正在播放";soundStatus.className="status ok"};
+    u.onend=()=>{soundStatus.textContent="✅ 播放完成";soundStatus.className="status ok"};
+    u.onerror=()=>{soundStatus.textContent="⚠️ 播放失敗。請用 Safari 開啟或重新整理後再試。";soundStatus.className="status fail"};
+    setTimeout(()=>speechSynthesis.speak(u),80);
+  }catch(e){soundStatus.textContent="⚠️ 播放失敗："+e.message;soundStatus.className="status fail"}
+}
+soundTest.onclick=()=>speakText("This is the T-PASS listening sound test.");
+document.addEventListener("touchstart",()=>{try{speechSynthesis.resume()}catch(e){}},{once:true});
+quiz.innerHTML='<h2>Listening｜10 題</h2>'+Q.map((q,i)=>'<div class="q"><b>'+(i+1)+'. Listening</b><button class="audioBtn" type="button" onclick="speakText(Q['+i+'][1],'+i+')">▶ 播放題目</button>'+q[2].map((x,j)=>'<label><input type="radio" name="q'+i+'" value="'+j+'"><span>'+x+'</span></label>').join('')+'</div>').join('');
+let last=null;
+grade.onclick=()=>{if(!name.value.trim()||!email.value.trim()){alert("請先填姓名與 Email。");return}
+const ans=Q.map((q,i)=>document.querySelector('input[name=q'+i+']:checked'));if(ans.some(x=>!x)){alert("請先完成全部 10 題。");return}
+const details=Q.map((q,i)=>({question_id:q[0],student_answer:q[2][+ans[i].value],correct_answer:q[2][q[3]],is_correct:+ans[i].value===q[3],dimension:q[4],plays:plays[i],accent:"en-US",speed:.82}));
+const score=details.filter(x=>x.is_correct).length;const errs={};details.filter(x=>!x.is_correct).forEach(x=>errs[x.dimension]=(errs[x.dimension]||0)+1);const ranked=Object.entries(errs).sort((a,b)=>b[1]-a[1]);
+const primary=ranked[0]?.[0]||"無明顯弱點";const secondary=ranked[1]?.[0]||"";
+last={submission_id:uid("LST"),submitted_at:new Date().toISOString(),assessment_type:"樂齡多益 Listening 聽力診斷",source_page:location.href,student_name:name.value.trim(),email:email.value.trim(),total_score:score+"/10",accuracy:Math.round(score*10)+"%",primary_weakness:primary,secondary_weakness:secondary,summary:"Listening 聽力診斷",responses_json:details};
+saveLocal("tpass_next_listening_last",last);result.innerHTML="<h2>結果："+score+"/10</h2><p>正確率："+last.accuracy+"</p><p>主要弱點："+primary+"</p>";submitResult(last,status)};
+pdf.onclick=()=>openPdfReport(last||loadLocal("tpass_next_listening_last"));
+dl.onclick=()=>downloadJSON("樂齡多益-Listening-"+Date.now()+".json",last||loadLocal("tpass_next_listening_last")||{note:"尚未完成診斷"});
 </script></body></html>
