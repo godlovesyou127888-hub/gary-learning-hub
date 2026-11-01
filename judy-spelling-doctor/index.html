@@ -1,0 +1,19 @@
+<!doctype html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Judy Spelling Doctor：拼字診斷、錯字拆解、錯題重練、進度追蹤與教練交付。">
+<title>Judy Spelling Doctor</title><link rel="stylesheet" href="style.css"></head><body>
+<header><nav><a href="/">← Gary Learning Hub</a><a href="/roadmap/">101 Roadmap</a></nav>
+<div class="hero"><p class="eyebrow">JUDY SPELLING DOCTOR · MVP V1</p><h1>不是多抄十遍，<br>是找出你到底錯在哪一個字母。</h1><p class="lead">看中文或例句拼出英文單字，自動標出錯字位置，再只重練真正拼錯的單字。</p>
+<div class="pills"><span>10題診斷</span><span>錯字拆解</span><span>錯題重練</span><span>進度保存</span><span>Coach Delivery</span></div></div></header>
+<main>
+<section class="card"><p class="eyebrow">01 · DIAGNOSE</p><h2>10 題拼字診斷</h2>
+<div class="grid"><label>姓名<input id="student" value="Judy"></label><label>Email<input id="email" type="email"></label><label>測驗名稱<input id="examName" placeholder="例如：Unit 3 Spelling"></label><label>日期<input id="date" type="date"></label></div>
+<div id="quiz"></div><button id="submitQuiz">完成診斷</button><p id="quizStatus" role="status"></p></section>
+
+<section class="card"><p class="eyebrow">02 · ERROR MAP</p><h2>你的拼字錯在哪裡？</h2><div id="errorMap"></div></section>
+
+<section class="card"><p class="eyebrow">03 · RETRY</p><h2>只重練錯的單字</h2><div id="retryQuiz"></div><button id="submitRetry">完成錯題重練</button><p id="retryStatus" role="status"></p></section>
+
+<section class="card"><p class="eyebrow">04 · REVIEW</p><h2>進度紀錄</h2><div id="summary"></div><div id="history"></div>
+<div class="actions"><button id="download">下載 JSON</button><button id="print" class="secondary">列印／PDF</button><button id="sendCoach">寄送完整結果給 Gary 教練</button></div><p id="deliveryStatus" role="status"></p></section>
+</main><footer>Gary · Judy Spelling Doctor MVP V1</footer><script src="app.js"></script></body></html>
