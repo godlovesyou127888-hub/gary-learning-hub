@@ -48,6 +48,20 @@ function getDeliveryStatus(token){
   if(!token)return null;
   try{return JSON.parse(localStorage.getItem(deliveryStatusKey(token))||"null")}catch{return null}
 }
+function markGmailVerified(token){
+  if(!token)return null;
+  const current=getDeliveryStatus(token)||{};
+  const next={...current,token,status:"gmail_verified",gmail_verified_at:new Date().toISOString(),updated_at:new Date().toISOString()};
+  localStorage.setItem(deliveryStatusKey(token),JSON.stringify(next));
+  return next;
+}
+function clearGmailVerified(token){
+  if(!token)return null;
+  const current=getDeliveryStatus(token)||{};
+  const next={...current,token,status:current.status==="gmail_verified"?"submitted_to_formsubmit":(current.status||"payload_created"),gmail_verified_at:null,updated_at:new Date().toISOString()};
+  localStorage.setItem(deliveryStatusKey(token),JSON.stringify(next));
+  return next;
+}
 function pendingAgeMinutes(payload){
   const t=payload?._saved_at||payload?.submitted_at;
   if(!t)return null;
