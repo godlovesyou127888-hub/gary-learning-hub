@@ -1,0 +1,51 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TOEIC Part 6 Context Lab｜T-PASS</title><style>
+:root{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",system-ui,sans-serif;color:#14213d;background:#f6f8fb}
+*{box-sizing:border-box}body{margin:0;background:#f6f8fb}.wrap{max-width:920px;margin:auto;padding:18px}
+.hero{background:#14213d;color:#fff;padding:24px;border-radius:20px;margin:12px 0}.hero h1{font-size:clamp(28px,5vw,42px);margin:0 0 8px}
+.card{background:#fff;border:1px solid #dde4ee;border-radius:18px;padding:20px;margin:16px 0;box-shadow:0 4px 16px #00000008}
+h2{color:#203864}.muted{color:#64748b;line-height:1.7}.passage{background:#f8fafc;border-left:5px solid #64748b;padding:16px;border-radius:12px;line-height:1.8;font-size:18px}
+.q{padding:18px 0;border-top:1px solid #e8edf3}.q:first-child{border-top:0}.q b{font-size:20px}.opt{display:flex;gap:10px;align-items:center;padding:12px;border:1px solid #ccd6e3;border-radius:12px;margin:8px 0;font-size:18px;background:#fff}
+.opt input{width:23px;height:23px}.btn{border:0;border-radius:12px;padding:13px 16px;background:#203864;color:#fff;font-weight:800;font-size:17px;cursor:pointer;text-decoration:none;display:inline-block;margin:4px}.secondary{background:#66758a}.outline{background:#fff;color:#203864;border:2px solid #203864}
+.resultBox{background:#eef4fb;border-radius:14px;padding:16px;margin-top:12px}.review{padding:12px;margin:10px 0;border-radius:10px;background:#f8fafc}.wrong{border-left:5px solid #c94b44}.correct{border-left:5px solid #2e7d32}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{background:#f4f7fb;border-radius:12px;padding:14px;text-align:center}.stat b{display:block;font-size:24px}
+input[type=text],input[type=email]{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;font-size:17px}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:700px){.row,.statgrid{grid-template-columns:1fr}.wrap{padding:10px}.btn{width:100%;margin:5px 0}}
+</style></head><body><main class="wrap">
+<section class="hero"><h1>TOEIC Part 6 Context Lab</h1><p>篇章填空｜上下文判斷｜句子插入｜文法與字彙整合</p></section>
+<section class="card"><div class="row"><input id="name" type="text" placeholder="姓名"><input id="email" type="email" placeholder="Email（選填）"></div><p class="muted">本練習為自編 TOEIC 類型題，非 ETS 官方題目。完成後會提供中文詳解、錯誤分類與 PDF。</p></section>
+<section class="card"><h2>Part 6 模擬題組</h2><div id="sets"></div></section>
+<section class="card"><button id="grade" class="btn">完成並查看結果</button><button id="retry" class="btn secondary">重新出題</button><button id="pdf" class="btn outline">下載／儲存 PDF</button><div id="result"></div></section>
+<section class="card"><h2>下一步</h2><p class="muted">如果 Part 6 的主要弱點是「文法／詞性」，回 Part 5；如果是「上下文／篇章理解」，下一步進 Part 7。</p><a class="btn secondary" href="/toeic-part5-grammar-lab/">回 Part 5</a><a class="btn secondary" href="/toeic-part7-reading-lab/">進 Part 7</a></section>
+</main><script>
+const BANK=[
+{title:"Memo｜Office Renovation",text:"The third-floor meeting rooms will be unavailable from Monday through Wednesday because the area is being renovated. Employees are asked to use the second-floor rooms instead. Please reserve a room in advance, as space may be limited. ___(1)___. The facilities team appreciates your cooperation during this period.",qs:[
+{id:"P6-1",q:"(1) Which sentence best completes the memo?",opts:["The renovation is expected to finish by Thursday morning.","The cafeteria serves lunch until two o'clock.","All visitors must sign in at reception.","Several employees joined the company last month."],a:0,type:"Sentence Insertion",exp:"前文談會議室整修與替代安排，後文感謝配合；只有 A 延續整修時程。"}]},
+{title:"Email｜Order Confirmation",text:"Thank you for your recent order. Your items have been packed and will leave our warehouse this afternoon. You will receive a tracking number once the package ____(2)____. If you need to change the delivery address, please contact us before 3 p.m.",qs:[
+{id:"P6-2",q:"(2) Choose the best answer.",opts:["ships","shipped","is shipped","shipping"],a:2,type:"Grammar / Voice",exp:"package 是被寄出，需用被動語態 is shipped。"}]},
+{title:"Notice｜Training Session",text:"All new employees must attend the safety training session on Friday. The program begins at 9 a.m. and ends at noon. Participants should arrive at least ten minutes ____(3)____ so that registration can be completed before the session starts. Training materials will be provided.",qs:[
+{id:"P6-3",q:"(3) Choose the best answer.",opts:["early","earlier","earliest","earliness"],a:0,type:"Part of Speech",exp:"arrive ten minutes early 是固定語意搭配，early 作副詞修飾 arrive。"}]},
+{title:"Email｜Customer Support",text:"We are sorry to hear that your device is not working properly. Before returning the product, please restart it and check whether the latest software update has been installed. ____(4)____, contact our support team for further assistance.",qs:[
+{id:"P6-4",q:"(4) Choose the best connector.",opts:["However","If the problem continues","For example","Because of"],a:1,type:"Context / Logic",exp:"前文提供排除故障步驟，後文是若仍未解決就聯絡客服，因此 B 最符合條件關係。"}]},
+{title:"Announcement｜Company Event",text:"The annual company picnic will take place on Saturday, June 18, at Riverside Park. Employees may bring family members, and lunch will be provided. Please complete the online registration form by June 10 so that the organizers can prepare an ____(5)____ number of meals.",qs:[
+{id:"P6-5",q:"(5) Choose the best answer.",opts:["accuracy","accurate","accurately","accurateness"],a:1,type:"Part of Speech",exp:"number 前需要形容詞修飾，因此 accurate 正確。"}]},
+{title:"Email｜Schedule Change",text:"Due to a scheduling conflict, tomorrow's client meeting has been moved from 10 a.m. to 2 p.m. The conference room remains the same. ____(6)____. Please update your calendar accordingly.",qs:[
+{id:"P6-6",q:"(6) Which sentence best completes the email?",opts:["The client has already confirmed the new time.","The office printer is located near the lobby.","Lunch orders must be submitted by noon.","Our website was updated last week."],a:0,type:"Sentence Insertion",exp:"整段都在談會議改時間，只有 A 補充新時間已獲確認。"}]},
+{title:"Notice｜Library Hours",text:"Beginning next month, the company library will remain open until 8 p.m. on Tuesdays and Thursdays. The extended hours are intended to give employees more time to use the research materials after work. The library will continue to close at 6 p.m. on all ____(7)____ weekdays.",qs:[
+{id:"P6-7",q:"(7) Choose the best answer.",opts:["another","other","others","the others"],a:1,type:"Grammar / Determiner",exp:"other + 複數名詞 weekdays，故選 other。"}]},
+{title:"Memo｜Expense Reports",text:"Employees are reminded to submit monthly expense reports no later than the fifth business day of the following month. Reports submitted after the deadline may not be processed until the next payment cycle. ____(8)____, please attach all required receipts.",qs:[
+{id:"P6-8",q:"(8) Choose the best connector.",opts:["In addition","Instead","Otherwise","Nevertheless"],a:0,type:"Connector",exp:"後句是在原要求之外再補充一項，因此 In addition 最合適。"}]}
+];
+const KEY='tpass_part6_context_v1';let state=JSON.parse(localStorage.getItem(KEY)||'{"records":[]}');let current=[],last=null;
+function make(){current=[...BANK].sort(()=>Math.random()-.5).slice(0,5);sets.innerHTML=current.map((s,i)=>'<div class="q"><h3>'+s.title+'</h3><div class="passage">'+s.text+'</div>'+s.qs.map((x,j)=>'<p><b>'+x.q+'</b></p>'+x.opts.map((o,k)=>'<label class="opt"><input type="radio" name="'+x.id+'" value="'+k+'"><span>'+o+'</span></label>').join('')).join('')+'</div>').join('');result.innerHTML='';last=null}
+function grade(){
+ if(!name.value.trim()){alert("請填姓名。");return}
+ const all=current.flatMap(s=>s.qs);const picks=all.map(x=>document.querySelector('input[name="'+x.id+'"]:checked'));if(picks.some(x=>!x)){alert("請先完成全部 5 題。");return}
+ const details=all.map((x,i)=>({id:x.id,type:x.type,student:+picks[i].value,student_text:x.opts[+picks[i].value],correct:x.a,correct_text:x.opts[x.a],ok:+picks[i].value===x.a,exp:x.exp}));
+ const score=details.filter(x=>x.ok).length*20;const errs={};details.filter(x=>!x.ok).forEach(x=>errs[x.type]=(errs[x.type]||0)+1);const primary=Object.entries(errs).sort((a,b)=>b[1]-a[1])[0]?.[0]||"無明顯弱點";
+ last={name:name.value.trim(),email:email.value.trim(),date:new Date().toLocaleString('zh-TW'),score,primary,details};
+ state.records.unshift({date:last.date,score,primary});state.records=state.records.slice(0,20);localStorage.setItem(KEY,JSON.stringify(state));
+ result.innerHTML='<div class="resultBox"><div class="statgrid"><div class="stat">成績<b>'+score+'</b></div><div class="stat">答對<b>'+details.filter(x=>x.ok).length+'/5</b></div><div class="stat">主要弱點<b>'+primary+'</b></div></div>'+details.map((d,i)=>'<div class="review '+(d.ok?'correct':'wrong')+'"><b>'+(i+1)+'. '+d.id+' '+(d.ok?'✓':'✗')+'</b><br>你的答案：'+d.student_text+'<br>正確答案：'+d.correct_text+'<br>類型：'+d.type+'<br>解析：'+d.exp+'</div>').join('')+'</div>'
+}
+function printPdf(){if(!last){alert("請先完成測驗。");return}const w=window.open('','_blank');w.document.write('<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><title>Part 6 Result</title><style>body{font-family:Arial,"Noto Sans TC";padding:28px;color:#14213d}table{width:100%;border-collapse:collapse}th,td{border:1px solid #aaa;padding:8px;text-align:left}@media print{button{display:none}}</style></head><body><h1>TOEIC Part 6 Context Lab 結果</h1><p>姓名：'+last.name+'</p><p>日期：'+last.date+'</p><p>成績：'+last.score+' 分</p><p>主要弱點：'+last.primary+'</p><table><tr><th>#</th><th>題號</th><th>你的答案</th><th>正解</th><th>類型</th><th>結果</th></tr>'+last.details.map((d,i)=>'<tr><td>'+(i+1)+'</td><td>'+d.id+'</td><td>'+d.student_text+'</td><td>'+d.correct_text+'</td><td>'+d.type+'</td><td>'+(d.ok?'O':'X')+'</td></tr>').join('')+'</table><p>請使用瀏覽器「列印／分享」並選擇「儲存為 PDF」。</p><button onclick="window.print()">列印／儲存 PDF</button></body></html>');w.document.close();setTimeout(()=>w.print(),300)}
+grade.onclick=grade;retry.onclick=make;pdf.onclick=printPdf;make();
+</script></body></html>
