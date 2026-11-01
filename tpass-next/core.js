@@ -1,81 +1,98 @@
-
 const TPASS_ENDPOINT="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728";
-function uid(prefix="TPASS"){return prefix+"-"+Date.now()+"-"+Math.random().toString(36).slice(2,8).toUpperCase()}
+
+function uid(prefix="TPASS"){
+  return prefix+"-"+Date.now()+"-"+Math.random().toString(36).slice(2,8).toUpperCase();
+}
 function saveLocal(key,data){localStorage.setItem(key,JSON.stringify(data))}
 function loadLocal(key){try{return JSON.parse(localStorage.getItem(key)||"null")}catch{return null}}
-function downloadJSON(name,data){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:"application/json"}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-async function submitResult(payload,statusEl){
+function downloadJSON(name,data){
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:"application/json"}));
+  a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function formFields(payload){
+  return {
+    _subject:"[T-PASS NEXT] "+(payload.assessment_type||"Assessment")+"｜"+(payload.student_name||"Student")+"｜"+payload.submission_id,
+    _template:"table",
+    _captcha:"false",
+    _autoresponse:"已收到你的 T-PASS NEXT 結果。請保留此信作為學習紀錄副本。",
+    submission_id:payload.submission_id||"",
+    submitted_at:payload.submitted_at||"",
+    assessment_type:payload.assessment_type||"",
+    source_page:payload.source_page||location.href,
+    name:payload.student_name||"",
+    email:payload.email||"",
+    current_score:payload.current_score||"",
+    target_score:payload.target_score||"",
+    total_score:payload.total_score||"",
+    accuracy:payload.accuracy||"",
+    primary_weakness:payload.primary_weakness||"",
+    secondary_weakness:payload.secondary_weakness||"",
+    summary:typeof payload.summary==="string"?payload.summary:JSON.stringify(payload.summary||{}),
+    responses_json:typeof payload.responses_json==="string"?payload.responses_json:JSON.stringify(payload.responses_json||[])
+  };
+}
+function submitResult(payload,statusEl){
   const localKey="tpass_next_submission_"+payload.submission_id;
-  saveLocal(localKey,payload);
-  statusEl.textContent="本機已保存，正在送出 FormSubmit…";
+  saveLocal(localKey,{...payload,delivery_status:"local_saved"});
+  statusEl.textContent="✅ 本機已保存。現在會開啟 FormSubmit 新頁面；看到成功頁才算真正送達。";
   statusEl.className="status pending";
 
-  try{
-    let iframe=document.getElementById("tpassFormSubmitFrame");
-    if(!iframe){
-      iframe=document.createElement("iframe");
-      iframe.id="tpassFormSubmitFrame";
-      iframe.name="tpassFormSubmitFrame";
-      iframe.style.display="none";
-      document.body.appendChild(iframe);
-    }
-
-    const form=document.createElement("form");
-    form.method="POST";
-    form.action=TPASS_ENDPOINT;
-    form.target="tpassFormSubmitFrame";
-    form.style.display="none";
-
-    const fields={
-      _subject:"[T-PASS NEXT] "+(payload.assessment_type||"Assessment")+"｜"+(payload.student_name||"Student")+"｜"+payload.submission_id,
-      _template:"table",
-      _captcha:"false",
-      _autoresponse:"已收到你的 T-PASS NEXT 結果。請保留此信作為學習紀錄副本。",
-      submission_id:payload.submission_id||"",
-      submitted_at:payload.submitted_at||"",
-      assessment_type:payload.assessment_type||"",
-      source_page:payload.source_page||"",
-      student_name:payload.student_name||"",
-      email:payload.email||"",
-      current_score:payload.current_score||"",
-      target_score:payload.target_score||"",
-      total_score:payload.total_score||"",
-      accuracy:payload.accuracy||"",
-      primary_weakness:payload.primary_weakness||"",
-      secondary_weakness:payload.secondary_weakness||"",
-      summary:typeof payload.summary==="string"?payload.summary:JSON.stringify(payload.summary||{}),
-      responses_json:typeof payload.responses_json==="string"?payload.responses_json:JSON.stringify(payload.responses_json||[])
-    };
-
-    Object.entries(fields).forEach(([name,value])=>{
-      const input=document.createElement("input");
-      input.type="hidden";
-      input.name=name;
-      input.value=value;
-      form.appendChild(input);
-    });
-
-    document.body.appendChild(form);
-    form.submit();
-    setTimeout(()=>form.remove(),1500);
-
-    const sent={...payload,delivery_status:"submitted_to_formsubmit"};
-    saveLocal(localKey,sent);
-    statusEl.textContent="✅ 已送出 FormSubmit。Submission ID："+payload.submission_id+"。完整資料亦已保存在本機。";
-    statusEl.className="status ok";
-    return true;
-  }catch(err){
-    saveLocal(localKey,{...payload,delivery_status:"failed",delivery_error:String(err)});
-    statusEl.textContent="⚠️ FormSubmit 送出失敗，但完整資料已保存在本機。請下載完整結果 JSON。";
-    statusEl.className="status fail";
-    return false;
-  }
+  const form=document.createElement("form");
+  form.method="POST";
+  form.action=TPASS_ENDPOINT;
+  form.target="_blank";
+  form.style.display="none";
+  const fields=formFields(payload);
+  Object.entries(fields).forEach(([name,value])=>{
+    const input=document.createElement("input");
+    input.type="hidden";input.name=name;input.value=value;form.appendChild(input);
+  });
+  document.body.appendChild(form);
+  form.requestSubmit();
+  setTimeout(()=>form.remove(),2000);
+  saveLocal(localKey,{...payload,delivery_status:"submitted_to_formsubmit"});
+}
+function openPdfReport(payload){
+  if(!payload){alert("請先完成診斷。");return}
+  const w=window.open("","_blank");
+  if(!w){alert("瀏覽器阻擋新視窗，請允許彈出視窗後再試。");return}
+  const safe=s=>String(s??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m]));
+  const rows=(Array.isArray(payload.responses_json)?payload.responses_json:[]).map((x,i)=>`
+    <tr><td>${i+1}</td><td>${safe(x.question_id||"")}</td><td>${safe(x.student_answer||"")}</td><td>${safe(x.correct_answer||"")}</td><td>${x.is_correct?"O":"X"}</td></tr>`).join("");
+  w.document.write(`<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><title>T-PASS Result</title>
+  <style>body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif;padding:28px;color:#173b2a}h1{color:#236b45}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{border:1px solid #aaa;padding:7px;text-align:left}small{color:#666}@media print{button{display:none}}</style></head><body>
+  <h1>T-PASS 樂齡多益學習診斷結果</h1>
+  <p>姓名：${safe(payload.student_name)}</p><p>Email：${safe(payload.email)}</p>
+  <p>測驗：${safe(payload.assessment_type)}</p><p>分數：${safe(payload.total_score)}｜正確率：${safe(payload.accuracy)}</p>
+  <p>主要弱點：${safe(payload.primary_weakness)}</p><p>Submission ID：${safe(payload.submission_id)}</p>
+  <table><thead><tr><th>#</th><th>題號</th><th>作答</th><th>正解</th><th>結果</th></tr></thead><tbody>${rows}</tbody></table>
+  <p><small>請使用瀏覽器「列印／分享」並選擇「儲存為 PDF」。</small></p>
+  <button onclick="window.print()">列印／儲存 PDF</button>
+  </body></html>`);
+  w.document.close();
+  setTimeout(()=>w.print(),350);
+}
+function reportProblem(site){
+  const subject=encodeURIComponent("[T-PASS NEXT 問題回報] "+site);
+  const body=encodeURIComponent("請描述問題：\n\n裝置／瀏覽器：\n\n發生在哪一步：\n\n畫面訊息：\n");
+  location.href="mailto:godlovesyou127888@gmail.com?subject="+subject+"&body="+body;
 }
 function baseStyles(){return `
-:root{font-family:Inter,"Noto Sans TC",system-ui,sans-serif;color:#14213d;background:#f6f8fb}
-body{margin:0}.wrap{max-width:920px;margin:auto;padding:24px}.card{background:#fff;border:1px solid #dfe5ee;border-radius:16px;padding:20px;margin:16px 0;box-shadow:0 3px 12px #00000008}
-h1{margin:.2em 0}.muted{color:#5d6778}.q{padding:16px 0;border-top:1px solid #edf0f4}.q:first-child{border-top:0}
-label{display:block;margin:7px 0}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #cbd3df;border-radius:10px}
-button,.btn{border:0;border-radius:10px;padding:12px 16px;background:#14213d;color:#fff;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block;margin:5px 5px 5px 0}.secondary{background:#54657e}.status{padding:14px;border-radius:10px;margin-top:12px}.ok{background:#e9f7ef}.fail{background:#fff1f0}.pending{background:#fff8df}
-@media(max-width:640px){.row{grid-template-columns:1fr}.wrap{padding:14px}}
+:root{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",system-ui,sans-serif;color:#173b2a;background:#f3f8f3}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#eef7ef,#f8fbf8)}
+.wrap{max-width:820px;margin:auto;padding:16px}.hero{background:#2f7d4f;color:white;border-radius:22px;padding:24px;margin:10px 0 18px}
+.hero h1{font-size:clamp(28px,6vw,42px);line-height:1.2;margin:0 0 8px}.hero p{font-size:18px;line-height:1.6;margin:0}
+.card{background:#fff;border:2px solid #dcebdd;border-radius:22px;padding:20px;margin:16px 0;box-shadow:0 4px 14px #214f2e12}
+h2{color:#236b45}.muted{color:#587061;font-size:17px;line-height:1.7}.q{padding:22px 0;border-top:1px solid #e5efe6}.q:first-child{border-top:0}.q>b{font-size:22px;line-height:1.45}
+label{display:flex;align-items:center;gap:12px;margin:12px 0;padding:14px;border:1px solid #d7e5d8;border-radius:14px;font-size:20px;line-height:1.4;background:#fbfdfb}
+input[type=radio]{width:26px;height:26px;flex:0 0 26px;accent-color:#2f7d4f}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+input[type=text],input[type=email],input[inputmode=numeric],input{font-size:18px}input:not([type=radio]){width:100%;padding:14px;border:2px solid #cfe0d1;border-radius:12px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+button,.btn{border:0;border-radius:14px;padding:15px 16px;background:#2f7d4f;color:#fff;font-size:18px;font-weight:800;cursor:pointer;text-decoration:none;text-align:center;min-height:54px}
+.secondary{background:#62856e}.outline{background:#fff;color:#2f7d4f;border:2px solid #2f7d4f}.status{padding:16px;border-radius:14px;margin-top:14px;font-size:18px;line-height:1.55}
+.ok{background:#e8f7ec;border:1px solid #aad6b6}.fail{background:#fff1f0;border:1px solid #efb4af}.pending{background:#fff8df;border:1px solid #ead694}
+.audioBtn{width:100%;background:#3d8b5b;margin:10px 0 4px}.helper{background:#f0f7f1;border-left:5px solid #5c9a70;padding:12px 14px;border-radius:10px;margin:12px 0}
+.footerHelp{margin-top:18px;padding-top:18px;border-top:1px solid #dfe9df}
+@media(max-width:640px){.wrap{padding:10px}.row,.actions{grid-template-columns:1fr}.card{padding:16px}.hero{padding:20px}button,.btn{width:100%}}
 `}
