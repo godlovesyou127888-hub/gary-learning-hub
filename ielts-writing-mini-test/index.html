@@ -1,0 +1,42 @@
+<!doctype html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="IELTS Academic Writing Mini Test：原創 Task 1 + Task 2 線上模考，60分鐘、字數統計、四構面自評、完整模考資料交付 Gary 教練。">
+<title>IELTS Writing Mini Test</title><link rel="stylesheet" href="style.css"></head><body>
+<header><nav><a href="/ielts-command-center/">← IELTS Command Center</a><a href="/roadmap/">101 Roadmap</a></nav>
+<div class="hero"><p class="eyebrow">IELTS ACADEMIC WRITING MINI TEST · ORIGINAL PRACTICE</p><h1>60 分鐘，完成 Task 1 + Task 2。</h1>
+<p class="lead">依最新 IELTS Academic Writing 正式結構精神製作：Task 1 20 分鐘、150+ 字；Task 2 40 分鐘、250+ 字。題目全部原創。</p>
+<div class="pills"><span>Task 1</span><span>Task 2</span><span>60分鐘</span><span>即時字數</span><span>四構面</span><span>Coach Delivery</span></div></div></header>
+<main>
+<section class="notice"><b>版權說明：</b>本測驗為原創練習，只模擬 IELTS Academic Writing 的題型、時間與評分結構，不重製 Cambridge IELTS 真題、圖表、題幹、範文或評語。</section>
+
+<section class="card"><p class="eyebrow">01 · SETUP</p><h2>模考設定</h2>
+<div class="grid"><label>姓名<input id="student" placeholder="Student"></label><label>Email<input id="email" type="email"></label><label>日期<input id="date" type="date"></label><label>模式<select id="mode"><option value="exam">正式模式｜60分鐘</option><option value="practice">練習模式｜不限時間</option></select></label></div>
+<div class="timer"><span id="timerText">60:00</span><div class="actions"><button id="startTimer">開始</button><button id="pauseTimer" class="secondary">暫停</button><button id="resetTimer" class="secondary">重設</button></div></div></section>
+
+<section class="card"><p class="eyebrow">02 · TASK 1</p><h2>Academic Writing Task 1｜20 minutes</h2>
+<div class="taskPrompt">
+<p><b>The table below shows the percentage of commuters using four forms of transport in a city in 2010 and 2025.</b></p>
+<table><thead><tr><th>Transport</th><th>2010</th><th>2025</th></tr></thead><tbody><tr><td>Car</td><td>52%</td><td>38%</td></tr><tr><td>Bus</td><td>21%</td><td>24%</td></tr><tr><td>Rail</td><td>17%</td><td>25%</td></tr><tr><td>Bicycle</td><td>10%</td><td>13%</td></tr></tbody></table>
+<p>Summarise the information by selecting and reporting the main features, and make comparisons where relevant.</p></div>
+<label>Task 1 作答<textarea id="task1" rows="14" maxlength="9000" placeholder="Write at least 150 words."></textarea></label>
+<p class="counter"><span id="t1Words">0</span> words <span id="t1Check" class="warn">未達 150 字</span></p></section>
+
+<section class="card"><p class="eyebrow">03 · TASK 2</p><h2>Academic Writing Task 2｜40 minutes</h2>
+<div class="taskPrompt"><p><b>Some people believe that universities should focus mainly on preparing students for employment, while others think the main purpose of university is to provide a broad education.</b></p><p>Discuss both views and give your own opinion.</p></div>
+<label>Task 2 作答<textarea id="task2" rows="18" maxlength="14000" placeholder="Write at least 250 words."></textarea></label>
+<p class="counter"><span id="t2Words">0</span> words <span id="t2Check" class="warn">未達 250 字</span></p></section>
+
+<section class="card"><p class="eyebrow">04 · SELF CHECK</p><h2>四構面自評</h2>
+<div id="rubric"></div>
+<label>你認為目前最大問題<select id="mainIssue"></select></label>
+<label>考後自我觀察<textarea id="reflection" rows="4" maxlength="2000" placeholder="例如：Task 2 第二段論點不足，結論太短。"></textarea></label>
+<button id="submitTest">完成 Writing Mini Test</button><p id="submitStatus" role="status"></p></section>
+
+<section class="card"><p class="eyebrow">05 · RESULT</p><h2>完成度診斷</h2><div id="summary"><p class="note">完成測驗後顯示。</p></div><div id="analysis"></div></section>
+
+<section class="card"><p class="eyebrow">06 · REVIEW</p><h2>寫作結構檢查</h2><div id="review"><p class="note">完成測驗後顯示。</p></div></section>
+
+<section class="card"><p class="eyebrow">07 · DELIVERY</p><h2>寄送完整模考資料給 Gary 教練</h2>
+<p class="note">正式交付包含 Task 1、Task 2 全文、字數、作答時間、自評四構面、最大問題與完整 JSON。需以 Gmail 實收確認才算完成。</p>
+<div class="actions"><button id="download">下載 JSON</button><button id="print" class="secondary">列印／PDF</button><button id="sendCoach">寄送完整模考資料給 Gary 教練</button></div><p id="deliveryStatus" role="status"></p></section>
+</main><footer>Gary · IELTS Academic Writing Mini Test｜Original practice</footer><script src="app.js"></script></body></html>
