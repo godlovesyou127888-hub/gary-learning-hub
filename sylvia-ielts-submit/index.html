@@ -32,18 +32,7 @@ h1{margin:0 0 6px}.muted{color:var(--muted)}input,textarea{width:100%;padding:11
 
 <div id="deliveryStatusBox" class="status">正在載入 IELTS Writing 作業資料…</div>
 
-<form id="emailForm" class="hidden" action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" target="emailSink">
-<input type="hidden" name="_template" value="table">
-<input type="hidden" name="_captcha" value="false">
-<input type="hidden" id="subjectField" name="_subject">
-<input type="hidden" id="submissionField" name="submission_id">
-<input type="hidden" id="sourceField" name="source_page">
-<input type="hidden" name="form_type" value="Sylvia IELTS Writing Submission">
-<input type="hidden" id="emailName" name="name">
-<input type="hidden" id="emailEmail" name="email">
-<textarea id="emailMessage" name="test_message" class="hidden"></textarea>
-</form>
-<iframe name="emailSink" id="emailSink" class="hidden"></iframe>
+
 </section>
 
 <section class="card hidden" id="completeCard">
@@ -68,14 +57,6 @@ const nameField=byId('nameField');
 const emailField=byId('emailField');
 const messageField=byId('messageField');
 const ieltsForm=byId('ieltsForm');
-const emailForm=byId('emailForm');
-const emailSink=byId('emailSink');
-const subjectField=byId('subjectField');
-const submissionField=byId('submissionField');
-const sourceField=byId('sourceField');
-const emailName=byId('emailName');
-const emailEmail=byId('emailEmail');
-const emailMessage=byId('emailMessage');
 const sendCard=byId('sendCard');
 const completeCard=byId('completeCard');
 const completeSummary=byId('completeSummary');
@@ -105,7 +86,7 @@ if(!data){
   }
 }
 
-async function storePrimary(timeoutMs=8000){
+async function submitServerSide(timeoutMs=30000){
   const payload={
     submission_id:data.submission_id,
     student_name:nameField.value.trim(),
@@ -118,117 +99,87 @@ async function storePrimary(timeoutMs=8000){
     minutes:data.minutes||null,
     self_checks:Array.isArray(data.self_checks)?data.self_checks:[],
     self_concern:data.self_concern||'',
-    source_page:data.source_page||''
+    source_page:data.source_page||'',
+    preformatted_message:messageField.value.trim()
   };
   const controller=new AbortController();
   const timer=setTimeout(()=>controller.abort(),timeoutMs);
-  let res;
   try{
-    res=await fetch(API+'/api/ielts-writing-submissions',{
+    const res=await fetch(API+'/api/ielts-writing-submit',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify(payload),
       signal:controller.signal
     });
+    const out=await res.json().catch(()=>({}));
+    if(!res.ok||!out.ok)throw new Error(out.error||('HTTP '+res.status));
+    return out;
   }finally{clearTimeout(timer)}
-  const out=await res.json().catch(()=>({}));
-  if(!res.ok||!out.ok)throw new Error(out.error||('HTTP '+res.status));
-  return out;
 }
 
-function sendEmailSecondary(){
-  emailSubmitted=true;
-  setEmailState('正在送往 FormSubmit Email 通道…');
-  subjectField.value='[Sylvia IELTS][Writing]['+(data.task_type||'Assignment')+'] '+(data.submission_id||'');
-  submissionField.value=data.submission_id||'';
-  sourceField.value=data.source_page||location.href;
-  emailName.value=nameField.value.trim();
-  emailEmail.value=emailField.value.trim();
-  emailMessage.value=messageField.value.trim();
-  emailForm.submit();
-}
-
-emailSink.addEventListener('load',async()=>{
-  if(!submitted||!emailSubmitted||!data)return;
-  setEmailState('FormSubmit 已回應；實際收件仍以 Gary Gmail 為準。');
-  try{
-    await fetch(API+'/api/ielts-writing-submissions/'+encodeURIComponent(data.submission_id)+'/email-status',{
-      method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({status:'submitted_to_formsubmit'})
-    });
-  }catch{}
-});
-
-retryEmailBtn.addEventListener('click',()=>{
-  if(!data)return;
-  retryEmailBtn.disabled=true;
-  retryEmailBtn.textContent='重新寄送中…';
-  sendEmailSecondary();
-  setTimeout(()=>{retryEmailBtn.disabled=false;retryEmailBtn.textContent='重新寄送 Email';},1800);
-});
-
-ieltsForm.addEventListener('submit',e=>{
+ieltsForm.addEventListener('submit',async e=>{
   e.preventDefault();
   if(submitted||!data)return;
   submitted=true;
   submitBtn.disabled=true;
   submitBtn.textContent='正在送出…';
+  deliveryStatusBox.className='status';
+  deliveryStatusBox.innerHTML='正在保存 IELTS 作業並由伺服器寄送 Email…';
 
   const outboxRecord={
     ...data,
     student_name:nameField.value.trim(),
     student_email:emailField.value.trim(),
     preformatted_message:messageField.value.trim(),
-    queued_at:new Date().toISOString(),
-    database_status:'pending',
-    email_status:'submitted_to_formsubmit'
+    queued_at:new Date().toISOString()
   };
   localStorage.setItem('sylvia_ielts_outbox_'+data.submission_id,JSON.stringify(outboxRecord));
-  localStorage.setItem('sylvia_ielts_last_submission',JSON.stringify({
-    submission_id:data.submission_id,
-    queued_at:outboxRecord.queued_at,
-    database_status:'pending',
-    email_status:'submitted_to_formsubmit'
-  }));
 
-  deliveryStatusBox.className='status';
-  deliveryStatusBox.innerHTML='Email 正在送出；資料庫同步會在背景進行，不會阻塞本次送出。';
+  try{
+    const result=await submitServerSide();
+    localStorage.setItem('sylvia_ielts_last_submission',JSON.stringify(result));
+    if(result.stored)localStorage.removeItem('sylvia_ielts_outbox_'+data.submission_id);
 
-  sendEmailSecondary();
-
-  setTimeout(()=>{
     sendCard.classList.add('hidden');
     completeCard.classList.remove('hidden');
     completeSummary.innerHTML='<b>Submission ID：</b>'+esc(data.submission_id||'—')+
       '<br><b>學生：</b>'+esc(nameField.value.trim())+
       '<br><b>Task：</b>'+esc(data.task_type||'Writing');
-  },500);
 
-  storePrimary(8000).then(stored=>{
-    const latest=JSON.parse(localStorage.getItem('sylvia_ielts_last_submission')||'{}');
-    localStorage.setItem('sylvia_ielts_last_submission',JSON.stringify({...latest,stored_at:stored.stored_at,database_status:'stored'}));
-    localStorage.removeItem('sylvia_ielts_outbox_'+data.submission_id);
-    if(document.getElementById('completeCard')&&!completeCard.classList.contains('hidden')){
-      const box=completeCard.querySelector('.status.success');
-      if(box)box.innerHTML='<b>主要保存：</b>已寫入 IELTS 資料庫。<br><b>Email：</b><span id="emailState">'+getEmailState()+'</span>';
-    }
-  }).catch(err=>{
-    const latest=JSON.parse(localStorage.getItem('sylvia_ielts_last_submission')||'{}');
-    localStorage.setItem('sylvia_ielts_last_submission',JSON.stringify({...latest,database_status:'queued_for_retry',database_error:String(err.message||err)}));
     const box=completeCard.querySelector('.status.success');
-    if(box)box.innerHTML='<b>主要保存：</b>已保存在本機待補同步；不影響本次 Email 送出。<br><b>Email：</b><span id="emailState">'+getEmailState()+'</span>';
-  });
+    if(box){
+      box.innerHTML='<b>主要保存：</b>'+(result.stored?'✅ 已寫入 IELTS 資料庫':'❌ 尚未保存')+
+        '<br><b>Email：</b>'+(result.emailAccepted?'✅ FormSubmit 伺服器端已接受寄送':'⚠️ Email 通道未確認接受，可按下方重新寄送');
+    }
+    setEmailState(result.emailAccepted?'伺服器端已接受寄送；最終仍以 Gary Gmail 實收為準。':'尚未確認接受');
+  }catch(err){
+    submitted=false;
+    submitBtn.disabled=false;
+    submitBtn.textContent='重新送出 Writing 作業';
+    deliveryStatusBox.className='status error';
+    deliveryStatusBox.innerHTML='❌ 本次未完成：'+esc(err.message||err)+'<br>資料仍保留在本機，請重新送出。';
+  }
 });
 
-async function retryQueuedSubmission(){
-  if(!data||!data.submission_id)return;
-  const key='sylvia_ielts_outbox_'+data.submission_id;
-  const queued=localStorage.getItem(key);
-  if(!queued)return;
+retryEmailBtn.addEventListener('click',async()=>{
+  if(!data)return;
+  retryEmailBtn.disabled=true;
+  retryEmailBtn.textContent='重新寄送中…';
   try{
-    await storePrimary(5000);
-    localStorage.removeItem(key);
-  }catch{}
-}
-retryQueuedSubmission();
+    const result=await submitServerSide();
+    const box=completeCard.querySelector('.status.success');
+    if(box){
+      box.innerHTML='<b>主要保存：</b>'+(result.stored?'✅ 已寫入 IELTS 資料庫':'❌ 尚未保存')+
+        '<br><b>Email：</b>'+(result.emailAccepted?'✅ FormSubmit 伺服器端已接受寄送':'⚠️ Email 通道仍未確認接受');
+    }
+    setEmailState(result.emailAccepted?'伺服器端已接受寄送；最終仍以 Gary Gmail 實收為準。':'尚未確認接受');
+  }catch(err){
+    setEmailState('重新寄送失敗：'+String(err.message||err));
+  }finally{
+    retryEmailBtn.disabled=false;
+    retryEmailBtn.textContent='重新寄送 Email';
+  }
+});
+
 </script>
 </body></html>
