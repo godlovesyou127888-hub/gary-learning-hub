@@ -1,0 +1,27 @@
+<!doctype html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Sylvia IELTS｜Writing 作業送出完成</title>
+<style>
+:root{--p:#5b5bd6;--p2:#7c3aed;--bg:#f6f7fb;--text:#1f2937;--muted:#667085;--line:#e5e7eb;--ok:#067647}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+.wrap{max-width:760px;margin:auto;padding:24px}.hero{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;border-radius:20px;padding:24px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;margin-top:16px}
+.btn{display:inline-block;text-decoration:none;border-radius:10px;padding:11px 15px;font-weight:800}.primary{background:var(--p);color:#fff}.secondary{background:#fff;color:var(--p);border:1px solid #c7c9ff}
+.ok{background:#ecfdf3;color:var(--ok);padding:12px;border-radius:10px}
+</style></head><body>
+<main class="wrap">
+<section class="hero"><h1>✅ Writing 作業已送出</h1><p>FormSubmit 已接受本次表單。</p></section>
+<section class="card">
+<div id="receipt" class="ok">正在讀取本次 Submission ID…</div>
+<p>Gary 是否實際收到，仍以 Gmail 實收為最終驗收。</p>
+<p><a class="btn primary" href="/sylvia-ielts-command-center/">回 Sylvia IELTS 首頁</a></p>
+<p><a class="btn secondary" href="/sylvia-ielts-30day/">回 Writing Sprint</a></p>
+</section></main>
+<script>
+let last=null;
+try{last=JSON.parse(localStorage.getItem('sylvia_ielts_last_submission')||'null')}catch{}
+if(last&&last.submission_id){
+  document.getElementById('receipt').innerHTML='<b>Submission ID：</b>'+last.submission_id+'<br><b>Task：</b>'+(last.task_type||'Writing');
+}
+</script>
+</body></html>
