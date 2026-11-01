@@ -61,7 +61,7 @@ input{width:100%;padding:10px;border:1px solid #d0d5dd;border-radius:10px;font:i
 <input type="hidden" name="source" value="Sylvia IELTS Command Center">
 <label>姓名<input name="name" value="Sylvia" required></label>
 <label>Email<input type="email" name="email" placeholder="你的 Email" required></label>
-<label>問題類型<select id="contactTopic" name="topic"><option>Listening</option><option>Reading</option><option>Writing</option><option>Speaking</option><option>模考／考試日期</option><option>網站操作</option><option>其他</option></select></label>
+<label>問題類型<select id="contactTopic" name="topic"><option value="作業批改">作業批改</option><option value="成績／進度">成績／進度</option><option value="模考／考試日期">模考／考試日期</option><option value="網站操作">網站操作</option><option value="課程／學習問題">課程／學習問題</option><option value="其他">其他</option></select></label>
 <div id="sourceHint" class="muted"></div>
 <label>留言<textarea name="message" rows="6" placeholder="請描述問題或需求..." required style="width:100%;padding:10px;border:1px solid #d0d5dd;border-radius:10px;font:inherit"></textarea></label>
 <button class="btn primary" type="submit">送出給站長</button>
@@ -96,12 +96,18 @@ examDate.onchange=()=>{localStorage.setItem('sylvia_ielts_exam_date',examDate.va
 
 const sourceParam=new URLSearchParams(location.search).get('source');
 const validSources=['Listening','Reading','Writing','Speaking'];
-if(sourceParam&&validSources.includes(sourceParam)){
-  contactTopic.value=sourceParam;
-  contactSubject.value='[Sylvia IELTS]['+sourceParam+'] 聯絡站長';
-  sourceHint.textContent='已自動辨識來源：'+sourceParam+' Lab';
-  if(location.hash==='#contact') setTimeout(()=>document.getElementById('contact')?.scrollIntoView({behavior:'smooth',block:'start'}),80);
-}else{
-  contactSubject.value='[Sylvia IELTS][General] 聯絡站長';
+const sourceLabel=(sourceParam&&validSources.includes(sourceParam))?sourceParam:'General';
+function updateContactSubject(){
+  const topic=contactTopic.value||'General';
+  contactSubject.value='[Sylvia IELTS]['+sourceLabel+']['+topic+'] 聯絡站長';
 }
+if(sourceParam&&validSources.includes(sourceParam)){
+  sourceHint.textContent='已自動辨識來源：'+sourceParam+' Lab';
+  if(sourceParam==='Writing') contactTopic.value='作業批改';
+  else if(sourceParam==='Speaking') contactTopic.value='課程／學習問題';
+  else contactTopic.value='成績／進度';
+  if(location.hash==='#contact') setTimeout(()=>document.getElementById('contact')?.scrollIntoView({behavior:'smooth',block:'start'}),80);
+}
+contactTopic.addEventListener('change',updateContactSubject);
+updateContactSubject();
 </script></body></html>
