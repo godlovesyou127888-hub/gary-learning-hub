@@ -132,41 +132,55 @@ app.patch("/api/submissions/:id/email-status", async (req,res)=>{
 });
 
 app.post("/api/ielts-writing-submit", async (req,res)=>{
-  if(!dbReady)return res.status(503).json({ok:false,stored:false,emailAccepted:false,error:"database_not_configured"});
   try{
     const b=req.body||{};
-    if(!b.submission_id || !b.essay)return res.status(400).json({ok:false,stored:false,emailAccepted:false,error:"submission_id and essay are required"});
-    const checks=Array.isArray(b.self_checks)?b.self_checks:[];
-    await pool.query(`
-      INSERT INTO ielts_writing_submissions
-      (submission_id,student_name,student_email,task_type,day_number,question,essay,word_count,minutes,self_checks,self_concern,source_page,email_status)
-      VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10::jsonb,$11,$12,'pending')
-      ON CONFLICT (submission_id) DO UPDATE SET
-        student_name=EXCLUDED.student_name,
-        student_email=EXCLUDED.student_email,
-        task_type=EXCLUDED.task_type,
-        day_number=EXCLUDED.day_number,
-        question=EXCLUDED.question,
-        essay=EXCLUDED.essay,
-        word_count=EXCLUDED.word_count,
-        minutes=EXCLUDED.minutes,
-        self_checks=EXCLUDED.self_checks,
-        self_concern=EXCLUDED.self_concern,
-        source_page=EXCLUDED.source_page
-    `,[
-      String(b.submission_id),
-      b.student_name?String(b.student_name):null,
-      b.student_email?String(b.student_email):null,
-      b.task_type?String(b.task_type):null,
-      Number.isFinite(Number(b.day_number))?Number(b.day_number):null,
-      b.question?String(b.question):null,
-      String(b.essay),
-      Number.isFinite(Number(b.word_count))?Number(b.word_count):null,
-      Number.isFinite(Number(b.minutes))?Number(b.minutes):null,
-      JSON.stringify(checks),
-      b.self_concern?String(b.self_concern):null,
-      b.source_page?String(b.source_page):null
-    ]);
+    if(!b.submission_id || !b.essay){
+      return res.status(400).json({ok:false,stored:false,emailAccepted:false,error:"submission_id and essay are required"});
+    }
+
+    let stored=false;
+    let storageError=null;
+    if(dbReady){
+      try{
+        const checks=Array.isArray(b.self_checks)?b.self_checks:[];
+        await pool.query(`
+          INSERT INTO ielts_writing_submissions
+          (submission_id,student_name,student_email,task_type,day_number,question,essay,word_count,minutes,self_checks,self_concern,source_page,email_status)
+          VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10::jsonb,$11,$12,'pending')
+          ON CONFLICT (submission_id) DO UPDATE SET
+            student_name=EXCLUDED.student_name,
+            student_email=EXCLUDED.student_email,
+            task_type=EXCLUDED.task_type,
+            day_number=EXCLUDED.day_number,
+            question=EXCLUDED.question,
+            essay=EXCLUDED.essay,
+            word_count=EXCLUDED.word_count,
+            minutes=EXCLUDED.minutes,
+            self_checks=EXCLUDED.self_checks,
+            self_concern=EXCLUDED.self_concern,
+            source_page=EXCLUDED.source_page
+        `,[
+          String(b.submission_id),
+          b.student_name?String(b.student_name):null,
+          b.student_email?String(b.student_email):null,
+          b.task_type?String(b.task_type):null,
+          Number.isFinite(Number(b.day_number))?Number(b.day_number):null,
+          b.question?String(b.question):null,
+          String(b.essay),
+          Number.isFinite(Number(b.word_count))?Number(b.word_count):null,
+          Number.isFinite(Number(b.minutes))?Number(b.minutes):null,
+          JSON.stringify(checks),
+          b.self_concern?String(b.self_concern):null,
+          b.source_page?String(b.source_page):null
+        ]);
+        stored=true;
+      }catch(err){
+        storageError=String(err?.message||err);
+        console.error("IELTS writing DB store failed",err);
+      }
+    }else{
+      storageError="database_not_configured";
+    }
 
     const form=new URLSearchParams();
     form.set("_subject", "[Sylvia IELTS][Writing]["+(b.task_type||"Assignment")+"] "+String(b.submission_id));
@@ -182,7 +196,7 @@ app.post("/api/ielts-writing-submit", async (req,res)=>{
     let emailAccepted=false;
     let emailStatus=0;
     let emailError=null;
-    for(let attempt=1;attempt<=2 && !emailAccepted;attempt++){
+    for(let attempt=1;attempt<=3 && !emailAccepted;attempt++){
       const controller=new AbortController();
       const timer=setTimeout(()=>controller.abort(),12000);
       try{
@@ -200,26 +214,35 @@ app.post("/api/ielts-writing-submit", async (req,res)=>{
         });
         emailStatus=r.status;
         emailAccepted=r.status>=200 && r.status<400;
-        if(!emailAccepted)emailError="formsubmit_http_"+r.status;
+        if(!emailAccepted) emailError="formsubmit_http_"+r.status;
       }catch(err){
         emailError=err?.name==="AbortError"?"formsubmit_timeout":String(err?.message||err);
-      }finally{clearTimeout(timer)}
-      if(!emailAccepted && attempt<2) await new Promise(resolve=>setTimeout(resolve,700));
+      }finally{
+        clearTimeout(timer);
+      }
+      if(!emailAccepted && attempt<3) await new Promise(resolve=>setTimeout(resolve,700*attempt));
     }
 
-    await pool.query(
-      "UPDATE ielts_writing_submissions SET email_status=$1 WHERE submission_id=$2",
-      [emailAccepted?"formsubmit_accepted":"formsubmit_failed",String(b.submission_id)]
-    );
+    if(dbReady){
+      try{
+        await pool.query(
+          "UPDATE ielts_writing_submissions SET email_status=$1 WHERE submission_id=$2",
+          [emailAccepted?"formsubmit_accepted":"formsubmit_failed",String(b.submission_id)]
+        );
+      }catch(err){
+        console.error("IELTS email status update failed",err);
+      }
+    }
 
     return res.status(emailAccepted?201:202).json({
       ok:true,
-      stored:true,
+      stored,
+      storageError,
       emailAccepted,
       emailStatus,
       emailError,
       submission_id:String(b.submission_id),
-      stored_at:new Date().toISOString()
+      processed_at:new Date().toISOString()
     });
   }catch(err){
     console.error("IELTS writing submit failed",err);
