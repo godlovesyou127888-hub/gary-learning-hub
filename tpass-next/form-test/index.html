@@ -1,7 +1,7 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>結果寄送｜多益</title><script src="../core.js?v=20261101-bridge-v10"></script><style id="s"></style></head><body><main class="wrap">
 <section class="hero"><h1 id="pageTitle">FormSubmit 單獨測試</h1><p id="pageLead">不做測驗，只確認資料能不能真正送達。</p></section>
 <section class="card"><h2 id="stepTitle">只做這一步</h2><p class="muted" id="stepText">填姓名與 Email → 按「送出測試」→ 會開啟 FormSubmit 新頁面。看到成功頁才算送達。</p>
-<form id="deliveryForm" action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" target="_blank">
+<form id="deliveryForm" action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" target="_self">
 <input type="hidden" name="_next" id="nextField" value="https://gary-learning-hub.onrender.com/toeic-submit-complete/">
 <input type="hidden" name="_subject" id="subjectField" value="[T-PASS NEXT] FormSubmit 單獨測試">
 <input type="hidden" name="_template" value="table"><input type="hidden" name="_url" id="urlField">
@@ -26,7 +26,7 @@ function setStandaloneMode(){
   pageTitle.textContent="FormSubmit 單獨測試";
   pageLead.textContent="不做測驗，只確認資料能不能真正送達。";
   stepTitle.textContent="只做這一步";
-  stepText.textContent="填姓名與 Email → 按「送出測試」→ 完成人機驗證 → 看到成功頁才算 FormSubmit 已接收。";
+  stepText.textContent="填姓名與 Email → 按「送出測試」→ 本頁直接前往 FormSubmit → 完成人機驗證 → 看到成功頁。";
   submitBtn.textContent="送出測試";
   typeField.value="T-PASS NEXT FormSubmit Direct POST";
   messageField.value="如果收到這筆資料，代表 FormSubmit 原生 POST 通道正常。";
@@ -56,13 +56,13 @@ function setAssessmentMode(){
     submitBtn.textContent="寄送 Writing 作業";
     typeField.value="Sylvia IELTS Writing via Proven Bridge";
   }else{
-    deliveryForm.target="_blank";
+    deliveryForm.target="_self";
     nextField.disabled=false;
     nextField.value="https://gary-learning-hub.onrender.com/toeic-submit-complete/";
     pageTitle.textContent="多益｜寄送診斷結果";
-    pageLead.textContent="已載入本次測驗資料；確認後送出，完成後可回 TOEIC Command Center。";
+    pageLead.textContent="已載入本次測驗資料；本頁將直接交給 FormSubmit 處理，不再經過新分頁或 JavaScript 轉送。";
     stepTitle.textContent="最後一步：寄送結果";
-    stepText.textContent="確認姓名、Email、Submission ID 與 Delivery Token，再按「寄送診斷結果」；請完成 FormSubmit 人機驗證。";
+    stepText.textContent="確認資料後按「寄送診斷結果」。頁面會直接前往 FormSubmit；請完成人機驗證並看到成功頁。";
     submitBtn.textContent="寄送診斷結果";
     typeField.value="T-PASS NEXT Formal Assessment via Proven Bridge";
   }
@@ -144,61 +144,13 @@ function setAssessmentMode(){
   window.addEventListener("online",syncNetworkState);
   syncNetworkState();
 
-  async function backupAssessment(){
-    try{
-      const apiPayload={
-        assessment_type:data.assessment_type||"T-PASS NEXT Assessment",
-        source_page:data.source_page||location.href,
-        student_name:data.student_name||"",
-        student_email:data.email||"",
-        current_score:data.current_score||"",
-        target_score:data.target_score||"",
-        summary:{
-          client_submission_id:data.submission_id||"",
-          delivery_token:tokenField.value||"",
-          total_score:data.total_score||"",
-          accuracy:data.accuracy||"",
-          primary_weakness:data.primary_weakness||"",
-          secondary_weakness:data.secondary_weakness||""
-        },
-        responses:Array.isArray(data.responses_json)?data.responses_json:[],
-        delivery_token:tokenField.value||"",
-        client_submission_id:data.submission_id||""
-      };
-      const r=await fetch("https://tpass-results-api.onrender.com/api/submissions",{
-        method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(apiPayload),keepalive:true
-      });
-      if(r.ok){
-        const j=await r.json().catch(()=>({}));
-        localStorage.setItem("tpass_last_api_backup",JSON.stringify({client_submission_id:data.submission_id||"",delivery_token:tokenField.value||"",api_submission_id:j.submission_id||"",stored_at:j.stored_at||new Date().toISOString()}));
-      }
-    }catch(err){
-      console.warn("T-PASS API backup failed",err);
-    }
-  }
-
-  let submitted=false;
-  deliveryForm.addEventListener("submit",(e)=>{
-    if(submitted){
-      e.preventDefault();
-      return;
-    }
-    submitted=true;
-    backupAssessment();
-    if(tokenField.value) markTokenizedDeliverySubmitted(tokenField.value);
-    localStorage.setItem("tpass_last_completed_submission",JSON.stringify({
-      delivery_token:tokenField.value||"",
-      submission_id:submissionField.value||"",
-      assessment_type:data.assessment_type||"",
-      source_page:data.source_page||"",
-      submitted_at:new Date().toISOString()
-    }));
-    submitBtn.textContent="正在送出…";
-    submitBtn.disabled=true;
-    lifecycleBox.innerHTML="<b>寄送狀態：</b>正在送往 FormSubmit，並同步建立伺服器備份<br><span style='font-size:14px'>請在新分頁完成人機驗證；Gmail 實際收件才是最終驗收。</span>";
+  // Reliability rule: do not intercept, delay, fetch, disable, or redirect this submit.
+  // The browser performs one plain native POST directly to FormSubmit.
+  deliveryForm.addEventListener("submit",()=>{
+    lifecycleBox.innerHTML="<b>寄送狀態：</b>瀏覽器正在直接送往 FormSubmit<br><span style='font-size:14px'>下一頁請完成人機驗證；Gmail 實際收到才算成功。</span>";
   });
 
-  helper.innerHTML='送出後會在新分頁開啟 FormSubmit。請完成人機驗證並看到成功頁；原頁會保留。確認後可 <a class="btn outline" href="/tpass-toeic-command-center/">回到 TOEIC Command Center</a>。';
+  helper.innerHTML='按下寄送後，本頁會直接進入 FormSubmit。請不要關閉頁面；完成人機驗證並看到成功頁後，再回 Command Center。';
 }
 
 if(isAssessment){
