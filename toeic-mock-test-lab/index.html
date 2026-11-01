@@ -32,7 +32,7 @@
 <section class="panel"><h2>紀錄表</h2><div class="tablebox"><table><thead><tr><th>日期</th><th>總分</th><th>聽力</th><th>閱讀</th><th>做完</th><th>主要失分</th></tr></thead><tbody id="historyBody"></tbody></table></div></section>
 
 <section id="analysisPanel" class="panel hidden"><h2>驗證結果</h2><div id="analysis"></div>
-<div class="backup-notice" role="note"><strong>第一步：先下載並確認檔案已保存。</strong><p>本頁資料主要保存在此瀏覽器；清除瀏覽資料或更換裝置可能無法取回。請先保留備份，再選擇是否寄送。</p></div><p class="download-actions"><button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF</button> <button class="btn primary" type="button" onclick="downloadCSV()">下載 CSV</button> <button class="btn secondary" type="button" onclick="downloadJSON()">下載完整 JSON</button></p><p id="backupStatus" role="status" aria-live="polite"></p>
+<div class="backup-notice" role="note"><strong>第一步：先下載並確認檔案已保存。</strong><p>本頁資料主要保存在此瀏覽器；清除瀏覽資料或更換裝置可能無法取回。請先保留備份，再選擇是否寄送。</p></div><p class="download-actions"><button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF</button> <button class="btn primary" type="button" onclick="downloadCSV()">下載 CSV</button> <button class="btn secondary" type="button" onclick="downloadJSON()">下載完整 JSON</button></p><p id="backupStatus" role="status" aria-live="polite"></p><div class="path"><label for="jsonVerifyFile"><b>驗證實際下載的 JSON 檔（最後驗收）</b></label><p>選擇剛從「下載完整 JSON」取得的檔案；本機讀取，不會上傳。</p><input id="jsonVerifyFile" type="file" accept=".json,application/json" aria-describedby="jsonVerifyStatus"><p id="jsonVerifyStatus" role="status" aria-live="polite">尚未驗證下載檔。</p></div>
 <div class="path" id="mockDeliveryBox">
 <p><label style="display:flex;gap:12px;align-items:flex-start"><input id="backupConfirmed" type="checkbox" style="width:24px;height:24px;flex-shrink:0;margin-top:6px">我已下載並確認備份檔案可以開啟。</label></p>
 <button class="btn primary" type="button" id="mockGoldenDeliveryBtn">準備並前往成功寄送頁</button>
@@ -139,6 +139,24 @@ function downloadJSON(){
  const payload={assessment_type:"TOEIC Mock Test Lab",exported_at:new Date().toISOString(),student_name:studentName.value.trim(),email:studentEmail.value.trim(),target_score:targetScore.value,plan_start:planStart.value,records:records,analysis:analysis.innerText.trim()};
  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json;charset=utf-8"}));a.download="toeic_mock_test_lab_"+Date.now()+".json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),30000);document.getElementById("backupStatus").textContent="已啟動 JSON 下載，請確認檔案已保存且可以開啟，再勾選備份確認。";
 }
+document.getElementById("jsonVerifyFile").addEventListener("change",async function(){
+ const status=document.getElementById("jsonVerifyStatus"),file=this.files?.[0];
+ if(!file){status.textContent="尚未選取檔案。";return}
+ if(file.size>2000000){status.textContent="驗收未通過：JSON 檔案超過 2MB，請檢查檔案。";return}
+ try{
+  const obj=JSON.parse(await file.text());
+  const checks=[
+   obj.assessment_type==="TOEIC Mock Test Lab",
+   typeof obj.student_name==="string"&&obj.student_name.trim().length>0,
+   /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(obj.email||""),
+   Number.isInteger(Number(obj.target_score))&&Number(obj.target_score)>=10&&Number(obj.target_score)<=990,
+   Array.isArray(obj.records)&&obj.records.length>0,
+   Array.isArray(obj.records)&&obj.records.every(x=>x&&/^\\d{4}-\\d{2}-\\d{2}$/.test(x.date||"")&&Number(x.listening)>=5&&Number(x.listening)<=495&&Number(x.reading)>=5&&Number(x.reading)<=495&&Number(x.total)===Number(x.listening)+Number(x.reading)&&String(x.loss||"").trim()),
+   typeof obj.analysis==="string"&&obj.analysis.trim().length>0
+  ];
+  status.textContent=checks.every(Boolean)?"JSON 檔案驗收通過：已從實際下載檔讀回、解析成功，且所有必要欄位與分數加總有效。":"JSON 檔案可解析，但欄位驗收未通過（"+checks.filter(x=>!x).length+" 項失敗）。請檢查並重新下載。";
+ }catch(e){status.textContent="驗收未通過：無法解析下載檔的 JSON 格式。"}
+});
 render();
 </script><script src="/assets/toeic-return.js?v=20261101"></script>
 </body></html>
