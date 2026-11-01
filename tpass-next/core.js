@@ -87,7 +87,7 @@ function openPdfReport(payload){
     <tr><td>${i+1}</td><td>${safe(x.question_id||"")}</td><td>${safe(x.student_answer||"")}</td><td>${safe(x.correct_answer||"")}</td><td>${x.is_correct?"O":"X"}</td></tr>`).join("");
   w.document.write(`<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><title>T-PASS Result</title>
   <style>body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif;padding:28px;color:#173b2a}h1{color:#236b45}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{border:1px solid #aaa;padding:7px;text-align:left}small{color:#666}@media print{button{display:none}}</style></head><body>
-  <h1>T-PASS 樂齡多益學習診斷結果</h1>
+  <h1>T-PASS 多益學習診斷結果</h1>
   <p>姓名：${safe(payload.student_name)}</p><p>Email：${safe(payload.email)}</p>
   <p>測驗：${safe(payload.assessment_type)}</p><p>分數：${safe(payload.total_score)}｜正確率：${safe(payload.accuracy)}</p>
   <p>主要弱點：${safe(payload.primary_weakness)}</p><p>Submission ID：${safe(payload.submission_id)}</p>

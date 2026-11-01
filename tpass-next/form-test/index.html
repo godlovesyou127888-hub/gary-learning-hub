@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>結果寄送｜樂齡多益</title><script src="../core.js"></script><style id="s"></style></head><body><main class="wrap">
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>結果寄送｜多益</title><script src="../core.js"></script><style id="s"></style></head><body><main class="wrap">
 <section class="hero"><h1 id="pageTitle">FormSubmit 單獨測試</h1><p id="pageLead">不做測驗，只確認資料能不能真正送達。</p></section>
 <section class="card"><h2 id="stepTitle">只做這一步</h2><p class="muted" id="stepText">填姓名與 Email → 按「送出測試」→ 會開啟 FormSubmit 新頁面。看到成功頁才算送達。</p>
 <form action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" target="_blank">
@@ -16,7 +16,7 @@ s.textContent=baseStyles();
 const p=new URLSearchParams(location.search);
 if(p.get("mode")==="assessment"){
   const data=loadPendingDelivery();
-  pageTitle.textContent="樂齡多益｜寄送診斷結果";
+  pageTitle.textContent="多益｜寄送診斷結果";
   pageLead.textContent="這一頁就是已實測成功的 FormSubmit 寄送頁。";
   stepTitle.textContent="最後一步：寄送結果";
   stepText.textContent="請確認姓名、Email 與結果摘要，再按「寄送診斷結果」。";
