@@ -1,0 +1,128 @@
+<!doctype html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sylvia IELTS Speaking Lab V1</title>
+<style>
+:root{--p:#0f766e;--p2:#0ea5a4;--bg:#f5f8f7;--card:#fff;--text:#1f2937;--muted:#667085;--line:#dfe7e5}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+header{background:linear-gradient(135deg,var(--p),var(--p2));color:white;padding:22px 16px;position:sticky;top:0;z-index:5}.wrap{max-width:1000px;margin:auto}
+h1{margin:0;font-size:27px}.sub{opacity:.92;font-size:14px}nav{display:flex;gap:8px;overflow:auto;margin-top:12px}nav button{border:0;border-radius:999px;padding:8px 12px;background:#ffffff22;color:#fff;white-space:nowrap}nav button.on{background:#fff;color:var(--p);font-weight:800}
+main{padding:18px}section{display:none}section.on{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 5px 16px #1018280a}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}@media(max-width:720px){.grid,.grid3{grid-template-columns:1fr}h1{font-size:23px}}
+.kpi{font-size:27px;font-weight:900;color:var(--p)}.badge{display:inline-block;background:#e7f7f5;color:var(--p);border-radius:999px;padding:4px 8px;font-size:12px;font-weight:800}.tip{border-left:4px solid var(--p);background:#effafa;padding:10px 12px;border-radius:8px}.ok{background:#ecfdf3;border-left-color:#12b76a}.muted{color:var(--muted)}
+textarea,input,select{width:100%;padding:10px;border:1px solid #d0d5dd;border-radius:10px;font:inherit;background:#fff}textarea{min-height:140px}.action{border:0;border-radius:10px;padding:10px 14px;background:var(--p);color:#fff;font-weight:800;cursor:pointer}.ghost{border:1px solid #b9dcd9;border-radius:10px;padding:9px 12px;background:#fff;color:var(--p);font-weight:700;cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#f8fbfa}.status{padding:10px 12px;border-radius:10px;background:#f2f4f7;margin-top:10px}.footer{text-align:center;color:var(--muted);padding:20px;font-size:13px}
+canvas{width:100%;height:280px;border:1px solid var(--line);border-radius:12px;background:white}
+</style></head><body>
+<header><div class="wrap">
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+<a href="/sylvia-ielts-30day/" style="display:inline-block;background:#fff;color:#0f766e;text-decoration:none;font-weight:800;padding:9px 13px;border-radius:999px">Sylvia Writing Lab</a>
+<a href="https://gary-ielts-day.gary2049.chatgpt.site" target="_blank" rel="noopener" style="display:inline-block;background:#fff;color:#0f766e;text-decoration:none;font-weight:800;padding:9px 13px;border-radius:999px">雅思考試的一天 ↗</a>
+<button type="button" onclick="go('contact')" style="background:#ffffff22;color:#fff;font-weight:800;padding:9px 13px;border:1px solid #ffffff55;border-radius:999px;cursor:pointer">聯絡站長</button>
+</div>
+<h1>Sylvia IELTS Speaking Lab</h1><div class="sub">Part 1–3 → 錄音／自評 → Gary 四項評分 → 診斷處方 → 自動派課 → 進步曲線</div><nav id="nav"></nav></div></header>
+<main class="wrap">
+
+<section id="dashboard" class="on">
+<div class="card"><h2>我的最新批改｜My Latest Feedback</h2><div id="latestReview" class="muted">尚未有 Gary 老師批改紀錄。</div></div>
+<div class="grid3">
+<div class="card"><span class="badge">Target</span><div class="kpi">Band 7.0–7.5+</div><div class="muted">先穩定流暢與展開，再精修字彙與發音。</div></div>
+<div class="card"><span class="badge">Attempts</span><div class="kpi" id="attemptCount">0</div><div class="muted">已完成口說練習</div></div>
+<div class="card"><span class="badge">Latest Band</span><div class="kpi" id="latestBand">—</div><div class="muted">Gary 評分後更新</div></div>
+</div>
+<div class="card"><h2>下一次自動派課｜Adaptive Next Assignment</h2><div id="adaptiveBox" class="muted">完成一次 Gary 批改後，系統會依最低構面自動派下一個口說任務。</div></div>
+<div class="card"><h2>Speaking Band 進步曲線</h2><canvas id="chart" width="900" height="280"></canvas></div>
+</section>
+
+<section id="practice">
+<div class="card"><h2>Part 1–3 題庫</h2>
+<div class="grid"><label>練習組<select id="setSelect"></select></label><label>Part<select id="partSelect"><option>Part 1</option><option>Part 2</option><option>Part 3</option></select></label></div>
+<div id="questionBox" class="tip" style="margin-top:12px"></div></div>
+<div class="card"><h2>回答規劃｜Answer Plan</h2>
+<textarea id="answerPlan" placeholder="先寫關鍵字，不要寫完整稿。"></textarea>
+<div class="grid3"><div class="tip"><b>Part 1</b><br>Answer + Reason + Small detail</div><div class="tip"><b>Part 2</b><br>Story arc + detail + feeling</div><div class="tip"><b>Part 3</b><br>Point + Why + Example + Implication</div></div>
+</div>
+<div class="card"><h2>錄音與自評</h2>
+<p><button class="action" id="startRec">開始錄音</button> <button class="ghost" id="stopRec" disabled>停止</button> <button class="ghost" id="playRec" disabled>播放錄音</button></p>
+<audio id="audio" controls style="width:100%;display:none"></audio>
+<div id="recStatus" class="status">尚未錄音。</div>
+<div class="grid">
+<label>流暢度自評<select id="selfFluency"><option>需要改善</option><option>普通</option><option>穩定</option></select></label>
+<label>最不確定<input id="selfConcern" placeholder="例如：停頓／時態／發音"></label>
+</div>
+<p><button class="action" onclick="saveAttempt()">儲存這次練習</button></p></div>
+</section>
+
+<section id="records"><div class="card"><h2>練習紀錄</h2><div style="overflow:auto"><table><thead><tr><th>日期</th><th>Part</th><th>題目</th><th>Band</th><th>主要問題</th></tr></thead><tbody id="historyBody"></tbody></table></div></div></section>
+
+<section id="grading"><div class="card"><h2>Gary 四項評分｜Teacher Score Entry</h2>
+<p class="muted">IELTS Speaking 四項官方評分構面：</p>
+<div class="grid">
+<label>Fluency & Coherence｜流暢度與連貫<input id="g1" type="number" min="0" max="9" step=".5"></label>
+<label>Lexical Resource｜字彙資源<input id="g2" type="number" min="0" max="9" step=".5"></label>
+<label>Grammatical Range & Accuracy｜文法多樣性與正確性<input id="g3" type="number" min="0" max="9" step=".5"></label>
+<label>Pronunciation｜發音<input id="g4" type="number" min="0" max="9" step=".5"></label>
+</div>
+<label>選擇練習<select id="gradeRecord"></select></label>
+<label>主要問題<input id="gradeErrors" placeholder="例如：停頓太多；答案展開不足；時態不穩"></label>
+<label>Gary 老師一句建議<input id="teacherNote" placeholder="下一次唯一修正重點"></label>
+<div class="card" style="margin-top:12px;background:#f7fbfa"><h3 style="margin-top:0">自動診斷處方</h3><div id="autoPrescription" class="muted">填入四項分數後自動產生。</div></div>
+<p><button class="action" onclick="saveGrade()">儲存分數與處方</button></p><div id="gradeResult" class="status"></div>
+</div></section>
+
+<section id="errors"><div class="card"><h2>Speaking Error Tracker</h2><div id="errorSummary"></div></div>
+<div class="card"><h2>Sylvia 目前高價值口說提醒</h2><table>
+<tr><th>問題</th><th>修正策略</th></tr>
+<tr><td>回答太短</td><td>Part 1 至少 Answer + Reason + Detail</td></tr>
+<tr><td>Part 2 像背稿</td><td>用故事線，不背完整句；保留自然停頓</td></tr>
+<tr><td>Part 3 只有觀點</td><td>Point → Why → Example → Implication</td></tr>
+<tr><td>停頓過多</td><td>用 chunking，避免逐字翻譯中文</td></tr>
+<tr><td>文法求難</td><td>先確保時態與基本句正確，再加入複句</td></tr>
+</table></div></section>
+
+<section id="contact"><div class="card"><h2>聯絡站長｜Contact Gary</h2>
+<form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" style="display:grid;gap:10px">
+<input type="hidden" name="_subject" value="Sylvia IELTS Speaking Lab｜聯絡站長"><input type="hidden" name="_captcha" value="false">
+<label>姓名<input name="name" value="Sylvia" required></label><label>Email<input type="email" name="email" required></label>
+<label>留言<textarea name="message" rows="6" required></textarea></label><button class="action" type="submit">送出給站長</button>
+</form></div></section>
+
+</main><div class="footer">Sylvia IELTS Speaking Lab V1｜Adaptive Coaching</div>
+<script>
+const tabs=[['dashboard','首頁'],['practice','口說練習'],['records','練習紀錄'],['grading','Gary評分'],['errors','錯誤追蹤'],['contact','聯絡站長']];
+tabs.forEach((x,i)=>{const b=document.createElement('button');b.textContent=x[1];b.dataset.id=x[0];if(i===0)b.classList.add('on');b.onclick=()=>go(x[0]);nav.appendChild(b)});
+function go(id){document.querySelectorAll('section').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.id===id));scrollTo(0,0)}
+
+const sets=[
+{p1:'Do you enjoy studying English? Why or why not?',p2:'Describe a skill you would like to improve. You should say what it is, why you want to improve it, how you plan to practise it, and explain how it would help you.',p3:'Why do some adults find it difficult to learn new skills? How can schools or workplaces help people keep learning?'},
+{p1:'What kind of place do you like to study in?',p2:'Describe a teacher who influenced you. You should say who the person was, what they taught you, what was special about them, and explain why they influenced you.',p3:'What qualities make a good teacher? Do you think technology will change the role of teachers?'},
+{p1:'How often do you use your phone for learning?',p2:'Describe a useful app or website you use. You should say what it is, how you use it, why it is useful, and explain whether you would recommend it.',p3:'How has technology changed the way people learn? What are the disadvantages of relying too much on technology?'},
+{p1:'Do you prefer travelling alone or with other people?',p2:'Describe a memorable trip you have taken. You should say where you went, who you went with, what you did, and explain why it was memorable.',p3:'Why do people travel? How can tourism affect local communities?'},
+{p1:'What do you usually do to relax?',p2:'Describe an activity that helps you reduce stress. You should say what it is, when you do it, how often you do it, and explain why it helps.',p3:'Why are people more stressed today? What can governments and employers do to improve well-being?'}
+];
+sets.forEach((_,i)=>setSelect.add(new Option('Set '+(i+1),i)));
+function showQuestion(){const s=sets[+setSelect.value],p=partSelect.value;questionBox.innerHTML='<b>'+p+'</b><br>'+s[p==='Part 1'?'p1':p==='Part 2'?'p2':'p3']}
+setSelect.onchange=showQuestion;partSelect.onchange=showQuestion;showQuestion();
+
+let recorder,chunks=[],blobUrl=null;
+startRec.onclick=async()=>{try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});recorder=new MediaRecorder(stream);chunks=[];recorder.ondataavailable=e=>chunks.push(e.data);recorder.onstop=()=>{const blob=new Blob(chunks,{type:recorder.mimeType||'audio/webm'});blobUrl=URL.createObjectURL(blob);audio.src=blobUrl;audio.style.display='block';playRec.disabled=false;recStatus.textContent='✅ 錄音完成，可播放回聽。';stream.getTracks().forEach(t=>t.stop())};recorder.start();startRec.disabled=true;stopRec.disabled=false;recStatus.textContent='🔴 錄音中…'}catch(e){recStatus.textContent='⚠️ 無法使用麥克風，請確認瀏覽器權限。'}};
+stopRec.onclick=()=>{if(recorder&&recorder.state!=='inactive')recorder.stop();startRec.disabled=false;stopRec.disabled=true};playRec.onclick=()=>audio.play();
+
+let records=JSON.parse(localStorage.getItem('sylvia_ielts_speaking_records')||'[]');
+function saveAttempt(){const s=sets[+setSelect.value],p=partSelect.value,q=s[p==='Part 1'?'p1':p==='Part 2'?'p2':'p3'];records.push({id:'SPK-'+Date.now(),date:new Date().toISOString().slice(0,10),part:p,question:q,plan:answerPlan.value.trim(),self_fluency:selfFluency.value,self_concern:selfConcern.value.trim(),band:null,scores:null,errors:'',teacher_note:'',prescription:null});saveRecords();alert('已儲存這次口說練習。')}
+function saveRecords(){localStorage.setItem('sylvia_ielts_speaking_records',JSON.stringify(records));renderAll()}
+function prescriptionFor(vals){const labels=['Fluency & Coherence 流暢度與連貫','Lexical Resource 字彙資源','Grammatical Range & Accuracy 文法','Pronunciation 發音'];const tasks=[
+'下一次只練「不停超過 2 秒」：用 chunking 與自然連接語，把答案說完整。',
+'下一次每題先準備 3 個自然 collocations，回答時至少成功使用 2 個，不追求艱深字。',
+'下一次只守住時態、主謂一致與句尾完整；每題加入 1 個正確複句即可。',
+'下一次只練重音、連音與句子節奏；先求清楚易懂，不追求模仿母語口音。'
+];const min=Math.min(...vals),idx=vals.indexOf(min);return {bottleneck:labels[idx],score:min,task:min>=7.5?'維持高分穩定度：下一次做完整 Part 1–3 模擬並控制自然流暢。':tasks[idx]}}
+function adaptiveTaskFor(r){const b=(r.prescription?.bottleneck||'');if(b.startsWith('Fluency'))return {title:'流暢度微訓練',task:'Part 1 連續 3 題，每題 25–35 秒，不停頓超過 2 秒。'};if(b.startsWith('Lexical'))return {title:'Collocation 微訓練',task:'選 1 個主題，先列 6 個自然搭配詞，再完成 Part 2 兩分鐘回答。'};if(b.startsWith('Grammatical'))return {title:'文法穩定訓練',task:'先改寫 5 個舊錯句，再回答 2 題 Part 3；每題只加入 1 個正確複句。'};if(b.startsWith('Pronunciation'))return {title:'發音清晰度訓練',task:'錄 60 秒回答兩次；第二次只修重音、連音與語句節奏。'};return {title:'完整模擬',task:'完成 Part 1–3 一輪，維持自然流暢與穩定文法。'}}
+function updatePreview(){if(!records.length)return;const vals=[g1,g2,g3,g4].map(x=>Number(x.value));if(vals.some(x=>!x)){autoPrescription.textContent='填入四項分數後自動產生。';return}const p=prescriptionFor(vals);autoPrescription.innerHTML='<b>最大瓶頸：</b>'+p.bottleneck+'（'+p.score.toFixed(1)+'）<br><b>下一次只練：</b>'+p.task}
+[g1,g2,g3,g4].forEach(x=>x.oninput=updatePreview);
+function saveGrade(){if(!records.length){alert('尚無練習紀錄');return}const i=+gradeRecord.value,vals=[g1,g2,g3,g4].map(x=>Number(x.value));if(vals.some(x=>!x)){alert('請填四項分數');return}const band=Math.round((vals.reduce((a,b)=>a+b,0)/4)*2)/2,p=prescriptionFor(vals);records[i].scores={fc:vals[0],lr:vals[1],gra:vals[2],pron:vals[3]};records[i].band=band;records[i].errors=gradeErrors.value.trim();records[i].teacher_note=teacherNote.value.trim();records[i].prescription=p;records[i].next_assignment=adaptiveTaskFor(records[i]);saveRecords();gradeResult.innerHTML='✅ Band '+band.toFixed(1)+'<br><b>最大瓶頸：</b>'+p.bottleneck+'<br><b>下一次：</b>'+p.task}
+function renderAll(){attemptCount.textContent=records.length;const graded=records.filter(r=>r.band!=null);latestBand.textContent=graded.length?graded[graded.length-1].band.toFixed(1):'—';historyBody.innerHTML=records.map(r=>'<tr><td>'+r.date+'</td><td>'+r.part+'</td><td>'+r.question+'</td><td>'+(r.band==null?'待批改':r.band.toFixed(1))+'</td><td>'+(r.errors||'—')+'</td></tr>').join('');gradeRecord.innerHTML=records.map((r,i)=>'<option value="'+i+'">'+r.date+'｜'+r.part+'</option>').join('');renderLatest();renderErrors();drawChart()}
+function renderLatest(){const g=records.filter(r=>r.band!=null);if(!g.length){latestReview.textContent='尚未有 Gary 老師批改紀錄。';adaptiveBox.textContent='完成一次 Gary 批改後，系統會依最低構面自動派下一個口說任務。';return}const r=g[g.length-1],s=r.scores||{};latestReview.innerHTML='<div class="grid3"><div class="tip"><b>'+r.date+'｜'+r.part+'</b><br><span class="kpi">Band '+r.band.toFixed(1)+'</span></div><div class="tip"><b>四項分數</b><br>FC：'+(s.fc??'—')+'<br>LR：'+(s.lr??'—')+'<br>GRA：'+(s.gra??'—')+'<br>Pronunciation：'+(s.pron??'—')+'</div><div class="tip"><b>主要問題</b><br>'+(r.errors||'—')+'<br><br><b>Gary 建議</b><br>'+(r.teacher_note||'—')+'</div></div><div class="tip ok" style="margin-top:12px"><b>Band → 下一級個人處方</b><br><b>最大瓶頸：</b>'+r.prescription.bottleneck+'（'+r.prescription.score.toFixed(1)+'）<br><b>下一次只練：</b>'+r.prescription.task+'</div>';const a=r.next_assignment||adaptiveTaskFor(r);adaptiveBox.innerHTML='<div class="tip ok"><b>'+a.title+'</b><br>'+a.task+'</div>'}
+function renderErrors(){const m={};records.forEach(r=>(r.errors||'').split(/[；,，;、]/).map(x=>x.trim()).filter(Boolean).forEach(x=>m[x]=(m[x]||0)+1));const arr=Object.entries(m).sort((a,b)=>b[1]-a[1]);errorSummary.innerHTML=arr.length?'<table><tr><th>問題</th><th>次數</th></tr>'+arr.map(x=>'<tr><td>'+x[0]+'</td><td>'+x[1]+'</td></tr>').join('')+'</table>':'<p class="muted">尚無 Gary 批改問題資料。</p>'}
+function drawChart(){const c=chart,ctx=c.getContext('2d'),W=c.width,H=c.height;ctx.clearRect(0,0,W,H);ctx.strokeStyle='#dfe7e5';ctx.fillStyle='#667085';ctx.font='13px sans-serif';for(let b=5;b<=9;b++){const y=H-30-(b-5)*(H-50)/4;ctx.beginPath();ctx.moveTo(45,y);ctx.lineTo(W-20,y);ctx.stroke();ctx.fillText(b.toFixed(1),8,y+4)}const pts=records.filter(r=>r.band!=null);if(!pts.length)return;ctx.strokeStyle='#0f766e';ctx.lineWidth=3;ctx.beginPath();pts.forEach((r,i)=>{const x=50+i*((W-80)/Math.max(1,pts.length-1)),y=H-30-(r.band-5)*(H-50)/4;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.stroke();pts.forEach((r,i)=>{const x=50+i*((W-80)/Math.max(1,pts.length-1)),y=H-30-(r.band-5)*(H-50)/4;ctx.fillStyle='#0ea5a4';ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fill();ctx.fillStyle='#1f2937';ctx.fillText(r.band.toFixed(1),x-10,y-10)})}
+renderAll();
+</script></body></html>
