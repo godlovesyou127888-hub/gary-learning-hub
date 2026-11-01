@@ -2,6 +2,9 @@
 const DELIVERY_URL='https://script.google.com/macros/s/AKfycbwyb8pphHtOR_oyMu5ICKAYaGZxmWad_3CjX_BchY0PF71tIiuB8KM85utE6Qj27AWK/exec';
 const SENT_PREFIX='interview_english_sent_';
 const el=id=>document.getElementById(id);
+function getState(){
+  try{return JSON.parse(localStorage.getItem('interview_english_coach_v1')||'{}')}catch{return {}}
+}
 
 function validIdentity(){
   const name=el('student')?.value.trim()||'';
@@ -15,8 +18,9 @@ function weakestDimension(d){
     .sort((a,b)=>a.p-b.p)[0]?.k||'';
 }
 function summaryText(){
-  const d=state.diagnosis;
-  const p=Array.isArray(state.practices)?state.practices:[];
+  const s=getState();
+  const d=s.diagnosis;
+  const p=Array.isArray(s.practices)?s.practices:[];
   const wk=weakestDimension(d);
   const map={understand:'理解題目',structure:'組織內容',evidence:'舉證成果',language:'英文表達'};
   const latest=p[p.length-1];
@@ -31,8 +35,9 @@ function summaryText(){
   ].filter(Boolean).join('\n');
 }
 function payload(){
-  const d=state.diagnosis;
-  const p=Array.isArray(state.practices)?state.practices:[];
+  const s=getState();
+  const d=s.diagnosis;
+  const p=Array.isArray(s.practices)?s.practices:[];
   const wk=weakestDimension(d);
   const map={understand:'理解題目',structure:'組織內容',evidence:'舉證成果',language:'英文表達'};
   const submission='INT-'+Date.now();
@@ -62,7 +67,7 @@ function sentKey(id){return SENT_PREFIX+id}
 function prepare(){
   const box=el('delivery'),status=el('deliveryStatus');
   if(!box||!status)return;
-  const ready=!!state.diagnosis;
+  const ready=!!getState().diagnosis;
   box.innerHTML='<b>寄送完整紀錄給 Gary 教練</b>'+
     '<p class="note">寄出內容包含姓名、Email、12 題診斷結果、主要弱點，以及已儲存的 STAR 面試演練。寄送前仍建議先下載 JSON 備份。</p>'+
     '<button id="sendInterviewResult" type="button" '+(ready?'':'disabled')+'>'+(ready?'寄送完整結果給 Gary 教練':'請先完成 12 題診斷')+'</button>'+
