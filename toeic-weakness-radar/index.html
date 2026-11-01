@@ -35,7 +35,7 @@ main{padding:30px 20px 64px}.panel{background:var(--card);border:2px solid var(-
 
 <section id="resultPanel" class="panel hidden"><h2>你的 TOEIC 弱點輪廓</h2><div id="headline"></div><div class="result" id="boxes"></div><div id="recommendation"></div>
 <p><button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF</button></p>
-<p><button class="btn secondary" type="button" onclick="copyWeaknessReport()">複製完整結果</button></p><div class="path" id="appsScriptPilot"><b>Google Apps Script 統一交付｜試點模式</b><p>先下載本次完整 JSON 備份，再前往統一寄送頁。舊版 FormSubmit 暫時保留，不會自動重複送出。Gmail 實收與 Sheets 紀錄驗收前，本入口不列為正式交付。</p><p><button class="btn secondary" type="button" onclick="downloadWeaknessJSONPilot()">① 下載完整 JSON</button> <button class="btn primary" type="button" onclick="startWeaknessAppsScriptPilot()">② 前往 Google Apps Script 寄送頁</button></p><p id="weaknessPilotStatus" role="status">試點待測試；尚未寄送。</p></div><p class="muted">舊版 FormSubmit 若顯示 Thanks 但沒有收到信，請先用「複製完整結果」保存 20 題完整紀錄。</p><form id="weaknessDeliveryForm" action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prepareDelivery()">
+<p><button class="btn secondary" type="button" onclick="copyWeaknessReport()">複製完整結果</button></p><div class="path" id="appsScriptPilot"><b>Google Apps Script 統一交付｜試點模式</b><p>先下載本次完整 JSON 備份，再前往統一寄送頁。舊版 FormSubmit 暫時保留，不會自動重複送出。Gmail 實收與 Sheets 紀錄驗收前，本入口不列為正式交付。</p><p><button class="btn secondary" type="button" onclick="downloadWeaknessJSONPilot()">① 下載完整 JSON</button> <button class="btn primary" type="button" onclick="startWeaknessAppsScriptPilot()">② 前往 Google Apps Script 寄送頁</button></p><p id="weaknessPilotStatus" role="status">Google Sheets＋Gmail 試點已核實；下載檔讀回待驗收。</p><label for="weaknessJsonVerify"><b>③ 驗證實際下載的 JSON 檔</b></label><input id="weaknessJsonVerify" type="file" accept=".json,application/json"><p id="weaknessJsonVerifyStatus" role="status">尚未選取下載檔。本機讀取，不會上傳。</p></div><p class="muted">舊版 FormSubmit 若顯示 Thanks 但沒有收到信，請先用「複製完整結果」保存 20 題完整紀錄。</p><form id="weaknessDeliveryForm" action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prepareDelivery()">
 <input type="hidden" name="_subject" value="TOEIC Weakness Radar｜Student Result">
 <input type="hidden" name="_template" value="table">
 <input type="hidden" name="_autoresponse" value="已收到你的 TOEIC Weakness Radar 結果。這封信是你的結果副本，請保留作為後續學習與複測參考。">
@@ -180,6 +180,28 @@ async function copyWeaknessReport(){
 }
 function prepareDelivery(){const r=collect();if(r&&r.incomplete!=null){focusWeaknessQuestion(r.incomplete,"Q"+(r.incomplete+1)+" 尚未作答。");return false}const p=r.scores[0],s=r.scores[1];sendCurrent.value=currentScore.value;sendTarget.value=targetScore.value;sendPrimary.value=labels[p.k]+" "+p.mean+"/5";sendSecondary.value=labels[s.k]+" "+s.mean+"/5";sendScores.value=r.scores.map(x=>labels[x.k]+":"+x.mean+"/5").join(" | ");sendResponses.value=r.responses.map(x=>x.question_id+"｜"+x.student_answer+"/5｜"+x.answer_label).join("\n");sendResponsesJson.value=JSON.stringify(r.responses);sendTime.value=new Date().toISOString();return true}
 
+document.getElementById("weaknessJsonVerify").addEventListener("change",async e=>{
+ const el=document.getElementById("weaknessJsonVerifyStatus"),f=e.target.files?.[0];
+ if(!f){el.textContent="尚未選取檔案。";return}
+ if(f.size>2000000){el.textContent="驗收失敗：檔案超過 2MB。";return}
+ try{
+  const d=JSON.parse(await f.text()),errors=[];
+  if(d.assessment_type!=="TOEIC Weakness Radar")errors.push("測驗類型");
+  if(!/^RADAR-\d+-[A-Z0-9]+$/.test(d.submission_id||""))errors.push("Submission ID");
+  if(!String(d.student_name||"").trim())errors.push("姓名");
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email||""))errors.push("Email");
+  if(!Array.isArray(d.responses_json)||d.responses_json.length!==20)errors.push("20題資料");
+  else {
+   const ids=Q.map(x=>x[0]);
+   if(!d.responses_json.every((x,i)=>x.question_id===ids[i]&&Number.isInteger(Number(x.student_answer))&&Number(x.student_answer)>=1&&Number(x.student_answer)<=5&&x.question_zh&&x.question_en&&x.dimension))errors.push("逐題題號／內容／作答");
+   const groups={};d.responses_json.forEach(x=>{(groups[x.dimension]??=[]).push(Number(x.student_answer))});
+   const ordered=Object.entries(groups).map(([k,v])=>({k,mean:Math.round(v.reduce((a,b)=>a+b,0)/v.length*100)/100})).sort((a,b)=>b.mean-a.mean);
+   if(ordered.length!==5||!ordered[0]||d.primary_weakness!==labels[ordered[0].k]+" "+ordered[0].mean+"/5"||d.secondary_weakness!==labels[ordered[1].k]+" "+ordered[1].mean+"/5")errors.push("主次弱點與作答不一致");
+  }
+  if(!String(d.summary||"").includes("20 題完整作答"))errors.push("摘要");
+  el.textContent=errors.length?"JSON 可解析，但驗收未通過："+errors.join("、")+"。":"JSON 下載檔驗收通過：已讀回實際檔案，20題及主次弱點一致。Submission ID："+d.submission_id+"。";
+ }catch(err){el.textContent="JSON 驗收未通過：檔案無法解析。"}
+});
 function weaknessPilotPayload(){
  const x=collect();
  if(x?.incomplete!=null){focusWeaknessQuestion(x.incomplete,"請先完成第 "+(x.incomplete+1)+" 題。");return null}
