@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>結果寄送｜多益</title><script src="../core.js?v=20261101-bridge-v9"></script><style id="s"></style></head><body><main class="wrap">
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>結果寄送｜多益</title><script src="../core.js?v=20261101-bridge-v10"></script><style id="s"></style></head><body><main class="wrap">
 <section class="hero"><h1 id="pageTitle">FormSubmit 單獨測試</h1><p id="pageLead">不做測驗，只確認資料能不能真正送達。</p></section>
 <section class="card"><h2 id="stepTitle">只做這一步</h2><p class="muted" id="stepText">填姓名與 Email → 按「送出測試」→ 會開啟 FormSubmit 新頁面。看到成功頁才算送達。</p>
 <form id="deliveryForm" action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" target="_blank">
@@ -100,8 +100,8 @@ function setAssessmentMode(){
   const st=tokenField.value?getDeliveryStatus(tokenField.value):null;
   const statusText=st?.status==="gmail_verified"
     ?"Gmail 已確認收到"
-    :st?.status==="submitted_to_formsubmit"
-      ?"已送往 FormSubmit"
+    :st?.status==="attempted_to_formsubmit"
+      ?"已嘗試送往 FormSubmit（可重試）"
       :"已產生資料";
 
   lifecycleBox.innerHTML="<b>寄送狀態：</b>"+statusText+
