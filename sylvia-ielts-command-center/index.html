@@ -56,7 +56,7 @@ input{width:100%;padding:10px;border:1px solid #d0d5dd;border-radius:10px;font:i
 <h2>聯絡站長｜Contact Gary</h2>
 <p class="muted">如果遇到網站操作、作業送出、分數紀錄、模考安排或 IELTS 學習問題，可直接填寫下列表單。</p>
 <form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" style="display:grid;gap:10px">
-<input type="hidden" name="_subject" value="Sylvia IELTS Command Center｜聯絡站長">
+<input type="hidden" id="contactSubject" name="_subject" value="[Sylvia IELTS][General] 聯絡站長">
 <input type="hidden" name="_captcha" value="false">
 <input type="hidden" name="source" value="Sylvia IELTS Command Center">
 <label>姓名<input name="name" value="Sylvia" required></label>
@@ -98,7 +98,10 @@ const sourceParam=new URLSearchParams(location.search).get('source');
 const validSources=['Listening','Reading','Writing','Speaking'];
 if(sourceParam&&validSources.includes(sourceParam)){
   contactTopic.value=sourceParam;
+  contactSubject.value='[Sylvia IELTS]['+sourceParam+'] 聯絡站長';
   sourceHint.textContent='已自動辨識來源：'+sourceParam+' Lab';
   if(location.hash==='#contact') setTimeout(()=>document.getElementById('contact')?.scrollIntoView({behavior:'smooth',block:'start'}),80);
+}else{
+  contactSubject.value='[Sylvia IELTS][General] 聯絡站長';
 }
 </script></body></html>
