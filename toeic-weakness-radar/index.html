@@ -39,7 +39,7 @@ main{padding:30px 20px 64px}.panel{background:var(--card);border:2px solid var(-
 <input type="hidden" name="_subject" value="TOEIC Weakness Radar｜Student Result">
 <input type="hidden" name="_template" value="table">
 <input type="hidden" name="_autoresponse" value="已收到你的 TOEIC Weakness Radar 結果。這封信是你的結果副本，請保留作為後續學習與複測參考。">
-<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-weakness-radar/">
+<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-submit-complete/">
 <input type="hidden" name="_url" value="https://gary-learning-hub.onrender.com/toeic-weakness-radar/">
 <input type="hidden" name="current_score" id="sendCurrent"><input type="hidden" name="target_score" id="sendTarget"><input type="hidden" name="primary_weakness" id="sendPrimary"><input type="hidden" name="secondary_weakness" id="sendSecondary"><input type="hidden" name="all_scores" id="sendScores"><input type="hidden" name="question_responses" id="sendResponses"><input type="hidden" name="question_responses_json" id="sendResponsesJson"><input type="hidden" name="submitted_at" id="sendTime">
 <button class="btn secondary" type="submit">FormSubmit 備援寄送</button>
@@ -181,4 +181,5 @@ async function copyWeaknessReport(){
 function prepareDelivery(){const r=collect();if(r&&r.incomplete!=null){focusWeaknessQuestion(r.incomplete,"Q"+(r.incomplete+1)+" 尚未作答。");return false}const p=r.scores[0],s=r.scores[1];sendCurrent.value=currentScore.value;sendTarget.value=targetScore.value;sendPrimary.value=labels[p.k]+" "+p.mean+"/5";sendSecondary.value=labels[s.k]+" "+s.mean+"/5";sendScores.value=r.scores.map(x=>labels[x.k]+":"+x.mean+"/5").join(" | ");sendResponses.value=r.responses.map(x=>x.question_id+"｜"+x.student_answer+"/5｜"+x.answer_label).join("\n");sendResponsesJson.value=JSON.stringify(r.responses);sendTime.value=new Date().toISOString();return true}
 function downloadCSV(){const r=collect();if(r&&r.incomplete!=null){focusWeaknessQuestion(r.incomplete,"Q"+(r.incomplete+1)+" 尚未作答。");return}const h=["timestamp","name","email","current_score","target_score",...Q.map(x=>x[0]),...r.scores.map(x=>x.k+"_mean")];const v=[new Date().toISOString(),studentName.value,studentEmail.value,currentScore.value,targetScore.value,...r.raw,...r.scores.map(x=>x.mean)];const esc=x=>'"'+String(x??"").replaceAll('"','""')+'"';const csv="\uFEFF"+h.map(esc).join(",")+"\n"+v.map(esc).join(",");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.download="toeic_weakness_radar.csv";a.click()}
 </script>
+<script src="/assets/toeic-return.js?v=20261101"></script>
 </body></html>
