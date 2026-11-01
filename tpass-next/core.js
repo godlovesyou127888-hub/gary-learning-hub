@@ -29,6 +29,7 @@ function compactResponses(payload){
   }).join("\n");
 }
 function buildMailMessage(payload){
+  if(payload&&typeof payload.preformatted_message==="string"&&payload.preformatted_message.trim()) return payload.preformatted_message.trim();
   const lines=[
     "Submission ID："+(payload.submission_id||""),
     "Submitted At："+(payload.submitted_at||""),
