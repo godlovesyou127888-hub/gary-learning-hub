@@ -4,7 +4,7 @@
 <form action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" target="_blank">
 <input type="hidden" name="_subject" id="subjectField" value="[T-PASS NEXT] FormSubmit 單獨測試">
 <input type="hidden" name="_template" value="table"><input type="hidden" name="_captcha" value="false">
-<input type="hidden" name="test_type" id="typeField" value="T-PASS NEXT FormSubmit Direct POST">
+<input type="hidden" name="test_type" id="typeField" value="T-PASS NEXT FormSubmit Direct POST"><input type="hidden" name="delivery_token" id="tokenField"><input type="hidden" name="submission_id" id="submissionField"><input type="hidden" name="source_page" id="sourceField">
 <div class="row"><input id="nameField" name="name" required placeholder="姓名"><input id="emailField" name="email" type="email" required placeholder="Email"></div>
 <label style="display:block;margin-top:12px">送出內容
 <textarea id="messageField" name="test_message" required style="width:100%;min-height:220px;padding:12px;border:2px solid #cfe0d1;border-radius:12px;font-size:16px"></textarea>
@@ -26,11 +26,14 @@ if(p.get("mode")==="assessment"){
 
   if(data){
     const age=pendingAgeMinutes(data);
+    tokenField.value=deliveryToken||data._delivery_token||"";
+    submissionField.value=data.submission_id||"";
+    sourceField.value=data.source_page||"";
     if(deliveryToken){const st=getDeliveryStatus(deliveryToken);lifecycleBox.innerHTML="<b>寄送狀態：</b>"+(st?.status==="submitted_to_formsubmit"?"已送往 FormSubmit":"已產生資料")+"<br><span style=\"font-size:14px\">Gmail 是否收到仍需 Gary 人工驗收。</span>";}
     nameField.value=data.student_name||"";
     emailField.value=data.email||"";
     subjectField.value="[T-PASS NEXT] "+(data.assessment_type||"Assessment")+"｜"+(data.student_name||"Student");
-    messageField.value=buildMailMessage(data);
+    messageField.value=buildMailMessage(data)+(deliveryToken?"\n\nDelivery Token："+deliveryToken:"");
 
     const src=(p.get("src")||"未標示");
     const stale=age!=null && age>120;
