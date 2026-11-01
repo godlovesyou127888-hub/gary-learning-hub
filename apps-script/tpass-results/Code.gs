@@ -41,12 +41,13 @@ function doPost(e) {
     lock.releaseLock();
   }
 
+  const brand = detectBrand_(p);
   let emailStatus = 'sent';
   let emailSentAt = new Date().toISOString();
   let emailError = '';
 
   try {
-    const subject = '[T-PASS] ' + (p.assessment_type || 'Assessment') + '｜' + (p.student_name || 'Student') + '｜' + submissionId;
+    const subject = '[' + brand.emailPrefix + '] ' + (p.assessment_type || 'Assessment') + '｜' + (p.student_name || 'Student') + '｜' + submissionId;
     const body = buildEmailBody_(p, submissionId, submittedAt);
 
     MailApp.sendEmail({
@@ -58,7 +59,7 @@ function doPost(e) {
     if (p.email && p.email !== COACH_EMAIL) {
       MailApp.sendEmail({
         to: p.email,
-        subject: '你的 ' + (p.assessment_type || 'T-PASS') + ' 結果副本',
+        subject: '你的 ' + (p.assessment_type || brand.displayName) + ' 結果副本',
         body: body
       });
     }
@@ -75,11 +76,11 @@ function doPost(e) {
   return HtmlService.createHtmlOutput(
     '<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
     '<title>已收到結果</title></head><body style="font-family:Arial,\'Noto Sans TC\',sans-serif;max-width:760px;margin:40px auto;padding:20px;line-height:1.7">' +
-    '<h2>結果已先保存到 T-PASS 診斷紀錄總表</h2>' +
+    '<h2>結果已保存到 ' + escapeHtml_(brand.displayName) + ' 診斷紀錄</h2>' +
     '<p><b>Submission ID：</b>' + escapeHtml_(submissionId) + '</p>' +
     '<p><b>Email 狀態：</b>' + escapeHtml_(emailStatus) + '</p>' +
     '<p>即使 Email 失敗，這次提交資料仍已保存。</p>' +
-    '<p><a href="https://gary-learning-hub.onrender.com/tpass-toeic-command-center/">回 T-PASS Command Center</a></p>' +
+    '<p><a href="' + escapeHtml_(brand.returnUrl) + '">回 ' + escapeHtml_(brand.returnLabel) + '</a></p>' +
     '</body></html>'
   );
 }
@@ -114,4 +115,37 @@ function escapeHtml_(s) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+}
+
+
+function detectBrand_(p) {
+  const source = String((p && p.source_page) || '').toLowerCase();
+  const assessment = String((p && p.assessment_type) || '').toLowerCase();
+
+  if (source.indexOf('/presentation-english-coach/') !== -1 ||
+      assessment.indexOf('presentation english coach') !== -1) {
+    return {
+      displayName: 'Presentation English Coach',
+      emailPrefix: 'Presentation English Coach',
+      returnLabel: 'Presentation English Coach',
+      returnUrl: 'https://gary-learning-hub.onrender.com/presentation-english-coach/'
+    };
+  }
+
+  if (source.indexOf('/meeting-english-coach/') !== -1 ||
+      assessment.indexOf('meeting english coach') !== -1) {
+    return {
+      displayName: 'Meeting English Coach',
+      emailPrefix: 'Meeting English Coach',
+      returnLabel: 'Meeting English Coach',
+      returnUrl: 'https://gary-learning-hub.onrender.com/meeting-english-coach/'
+    };
+  }
+
+  return {
+    displayName: 'T-PASS',
+    emailPrefix: 'T-PASS',
+    returnLabel: 'T-PASS Command Center',
+    returnUrl: 'https://gary-learning-hub.onrender.com/tpass-toeic-command-center/'
+  };
 }
