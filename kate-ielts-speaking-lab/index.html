@@ -1,0 +1,26 @@
+<!doctype html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Kate IELTS Speaking Lab：Part 1–3 題庫、口說稿、錄音回聽、Fluency／Pronunciation／Grammar 診斷與教練交付。">
+<title>Kate IELTS Speaking Lab</title><link rel="stylesheet" href="style.css"></head><body>
+<header><nav><a href="/">← Gary Learning Hub</a><a href="/roadmap/">101 Roadmap</a><a href="/kate-ielts-writing-lab/">Kate Writing Lab</a></nav>
+<div class="hero"><p class="eyebrow">KATE IELTS SPEAKING LAB · MVP V1</p><h1>先把答案說完整，<br>再修流暢度、發音與時態。</h1><p class="lead">Part 1／2／3 口說訓練：題目、計時、錄音回聽、逐字稿、自評與重錄全部集中在同一站。</p>
+<div class="pills"><span>Part 1–3</span><span>錄音回聽</span><span>四構面自評</span><span>教練交付</span></div></div></header>
+<main>
+<section class="card"><p class="eyebrow">01 · PRACTICE</p><h2>選題並完成一次口說</h2>
+<div class="grid"><label>Part<select id="part"><option value="1">Part 1</option><option value="2">Part 2</option><option value="3">Part 3</option></select></label><label>姓名<input id="student" value="Kate"></label><label>Email<input id="email" type="email" placeholder="student@example.com"></label><label>日期<input id="date" type="date"></label></div>
+<label>題目<select id="promptSelect"></select></label><div class="promptBox"><h3 id="prompt"></h3><p id="promptZh"></p></div>
+<div class="timer"><span id="timerText">00:00</span><div class="actions"><button id="startTimer">開始計時</button><button id="stopTimer" class="secondary">停止</button><button id="resetTimer" class="secondary">歸零</button></div></div>
+<div class="actions"><button id="recordBtn">開始錄音</button><button id="stopRecord" class="secondary" disabled>停止錄音</button></div><audio id="audio" controls></audio><p id="recordStatus" role="status"></p>
+<label>口說逐字稿<textarea id="transcript" rows="10" maxlength="6000" placeholder="把剛才實際說的內容寫下來"></textarea></label><p id="wordCount" class="note">0 words</p></section>
+
+<section class="card"><p class="eyebrow">02 · DIAGNOSE</p><h2>四構面自我診斷</h2><div id="rubric"></div>
+<label>主要問題<select id="mainIssue"></select></label><label>Gary 教練重點／自己的觀察<textarea id="coachNote" rows="4" maxlength="2200"></textarea></label>
+<button id="saveAttempt">儲存這次口說</button><p id="saveStatus" role="status"></p></section>
+
+<section class="card"><p class="eyebrow">03 · RETAKE</p><h2>同一題再說一次</h2><label>第一次最想修的地方<textarea id="retakeGoal" rows="3" maxlength="1200" placeholder="例如：少用停頓詞、統一過去式、句尾清楚收音"></textarea></label>
+<label>第二次逐字稿<textarea id="retakeTranscript" rows="8" maxlength="6000"></textarea></label><div class="grid"><label>重錄自評<select id="retakeScore"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select></label><label>是否改善<select id="improved"><option value="yes">有改善</option><option value="partial">部分改善</option><option value="no">尚未改善</option></select></label></div>
+<button id="saveRetake">儲存重錄</button><p id="retakeStatus" role="status"></p></section>
+
+<section class="card"><p class="eyebrow">04 · REVIEW</p><h2>學習紀錄</h2><div id="summary"></div><details><summary>查看歷次口說與重錄</summary><div id="history"></div></details>
+<div class="actions"><button id="download">下載 JSON</button><button id="print" class="secondary">列印／PDF</button><button id="sendCoach">寄送完整結果給 Gary 教練</button></div><p id="deliveryStatus" role="status"></p></section>
+</main><footer>Gary · Kate IELTS Speaking Lab MVP V1</footer><script src="app.js"></script></body></html>
