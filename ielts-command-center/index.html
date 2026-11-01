@@ -125,16 +125,16 @@ footer{text-align:center;padding:30px;color:var(--muted)}
 <li>設定下一次 Mock Test 要驗證的指標</li>
 </ul>
 <div class="boundary"><b>申請條件：</b>先完成至少一份 IELTS 診斷或 Mock Test，讓 Gary 有真實作答證據可以判斷。每位學員限免費申請一次；名額與時段需確認。</div>
-<form class="applyform" action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST">
+<form class="applyform" id="freeConsultForm" action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST">
 <input type="hidden" name="_subject" value="[IELTS] 免費一次 Gary 一對一策略諮詢申請">
 <input type="hidden" name="_template" value="table">
 <input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/ielts-command-center/">
-<label>姓名<input name="name" required></label>
-<label>Email<input name="email" type="email" required></label>
-<label>目前 Overall／各科 Band<input name="current_band" placeholder="例如 Overall 6.0；L6.5 R6.0 W5.5 S6.0"></label>
+<label>姓名<input id="consultName" name="name" required></label>
+<label>Email<input id="consultEmail" name="email" type="email" required></label>
+<label>目前 Overall／各科 Band<input id="consultBand" name="current_band" placeholder="例如 Overall 6.0；L6.5 R6.0 W5.5 S6.0"></label>
 <label>目標 Band<input name="target_band" placeholder="例如 Overall 7.0"></label>
 <label>考試日期<input name="exam_date" type="date"></label>
-<label>目前最困擾的問題<textarea name="main_problem" rows="4" placeholder="例如：Writing 一直卡 5.5，不知道該先改 Task Response 還是 Grammar"></textarea></label>
+<label>目前最困擾的問題<textarea id="consultProblem" name="main_problem" rows="4" placeholder="例如：Writing 一直卡 5.5，不知道該先改 Task Response 還是 Grammar"></textarea></label>
 <label>方便諮詢時段<input name="preferred_time" placeholder="例如 平日 19:00–21:00"></label>
 <button class="btn" type="submit">免費申請一次策略諮詢</button>
 </form>
@@ -204,5 +204,46 @@ footer{text-align:center;padding:30px;color:var(--muted)}
 
 <script>
 (()=>{const key="gary_ielts_command_flow_v1";const boxes=[...document.querySelectorAll("[data-ielts-step]")];let saved={};try{saved=JSON.parse(localStorage.getItem(key)||"{}")}catch{};boxes.forEach(b=>{b.checked=!!saved[b.dataset.ieltsStep];b.addEventListener("change",()=>{const d={};boxes.forEach(x=>d[x.dataset.ieltsStep]=x.checked);localStorage.setItem(key,JSON.stringify(d));draw()})});function draw(){const done=boxes.filter(x=>x.checked).length;const bar=document.getElementById("ieltsFlowBar"),txt=document.getElementById("ieltsFlowText");if(bar)bar.style.width=(done/6*100)+"%";if(txt)txt.textContent=done+" / 6 完成"}draw()})();
+</script>
+
+<script>
+(()=> {
+ const form=document.getElementById("freeConsultForm");
+ if(!form)return;
+ let handoff=null;
+ try{handoff=JSON.parse(localStorage.getItem("ielts_free_consultation_handoff_v1")||"null")}catch{}
+ const used=localStorage.getItem("ielts_free_consultation_used_v1")==="1";
+ const fromMock=new URLSearchParams(location.search).get("from")==="mock";
+ if(handoff){
+   if(document.getElementById("consultName")&&!document.getElementById("consultName").value) document.getElementById("consultName").value=handoff.student||"";
+   if(document.getElementById("consultEmail")&&!document.getElementById("consultEmail").value) document.getElementById("consultEmail").value=handoff.email||"";
+   if(document.getElementById("consultBand")){
+     const b=handoff.bands||{};
+     document.getElementById("consultBand").value="Overall "+Number(handoff.overall||0).toFixed(1)+"；L"+Number(b.Listening||0).toFixed(1)+" R"+Number(b.Reading||0).toFixed(1)+" W"+Number(b.Writing||0).toFixed(1)+" S"+Number(b.Speaking||0).toFixed(1);
+   }
+   if(document.getElementById("consultProblem")){
+     document.getElementById("consultProblem").value="目前最低科目："+(handoff.weakestSkill||"")+" "+Number(handoff.weakestBand||0).toFixed(1)+"；主要錯誤："+(handoff.weakestError||"")+"。希望 Gary 協助判斷未來 30 天唯一優先主線。";
+   }
+ }
+ if(fromMock&&handoff){
+   const box=document.querySelector("#free-consultation .offerbox");
+   if(box&&!used){
+     const msg=document.createElement("div");
+     msg.className="boundary";
+     msg.style.marginBottom="12px";
+     msg.innerHTML="<b>Mock 已完成，資格已解鎖。</b><br>四科 Band、Overall、最低科目與主要錯誤已自動帶入；確認資料後即可送出免費一次策略諮詢申請。";
+     box.insertBefore(msg,box.children[1]||null);
+   }
+ }
+ if(used){
+   const btn=form.querySelector('button[type="submit"]');
+   if(btn){btn.disabled=true;btn.textContent="免費一次申請已使用";}
+   const warn=document.createElement("div");
+   warn.className="boundary";
+   warn.innerHTML="<b>此瀏覽器已記錄你送出過免費一次策略諮詢申請。</b><br>後續請使用付費一對一教練校準。";
+   form.parentNode.insertBefore(warn,form);
+ }
+ form.addEventListener("submit",()=>localStorage.setItem("ielts_free_consultation_used_v1","1"));
+})();
 </script>
 </body></html>
