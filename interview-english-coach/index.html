@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="英文面試診斷、STAR 回答建構、高頻題庫、自評與學習紀錄。">
+<title>Interview English Coach｜英文面試教練</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <nav>
+    <a href="/">← Gary Learning Hub</a>
+    <a href="/business-english-survival-kit/">職場英語診斷</a>
+    <a href="/roadmap/">101 Roadmap</a>
+  </nav>
+  <div class="hero">
+    <p class="eyebrow">INTERVIEW ENGLISH COACH · MVP V1</p>
+    <h1>不是背答案，<br>是把你的經驗說清楚。</h1>
+    <p class="lead">先診斷英文面試最容易失分的環節，再用 STAR 把真實經驗整理成能說出口的答案。</p>
+    <div class="pills"><span>12 題診斷</span><span>8 題高頻演練</span><span>STAR Builder</span><span>本機保存</span></div>
+    <a class="button" href="#diagnosis">開始診斷 ↓</a>
+  </div>
+</header>
+
+<main>
+  <aside>
+    <div class="card sticky">
+      <p class="eyebrow">練習路線</p>
+      <a href="#diagnosis">01｜找出失分點</a>
+      <a href="#practice">02｜STAR 演練</a>
+      <a href="#review">03｜保存與複習</a>
+      <p class="note">本站為自編英文面試練習，不代表任何公司正式甄選標準；自評結果需搭配真實面試回饋校準。</p>
+    </div>
+  </aside>
+
+  <div>
+    <section class="card" id="diagnosis">
+      <p class="eyebrow">01 · DIAGNOSE</p>
+      <h2>你真正卡在哪裡？</h2>
+      <p>12 題情境題，涵蓋「理解題目、組織內容、舉證、英文表達」四個構面。</p>
+      <div class="grid">
+        <label>姓名<input id="student" maxlength="100" autocomplete="name"></label>
+        <label>Email<input id="email" type="email" maxlength="254" autocomplete="email"></label>
+      </div>
+      <p class="note">資料只保存在這台裝置。需要帶走時，請下載 JSON 或列印 PDF。</p>
+      <div class="progressWrap"><div id="quizProgress" class="progressBar"></div></div>
+      <p id="progressText" class="note">已完成 0 / 12 題</p>
+      <form id="quizForm"><div id="questions"></div><button type="submit">完成診斷</button></form>
+      <p id="quizStatus" role="status"></p>
+      <div id="diagnosisResult" hidden>
+        <h3 id="score"></h3>
+        <div id="dimensions" class="metrics"></div>
+        <p id="prescription"></p>
+        <details><summary>查看逐題解析</summary><div id="answerReview"></div></details>
+        <a class="button secondary" href="#practice">帶著最低分構面進入 STAR 演練 ↓</a>
+      </div>
+    </section>
+
+    <section class="card" id="practice">
+      <p class="eyebrow">02 · STAR PRACTICE</p>
+      <h2>把經驗整理成面試官聽得懂的故事。</h2>
+      <label>選擇面試題<select id="promptSelect"></select></label>
+      <div class="promptBox">
+        <p class="badge" id="promptCategory"></p>
+        <h3 id="promptQuestion"></h3>
+        <p id="promptZh"></p>
+      </div>
+
+      <div class="starGrid">
+        <label><b>S｜Situation 情境</b><textarea id="situation" rows="3" maxlength="800" placeholder="When / where / what context?"></textarea></label>
+        <label><b>T｜Task 任務</b><textarea id="task" rows="3" maxlength="800" placeholder="What were you responsible for?"></textarea></label>
+        <label><b>A｜Action 行動</b><textarea id="action" rows="4" maxlength="1200" placeholder="What exactly did you do?"></textarea></label>
+        <label><b>R｜Result 結果</b><textarea id="result" rows="3" maxlength="800" placeholder="What changed? Add evidence if possible."></textarea></label>
+      </div>
+
+      <label><b>整合成英文回答</b>
+        <textarea id="finalAnswer" rows="8" maxlength="3000" placeholder="Combine your STAR notes into a 60–90 second answer."></textarea>
+      </label>
+      <p id="answerCount" class="note">0 words</p>
+
+      <details>
+        <summary>需要幫助？看回答骨架與示範</summary>
+        <p id="frame" class="english"></p>
+        <p id="model" class="english"></p>
+        <p id="modelZh"></p>
+      </details>
+
+      <fieldset>
+        <legend>自評 5 構面（1–5）</legend>
+        <div id="rubric"></div>
+      </fieldset>
+
+      <div class="actions">
+        <button id="savePractice" type="button">儲存這次演練</button>
+        <button id="nextPrompt" type="button" class="secondary">下一題 →</button>
+      </div>
+      <p id="practiceStatus" role="status"></p>
+    </section>
+
+    <section class="card" id="review">
+      <p class="eyebrow">03 · REVIEW</p>
+      <h2>留下紀錄，下一次只練最弱一點。</h2>
+      <div id="summary"></div>
+      <details><summary>查看已儲存的面試演練</summary><div id="history"></div></details>
+      <div class="actions">
+        <button id="download" type="button">下載 JSON</button>
+        <button id="print" type="button" class="secondary">列印／儲存 PDF</button>
+        <button id="reset" type="button" class="danger">清除此裝置紀錄</button>
+      </div>
+      <p><a href="/">回 Gary Learning Hub</a> · <a href="/roadmap/">回 101 Roadmap</a></p>
+    </section>
+  </div>
+</main>
+
+<footer>Gary · Interview English Coach｜英文面試教練 MVP V1</footer>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
