@@ -1,0 +1,28 @@
+<!doctype html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="IELTS Task 2 Idea Builder：題型辨識、立場決策、論點展開、反方處理、四段式規劃與教練交付。">
+<title>IELTS Task 2 Idea Builder</title><link rel="stylesheet" href="style.css"></head><body>
+<header><nav><a href="/">← Gary Learning Hub</a><a href="/roadmap/">101 Roadmap</a></nav>
+<div class="hero"><p class="eyebrow">IELTS TASK 2 IDEA BUILDER · MVP V1</p><h1>不是沒有想法，<br>是還沒把想法變成論證。</h1><p class="lead">從題型辨識、立場決策、理由、例子到反方處理，建立可直接寫成 Task 2 的完整骨架。</p>
+<div class="pills"><span>5 類題型</span><span>立場決策</span><span>PEEL Builder</span><span>Coach Delivery</span></div></div></header>
+<main>
+<section class="card"><p class="eyebrow">01 · QUESTION</p><h2>先看懂題目要你做什麼</h2>
+<div class="grid"><label>題型<select id="questionType"><option>Opinion</option><option>Discussion</option><option>Advantages / Disadvantages</option><option>Problem / Solution</option><option>Two-part Question</option></select></label><label>姓名<input id="student" placeholder="Student"></label><label>Email<input id="email" type="email"></label><label>日期<input id="date" type="date"></label></div>
+<label>題目<textarea id="question" rows="5" maxlength="2500"></textarea></label>
+<label>你的立場<textarea id="position" rows="3" maxlength="1200" placeholder="I agree / partly agree / both views..."></textarea></label></section>
+
+<section class="card"><p class="eyebrow">02 · IDEA MAP</p><h2>建立兩個可展開的主體段</h2>
+<div class="ideaCard"><h3>Body 1</h3><label>Point<textarea id="p1" rows="2"></textarea></label><label>Why<textarea id="why1" rows="3"></textarea></label><label>Example<textarea id="ex1" rows="3"></textarea></label><label>Link<textarea id="link1" rows="2"></textarea></label></div>
+<div class="ideaCard"><h3>Body 2</h3><label>Point<textarea id="p2" rows="2"></textarea></label><label>Why<textarea id="why2" rows="3"></textarea></label><label>Example<textarea id="ex2" rows="3"></textarea></label><label>Link<textarea id="link2" rows="2"></textarea></label></div></section>
+
+<section class="card"><p class="eyebrow">03 · COUNTERARGUMENT</p><h2>反方與回應</h2>
+<label>可能的反方觀點<textarea id="counter" rows="3"></textarea></label><label>你的回應／限制條件<textarea id="rebuttal" rows="3"></textarea></label></section>
+
+<section class="card"><p class="eyebrow">04 · ESSAY PLAN</p><h2>組成四段式</h2>
+<label>Introduction<textarea id="intro" rows="4"></textarea></label><label>Body 1<textarea id="body1" rows="6"></textarea></label><label>Body 2<textarea id="body2" rows="6"></textarea></label><label>Conclusion<textarea id="conclusion" rows="4"></textarea></label><p id="wordCount" class="note">0 words</p></section>
+
+<section class="card"><p class="eyebrow">05 · SCORE & SAVE</p><h2>四構面自評</h2><div id="rubric"></div><label>主要問題<select id="mainIssue"></select></label><label>Gary 教練重點／自己的觀察<textarea id="coachNote" rows="4"></textarea></label>
+<div class="actions"><button id="savePlan">儲存這次 Idea Plan</button><button id="download" class="secondary">下載 JSON</button><button id="print" class="secondary">列印／PDF</button><button id="sendCoach">寄送完整結果給 Gary 教練</button></div><p id="status" role="status"></p></section>
+
+<section class="card"><p class="eyebrow">06 · HISTORY</p><h2>歷次規劃</h2><div id="summary"></div><div id="history"></div></section>
+</main><footer>Gary · IELTS Task 2 Idea Builder MVP V1</footer><script src="app.js"></script></body></html>
