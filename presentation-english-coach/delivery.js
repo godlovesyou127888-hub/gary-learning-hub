@@ -8,7 +8,9 @@ function deliverySummary(data){
     'Presentation English Coach V1.0',
     '診斷層級：'+(data.diagnostic_level||''),
     '五構面：'+dims,
+    '總分：'+(data.total_score||'')+'｜正確率：'+(data.accuracy||''),
     '主要弱點：'+(data.primary_weakness||''),
+    '次要弱點：'+(data.secondary_weakness||''),
     '簡報練習次數：'+roles.length,
     roles.length?'簡報稿摘要：':'',
     ...roles.slice(-5).map((r,i)=>(i+1)+'. ['+(r.skill||'')+'] '+(r.student_answer||''))
@@ -29,12 +31,13 @@ function deliveryPayload(){
     total_score:data.total_score||'',
     accuracy:data.accuracy||'',
     primary_weakness:data.primary_weakness||'',
-    secondary_weakness:'',
+    secondary_weakness:data.secondary_weakness||'',
     summary:deliverySummary(data),
     responses_json:JSON.stringify({
       quiz_responses:Array.isArray(data.responses_json)?data.responses_json:[],
       dimensions:Array.isArray(data.dimensions)?data.dimensions:[],
       role_responses:Array.isArray(data.role_responses)?data.role_responses:[],
+      practice_summary:(Array.isArray(data.role_responses)?data.role_responses:[]).map(r=>({skill:r.skill,word_count:r.word_count||0,practice_status:r.practice_status||'draft',self_check_count:r.self_check_count||0})),
       scoring_note:data.scoring_note||''
     })
   };
@@ -52,8 +55,8 @@ function prepareDelivery(){
     return;
   }
   const already=localStorage.getItem(sentKey(data.submission_id));
-  box.innerHTML='<div class="deliveryBox"><b>寄送完整紀錄給自己與 Gary 教練</b><p class="note">會送出姓名、Email、診斷分數、五構面、弱點、逐題紀錄與已儲存的簡報稿。寄送前仍建議先下載 JSON。</p><button id="sendMeetingResult" type="button" '+(already?'disabled':'')+'>'+(already?'這筆結果已送出':'寄送完整結果')+'</button><div class="statusLine">'+(already?'已記錄送出時間：'+already:'使用 Google Apps Script → Google Sheet → Gmail 原生寄送。')+'</div></div>';
-  const btn=$('sendMeetingResult');
+  box.innerHTML='<div class="deliveryBox"><b>寄送完整紀錄給自己與 Gary 教練</b><p class="note">會送出姓名、Email、診斷分數、五構面、弱點、逐題紀錄與已儲存的簡報稿。寄送前仍建議先下載 JSON。</p><button id="sendPresentationResult" type="button" '+(already?'disabled':'')+'>'+(already?'這筆結果已送出':'寄送完整結果')+'</button><div class="statusLine">'+(already?'已記錄送出時間：'+already:'使用 Google Apps Script → Google Sheet → Gmail 原生寄送。')+'</div></div>';
+  const btn=$('sendPresentationResult');
   if(!btn)return;
   btn.onclick=()=>{
     if(!validIdentity()){status.textContent='請先確認姓名與有效 Email。';return;}
