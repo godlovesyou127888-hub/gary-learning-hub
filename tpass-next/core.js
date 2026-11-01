@@ -10,32 +10,42 @@ function downloadJSON(name,data){
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:"application/json"}));
   a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
+function compactResponses(payload){
+  const arr=Array.isArray(payload.responses_json)?payload.responses_json:[];
+  return arr.map((x,i)=>{
+    const q=x.question_id||("Q"+(i+1));
+    const sa=x.student_answer??"";
+    const ca=x.correct_answer??"";
+    const ok=x.is_correct?"O":"X";
+    const skill=x.skill||x.dimension||"";
+    const plays=x.plays!=null?("｜播放:"+x.plays):"";
+    return q+"｜學生:"+sa+"｜正解:"+ca+"｜"+ok+(skill?"｜"+skill:"")+plays;
+  }).join("\n");
+}
 function formFields(payload){
   return {
     _subject:"[T-PASS NEXT] "+(payload.assessment_type||"Assessment")+"｜"+(payload.student_name||"Student")+"｜"+payload.submission_id,
     _template:"table",
     _captcha:"false",
-    _autoresponse:"已收到你的 T-PASS NEXT 結果。請保留此信作為學習紀錄副本。",
     submission_id:payload.submission_id||"",
     submitted_at:payload.submitted_at||"",
     assessment_type:payload.assessment_type||"",
-    source_page:payload.source_page||location.href,
     name:payload.student_name||"",
-    email:payload.email||"",
+    student_email:payload.email||"",
     current_score:payload.current_score||"",
     target_score:payload.target_score||"",
     total_score:payload.total_score||"",
     accuracy:payload.accuracy||"",
     primary_weakness:payload.primary_weakness||"",
     secondary_weakness:payload.secondary_weakness||"",
-    summary:typeof payload.summary==="string"?payload.summary:JSON.stringify(payload.summary||{}),
-    responses_json:typeof payload.responses_json==="string"?payload.responses_json:JSON.stringify(payload.responses_json||[])
+    summary:typeof payload.summary==="string"?payload.summary:"診斷完成",
+    item_responses:compactResponses(payload)
   };
 }
 function submitResult(payload,statusEl){
   const localKey="tpass_next_submission_"+payload.submission_id;
   saveLocal(localKey,{...payload,delivery_status:"local_saved"});
-  statusEl.textContent="✅ 本機已保存。現在會開啟 FormSubmit 新頁面；看到成功頁才算真正送達。";
+  statusEl.textContent="✅ 完整結果已保存在本機。現在送出精簡 Email 紀錄；FormSubmit 成功頁代表已接收，但 Gmail 收信仍需另外驗收。";
   statusEl.className="status pending";
 
   const form=document.createElement("form");
