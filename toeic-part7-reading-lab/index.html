@@ -15,7 +15,7 @@ body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans
 <input type="hidden" name="_subject" value="TOEIC Part 7 Reading Diagnostic V1 Result">
 <input type="hidden" name="_template" value="table">
 <input type="hidden" name="_autoresponse" value="已收到你的 TOEIC Part 7 Reading Diagnostic V1 結果。請保留這封結果副本，作為後續閱讀訓練與再測參考。">
-<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-part7-reading-lab/">
+<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-submit-complete/">
 <input type="hidden" name="_url" value="https://gary-learning-hub.onrender.com/toeic-part7-reading-lab/">
 <input type="hidden" name="diagnostic_score" id="sendScore"><input type="hidden" name="weakest_dimension" id="sendWeakness"><input type="hidden" name="dimension_scores" id="sendDimensions"><input type="hidden" name="diagnostic_responses" id="sendDiagnosticResponses"><input type="hidden" name="diagnostic_responses_json" id="sendDiagnosticResponsesJson"><input type="hidden" name="retest_score" id="sendRetest"><input type="hidden" name="retest_responses" id="sendRetestResponses"><input type="hidden" name="retest_responses_json" id="sendRetestResponsesJson"><input type="hidden" name="submitted_at" id="sendTime">
 <button class="btn secondary" type="submit">FormSubmit 備援寄送</button></form></section>
@@ -314,4 +314,5 @@ async function copyPart7Report(){
 }
 function prep(){if(!last){return false}sendScore.value=last.total+"/20";sendWeakness.value=last.weakest;sendDimensions.value=last.ranked.map(x=>x.d+":"+x.score+"/"+x.total).join(" | ");sendDiagnosticResponses.value=last.responses.map(x=>x.question_id+"｜學生："+x.student_answer+"｜正解："+x.correct_answer+"｜"+(x.is_correct?"O":"X")+"｜"+x.dimension).join("\n");sendDiagnosticResponsesJson.value=JSON.stringify(last.responses);sendRetest.value=retestScore===null?"尚未完成":retestScore+"/10";sendRetestResponses.value=(last.retestResponses||[]).map(x=>x.question_id+"｜學生："+x.student_answer+"｜正解："+x.correct_answer+"｜"+(x.is_correct?"O":"X")+"｜"+x.dimension).join("\n");sendRetestResponsesJson.value=JSON.stringify(last.retestResponses||[]);sendTime.value=new Date().toISOString();return true}
 function downloadCSV(){if(!last){alert("請先完成診斷。");return}const rows=[["dimension","score","total","percent"],...last.ranked.map(x=>[x.d,x.score,x.total,x.pct])],esc=v=>'"'+String(v).replaceAll('"','""')+'"';const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\uFEFF"+rows.map(r=>r.map(esc).join(",")).join("\n")],{type:"text/csv;charset=utf-8"}));a.download="toeic_part7_reading_diagnostic_v1.csv";a.click()}
-</script></body></html>
+</script><script src="/assets/toeic-return.js?v=20261101"></script>
+</body></html>
