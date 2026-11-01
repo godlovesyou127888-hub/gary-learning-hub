@@ -16,7 +16,7 @@ main{padding:30px 20px 64px}.panel{background:var(--card);border:2px solid var(-
 .result{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.box{border:1px solid var(--line);border-radius:16px;padding:16px;background:#f7faf8}.score{font-size:34px;font-weight:900}.path{padding:14px;border-left:5px solid var(--accent);background:#f1f7f4;border-radius:10px;margin:12px 0}.hidden{display:none}
 @media(max-width:760px){.grid,.result,.scale{grid-template-columns:1fr}.scale label{text-align:left}.scale input{display:inline-block;margin-right:8px}}
 </style>
-</head>
+<script src="/tpass-next/core.js?v=20261101-toeic-unify-pilot"></script></head>
 <body><div style="background:#314247;color:#fff;padding:10px 16px;font-family:'Noto Sans TC','Microsoft JhengHei',sans-serif"><div style="max-width:1100px;margin:auto;display:flex;gap:10px;flex-wrap:wrap;align-items:center"><strong>T-PASS TOEIC Command Center｜Step 1｜初始診斷</strong><a href="/tpass-toeic-command-center/" style="color:#fff;background:#6f9993;padding:7px 10px;border-radius:9px;text-decoration:none;font-weight:700">← 回 Command Center</a><a href="/toeic-mistake-doctor/" style="color:#314247;background:#fffdf8;padding:7px 10px;border-radius:9px;text-decoration:none;font-weight:700">下一步：Mistake Doctor →</a></div></div>
 <header><div class="wrap"><h1>#28 TOEIC Weakness Radar<br><span style="font-size:.58em">TOEIC Weakness Diagnostic Radar</span></h1><p class="lead">用 20 題快速定位多益真正弱點：Listening、Reading、Vocabulary & Grammar、Strategy、Time & Performance。</p><p><a class="btn secondary" href="/">← Gary Learning Hub</a> <a class="btn secondary" href="/english-stuck-diagnosis/">#25 卡關診斷</a> <a class="btn secondary" href="/english-90day-plan/">#27 90天計畫</a></p></div></header>
 <main class="wrap">
@@ -35,7 +35,7 @@ main{padding:30px 20px 64px}.panel{background:var(--card);border:2px solid var(-
 
 <section id="resultPanel" class="panel hidden"><h2>你的 TOEIC 弱點輪廓</h2><div id="headline"></div><div class="result" id="boxes"></div><div id="recommendation"></div>
 <p><button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF</button></p>
-<p><button class="btn secondary" type="button" onclick="copyWeaknessReport()">複製完整結果</button></p><p class="muted">若 FormSubmit 顯示 Thanks 但沒有收到信，請先用「複製完整結果」保存 20 題完整紀錄。</p><form id="weaknessDeliveryForm" action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prepareDelivery()">
+<p><button class="btn secondary" type="button" onclick="copyWeaknessReport()">複製完整結果</button></p><div class="path" id="appsScriptPilot"><b>Google Apps Script 統一交付｜試點模式</b><p>先下載本次完整 JSON 備份，再前往統一寄送頁。舊版 FormSubmit 暫時保留，不會自動重複送出。Gmail 實收與 Sheets 紀錄驗收前，本入口不列為正式交付。</p><p><button class="btn secondary" type="button" onclick="downloadWeaknessJSONPilot()">① 下載完整 JSON</button> <button class="btn primary" type="button" onclick="startWeaknessAppsScriptPilot()">② 前往 Google Apps Script 寄送頁</button></p><p id="weaknessPilotStatus" role="status">試點待測試；尚未寄送。</p></div><p class="muted">舊版 FormSubmit 若顯示 Thanks 但沒有收到信，請先用「複製完整結果」保存 20 題完整紀錄。</p><form id="weaknessDeliveryForm" action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" onsubmit="return prepareDelivery()">
 <input type="hidden" name="_subject" value="TOEIC Weakness Radar｜Student Result">
 <input type="hidden" name="_template" value="table">
 <input type="hidden" name="_autoresponse" value="已收到你的 TOEIC Weakness Radar 結果。這封信是你的結果副本，請保留作為後續學習與複測參考。">
@@ -179,6 +179,38 @@ async function copyWeaknessReport(){
  }
 }
 function prepareDelivery(){const r=collect();if(r&&r.incomplete!=null){focusWeaknessQuestion(r.incomplete,"Q"+(r.incomplete+1)+" 尚未作答。");return false}const p=r.scores[0],s=r.scores[1];sendCurrent.value=currentScore.value;sendTarget.value=targetScore.value;sendPrimary.value=labels[p.k]+" "+p.mean+"/5";sendSecondary.value=labels[s.k]+" "+s.mean+"/5";sendScores.value=r.scores.map(x=>labels[x.k]+":"+x.mean+"/5").join(" | ");sendResponses.value=r.responses.map(x=>x.question_id+"｜"+x.student_answer+"/5｜"+x.answer_label).join("\n");sendResponsesJson.value=JSON.stringify(r.responses);sendTime.value=new Date().toISOString();return true}
+
+function weaknessPilotPayload(){
+ const x=collect();
+ if(x?.incomplete!=null){focusWeaknessQuestion(x.incomplete,"請先完成第 "+(x.incomplete+1)+" 題。");return null}
+ if(!studentName.value.trim()||!studentEmail.value.trim()||!studentEmail.checkValidity()){alert("請填完整姓名與有效 Email。");return null}
+ const primary=x.scores[0],secondary=x.scores[1];
+ const submission_id=uid("RADAR");
+ return {submission_id,submitted_at:new Date().toISOString(),assessment_type:"TOEIC Weakness Radar",source_page:location.href,student_name:studentName.value.trim(),email:studentEmail.value.trim(),current_score:currentScore.value.trim(),target_score:targetScore.value.trim(),total_score:"20/20 已完成自評",accuracy:"自評量表不適用正確率",primary_weakness:labels[primary.k]+" "+primary.mean+"/5",secondary_weakness:labels[secondary.k]+" "+secondary.mean+"/5",summary:buildWeaknessReport(),responses_json:x.responses,dimension_scores:x.scores};
+}
+let weaknessPilotBackupId="";
+function downloadWeaknessJSONPilot(){
+ const x=weaknessPilotPayload();if(!x)return;
+ const blob=new Blob([JSON.stringify(x,null,2)],{type:"application/json;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download=x.submission_id+".json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),15000);
+ weaknessPilotBackupId=x.submission_id;
+ try{sessionStorage.setItem("weakness_pilot_backup",JSON.stringify(x))}catch(e){}
+ weaknessPilotStatus.textContent="已啟動完整 JSON 下載，請自行確認檔案可開啟；試點尚未寄送。";
+}
+function startWeaknessAppsScriptPilot(){
+ const current=weaknessPilotPayload();if(!current)return;
+ let saved;try{saved=JSON.parse(sessionStorage.getItem("weakness_pilot_backup")||"null")}catch(e){}
+ if(!saved||saved.submission_id!==weaknessPilotBackupId){weaknessPilotStatus.textContent="請先按①下載 JSON，確認備份，再送出。";return}
+ if(!confirm("已確認 JSON 檔案可以開啟？接下來會進入 Google Apps Script 統一寄送頁，尚未通過 Gmail/Sheets E2E 驗收。"))return;
+ // Keep the backed-up Submission ID and recompute live data only to protect against edits after backup.
+ const latest=collect();
+ if(latest.incomplete!=null||JSON.stringify(latest.responses)!==JSON.stringify(saved.responses_json)||studentName.value.trim()!==saved.student_name||studentEmail.value.trim()!==saved.email||currentScore.value.trim()!==saved.current_score||targetScore.value.trim()!==saved.target_score){weaknessPilotStatus.textContent="資料已變更，請重新下載最新 JSON，避免寄送與備份不一致。";return}
+ const result=validateDeliveryPayload(saved);
+ if(!result.ok){weaknessPilotStatus.textContent="欄位驗證失敗："+result.missing.join("、");return}
+ const token=saveTokenizedDelivery(saved);
+ location.href="/tpass-next/form-test/?mode=assessment&src=weakness-radar-pilot&token="+encodeURIComponent(token);
+}
+
 function downloadCSV(){const r=collect();if(r&&r.incomplete!=null){focusWeaknessQuestion(r.incomplete,"Q"+(r.incomplete+1)+" 尚未作答。");return}const h=["timestamp","name","email","current_score","target_score",...Q.map(x=>x[0]),...r.scores.map(x=>x.k+"_mean")];const v=[new Date().toISOString(),studentName.value,studentEmail.value,currentScore.value,targetScore.value,...r.raw,...r.scores.map(x=>x.mean)];const esc=x=>'"'+String(x??"").replaceAll('"','""')+'"';const csv="\uFEFF"+h.map(esc).join(",")+"\n"+v.map(esc).join(",");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.download="toeic_weakness_radar.csv";a.click()}
 </script>
 <script src="/assets/toeic-return.js?v=20261101"></script>
