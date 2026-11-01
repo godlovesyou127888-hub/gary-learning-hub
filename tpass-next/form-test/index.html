@@ -120,6 +120,18 @@ function setAssessmentMode(){
     return;
   }
 
+  const syncNetworkState=()=>{
+    if(!navigator.onLine){
+      submitBtn.disabled=true;
+      lifecycleBox.innerHTML="<b>寄送狀態：</b>目前離線<br><span style='font-size:14px'>請恢復網路後再送出。</span>";
+    }else if(!wasDeliverySubmitted(tokenField.value)){
+      submitBtn.disabled=false;
+    }
+  };
+  window.addEventListener("offline",syncNetworkState);
+  window.addEventListener("online",syncNetworkState);
+  syncNetworkState();
+
   let submitted=false;
   deliveryForm.addEventListener("submit",(e)=>{
     if(submitted){
