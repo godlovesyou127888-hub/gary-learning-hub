@@ -140,6 +140,13 @@ function setAssessmentMode(){
     }
     submitted=true;
     if(tokenField.value) markTokenizedDeliverySubmitted(tokenField.value);
+    localStorage.setItem("tpass_last_completed_submission",JSON.stringify({
+      delivery_token:tokenField.value||"",
+      submission_id:submissionField.value||"",
+      assessment_type:data.assessment_type||"",
+      source_page:data.source_page||"",
+      submitted_at:new Date().toISOString()
+    }));
     submitBtn.textContent="正在送出…";
     submitBtn.disabled=true;
     lifecycleBox.innerHTML="<b>寄送狀態：</b>已送往 FormSubmit<br><span style='font-size:14px'>完成後仍以 Gmail 實際收件為最終驗收。</span>";
