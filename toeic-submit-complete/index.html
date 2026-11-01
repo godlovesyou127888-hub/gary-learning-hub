@@ -19,9 +19,30 @@ p{line-height:1.8}
 <section class="card">
 <h1>資料已送出</h1>
 <p>你已完成這一步的資料送出。請回到 TOEIC Command Center，依主線繼續下一個學習步驟。</p>
+<div id="receipt" class="note" style="padding:14px;background:#f6faf7;border-radius:12px;margin:14px 0">正在讀取本次送出紀錄…</div>
 <p class="note">注意：此頁代表表單已完成送出流程；Gary 端仍以 Gmail 實際收件作為最終驗收依據。</p>
 <a class="btn" href="/tpass-toeic-command-center/">← 回到 TOEIC Command Center</a>
+<a class="btn" id="sourceBack" href="#" style="display:none;background:#fff;color:#173f2d;border:2px solid #173f2d;margin-left:8px">回原測驗頁</a>
 </section>
 </main>
+<script>
+(function(){
+  const box=document.getElementById("receipt");
+  const back=document.getElementById("sourceBack");
+  let d=null;
+  try{d=JSON.parse(localStorage.getItem("tpass_last_completed_submission")||"null")}catch(e){}
+  if(!d){box.textContent="沒有找到本機送出識別資料；仍可直接回 Command Center。";return}
+  box.innerHTML="<b>本次送出：</b>"+(d.assessment_type||"多益資料")+
+    "<br><b>Submission ID：</b>"+(d.submission_id||"未提供")+
+    "<br><b>Delivery Token：</b>"+(d.delivery_token||"未提供")+
+    "<br><b>送出時間：</b>"+new Date(d.submitted_at).toLocaleString("zh-TW");
+  try{
+    const u=new URL(d.source_page,location.origin);
+    if(u.origin===location.origin){
+      back.href=u.href;back.style.display="inline-block";
+    }
+  }catch(e){}
+})();
+</script>
 </body>
 </html>
