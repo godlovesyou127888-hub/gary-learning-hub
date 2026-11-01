@@ -3,7 +3,14 @@
 <section class="card"><div class="actions"><a class="btn outline" href="../">← 回樂齡多益首頁</a><a class="btn outline" href="../form-test/" target="_blank">表單測試</a></div></section>
 <section class="card"><h2>① 基本資料</h2><div class="row"><input id="name" type="text" placeholder="姓名"><input id="email" type="email" placeholder="Email"><input id="current" type="text" inputmode="numeric" placeholder="目前 TOEIC 分數"><input id="target" type="text" inputmode="numeric" placeholder="目標分數"></div><div class="helper">表單可先單獨測試：<a href="../form-test/" target="_blank">開啟 FormSubmit 測試頁</a></div></section>
 <section id="quiz" class="card"></section>
-<section class="card"><h2>② 完成後保存與送出</h2><div class="actions"><button id="grade" type="button">① 完成 T-PASS 診斷</button><button id="pdf" class="secondary">下載／儲存 PDF</button><button id="dl" class="secondary">下載完整 JSON</button><button class="outline" onclick="reportProblem('T-PASS 核心診斷')">問題回報</button></div><div id="result"></div><div id="status" class="status pending">尚未送出</div><a class="btn" id="deliveryBridgeBtn" href="../form-test/?mode=assessment" style="display:none;margin-top:12px">② 前往寄送結果</a><div class="helper"><b>下一步：</b>完成並確認 FormSubmit 成功後，進入 Part 5 文法診斷。</div><a class="btn secondary" href="../part5/">下一步：Part 5</a></section>
+<section class="card"><h2>② 完成後保存與送出</h2><div class="actions"><button id="grade" type="button">① 完成 T-PASS 診斷</button><button id="pdf" class="secondary">下載／儲存 PDF</button><button id="dl" class="secondary">下載完整 JSON</button><button class="outline" onclick="reportProblem('T-PASS 核心診斷')">問題回報</button></div><div id="result"></div><div id="status" class="status pending">尚未送出</div>
+<div id="deliveryOptions" style="display:none;margin-top:12px">
+  <div class="helper"><b>寄送前提醒：</b>請先下載 PDF 或 JSON，確保結果已備份。</div>
+  <div class="actions">
+    <a class="btn" id="deliveryBridgeBtn" href="../form-test/?mode=assessment">A｜使用網站表單寄送</a>
+    <button class="btn secondary" type="button" id="studentShareBtn">B｜使用學生 Email 寄送</button>
+  </div>
+</div><div class="helper"><b>下一步：</b>完成並確認 FormSubmit 成功後，進入 Part 5 文法診斷。</div><a class="btn secondary" href="../part5/">下一步：Part 5</a></section>
 </main><script>
 s.textContent=baseStyles();
 const nameEl=document.getElementById("name");
@@ -33,10 +40,23 @@ const Q=[
 quizEl.innerHTML='<h2>T-PASS｜12 題</h2>'+Q.map((q,i)=>'<div class="q"><b>'+(i+1)+'. '+q[1]+'</b>'+q[2].map((x,j)=>'<label><input type="radio" name="q'+i+'" value="'+j+'"><span>'+x+'</span></label>').join('')+'</div>').join('');
 function prepNativeDelivery(payload){
   savePendingDelivery(payload);
-  const btn=document.getElementById("deliveryBridgeBtn");
-  if(btn)btn.style.display="block";
-  statusEl.textContent="✅ 診斷完成並已保存在本機。請按「② 前往寄送結果」，使用已驗證成功的寄送頁送出。";
+  const box=document.getElementById("deliveryOptions");
+  if(box)box.style.display="block";
+  statusEl.textContent="✅ 診斷完成並已保存在本機。請先下載 PDF 或 JSON，再選擇寄送方式。";
   statusEl.className="status ok";
+}
+async function shareWithStudentEmail(){
+  const payload=loadPendingDelivery();
+  if(!payload){alert("找不到診斷結果，請先完成診斷。");return}
+  const text=buildMailMessage(payload)+"\n\n完整結果已另存 PDF／JSON。";
+  try{
+    if(navigator.share){
+      await navigator.share({title:"T-PASS 診斷結果",text});
+    }else{
+      await navigator.clipboard.writeText(text);
+      alert("結果內容已複製。請開啟學生自己的 Email，貼上後寄出。");
+    }
+  }catch(e){}
 }
 
 let last=null;
@@ -49,6 +69,7 @@ last={submission_id:uid("TPASS"),submitted_at:new Date().toISOString(),assessmen
 saveLocal("tpass_next_diagnostic_last",last);resultEl.innerHTML="<h2>結果："+score+"/12</h2><p>優先訓練："+ranked[0].dimension+"</p><p>第二弱項："+ranked[1].dimension+"</p>";prepNativeDelivery(last)};
 pdfBtn.onclick=()=>openPdfReport(last||loadLocal("tpass_next_diagnostic_last"));
 dlBtn.onclick=()=>downloadJSON("樂齡多益-TPASS-"+Date.now()+".json",last||loadLocal("tpass_next_diagnostic_last")||{note:"尚未完成診斷"});
+document.getElementById("studentShareBtn").onclick=shareWithStudentEmail;
 
 window.addEventListener("error",e=>{
   statusEl.textContent="⚠️ 程式錯誤："+(e.message||"unknown")+"。請截圖回報。";
