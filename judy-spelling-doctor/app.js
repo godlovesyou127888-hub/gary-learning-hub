@@ -1,0 +1,32 @@
+(()=>{"use strict";
+const KEY="judy_spelling_doctor_v1",DELIVERY_URL="https://script.google.com/macros/s/AKfycbwyb8pphHtOR_oyMu5ICKAYaGZxmWad_3CjX_BchY0PF71tIiuB8KM85utE6Qj27AWK/exec",$=id=>document.getElementById(id);
+const BANK=[
+{word:"because",zh:"因為",hint:"I stayed home ___ it was raining."},
+{word:"friend",zh:"朋友",hint:"She is my best ___."},
+{word:"beautiful",zh:"美麗的",hint:"The garden is very ___."},
+{word:"different",zh:"不同的",hint:"These two answers are ___."},
+{word:"important",zh:"重要的",hint:"Sleep is ___ for health."},
+{word:"people",zh:"人們",hint:"Many ___ use smartphones."},
+{word:"school",zh:"學校",hint:"I go to ___ every weekday."},
+{word:"teacher",zh:"老師",hint:"My English ___ is kind."},
+{word:"favorite",zh:"最喜歡的",hint:"Blue is my ___ color."},
+{word:"usually",zh:"通常",hint:"I ___ get up at seven."},
+{word:"answer",zh:"答案",hint:"Please write your ___."},
+{word:"language",zh:"語言",hint:"English is an international ___."}
+];
+let state={runs:[]};try{const x=JSON.parse(localStorage.getItem(KEY)||"{}");state={runs:Array.isArray(x.runs)?x.runs:[]}}catch{}
+const save=()=>localStorage.setItem(KEY,JSON.stringify(state));$("date").value=new Date().toISOString().slice(0,10);
+let current=[],retryItems=[];
+function shuffled(){return [...BANK].sort(()=>Math.random()-.5).slice(0,10)}
+function renderQuiz(){current=shuffled();$("quiz").innerHTML=current.map((x,i)=>`<div class="question"><b>${i+1}. ${x.zh}</b><div class="hint">${x.hint}</div><input id="q${i}" autocomplete="off" spellcheck="false" placeholder="輸入英文單字"></div>`).join("")}
+function normalize(s){return String(s||"").trim().toLowerCase()}
+function diffWord(answer,target){const a=normalize(answer),t=normalize(target),n=Math.max(a.length,t.length);let aw="",tw="",errors=0;for(let i=0;i<n;i++){const ac=a[i]||"∅",tc=t[i]||"∅",same=ac===tc;if(!same)errors++;aw+=`<span class="${same?"rightChar":"wrongChar"}">${ac}</span>`;tw+=`<span class="${same?"rightChar":"wrongChar"}">${tc}</span>`}return{answerHtml:aw,targetHtml:tw,errors}}
+$("submitQuiz").onclick=()=>{const responses=current.map((x,i)=>normalize($("q"+i).value));if(responses.some(x=>!x)){ $("quizStatus").textContent="請完成全部 10 題。";return }let correct=0;const mistakes=[];current.forEach((x,i)=>{if(responses[i]===x.word)correct++;else mistakes.push({...x,answer:responses[i],diff:diffWord(responses[i],x.word)})});const score=correct*10;state.runs.unshift({id:"JSD-"+Date.now(),examName:$("examName").value.trim(),date:$("date").value,score,correct,total:10,mistakes,retryScore:null,createdAt:new Date().toISOString()});save();$("quizStatus").textContent=`本次 ${score} 分，拼錯 ${mistakes.length} 個單字。`;renderErrors(mistakes);renderRetry(mistakes);render()};
+function renderErrors(mistakes){$("errorMap").innerHTML=mistakes.length?mistakes.map(x=>`<div class="errorItem"><b>${x.zh}｜${x.word}</b><div class="diff">你的：${x.diff.answerHtml}</div><div class="diff">正解：${x.diff.targetHtml}</div><div class="hint">字母差異：${x.diff.errors} 個位置</div></div>`).join(""):'<p class="ok">全部拼對。</p>'}
+function renderRetry(items){retryItems=items;$("retryQuiz").innerHTML=items.length?items.map((x,i)=>`<div class="question"><b>${i+1}. ${x.zh}</b><div class="hint">${x.hint}</div><input id="r${i}" autocomplete="off" spellcheck="false" placeholder="再拼一次"></div>`).join(""):'<p class="ok">沒有錯題需要重練。</p>'}
+$("submitRetry").onclick=()=>{const run=state.runs[0];if(!run){$("retryStatus").textContent="請先完成一次診斷。";return}if(!retryItems.length){$("retryStatus").textContent="沒有錯題需要重練。";return}const responses=retryItems.map((x,i)=>normalize($("r"+i).value));if(responses.some(x=>!x)){ $("retryStatus").textContent="請完成所有錯題。";return }let correct=0;retryItems.forEach((x,i)=>{if(responses[i]===x.word)correct++});run.retryScore=Math.round(correct/retryItems.length*100);run.retryAt=new Date().toISOString();save();$("retryStatus").textContent=`錯題重練正確率：${run.retryScore}%`;render()};
+function render(){const r=state.runs[0];$("summary").innerHTML=`<div class="grid"><div class="metric"><b>練習次數</b><br>${state.runs.length}</div><div class="metric"><b>最新分數</b><br>${r?r.score:"—"}</div><div class="metric"><b>最新錯字</b><br>${r?r.mistakes.length:"—"}</div><div class="metric"><b>重練正確率</b><br>${r&&r.retryScore!=null?r.retryScore+"%":"尚未"}</div></div>`; $("history").innerHTML=state.runs.length?state.runs.slice(0,10).map(x=>`<div class="historyItem"><b>${new Date(x.createdAt).toLocaleString()}｜${x.score} 分</b><br><span class="hint">${x.examName||"未命名測驗"}｜錯字：${x.mistakes.map(m=>m.word).join(", ")||"無"}</span></div>`).join(""):"尚無紀錄。"}render();renderQuiz();renderErrors([]);renderRetry([]);
+function payload(){return{site_version:"Judy Spelling Doctor MVP V1",exported_at:new Date().toISOString(),student:$("student").value.trim()||"Judy",email:$("email").value.trim(),runs:state.runs,latest_run:state.runs[0]||null}}
+$("download").onclick=()=>{const p=payload(),u=URL.createObjectURL(new Blob([JSON.stringify(p,null,2)],{type:"application/json"})),a=document.createElement("a");a.href=u;a.download="judy-spelling-doctor-"+Date.now()+".json";a.click();setTimeout(()=>URL.revokeObjectURL(u),500)};$("print").onclick=()=>window.print();
+$("sendCoach").onclick=()=>{const p=payload(),r=p.latest_run;if(!r){$("deliveryStatus").textContent="請先完成一次拼字診斷。";return}if(p.email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email)){$("deliveryStatus").textContent="Email 格式不正確。";return}const body={submission_id:"JSD-"+Date.now(),submitted_at:new Date().toISOString(),assessment_type:"Judy Spelling Doctor｜拼字診斷",source_page:location.href,student_name:p.student,email:p.email,current_score:r.score+"/100",target_score:"100/100",total_score:r.score+"/100",accuracy:r.correct*10+"%",primary_weakness:r.mistakes[0]?.word||"無",secondary_weakness:r.mistakes[1]?.word||"",summary:["Judy Spelling Doctor","測驗："+(r.examName||""),"分數："+r.score+"/100","錯字數："+r.mistakes.length,"錯字："+(r.mistakes.map(m=>m.word).join(", ")||"無"),"錯題重練："+(r.retryScore==null?"尚未":r.retryScore+"%")].join("\n"),responses_json:JSON.stringify(p)};$("deliveryStatus").textContent="正在寄送完整結果給 Gary 教練。看到 Email 狀態：sent 才算完成。";const form=document.createElement("form");form.method="POST";form.action=DELIVERY_URL;form.target="_self";form.style.display="none";Object.entries(body).forEach(([k,v])=>{const i=document.createElement("input");i.type="hidden";i.name=k;i.value=String(v??"");form.appendChild(i)});document.body.appendChild(form);form.submit()};
+})();
