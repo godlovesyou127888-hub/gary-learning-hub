@@ -1,22 +1,22 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>T-PASS NEXT｜核心诊断</title><script src="../core.js"></script><style id="s"></style></head><body><main class="wrap"><div class="card"><h1>T-PASS NEXT｜核心诊断总站</h1><p class="muted">第三个新站：先收基本资料与目前／目标分数，再做 12 题核心诊断，判断优先训练轨道。</p><div class="row"><input id="name" placeholder="姓名"><input id="email" type="email" placeholder="Email"><input id="current" inputmode="numeric" placeholder="目前 TOEIC 分数"><input id="target" inputmode="numeric" placeholder="目标分数"></div></div><div id="quiz" class="card"></div><div class="card"><button id="grade">完成 T-PASS 诊断并保存</button><button id="dl" class="secondary">下载完整结果 JSON</button><p><a class="btn secondary" href="../part5/">进入 Part 5</a><a class="btn secondary" href="../listening/">进入 Listening</a></p><div id="result"></div><div id="status" class="status pending">尚未送出</div></div></main><script>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>T-PASS NEXT｜核心診斷</title><script src="../core.js"></script><style id="s"></style></head><body><main class="wrap"><div class="card"><h1>T-PASS NEXT｜核心診斷總站</h1><p class="muted">第三个新站：先收基本資料与目前／目標分数，再做 12 題核心診斷，判断優先訓練轨道。</p><div class="row"><input id="name" placeholder="姓名"><input id="email" type="email" placeholder="Email"><input id="current" inputmode="numeric" placeholder="目前 TOEIC 分数"><input id="target" inputmode="numeric" placeholder="目标分数"></div></div><div id="quiz" class="card"></div><div class="card"><button id="grade">完成 T-PASS 診斷并保存</button><button id="dl" class="secondary">下載完整結果 JSON</button><p><a class="btn secondary" href="../part5/">進入 Part 5</a><a class="btn secondary" href="../listening/">進入 Listening</a></p><div id="result"></div><div id="status" class="status pending">尚未送出</div></div></main><script>
 s.textContent=baseStyles();
 const Q=[
 ["TN-1","The report was submitted ___ time.",["in","on","at","from"],1,"Grammar"],
 ["TN-2","The company is looking for a highly ___ candidate.",["qualify","qualified","qualification","qualifyingly"],1,"Grammar"],
-["TN-3","reusable 最接近哪一个意思？",["可重复使用的","不可使用的","重新付款的","非常昂贵的"],0,"Vocabulary"],
-["TN-4","availability 最接近？",["可获得性","责任","设备","建议"],0,"Vocabulary"],
-["TN-5","Email: 'Please confirm attendance by noon.' 要求你做什么？",["取消会议","中午前确认出席","下午付款","寄纸本"],1,"Reading"],
-["TN-6","Notice: 'The lobby entrance is temporarily closed.' 代表？",["大厅入口暂时关闭","整栋大楼永久关闭","停车场开放","会议取消"],0,"Reading"],
+["TN-3","reusable 最接近哪一個意思？",["可重複使用的","不可使用的","重新付款的","非常昂貴的"],0,"Vocabulary"],
+["TN-4","availability 最接近？",["可獲得性","責任","設備","建議"],0,"Vocabulary"],
+["TN-5","Email: 'Please confirm attendance by noon.' 要求你做什么？",["取消會議","中午前確認出席","下午付款","寄紙本"],1,"Reading"],
+["TN-6","Notice: 'The lobby entrance is temporarily closed.' 代表？",["大廳入口暫時關閉","整棟大樓永久關閉","停車場開放","會議取消"],0,"Reading"],
 ["TN-7","If a speaker says 'fifteen', which number is correct?",["50","15","5","55"],1,"Listening"],
-["TN-8","If you hear 'before Friday', when is the deadline?",["Friday之后","Friday之前","只有Friday","下个月"],1,"Listening"],
+["TN-8","If you hear 'before Friday', when is the deadline?",["Friday之後","Friday之前","只有Friday","下個月"],1,"Listening"],
 ["TN-9","Which is the noun?",["efficient","efficiently","efficiency","more efficient"],2,"Grammar"],
-["TN-10","Which word best means '检查'?",["inspect","expect","respect","suspect"],0,"Vocabulary"],
-["TN-11","A memo says 'Employees must wear badges at all times.' 主旨？",["员工可选择是否戴识别证","员工必须一直佩戴识别证","只有主管要戴","访客不用登记"],1,"Reading"],
-["TN-12","If you hear 'platform six', what detail should you catch?",["人物","地点号码","价格","原因"],1,"Listening"]
+["TN-10","Which word best means '檢查'?",["inspect","expect","respect","suspect"],0,"Vocabulary"],
+["TN-11","A memo says 'Employees must wear badges at all times.' 主旨？",["員工可選擇是否戴識別證","員工必須一直佩戴識別證","只有主管要戴","訪客不用登記"],1,"Reading"],
+["TN-12","If you hear 'platform six', what detail should you catch?",["人物","地點號碼","價格","原因"],1,"Listening"]
 ];
 quiz.innerHTML=Q.map((q,i)=>'<div class="q"><b>'+(i+1)+'. '+q[1]+'</b>'+q[2].map((x,j)=>'<label><input type="radio" name="q'+i+'" value="'+j+'"> '+x+'</label>').join('')+'</div>').join('');
-let last=null;grade.onclick=async()=>{if(!name.value.trim()||!email.value.trim()){alert("请填写姓名与 Email");return}const ans=Q.map((q,i)=>document.querySelector('input[name=q'+i+']:checked'));if(ans.some(x=>!x)){alert("请完成全部 12 题");return}
+let last=null;grade.onclick=async()=>{if(!name.value.trim()||!email.value.trim()){alert("請填写姓名与 Email");return}const ans=Q.map((q,i)=>document.querySelector('input[name=q'+i+']:checked'));if(ans.some(x=>!x)){alert("請完成全部 12 題");return}
 const details=Q.map((q,i)=>({question_id:q[0],question:q[1],student_answer:q[2][+ans[i].value],correct_answer:q[2][q[3]],is_correct:+ans[i].value===q[3],dimension:q[4]}));const dims={};Q.forEach(q=>dims[q[4]]={correct:0,total:0});details.forEach(x=>{dims[x.dimension].total++;if(x.is_correct)dims[x.dimension].correct++});const ranked=Object.entries(dims).map(([k,v])=>({dimension:k,pct:Math.round(v.correct/v.total*100),...v})).sort((a,b)=>a.pct-b.pct);const score=details.filter(x=>x.is_correct).length;const primary=ranked[0].dimension;
-last={submission_id:uid("TPASS"),submitted_at:new Date().toISOString(),assessment_type:"T-PASS NEXT Core Diagnostic",source_page:location.href,student_name:name.value.trim(),email:email.value.trim(),current_score:current.value.trim(),target_score:target.value.trim(),total_score:score+"/12",accuracy:Math.round(score/12*100)+"%",primary_weakness:primary,secondary_weakness:ranked[1].dimension,summary:{dimension_scores:ranked},responses_json:details};result.innerHTML="<h2>"+score+"/12</h2><p>优先训练："+primary+"；第二弱项："+ranked[1].dimension+"</p>";await submitResult(last,status)};
-dl.onclick=()=>downloadJSON("tpass-next-diagnostic-"+Date.now()+".json",last||{note:"尚未完成诊断"});
+last={submission_id:uid("TPASS"),submitted_at:new Date().toISOString(),assessment_type:"T-PASS NEXT Core Diagnostic",source_page:location.href,student_name:name.value.trim(),email:email.value.trim(),current_score:current.value.trim(),target_score:target.value.trim(),total_score:score+"/12",accuracy:Math.round(score/12*100)+"%",primary_weakness:primary,secondary_weakness:ranked[1].dimension,summary:{dimension_scores:ranked},responses_json:details};result.innerHTML="<h2>"+score+"/12</h2><p>優先訓練："+primary+"；第二弱項："+ranked[1].dimension+"</p>";await submitResult(last,status)};
+dl.onclick=()=>downloadJSON("tpass-next-diagnostic-"+Date.now()+".json",last||{note:"尚未完成診斷"});
 </script></body></html>
