@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>結果寄送｜多益</title><script src="../core.js?v=20261101-bridge-v2"></script><style id="s"></style></head><body><main class="wrap">
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>結果寄送｜多益</title><script src="../core.js?v=20261101-bridge-v3"></script><style id="s"></style></head><body><main class="wrap">
 <section class="hero"><h1 id="pageTitle">FormSubmit 單獨測試</h1><p id="pageLead">不做測驗，只確認資料能不能真正送達。</p></section>
 <section class="card"><h2 id="stepTitle">只做這一步</h2><p class="muted" id="stepText">填姓名與 Email → 按「送出測試」→ 會開啟 FormSubmit 新頁面。看到成功頁才算送達。</p>
 <form action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" target="_blank">
@@ -10,24 +10,54 @@
 <textarea id="messageField" name="test_message" required style="width:100%;min-height:220px;padding:12px;border:2px solid #cfe0d1;border-radius:12px;font-size:16px"></textarea>
 </label>
 <button id="submitBtn" type="submit">送出測試</button></form>
-<div class="helper" id="helper">送出後請回來告訴我：<b>成功</b>、<b>失敗</b>，或直接貼錯誤畫面。</div>
+<div class="helper" id="deliveryMeta">尚未載入資料。</div><div class="helper" id="helper">送出後請回來告訴我：<b>成功</b>、<b>失敗</b>，或直接貼錯誤畫面。</div>
 </section></main><script>
 s.textContent=baseStyles();
 const p=new URLSearchParams(location.search);
 if(p.get("mode")==="assessment"){
   const data=loadPendingDelivery();
   pageTitle.textContent="多益｜寄送診斷結果";
-  pageLead.textContent="這一頁就是已實測成功的 FormSubmit 寄送頁。";
+  pageLead.textContent="這一頁使用已實測成功的 FormSubmit 原生寄送方式。";
   stepTitle.textContent="最後一步：寄送結果";
-  stepText.textContent="請確認姓名、Email 與結果摘要，再按「寄送診斷結果」。";
+  stepText.textContent="先確認下方資料來源與 Submission ID，再按「寄送診斷結果」。";
   submitBtn.textContent="寄送診斷結果";
   typeField.value="T-PASS NEXT Formal Assessment via Proven Bridge";
+
   if(data){
+    const age=pendingAgeMinutes(data);
     nameField.value=data.student_name||"";
     emailField.value=data.email||"";
     subjectField.value="[T-PASS NEXT] "+(data.assessment_type||"Assessment")+"｜"+(data.student_name||"Student");
     messageField.value=buildMailMessage(data);
+
+    const src=(p.get("src")||"未標示");
+    const stale=age!=null && age>120;
+    deliveryMeta.innerHTML="<b>資料來源：</b>"+src+
+      "<br><b>測驗：</b>"+(data.assessment_type||"")+
+      "<br><b>Submission ID：</b>"+(data.submission_id||"未提供")+
+      "<br><b>資料時間：</b>"+(data._saved_at||data.submitted_at||"未提供")+
+      "<br><b>內容長度：</b>"+messageField.value.length+" 字元"+
+      (stale?"<br><b style='color:#b42318'>⚠ 這筆資料已超過 120 分鐘，建議回原測驗頁重新準備。</b>":"");
+
+    if(stale){
+      submitBtn.disabled=true;
+      submitBtn.textContent="資料過期，請回原站重新準備";
+    }
   }else{
+    messageField.value="找不到待寄送的診斷資料，請回上一頁重新完成診斷。";
+    submitBtn.disabled=true;
+    deliveryMeta.innerHTML="<b style='color:#b42318'>找不到待寄送資料。</b>";
+  }
+
+  let submitted=false;
+  submitBtn.addEventListener("click",()=>{
+    if(submitted)return;
+    submitted=true;
+    submitBtn.textContent="已送出，請勿重複點擊";
+    setTimeout(()=>{submitBtn.disabled=true;},0);
+  });
+  helper.innerHTML="看到 FormSubmit <b>Thanks!</b> 後，仍以 Gmail 實際收件為最終驗收。";
+}else{
     messageField.value="找不到待寄送的診斷資料，請回上一頁重新完成診斷。";
     submitBtn.disabled=true;
   }
