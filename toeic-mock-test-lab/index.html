@@ -2,9 +2,11 @@
 <style>
 :root{--bg:#f6f4ee;--card:#fffdf8;--text:#314247;--line:#dce7e2;--a:#6f9993;--a2:#8fb1ab}
 *{box-sizing:border-box}body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--text);font-size:19px;line-height:1.75}header{background:linear-gradient(135deg,#5f7f7b,#789d98);color:#fff;padding:38px 18px}.wrap{max-width:1050px;margin:auto}.panel{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:22px;margin:18px 0}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.field label{display:block;font-weight:800}.field input,.field select{width:100%;padding:12px;border:2px solid var(--line);border-radius:10px;font:inherit}.btn{padding:12px 16px;border-radius:11px;border:0;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}.primary{background:linear-gradient(135deg,var(--a),var(--a2));color:#fff}.secondary{background:#fff;color:#3d5653;border:2px solid var(--line)}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{background:#f7faf8;border:1px solid var(--line);border-radius:14px;padding:14px}.metric b{display:block;font-size:28px}.tablebox{overflow:auto}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left}.path{background:#f1f7f4;border-left:5px solid var(--a);padding:13px;border-radius:10px;margin:10px 0}.hidden{display:none}@media(max-width:760px){.grid,.metrics{grid-template-columns:1fr}}
+.backup-notice{background:#fff3d8;border:2px solid #be954c;border-radius:14px;padding:18px;color:#493817}.backup-notice h2{margin-top:0}.backup-notice a{color:#315a4b;text-decoration:underline}.download-actions{display:flex;gap:10px;flex-wrap:wrap}#deliveryStatus,#backupStatus{font-weight:700;color:#6e4b17}button{font:inherit}@media print{header,form,.download-actions,.backup-notice,#backupStatus,#deliveryStatus,button{display:none!important}.panel{break-inside:avoid}.wrap{max-width:none}body{background:white;color:black}}
 </style></head><body><div style="background:#314247;color:#fff;padding:10px 16px;font-family:'Noto Sans TC','Microsoft JhengHei',sans-serif"><div style="max-width:1100px;margin:auto;display:flex;gap:10px;flex-wrap:wrap;align-items:center"><strong>T-PASS TOEIC Command Center｜Step 5｜模考驗證</strong><a href="/tpass-toeic-command-center/" style="color:#fff;background:#6f9993;padding:7px 10px;border-radius:9px;text-decoration:none;font-weight:700">← 回 Command Center</a><a href="/tpass-toeic-command-center/#step6" style="color:#314247;background:#fffdf8;padding:7px 10px;border-radius:9px;text-decoration:none;font-weight:700">下一步：Step 6 教練校準 →</a></div></div>
 <header><div class="wrap"><h1>#31 TOEIC Mock Test Lab</h1><p>模考驗證：記錄分數、比較變化、找出主要失分，再回到診斷與計畫校準。</p><p><a class="btn secondary" href="/">← Gary Learning Hub</a> <a class="btn secondary" href="/toeic-90day-planner/">#30 90-Day Planner</a></p></div></header>
 <main class="wrap">
+<section class="panel backup-notice" role="note" aria-labelledby="backupTitle"><h2 id="backupTitle">請先下載模考結果，再嘗試寄送</h2><p><strong>目前電子郵件寄送尚未確認能穩定收件。</strong>完成紀錄後，請先下載 CSV／完整 JSON，或將結果儲存為 PDF，保留自己的備份。</p><p>開啟寄送頁或顯示送出畫面，不代表 Gary 已收到資料。請保留下載檔案，直到確認教練收件；必要時可用自己的 Email 附檔寄給 Gary。</p><p><a href="mailto:godlovesyou127888@gmail.com?subject=TOEIC%20Mock%20Test%20Lab%20模考結果">用自己的 Email 寄送備份給 Gary</a>（請自行加入下載檔案）</p></section>
 <section class="panel"><h2>基本資料</h2><div class="grid">
 <div class="field"><label>姓名</label><input id="studentName"></div>
 <div class="field"><label>Email</label><input id="studentEmail" type="email"></div>
@@ -30,14 +32,13 @@
 <section class="panel"><h2>紀錄表</h2><div class="tablebox"><table><thead><tr><th>日期</th><th>總分</th><th>聽力</th><th>閱讀</th><th>做完</th><th>主要失分</th></tr></thead><tbody id="historyBody"></tbody></table></div></section>
 
 <section id="analysisPanel" class="panel hidden"><h2>驗證結果</h2><div id="analysis"></div>
-<p><button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF</button><button class="btn secondary" type="button" onclick="downloadCSV()">下載 CSV</button></p>
+<div class="backup-notice" role="note"><strong>第一步：先下載並確認檔案已保存。</strong><p>本頁資料主要保存在此瀏覽器；清除瀏覽資料或更換裝置可能無法取回。請先保留備份，再選擇是否寄送。</p></div><p class="download-actions"><button class="btn secondary" type="button" onclick="window.print()">列印／儲存 PDF</button> <button class="btn primary" type="button" onclick="downloadCSV()">下載 CSV</button> <button class="btn secondary" type="button" onclick="downloadJSON()">下載完整 JSON</button></p><p id="backupStatus" role="status" aria-live="polite"></p>
 <form action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" target="_blank" onsubmit="return prepareDelivery()">
 <input type="hidden" name="_subject" value="TOEIC Mock Test Lab Result">
 <input type="hidden" name="_template" value="table">
 <input type="hidden" name="_captcha" value="false">
-<input type="hidden" name="_autoresponse" value="已收到你的 TOEIC Mock Test Lab 結果。請保留這封結果副本，作為後續模考趨勢、失分分析與 Step 6 教練校準參考。">
 <input type="hidden" name="student_name" id="sendName"><input type="hidden" name="email" id="sendEmail"><input type="hidden" name="target_score" id="sendTarget"><input type="hidden" name="mock_count" id="sendCount"><input type="hidden" name="first_score" id="sendFirst"><input type="hidden" name="latest_score" id="sendLatest"><input type="hidden" name="score_change" id="sendChange"><input type="hidden" name="main_loss_pattern" id="sendLoss"><input type="hidden" name="coach_recommendation" id="sendRecommendation"><input type="hidden" name="submitted_at" id="sendTime">
-<button class="btn primary" type="submit">寄給我並同步給教練</button>
+<p><label style="display:flex;gap:12px;align-items:flex-start"><input id="backupConfirmed" type="checkbox" required style="width:24px;height:24px;flex-shrink:0;margin-top:6px">我已下載並確認備份檔案可以開啟。</label></p><button class="btn secondary" type="submit">第二步：嘗試寄送（須確認教練收件）</button><p id="deliveryStatus" role="status" aria-live="polite">目前尚未確認寄送成功。請以教練實際收件為準。</p>
 </form></section>
 </main>
 <script>
@@ -49,7 +50,7 @@ function addMock(){
  const d=mockDate.value,l=Number(listeningScore.value),r=Number(readingScore.value);
  if(!d||!l||!r){alert("請完整填寫日期、Listening 與 Reading 分數。");return}
  records.push({date:d,total:l+r,listening:l,reading:r,finished:finishedReading.value,loss:lossType.value});
- records.sort((a,b)=>a.date.localeCompare(b.date));save();render();
+ records.sort((a,b)=>a.date.localeCompare(b.date));save();document.getElementById("backupConfirmed").checked=false;document.getElementById("deliveryStatus").textContent="紀錄已更新，請重新下載備份。尚未寄送給教練。";render();
  listeningScore.value="";readingScore.value="";
 }
 function render(){
@@ -66,14 +67,21 @@ function render(){
 }
 targetScore.addEventListener("input",render);
 function prepareDelivery(){
+ if(!document.getElementById("backupConfirmed").checked){alert("請先下載 CSV、JSON 或 PDF，確認檔案已保存，再勾選備份確認。");return false}
+ if(!studentName.value.trim()||!studentEmail.value||!studentEmail.checkValidity()){alert("請確認姓名與有效 Email。");return false}
  if(!records.length){alert("請先新增至少一次模考紀錄。");return false}
  const first=records[0],latest=records[records.length-1],change=latest.total-first.total,counts={};records.forEach(x=>counts[x.loss]=(counts[x.loss]||0)+1);const topLoss=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
- sendName.value=studentName.value.trim();sendEmail.value=studentEmail.value.trim();sendTarget.value=targetScore.value;sendCount.value=records.length;sendFirst.value=first.total;sendLatest.value=latest.total;sendChange.value=(change>=0?"+":"")+change;sendLoss.value=topLoss;sendRecommendation.value=analysis.innerText.trim();sendTime.value=new Date().toISOString();return true
+ sendName.value=studentName.value.trim();sendEmail.value=studentEmail.value.trim();sendTarget.value=targetScore.value;sendCount.value=records.length;sendFirst.value=first.total;sendLatest.value=latest.total;sendChange.value=(change>=0?"+":"")+change;sendLoss.value=topLoss;sendRecommendation.value=analysis.innerText.trim();sendTime.value=new Date().toISOString();document.getElementById("deliveryStatus").textContent="已開啟寄送流程，尚未確認教練收件。請保留備份；若未收到確認，請用自己的 Email 附檔寄送。";return true
 }
 function downloadCSV(){
  if(!records.length){alert("目前沒有模考紀錄。");return}
  const esc=v=>'"'+String(v??"").replaceAll('"','""')+'"',rows=[["date","total","listening","reading","finished_reading","main_loss"],...records.map(x=>[x.date,x.total,x.listening,x.reading,x.finished,x.loss])];
- const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\uFEFF"+rows.map(r=>r.map(esc).join(",")).join("\n")],{type:"text/csv;charset=utf-8"}));a.download="toeic_mock_test_lab.csv";a.click()
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\uFEFF"+rows.map(r=>r.map(esc).join(",")).join("\n")],{type:"text/csv;charset=utf-8"}));a.download="toeic_mock_test_lab.csv";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),30000);document.getElementById("backupStatus").textContent="已啟動 CSV 下載，請確認檔案已保存且可以開啟，再勾選備份確認。"
+}
+function downloadJSON(){
+ if(!records.length){alert("目前沒有模考紀錄。");return}
+ const payload={assessment_type:"TOEIC Mock Test Lab",exported_at:new Date().toISOString(),student_name:studentName.value.trim(),email:studentEmail.value.trim(),target_score:targetScore.value,plan_start:planStart.value,records:records,analysis:analysis.innerText.trim()};
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json;charset=utf-8"}));a.download="toeic_mock_test_lab_"+Date.now()+".json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),30000);document.getElementById("backupStatus").textContent="已啟動 JSON 下載，請確認檔案已保存且可以開啟，再勾選備份確認。";
 }
 render();
 </script></body></html>
