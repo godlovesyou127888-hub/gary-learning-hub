@@ -58,6 +58,25 @@ async function init(){
     );
   `);
   await pool.query(`CREATE INDEX IF NOT EXISTS idx_ielts_contact_status_created ON ielts_contact_tickets(status, created_at DESC);`);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS ielts_writing_submissions (
+      submission_id TEXT PRIMARY KEY,
+      student_name TEXT,
+      student_email TEXT,
+      task_type TEXT,
+      day_number INTEGER,
+      question TEXT,
+      essay TEXT NOT NULL,
+      word_count INTEGER,
+      minutes INTEGER,
+      self_checks JSONB NOT NULL DEFAULT '[]'::jsonb,
+      self_concern TEXT,
+      source_page TEXT,
+      email_status TEXT NOT NULL DEFAULT 'pending',
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `);
+  await pool.query(`CREATE INDEX IF NOT EXISTS idx_ielts_writing_email_created ON ielts_writing_submissions(student_email, created_at DESC);`);
 }
 let dbReady=false;
 if(process.env.DATABASE_URL){
@@ -110,6 +129,75 @@ app.patch("/api/submissions/:id/email-status", async (req,res)=>{
     console.error(err);
     res.status(500).json({ok:false,error:"update_failed"});
   }
+});
+
+app.post("/api/ielts-writing-submissions", async (req,res)=>{
+  if(!dbReady)return res.status(503).json({ok:false,error:"database_not_configured"});
+  try{
+    const b=req.body||{};
+    if(!b.submission_id || !b.essay)return res.status(400).json({ok:false,error:"submission_id and essay are required"});
+    await pool.query(`
+      INSERT INTO ielts_writing_submissions
+      (submission_id,student_name,student_email,task_type,day_number,question,essay,word_count,minutes,self_checks,self_concern,source_page)
+      VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10::jsonb,$11,$12)
+      ON CONFLICT (submission_id) DO UPDATE SET
+        student_name=EXCLUDED.student_name,
+        student_email=EXCLUDED.student_email,
+        task_type=EXCLUDED.task_type,
+        day_number=EXCLUDED.day_number,
+        question=EXCLUDED.question,
+        essay=EXCLUDED.essay,
+        word_count=EXCLUDED.word_count,
+        minutes=EXCLUDED.minutes,
+        self_checks=EXCLUDED.self_checks,
+        self_concern=EXCLUDED.self_concern,
+        source_page=EXCLUDED.source_page
+    `,[
+      String(b.submission_id),
+      b.student_name?String(b.student_name):null,
+      b.student_email?String(b.student_email):null,
+      b.task_type?String(b.task_type):null,
+      Number.isFinite(Number(b.day_number))?Number(b.day_number):null,
+      b.question?String(b.question):null,
+      String(b.essay),
+      Number.isFinite(Number(b.word_count))?Number(b.word_count):null,
+      Number.isFinite(Number(b.minutes))?Number(b.minutes):null,
+      JSON.stringify(Array.isArray(b.self_checks)?b.self_checks:[]),
+      b.self_concern?String(b.self_concern):null,
+      b.source_page?String(b.source_page):null
+    ]);
+    res.status(201).json({ok:true,submission_id:String(b.submission_id),stored_at:new Date().toISOString()});
+  }catch(err){
+    console.error(err);
+    res.status(500).json({ok:false,error:"ielts_writing_store_failed"});
+  }
+});
+
+app.patch("/api/ielts-writing-submissions/:id/email-status", async (req,res)=>{
+  if(!dbReady)return res.status(503).json({ok:false,error:"database_not_configured"});
+  try{
+    const status=String(req.body?.status||"").slice(0,40);
+    if(!status)return res.status(400).json({ok:false,error:"status required"});
+    const r=await pool.query("UPDATE ielts_writing_submissions SET email_status=$1 WHERE submission_id=$2 RETURNING submission_id,email_status",[status,req.params.id]);
+    if(!r.rowCount)return res.status(404).json({ok:false,error:"not_found"});
+    res.json({ok:true,...r.rows[0]});
+  }catch(err){
+    console.error(err);
+    res.status(500).json({ok:false,error:"update_failed"});
+  }
+});
+
+app.get("/api/ielts-writing-submissions", async (req,res)=>{
+  if(!dbReady)return res.status(503).json({ok:false,error:"database_not_configured"});
+  if(!process.env.ADMIN_TOKEN || req.headers.authorization!==`Bearer ${process.env.ADMIN_TOKEN}`){
+    return res.status(401).json({ok:false,error:"unauthorized"});
+  }
+  const limit=Math.min(Math.max(Number(req.query.limit)||100,1),200);
+  const r=await pool.query(`
+    SELECT submission_id,student_name,student_email,task_type,day_number,question,essay,word_count,minutes,self_checks,self_concern,source_page,email_status,created_at
+    FROM ielts_writing_submissions ORDER BY created_at DESC LIMIT $1
+  `,[limit]);
+  res.json({ok:true,items:r.rows});
 });
 
 app.post("/api/ielts-contact-tickets", async (req,res)=>{
