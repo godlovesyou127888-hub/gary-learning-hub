@@ -2,7 +2,7 @@
 <section class="hero"><h1 id="pageTitle">FormSubmit 單獨測試</h1><p id="pageLead">不做測驗，只確認資料能不能真正送達。</p></section>
 <section class="card"><h2 id="stepTitle">只做這一步</h2><p class="muted" id="stepText">填姓名與 Email → 按「送出測試」→ 會開啟 FormSubmit 新頁面。看到成功頁才算送達。</p>
 <form action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" target="_blank">
-<input type="hidden" name="_next" value="https://gary-learning-hub.onrender.com/toeic-submit-complete/">
+<input type="hidden" name="_next" id="nextField" value="https://gary-learning-hub.onrender.com/toeic-submit-complete/">
 <input type="hidden" name="_subject" id="subjectField" value="[T-PASS NEXT] FormSubmit 單獨測試">
 <input type="hidden" name="_template" value="table"><input type="hidden" name="_captcha" value="false">
 <input type="hidden" name="test_type" id="typeField" value="T-PASS NEXT FormSubmit Direct POST"><input type="hidden" name="delivery_token" id="tokenField"><input type="hidden" name="submission_id" id="submissionField"><input type="hidden" name="source_page" id="sourceField">
@@ -18,12 +18,28 @@ const p=new URLSearchParams(location.search);
 if(p.get("mode")==="assessment"){
   const deliveryToken=p.get("token")||"";
   const data=deliveryToken?loadTokenizedDelivery(deliveryToken):loadPendingDelivery();
-  pageTitle.textContent="多益｜寄送診斷結果";
+  const src=p.get("src")||"";
+  const isSylviaIELTS=src==="sylvia-ielts-v2";
+  if(isSylviaIELTS){
+    nextField.value="https://gary-learning-hub.onrender.com/sylvia-ielts-command-center/";
+    pageTitle.textContent="Sylvia IELTS｜寄送 Writing 作業";
+    pageLead.textContent="完成寄送後會回到 Sylvia IELTS Command Center。";
+    stepTitle.textContent="最後一步：寄送 Writing 作業";
+    stepText.textContent="確認資料後按「寄送 Writing 作業」；完成後回到 IELTS 首頁。";
+    submitBtn.textContent="寄送 Writing 作業";
+    typeField.value="Sylvia IELTS Writing via Proven Bridge";
+  }else{
+    pageTitle.textContent="多益｜寄送診斷結果";
   pageLead.textContent="這一頁使用已實測成功的 FormSubmit 原生寄送方式。";
   stepTitle.textContent="最後一步：寄送結果";
   stepText.textContent="先確認下方資料來源與 Submission ID，再按「寄送診斷結果」。";
   submitBtn.textContent="寄送診斷結果";
-  typeField.value="T-PASS NEXT Formal Assessment via Proven Bridge";
+    pageLead.textContent="這一頁使用已實測成功的 FormSubmit 原生寄送方式。";
+    stepTitle.textContent="最後一步：寄送結果";
+    stepText.textContent="先確認下方資料來源與 Submission ID，再按「寄送診斷結果」。";
+    submitBtn.textContent="寄送診斷結果";
+    typeField.value="T-PASS NEXT Formal Assessment via Proven Bridge";
+  }
 
   if(data){
     const age=pendingAgeMinutes(data);
@@ -36,9 +52,9 @@ if(p.get("mode")==="assessment"){
     subjectField.value="[T-PASS NEXT] "+(data.assessment_type||"Assessment")+"｜"+(data.student_name||"Student");
     messageField.value=buildMailMessage(data)+(deliveryToken?"\n\nDelivery Token："+deliveryToken:"");
 
-    const src=(p.get("src")||"未標示");
+    const srcLabel=(p.get("src")||"未標示");
     const stale=age!=null && age>120;
-    deliveryMeta.innerHTML="<b>資料來源：</b>"+src+
+    deliveryMeta.innerHTML="<b>資料來源：</b>"+srcLabel+
       "<br><b>測驗：</b>"+(data.assessment_type||"")+
       "<br><b>Submission ID：</b>"+(data.submission_id||"未提供")+
       (deliveryToken?"<br><b>Delivery Token：</b>"+deliveryToken:"")+
