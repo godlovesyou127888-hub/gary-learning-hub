@@ -30,7 +30,7 @@ h1{margin:0 0 6px}.muted{color:var(--muted)}input,textarea{width:100%;padding:11
 <p><button id="submitBtn" class="btn primary" type="submit">送出 Writing 作業給 Gary</button></p>
 </form>
 
-<div id="status" class="status">正在載入 IELTS Writing 作業資料…</div>
+<div id="deliveryStatusBox" class="status">正在載入 IELTS Writing 作業資料…</div>
 
 <form id="emailForm" class="hidden" action="https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728" method="POST" target="emailSink">
 <input type="hidden" name="_template" value="table">
@@ -60,21 +60,22 @@ h1{margin:0 0 6px}.muted{color:var(--muted)}input,textarea{width:100%;padding:11
 
 <script>
 const API='https://tpass-results-api.onrender.com';
-let data=null,submitted=false;
+let data=null,submitted=false,emailSubmitted=false;
+const deliveryStatusBox=document.getElementById('deliveryStatusBox');
 try{data=JSON.parse(localStorage.getItem('sylvia_ielts_pending_delivery')||'null')}catch{}
 
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 
 if(!data){
-  status.classList.add('error');
-  status.innerHTML='❌ 找不到待寄送的 IELTS Writing 作業。請回 Writing Sprint 重新按「一鍵送出給 Gary」。';
+  deliveryStatusBox.classList.add('error');
+  deliveryStatusBox.innerHTML='❌ 找不到待寄送的 IELTS Writing 作業。請回 Writing Sprint 重新按「一鍵送出給 Gary」。';
   submitBtn.disabled=true;
 }else{
   const age=data._saved_at?Math.max(0,Math.round((Date.now()-new Date(data._saved_at).getTime())/60000)):null;
   nameField.value=data.student_name||'Sylvia';
   emailField.value=data.student_email||data.email||'';
   messageField.value=data.preformatted_message||'';
-  status.innerHTML='✅ 已載入 IELTS Writing 作業'
+  deliveryStatusBox.innerHTML='✅ 已載入 IELTS Writing 作業'
     +(data.submission_id?'<br><b>Submission ID：</b>'+esc(data.submission_id):'')
     +(age!=null?'<br><b>資料建立：</b>'+age+' 分鐘前':'')
     +'<br>送出後會停留在本站完成畫面，並提供「回 Sylvia IELTS 首頁」按鈕。';
@@ -84,7 +85,7 @@ if(!data){
   }
 }
 
-async function storePrimary(){
+async function storePrimary(timeoutMs=8000){
   const payload={
     submission_id:data.submission_id,
     student_name:nameField.value.trim(),
@@ -99,17 +100,24 @@ async function storePrimary(){
     self_concern:data.self_concern||'',
     source_page:data.source_page||''
   };
-  const res=await fetch(API+'/api/ielts-writing-submissions',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(payload)
-  });
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),timeoutMs);
+  let res;
+  try{
+    res=await fetch(API+'/api/ielts-writing-submissions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload),
+      signal:controller.signal
+    });
+  }finally{clearTimeout(timer)}
   const out=await res.json().catch(()=>({}));
   if(!res.ok||!out.ok)throw new Error(out.error||('HTTP '+res.status));
   return out;
 }
 
 function sendEmailSecondary(){
+  emailSubmitted=true;
   emailState.textContent='正在送往 FormSubmit Email 通道…';
   subjectField.value='[Sylvia IELTS][Writing]['+(data.task_type||'Assignment')+'] '+(data.submission_id||'');
   submissionField.value=data.submission_id||'';
@@ -121,7 +129,7 @@ function sendEmailSecondary(){
 }
 
 emailSink.addEventListener('load',async()=>{
-  if(!submitted||!data)return;
+  if(!submitted||!emailSubmitted||!data)return;
   emailState.textContent='FormSubmit 已回應；實際收件仍以 Gary Gmail 為準。';
   try{
     await fetch(API+'/api/ielts-writing-submissions/'+encodeURIComponent(data.submission_id)+'/email-status',{
@@ -138,38 +146,69 @@ retryEmailBtn.addEventListener('click',()=>{
   setTimeout(()=>{retryEmailBtn.disabled=false;retryEmailBtn.textContent='重新寄送 Email';},1800);
 });
 
-ieltsForm.addEventListener('submit',async e=>{
+ieltsForm.addEventListener('submit',e=>{
   e.preventDefault();
   if(submitted||!data)return;
   submitted=true;
   submitBtn.disabled=true;
-  submitBtn.textContent='正在保存並寄送…';
-  status.className='status';
-  status.innerHTML='步驟 1/2：正在寫入 IELTS 資料庫…';
-  try{
-    const stored=await storePrimary();
-    localStorage.setItem('sylvia_ielts_last_submission',JSON.stringify({
-      submission_id:data.submission_id,
-      stored_at:stored.stored_at,
-      database_status:'stored',
-      email_status:'submitted_to_formsubmit'
-    }));
-    status.innerHTML='步驟 2/2：資料庫已保存，正在送出 Email…';
-    sendEmailSecondary();
-    setTimeout(()=>{
-      sendCard.classList.add('hidden');
-      completeCard.classList.remove('hidden');
-      completeSummary.innerHTML='<b>Submission ID：</b>'+esc(data.submission_id||'—')+
-        '<br><b>學生：</b>'+esc(nameField.value.trim())+
-        '<br><b>Task：</b>'+esc(data.task_type||'Writing');
-    },900);
-  }catch(err){
-    submitted=false;
-    submitBtn.disabled=false;
-    submitBtn.textContent='重新送出 Writing 作業';
-    status.className='status error';
-    status.innerHTML='❌ 資料尚未完成保存，因此沒有進入完成畫面。錯誤：'+esc(err.message)+'<br>請保留本頁並重新送出。';
-  }
+  submitBtn.textContent='正在送出…';
+
+  const outboxRecord={
+    ...data,
+    student_name:nameField.value.trim(),
+    student_email:emailField.value.trim(),
+    preformatted_message:messageField.value.trim(),
+    queued_at:new Date().toISOString(),
+    database_status:'pending',
+    email_status:'submitted_to_formsubmit'
+  };
+  localStorage.setItem('sylvia_ielts_outbox_'+data.submission_id,JSON.stringify(outboxRecord));
+  localStorage.setItem('sylvia_ielts_last_submission',JSON.stringify({
+    submission_id:data.submission_id,
+    queued_at:outboxRecord.queued_at,
+    database_status:'pending',
+    email_status:'submitted_to_formsubmit'
+  }));
+
+  deliveryStatusBox.className='status';
+  deliveryStatusBox.innerHTML='Email 正在送出；資料庫同步會在背景進行，不會阻塞本次送出。';
+
+  sendEmailSecondary();
+
+  setTimeout(()=>{
+    sendCard.classList.add('hidden');
+    completeCard.classList.remove('hidden');
+    completeSummary.innerHTML='<b>Submission ID：</b>'+esc(data.submission_id||'—')+
+      '<br><b>學生：</b>'+esc(nameField.value.trim())+
+      '<br><b>Task：</b>'+esc(data.task_type||'Writing');
+  },500);
+
+  storePrimary(8000).then(stored=>{
+    const latest=JSON.parse(localStorage.getItem('sylvia_ielts_last_submission')||'{}');
+    localStorage.setItem('sylvia_ielts_last_submission',JSON.stringify({...latest,stored_at:stored.stored_at,database_status:'stored'}));
+    localStorage.removeItem('sylvia_ielts_outbox_'+data.submission_id);
+    if(document.getElementById('completeCard')&&!completeCard.classList.contains('hidden')){
+      const box=completeCard.querySelector('.status.success');
+      if(box)box.innerHTML='<b>主要保存：</b>已寫入 IELTS 資料庫。<br><b>Email：</b><span id="emailState">'+emailState.textContent+'</span>';
+    }
+  }).catch(err=>{
+    const latest=JSON.parse(localStorage.getItem('sylvia_ielts_last_submission')||'{}');
+    localStorage.setItem('sylvia_ielts_last_submission',JSON.stringify({...latest,database_status:'queued_for_retry',database_error:String(err.message||err)}));
+    const box=completeCard.querySelector('.status.success');
+    if(box)box.innerHTML='<b>主要保存：</b>已保存在本機待補同步；不影響本次 Email 送出。<br><b>Email：</b><span id="emailState">'+emailState.textContent+'</span>';
+  });
 });
+
+async function retryQueuedSubmission(){
+  if(!data||!data.submission_id)return;
+  const key='sylvia_ielts_outbox_'+data.submission_id;
+  const queued=localStorage.getItem(key);
+  if(!queued)return;
+  try{
+    await storePrimary(5000);
+    localStorage.removeItem(key);
+  }catch{}
+}
+retryQueuedSubmission();
 </script>
 </body></html>
