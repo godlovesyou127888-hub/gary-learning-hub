@@ -17,7 +17,7 @@ canvas{width:100%;height:280px;border:1px solid var(--line);border-radius:12px;b
 <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
 <a href="/sylvia-ielts-command-center/" style="display:inline-block;background:#fff;color:#0f766e;text-decoration:none;font-weight:800;padding:9px 13px;border-radius:999px">IELTS Command Center</a><a href="/sylvia-ielts-30day/" style="display:inline-block;background:#fff;color:#0f766e;text-decoration:none;font-weight:800;padding:9px 13px;border-radius:999px">Sylvia Writing Lab</a>
 <a href="https://gary-ielts-day.gary2049.chatgpt.site" target="_blank" rel="noopener" style="display:inline-block;background:#fff;color:#0f766e;text-decoration:none;font-weight:800;padding:9px 13px;border-radius:999px">雅思考試的一天 ↗</a>
-<button type="button" onclick="go('contact')" style="background:#ffffff22;color:#fff;font-weight:800;padding:9px 13px;border:1px solid #ffffff55;border-radius:999px;cursor:pointer">聯絡站長</button>
+<a href="/sylvia-ielts-command-center/#contact" style="display:inline-block;background:#ffffff22;color:#fff;text-decoration:none;font-weight:800;padding:9px 13px;border:1px solid #ffffff55;border-radius:999px">聯絡站長</a>
 </div>
 <h1>Sylvia IELTS Speaking Lab</h1><div class="sub">Part 1–3 → 錄音／自評 → Gary 四項評分 → 診斷處方 → 自動派課 → 進步曲線</div><nav id="nav"></nav></div></header>
 <main class="wrap">
@@ -79,16 +79,9 @@ canvas{width:100%;height:280px;border:1px solid var(--line);border-radius:12px;b
 <tr><td>文法求難</td><td>先確保時態與基本句正確，再加入複句</td></tr>
 </table></div></section>
 
-<section id="contact"><div class="card"><h2>聯絡站長｜Contact Gary</h2>
-<form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST" style="display:grid;gap:10px">
-<input type="hidden" name="_subject" value="Sylvia IELTS Speaking Lab｜聯絡站長"><input type="hidden" name="_captcha" value="false">
-<label>姓名<input name="name" value="Sylvia" required></label><label>Email<input type="email" name="email" required></label>
-<label>留言<textarea name="message" rows="6" required></textarea></label><button class="action" type="submit">送出給站長</button>
-</form></div></section>
-
 </main><div class="footer">Sylvia IELTS Speaking Lab V1｜Adaptive Coaching</div>
 <script>
-const tabs=[['dashboard','首頁'],['practice','口說練習'],['records','練習紀錄'],['grading','Gary評分'],['errors','錯誤追蹤'],['contact','聯絡站長']];
+const tabs=[['dashboard','首頁'],['practice','口說練習'],['records','練習紀錄'],['grading','Gary評分'],['errors','錯誤追蹤'] ];
 tabs.forEach((x,i)=>{const b=document.createElement('button');b.textContent=x[1];b.dataset.id=x[0];if(i===0)b.classList.add('on');b.onclick=()=>go(x[0]);nav.appendChild(b)});
 function go(id){document.querySelectorAll('section').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.id===id));scrollTo(0,0)}
 
