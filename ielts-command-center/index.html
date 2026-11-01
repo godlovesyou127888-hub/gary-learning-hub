@@ -9,6 +9,15 @@ header{background:linear-gradient(135deg,#3730a3,#7c3aed);color:#fff}nav,.hero,m
 main{padding:24px 20px}.section{margin-bottom:26px}.section h2{margin-bottom:10px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 7px 20px #1018280a}.card h3{margin:4px 0 8px}.card p{color:var(--muted);margin:6px 0 14px}.meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.badge{display:inline-block;border-radius:999px;padding:4px 8px;font-size:12px;font-weight:800;background:#eef2ff;color:#4338ca}.badge.live{background:#ecfdf3;color:var(--ok)}.badge.test{background:#fff7ed;color:var(--test)}.btn{display:inline-block;text-decoration:none;border-radius:10px;padding:10px 13px;font-weight:800;background:var(--p);color:#fff}.btn.secondary{background:#fff;color:var(--p);border:1px solid #c7d2fe}.route{border-left:5px solid var(--p);background:#f5f3ff;border-radius:14px;padding:16px}.route ol{margin:8px 0 0 20px}.note{color:var(--muted);font-size:14px}.topline{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
 footer{text-align:center;padding:30px;color:var(--muted)}
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:640px){.grid{grid-template-columns:1fr}.hero h1{font-size:42px}.btn{width:100%;text-align:center}}
+
+.examflow{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:16px}
+.flowstep{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px}
+.flowstep h3{margin:6px 0 8px}.flowstep ul{margin:8px 0 14px;padding-left:20px}
+.flowprogress{height:16px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-top:12px}
+.flowbar{height:100%;width:0;background:linear-gradient(90deg,var(--p),var(--p2))}
+.flowcheck{display:flex;gap:9px;align-items:center;margin-top:12px;font-weight:700}
+.flowcheck input{width:21px;height:21px}.coach{background:#fff7ed!important;border-color:#fed7aa!important}.system{background:#f8fafc!important}
+@media(max-width:760px){.examflow{grid-template-columns:1fr}}
 </style></head><body>
 <header><nav><a href="/">← Gary Learning Hub</a><a href="/roadmap/">101 Roadmap</a><a href="/sylvia-ielts-command-center/">Sylvia 個人儀表板</a></nav>
 <div class="hero">
@@ -19,6 +28,79 @@ footer{text-align:center;padding:30px;color:var(--muted)}
 </div></header>
 
 <main>
+<section class="section card" id="ielts-flow">
+<p class="eyebrow">IELTS MASTER FLOW</p>
+<h2>IELTS 英文檢定正式流程</h2>
+<p><strong>主線：</strong> Command Center → 四科診斷 → Gary 解讀 → 30 天計畫 → 專項訓練 → 模考驗證 → 教練校準</p>
+<div class="flowprogress"><div class="flowbar" id="ieltsFlowBar"></div></div>
+<p class="note" id="ieltsFlowText">0 / 6 完成</p>
+
+<div class="examflow">
+<article class="flowstep system">
+<span class="badge">FREE / SYSTEM</span>
+<h3>Step 1｜四科診斷</h3>
+<p>先確認 Listening、Reading、Writing、Speaking 的目前 Band 與主要失分原因，不平均刷題。</p>
+<ul><li>Listening：口音、定位、拼字</li><li>Reading：速度、定位、同義替換</li><li>Writing：Task Response／Coherence／Lexical／Grammar</li><li>Speaking：Fluency／Lexical／Grammar／Pronunciation</li></ul>
+<div class="meta">
+<a class="btn secondary" href="/ielts-listening-accent-lab/">Listening</a>
+<a class="btn secondary" href="/ielts-reading-speed-lab/">Reading</a>
+<a class="btn secondary" href="/sylvia-ielts-30day/">Writing</a>
+<a class="btn secondary" href="/sylvia-ielts-speaking/">Speaking</a>
+</div>
+<label class="flowcheck"><input type="checkbox" data-ielts-step="1">我已完成四科基準診斷</label>
+</article>
+
+<article class="flowstep coach">
+<span class="badge test">PAID / COACH</span>
+<h3>Step 2｜Gary 策略解讀</h3>
+<p>把四科結果整合成一個優先順序：先處理最低 Band 與最可拉分的瓶頸。</p>
+<ul><li>決定先練哪一科</li><li>哪些題型暫時不要做</li><li>設定下一次驗證指標</li></ul>
+<a class="btn" href="/sylvia-ielts-command-center/">開啟 Adaptive Dashboard</a>
+<label class="flowcheck"><input type="checkbox" data-ielts-step="2">我已完成策略解讀</label>
+</article>
+
+<article class="flowstep system">
+<span class="badge">SYSTEM</span>
+<h3>Step 3｜30 天計畫</h3>
+<p>把最低瓶頸轉成可執行的 30 天週期，而不是四科平均分配時間。</p>
+<ul><li>Writing：30-Day Sprint</li><li>Speaking：Daily 5</li><li>Reading／Listening：限時＋錯題紀錄</li></ul>
+<a class="btn" href="/sylvia-ielts-30day/">開啟 30-Day Writing Sprint</a>
+<a class="btn secondary" href="/ielts-speaking-daily-5/">Speaking Daily 5</a>
+<label class="flowcheck"><input type="checkbox" data-ielts-step="3">我已建立 30 天計畫</label>
+</article>
+
+<article class="flowstep system">
+<span class="badge">SYSTEM</span>
+<h3>Step 4｜專項訓練</h3>
+<p>依診斷選一條軌道，不同時開所有工具。</p>
+<ul><li>Writing：Task 1 Graph／Task 2 Idea／Band 7 Sentence</li><li>Vocabulary：Academic Collocations</li><li>Speaking：Part 1–3＋Daily 5</li><li>Reading／Listening：速度、定位與口音</li></ul>
+<a class="btn secondary" href="/ielts-task1-graph-lab/">Task 1</a>
+<a class="btn secondary" href="/ielts-task2-idea-builder/">Task 2</a>
+<a class="btn secondary" href="/ielts-vocabulary-collocation-lab/">Vocabulary</a>
+<label class="flowcheck"><input type="checkbox" data-ielts-step="4">我已達成目前專項完成線</label>
+</article>
+
+<article class="flowstep system">
+<span class="badge">SYSTEM</span>
+<h3>Step 5｜模考驗證</h3>
+<p>用新的四科結果驗證方法是否有效。不是看「有沒有讀」，而是看 Band、正確率、時間與錯誤類型是否改善。</p>
+<ul><li>比較前後 Band／正確率</li><li>檢查限時條件是否穩定</li><li>把新錯誤送進 Error Tracker</li></ul>
+<a class="btn" href="https://gary-ielts-day.gary2049.chatgpt.site" target="_blank" rel="noopener">雅思考試的一天 ↗</a>
+<a class="btn secondary" href="/sylvia-ielts-error-tracker/">Error Tracker</a>
+<label class="flowcheck"><input type="checkbox" data-ielts-step="5">我已完成階段模考／四科再測</label>
+</article>
+
+<article class="flowstep coach">
+<span class="badge test">PAID / COACH</span>
+<h3>Step 6｜Gary 教練校準</h3>
+<p>根據最新四科、錯題與時間表現，決定：維持、加速、換策略，或開下一個 30 天週期。</p>
+<ul><li>確認最低 Band 是否真的提升</li><li>決定下一個主攻科目</li><li>更新考試前最後策略</li></ul>
+<a class="btn" href="/sylvia-ielts-command-center/#contact">交給 Gary 校準</a>
+<label class="flowcheck"><input type="checkbox" data-ielts-step="6">我已完成教練校準</label>
+</article>
+</div>
+</section>
+
 <section class="section route"><div class="topline"><div><p class="eyebrow">RECOMMENDED ROUTE</p><h2>今天只走一條主線</h2></div><a class="btn secondary" href="/sylvia-ielts-command-center/">開啟 Sylvia Adaptive Dashboard</a></div>
 <ol><li>先看四科最低瓶頸。</li><li>進入對應技能 Lab 練習。</li><li>若卡在寫作，進 Task 1／Task 2／Band 7 Sentence／Vocabulary 專項。</li><li>完成後進 Error Tracker，把重複錯誤留下來。</li></ol></section>
 
@@ -50,4 +132,8 @@ footer{text-align:center;padding:30px;color:var(--muted)}
 <section class="section card"><h2>使用原則</h2><p><b>不要一次打開全部網站。</b> 先用 Command Center 找最低瓶頸，再進一個 Lab；完成後才回 Error Tracker。這樣每個網站都服務同一條學習主線，而不是變成更多分散工具。</p><p class="note">所有標示「測試」的網站功能已建立，但部分 Gmail E2E 或實機流程仍待驗收。</p></section>
 </main>
 <footer>Gary IELTS Command Center｜All IELTS Sites Integrated</footer>
+
+<script>
+(()=>{const key="gary_ielts_command_flow_v1";const boxes=[...document.querySelectorAll("[data-ielts-step]")];let saved={};try{saved=JSON.parse(localStorage.getItem(key)||"{}")}catch{};boxes.forEach(b=>{b.checked=!!saved[b.dataset.ieltsStep];b.addEventListener("change",()=>{const d={};boxes.forEach(x=>d[x.dataset.ieltsStep]=x.checked);localStorage.setItem(key,JSON.stringify(d));draw()})});function draw(){const done=boxes.filter(x=>x.checked).length;const bar=document.getElementById("ieltsFlowBar"),txt=document.getElementById("ieltsFlowText");if(bar)bar.style.width=(done/6*100)+"%";if(txt)txt.textContent=done+" / 6 完成"}draw()})();
+</script>
 </body></html>
