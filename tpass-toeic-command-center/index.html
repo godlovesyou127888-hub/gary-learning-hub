@@ -119,7 +119,7 @@
 <p><b>計畫：</b>Gary 教練解讀 → TOEIC 90-Day Planner</p>
 <p><b>訓練：</b>依診斷與教練解讀，從 Part 5 文法／Part 7 閱讀／Listening 聽力選擇目前最需要補強的專項；詞素／字彙基礎只保留在 Step 1 診斷。</p>
 <p><b>驗證：</b>Mock Test Lab → Gary 教練校準</p>
-<p><b>會員：</b>T-PASS Member Dashboard 負責會員進度查看；Command Center 負責學習決策與下一步。</p>
+<p><b>主線：</b>目前所有正式學習決策、進度與下一步都以本 Command Center 為準；舊 Member Dashboard 保留待日後整合。</p>
 </section>
 <section class="panel"><h2>T-PASS 90 教練版</h2><p><b>方案價格：NT$29,800 起</b></p><p>適合已經投入不少時間，但仍不知道自己真正卡在哪裡，或分數長期停滯的 TOEIC 學習者。</p><div class="steps"><div class="step"><h3>你會得到</h3><p>初始診斷解讀、90 天個人化提分路徑、專項訓練安排、模考數據追蹤、關鍵節點校準。</p></div><div class="step"><h3>Gary 親自介入</h3><p>Step 2 教練解讀與 Step 6 教練校準。標準練習由系統處理，真正需要判斷的地方由教練處理。</p></div></div><p><a class="btn primary" href="#coach-apply">申請 T-PASS 90 教練版</a></p></section><section class="panel" id="coach-apply"><h2>預約 Gary 教練</h2><p>FIONA 從 290 分進步到 705 分；JIM 在七百多分時繼續朝更高目標前進。你的起點與目標是什麼？留下資料，讓 Gary 從你的學習狀況開始判斷。</p><p class="muted">留下目前分數、目標分數與方便聯絡時段，Gary 再確認是否適合進入 T-PASS 90。</p><form action="https://formsubmit.co/godlovesyou127888@gmail.com" method="POST">
 <input type="hidden" name="_subject" value="T-PASS 90 教練版申請">
@@ -142,6 +142,7 @@ boxes.forEach(b=>{b.checked=!!saved[b.dataset.step];b.addEventListener("change",
 function save(){const d={};boxes.forEach(b=>d[b.dataset.step]=b.checked);localStorage.setItem(key,JSON.stringify(d));draw()}
 function draw(){const done=boxes.filter(b=>b.checked).length;bar.style.width=(done/boxes.length*100)+"%";progressText.textContent=done+" / "+boxes.length+" 完成"}
 
+cleanupOldDeliveries(7);
 let gmailVerificationRegistry={verified:[]};
 async function loadGmailVerificationRegistry(){
   try{const r=await fetch("/tpass-next/gmail-verification.json?v="+Date.now(),{cache:"no-store"});if(r.ok)gmailVerificationRegistry=await r.json();}catch(e){}
