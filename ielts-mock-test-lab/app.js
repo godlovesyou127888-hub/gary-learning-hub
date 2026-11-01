@@ -2,6 +2,24 @@
 const KEY="ielts_mock_test_lab_v1",DELIVERY_URL="https://script.google.com/macros/s/AKfycbwyb8pphHtOR_oyMu5ICKAYaGZxmWad_3CjX_BchY0PF71tIiuB8KM85utE6Qj27AWK/exec",$=id=>document.getElementById(id);
 let state={mocks:[]};try{const x=JSON.parse(localStorage.getItem(KEY)||"{}");state={mocks:Array.isArray(x.mocks)?x.mocks:[]}}catch{}
 const save=()=>localStorage.setItem(KEY,JSON.stringify(state));$("mockDate").value=new Date().toISOString().slice(0,10);
+$("loadE2E").onclick=()=>{
+ $("student").value="Gary E2E Test";
+ $("email").value="godlovesyou127888@gmail.com";
+ $("mockName").value="IELTS Mock E2E Verification";
+ $("mockDate").value=new Date().toISOString().slice(0,10);
+ $("listening").value="7.0";
+ $("reading").value="6.5";
+ $("writing").value="6.0";
+ $("speaking").value="6.5";
+ $("listeningRaw").value="30";
+ $("readingRaw").value="28";
+ $("lError").value="定位";
+ $("rError").value="同义替换";
+ $("wError").value="Task Response";
+ $("sError").value="Fluency & Coherence";
+ $("note").value="E2E 验收测试：预期 Overall 6.5，最低科目 Writing 6.0。";
+ $("saveStatus").textContent="E2E 测试资料已载入：请按「储存这次模考」，再按「寄送完整结果给 Gary 教练」。";
+};
 function roundBand(x){const n=Math.round(x*4)/4;const frac=n%1;if(frac===0.25)return Math.floor(n)+0.5;if(frac===0.75)return Math.ceil(n);return n}
 function validBand(v){const n=Number(v);return Number.isFinite(n)&&n>=0&&n<=9&&Math.abs(n*2-Math.round(n*2))<1e-9}
 function collect(){return{student:$("student").value.trim(),email:$("email").value.trim(),mockName:$("mockName").value.trim(),mockDate:$("mockDate").value,bands:{Listening:Number($("listening").value),Reading:Number($("reading").value),Writing:Number($("writing").value),Speaking:Number($("speaking").value)},raw:{Listening:$("listeningRaw").value===""?null:Number($("listeningRaw").value),Reading:$("readingRaw").value===""?null:Number($("readingRaw").value)},errors:{Listening:$("lError").value,Reading:$("rError").value,Writing:$("wError").value,Speaking:$("sError").value},note:$("note").value.trim()}}
