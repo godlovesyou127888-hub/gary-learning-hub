@@ -137,7 +137,7 @@ $('coachForm').onsubmit=e=>{
   '成績: '+r.score+'/100','正確題數: '+r.score/5+'/20',
   '來源: '+location.origin+location.pathname,'','--- 完整逐題結果 ---',lines].join('\n');
  const subject='[國一英語練習成績] '+name+' '+r.score+'/100';
- const shortBody=['Gary 教練您好：','以下為本次國一英語練習成績。','學員：'+name,'Email：'+(email||'未提供'),'範圍：'+scopeLabel(r.scope),'成績：'+r.score+'/100（'+r.score/5+'/20 題正確）','練習編號：'+r.id,'','【請在此貼上完整20題作答與中英解析】','請先回到練習站點擊「複製完整報告」，然後貼入此封郵件，最後再按傳送。'].join('\\n');
+ const shortBody=['Gary 教練您好：','以下為本次國一英語練習成績。','學員：'+name,'Email：'+(email||'未提供'),'範圍：'+scopeLabel(r.scope),'成績：'+r.score+'/100（'+r.score/5+'/20 題正確）','練習編號：'+r.id,'','【請在此貼上完整20題作答與中英解析】','請先回到練習站點擊「複製完整報告」，然後貼入此封郵件，最後再按傳送。'].join('\n');
  const gmail='https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent('godlovesyou127888@gmail.com')+'&su='+encodeURIComponent(subject)+'&body='+encodeURIComponent(shortBody);
  const old=$('coachRetry');if(old)old.remove();$('coachCopy')?.remove();
  const link=document.createElement('a');link.id='coachRetry';link.href=gmail;link.target='_blank';link.rel='noopener';link.className='contact-gary';link.textContent='開啟 Gmail 草稿 / Open Gmail draft';link.style.marginTop='8px';
