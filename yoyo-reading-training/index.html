@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="yo-yo 閱讀理解訓練站：主旨、細節、推論、詞義與證據定位診斷，提供白話解析、錯題重練與學習歷程。">
+<title>yo-yo 閱讀理解訓練站</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f6fafc;color:#263744;font:18px/1.75 system-ui,"Noto Sans TC",sans-serif}header{background:#31586f;color:#fff;padding:22px 16px}.wrap,main{max-width:980px;margin:auto}main{padding:16px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn,button{border:0;border-radius:10px;padding:11px 15px;background:#3e718d;color:#fff;font:inherit;font-weight:800;text-decoration:none;cursor:pointer}.secondary{background:#e3eef3!important;color:#31586f!important}.card{background:#fff;border:1px solid #dce8ee;border-radius:16px;padding:20px;margin:16px 0}.eyebrow{font-size:13px;font-weight:900;letter-spacing:.08em;color:#6c8796}.hidden{display:none}.passage{background:#f9fcfd;border-left:5px solid #6a94aa;padding:16px;border-radius:10px;white-space:pre-line}.q{padding:16px 0;border-top:1px solid #e7eef2}.q:first-child{border-top:0}.q label{display:block;padding:8px 10px;border:1px solid #dfe8ed;border-radius:9px;margin:7px 0;font-weight:400}.q input{width:auto;margin-right:8px}.tag{display:inline-block;padding:4px 8px;border-radius:999px;background:#e7f0f4;color:#31586f;font-size:13px;font-weight:800;margin:2px}.feedback{white-space:pre-line;background:#edf5f8;padding:12px;border-radius:9px;margin-top:10px}.metric{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric div{background:#f7fbfd;border:1px solid #dfeaf0;border-radius:12px;padding:14px;text-align:center}.metric b{display:block;font-size:25px}.good{color:#047857}.bad{color:#b42318}.priority{padding:12px;border-left:5px solid #4e7d96;background:#eef6f9;border-radius:10px}.evidence{padding:10px;background:#fff8e9;border-radius:9px;margin-top:8px}input[type=text],input[type=email]{width:100%;padding:10px;border:1px solid #bccdd6;border-radius:9px;font:inherit}.muted{color:#687983;font-size:14px}@media(max-width:700px){.metric{grid-template-columns:1fr 1fr}.card{padding:14px}.btn,button{width:100%}}@media print{header .actions,.actions,button{display:none!important}body{background:white}.card{border:0}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="actions"><a class="btn secondary" href="/">回 Hub</a><a class="btn secondary" href="/roadmap/">回 Roadmap</a><a class="btn" href="https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su=yo-yo%20%E9%96%B1%E8%AE%80%E7%90%86%E8%A7%A3%E8%A8%93%E7%B7%B4%E7%AB%99%20%E8%81%AF%E7%B5%A1%E7%AB%99%E9%95%B7" target="_blank" rel="noopener">聯絡站長</a></div><h1>yo-yo 閱讀理解訓練站</h1><p>主旨 × 細節 × 推論 × 詞義 × 證據定位｜閱讀不是猜答案，而是知道答案從哪裡來。</p></div></header>
+<main>
+<section class="card"><p class="eyebrow">01 · START</p><h2>每回 10 題閱讀理解</h2><p>從 3 篇原創短文中抽題，診斷五種閱讀能力。完成後會告訴你最弱的是哪一層。</p><div class="actions"><button id="start">開始 10 題閱讀診斷</button><button id="retry" class="secondary">只重練錯題</button></div><p id="startStatus">按「開始 10 題閱讀診斷」。</p></section>
+
+<section id="quizCard" class="card hidden"><p class="eyebrow">02 · READ</p><h2>閱讀題組</h2><div id="quiz"></div><button id="submit">交卷並查看解析</button><p id="submitStatus"></p></section>
+
+<section id="resultCard" class="card hidden"><p class="eyebrow">03 · DIAGNOSIS</p><h2>閱讀能力診斷</h2><div class="metric"><div><b id="score">0/10</b>分數</div><div><b id="accuracy">0%</b>正確率</div><div><b id="weakType">—</b>優先弱點</div><div><b id="wrongN">0</b>錯題</div></div><div id="priorityPlan" class="priority"></div><div id="typeSummary"></div><div id="review"></div></section>
+
+<section id="deliveryCard" class="card hidden"><p class="eyebrow">04 · SAVE & COACH</p><h2>保存／交付</h2><label>姓名<input id="student" type="text" value="yo-yo"></label><label>Email（選填）<input id="email" type="email"></label><div class="actions" style="margin-top:14px"><button id="download">下載 JSON</button><button id="print" class="secondary">列印／另存 PDF</button><button id="coach">寄給 Gary 教練（Gmail 草稿）</button></div><p class="muted">建議錯題不要只看答案，下一次要先找「證據句」再作答。</p><p id="deliveryStatus"></p></section>
+
+<section class="card"><p class="eyebrow">05 · HISTORY</p><h2>最近閱讀紀錄</h2><div id="history">尚無紀錄。</div></section>
+</main>
+<script>
+const passages={
+A:{title:"每天十分鐘",text:"小安原本不喜歡閱讀，因為他覺得文章太長，很容易分心。老師沒有要求他一次讀很多，而是請他每天睡前讀十分鐘，並在讀完後寫下一句「今天這篇在說什麼」。一開始，小安常常只寫出文章中的一句話，沒有抓到真正的重點。幾週後，他慢慢能用自己的話整理內容。兩個月後，小安發現自己看題目的速度變快，也比較知道該回文章哪裡找答案。",qs:[
+{t:"主旨",q:"這篇文章主要想說明什麼？",o:["短時間持續閱讀也能累積能力","閱讀一定要一次讀很久","睡前不能閱讀","老師不應要求學生寫摘要"],a:0,e:"每天睡前讀十分鐘，並在讀完後寫下一句…兩個月後，小安發現自己看題目的速度變快。",plain:"整篇都在說「每天少量但持續」帶來閱讀進步。"},
+{t:"細節",q:"老師要求小安讀完後做什麼？",o:["寫一句文章重點","背整篇文章","查十個生字","立刻做考卷"],a:0,e:"並在讀完後寫下一句「今天這篇在說什麼」。",plain:"這是原文直接說明的做法。"},
+{t:"推論",q:"小安一開始的問題最可能是什麼？",o:["抓不到真正重點","完全看不懂字","不會寫字","沒有時間睡覺"],a:0,e:"一開始，小安常常只寫出文章中的一句話，沒有抓到真正的重點。",plain:"從他的摘要方式可以推論，他原本不太會抓主旨。"},
+{t:"詞義",q:"文中「分心」最接近哪個意思？",o:["注意力跑掉","很專心","非常開心","快速完成"],a:0,e:"他覺得文章太長，很容易分心。",plain:"分心就是注意力沒有放在原本正在做的事上。"},
+{t:"證據定位",q:"哪一句最能證明小安的閱讀能力有進步？",o:["兩個月後，他看題目的速度變快，也比較知道去哪裡找答案。","他原本不喜歡閱讀。","老師請他每天讀十分鐘。","文章很長。"],a:0,e:"兩個月後，小安發現自己看題目的速度變快，也比較知道該回文章哪裡找答案。",plain:"這一句直接描述了能力上的變化。"}
+]},
+B:{title:"失敗後的紙橋",text:"自然課時，老師要每組用十張紙做一座能承重的橋。yo-yo 這組第一次做出的橋，只放了五枚硬幣就倒了。組員原本有點失望，但他們沒有立刻重做，而是先觀察橋是從哪個地方塌下來。後來他們發現，中間的紙面太平，沒有足夠支撐。第二次，他們把部分紙張摺成三角形，再重新測試。這次紙橋承受了二十七枚硬幣。老師說，真正重要的不是一次成功，而是知道失敗提供了什麼線索。",qs:[
+{t:"主旨",q:"這篇文章的重點是什麼？",o:["從失敗找線索可以幫助改進","紙橋一定要用很多紙","五枚硬幣很重","自然課很簡單"],a:0,e:"真正重要的不是一次成功，而是知道失敗提供了什麼線索。",plain:"老師最後一句就是全文核心。"},
+{t:"細節",q:"第一次紙橋承受幾枚硬幣就倒了？",o:["五枚","十枚","二十七枚","三十枚"],a:0,e:"只放了五枚硬幣就倒了。",plain:"這是直接細節題。"},
+{t:"推論",q:"為什麼他們第二次把紙摺成三角形？",o:["想增加支撐力","想讓橋更漂亮","想減少紙張","想加快下課"],a:0,e:"他們發現，中間的紙面太平，沒有足夠支撐。第二次，他們把部分紙張摺成三角形。",plain:"因為發現支撐不足，所以改變結構。"},
+{t:"詞義",q:"文中「承重」最接近哪個意思？",o:["承受重量","增加速度","改變顏色","減少高度"],a:0,e:"做一座能承重的橋。",plain:"承重就是承受重量。"},
+{t:"證據定位",q:"哪一句最能證明第二次設計有效？",o:["這次紙橋承受了二十七枚硬幣。","老師要每組用十張紙。","組員有點失望。","第一次做出的橋倒了。"],a:0,e:"這次紙橋承受了二十七枚硬幣。",plain:"這個結果直接證明第二次設計比第一次更有效。"}
+]},
+C:{title:"不直接給答案",text:"國文課上，老師常常不直接告訴學生正確答案。當學生答錯時，老師會先問：「你是從哪一句判斷的？」如果學生找不到依據，老師就請他回到文章裡，把相關句子圈起來。久而久之，學生不再只靠感覺選答案，而是會先找證據，再排除不合理的選項。雖然一開始作答速度變慢了，但幾次練習後，大家反而更少改答案，也更能說明自己的理由。",qs:[
+{t:"主旨",q:"這篇文章主要在說什麼？",o:["閱讀作答要根據文章證據","老師不應該教答案","作答越快越好","圈句子沒有幫助"],a:0,e:"學生不再只靠感覺選答案，而是會先找證據。",plain:"全文都在強調「先找證據再作答」。"},
+{t:"細節",q:"學生答錯時，老師先問什麼？",o:["你是從哪一句判斷的？","你為什麼沒背課文？","你怎麼這麼慢？","你要不要放棄？"],a:0,e:"老師會先問：「你是從哪一句判斷的？」",plain:"這是直接細節。"},
+{t:"推論",q:"為什麼後來學生比較少改答案？",o:["因為作答有證據支持","因為題目變簡單","因為老師直接提示","因為他們不再閱讀"],a:0,e:"會先找證據，再排除不合理的選項。",plain:"有證據支持的答案比較有把握，所以較少反覆修改。"},
+{t:"詞義",q:"文中「依據」最接近哪個意思？",o:["支持判斷的理由或證據","個人喜好","作答速度","老師的情緒"],a:0,e:"如果學生找不到依據，老師就請他回到文章裡，把相關句子圈起來。",plain:"依據就是支持你判斷的理由或證據。"},
+{t:"證據定位",q:"哪一句最能證明這個方法後來有效？",o:["大家反而更少改答案，也更能說明自己的理由。","一開始作答速度變慢了。","老師不直接告訴答案。","學生把句子圈起來。"],a:0,e:"幾次練習後，大家反而更少改答案，也更能說明自己的理由。",plain:"這一句直接描述方法帶來的正面結果。"}
+]}
+};
+const $=id=>document.getElementById(id);let current=[],results=[],wrong=[];
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function build(){const all=[];Object.entries(passages).forEach(([k,p])=>p.qs.forEach(q=>all.push({...q,p:k})));return shuffle(all).slice(0,10)}
+function render(items){current=items;results=[];$("quiz").replaceChildren();const groups={};items.forEach((q,i)=>{(groups[q.p]??=[]).push([q,i])});Object.entries(groups).forEach(([k,list])=>{const p=passages[k],box=document.createElement("div");box.innerHTML='<h3>'+p.title+'</h3><div class="passage">'+p.text+'</div>';$("quiz").append(box);list.forEach(([q,i])=>{const d=document.createElement("div");d.className="q";let h='<span class="tag">'+q.t+'</span><p><b>Q'+(i+1)+'. '+q.q+'</b></p>';q.o.forEach((x,j)=>h+='<label><input type="radio" name="q'+i+'" value="'+j+'"> '+String.fromCharCode(65+j)+'. '+x+'</label>');d.innerHTML=h;$("quiz").append(d)})});$("quizCard").classList.remove("hidden");$("resultCard").classList.add("hidden");$("deliveryCard").classList.add("hidden");$("submitStatus").textContent=""}
+$("start").onclick=()=>{render(build());$("startStatus").textContent="已建立 10 題閱讀診斷。"};
+$("retry").onclick=()=>{if(!wrong.length){$("startStatus").textContent="目前沒有上一回錯題可重練。";return}render(wrong.map(x=>x.q));$("startStatus").textContent="已載入上一回錯題。"};
+$("submit").onclick=()=>{const missing=current.filter((q,i)=>!document.querySelector('input[name="q'+i+'"]:checked')).length;if(missing){$("submitStatus").textContent="還有 "+missing+" 題未作答。";return}let score=0;const by={};results=current.map((q,i)=>{if(!by[q.t])by[q.t]={c:0,t:0};by[q.t].t++;const selected=Number(document.querySelector('input[name="q'+i+'"]:checked').value),ok=selected===q.a;if(ok){score++;by[q.t].c++}return{q,selected,ok}});wrong=results.filter(x=>!x.ok);const weak=Object.keys(by).sort((a,b)=>(by[a].c/by[a].t)-(by[b].c/by[b].t))[0]||"無明顯弱點";$("score").textContent=score+"/"+current.length;$("accuracy").textContent=Math.round(score/current.length*100)+"%";$("weakType").textContent=weak;$("wrongN").textContent=wrong.length;const plan=score/current.length>=.9?"閱讀策略：能力穩定，下一步增加較長文本與跨段推論。":score/current.length>=.7?"閱讀策略：先集中補強「"+weak+"」，每題都先圈出證據句再作答。":"閱讀策略：先練「題目問什麼 → 回原文定位 → 找證據 → 排除選項」四步驟，不要急著猜。";$("priorityPlan").innerHTML="<b>"+plan+"</b>";$("typeSummary").innerHTML='<h3>五類閱讀能力</h3>'+Object.entries(by).map(([t,x])=>'<span class="tag">'+t+' '+x.c+'/'+x.t+'</span>').join("");$("review").replaceChildren();results.forEach((r,i)=>{const q=r.q,d=document.createElement("div");d.className="q";d.innerHTML='<h3 class="'+(r.ok?'good':'bad')+'">Q'+(i+1)+' '+(r.ok?'✓ 正確':'✗ 需要訂正')+'</h3><p><span class="tag">'+q.t+'</span> <b>'+q.q+'</b></p><p>你的答案：'+q.o[r.selected]+'<br>正確答案：'+q.o[q.a]+'</p><div class="feedback"><b>白話解析</b>\n'+q.plain+'</div><div class="evidence"><b>Evidence 證據句</b><br>'+q.e+'</div>';$("review").append(d)});$("resultCard").classList.remove("hidden");$("deliveryCard").classList.remove("hidden");save(score,weak);$("resultCard").scrollIntoView({behavior:"smooth"})};
+function snapshot(){const score=results.filter(x=>x.ok).length;return{site:"yo-yo 閱讀理解訓練站",version:"MVP V1",date:new Date().toISOString(),student:$("student").value.trim()||"yo-yo",email:$("email").value.trim(),score,total:current.length,accuracy:current.length?Math.round(score/current.length*100):0,items:results.map((r,i)=>({no:i+1,type:r.q.t,question:r.q.q,chosen:r.q.o[r.selected],answer:r.q.o[r.q.a],correct:r.ok,plain_explanation:r.q.plain,evidence:r.q.e}))}}
+function save(score,weak){const key="yoyo-reading-training-v1",arr=JSON.parse(localStorage.getItem(key)||"[]");arr.unshift({date:new Date().toISOString(),score,total:current.length,weak});localStorage.setItem(key,JSON.stringify(arr.slice(0,12)));showHistory()}
+function showHistory(){const arr=JSON.parse(localStorage.getItem("yoyo-reading-training-v1")||"[]");$("history").innerHTML=arr.length?arr.map(x=>'<p>'+new Date(x.date).toLocaleString()+'｜'+x.score+'/'+x.total+'｜優先：'+x.weak+'</p>').join(""):"尚無紀錄。"}
+function report(){const d=snapshot();return "yo-yo 閱讀理解訓練站\n學員："+d.student+"\nEmail："+d.email+"\n分數："+d.score+"/"+d.total+"（"+d.accuracy+"%）\n\n"+d.items.map(x=>x.no+". ["+x.type+"] "+x.question+"\n你的答案："+x.chosen+"\n正解："+x.answer+"｜"+(x.correct?"正確":"錯誤")+"\n證據："+x.evidence).join("\n\n")}
+$("download").onclick=()=>{const b=new Blob([JSON.stringify(snapshot(),null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="yoyo-reading-training-"+new Date().toISOString().slice(0,10)+".json";a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);$("deliveryStatus").textContent="已下載 JSON 備份。"};
+$("print").onclick=()=>window.print();
+$("coach").onclick=()=>{const d=snapshot(),subject="yo-yo 閱讀理解訓練｜"+d.student+"｜"+d.score+"/"+d.total;window.open("https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su="+encodeURIComponent(subject)+"&body="+encodeURIComponent(report()),"_blank","noopener,noreferrer");$("deliveryStatus").textContent="已嘗試開啟 Gmail 草稿，請確認後手動傳送。"};
+showHistory();
+</script>
+</body></html>
