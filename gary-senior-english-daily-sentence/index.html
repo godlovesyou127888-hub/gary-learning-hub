@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Gary 樂齡英文每日一句：每天一句實用生活英文，大字、中英對照、慢速播放、跟讀、小測驗與完成紀錄。">
+<title>Gary 樂齡英文每日一句</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#fffaf2;color:#3d3428;font:22px/1.75 system-ui,"Noto Sans TC",sans-serif}header{background:#8a6a35;color:white;padding:24px 16px}.wrap,main{max-width:940px;margin:auto}main{padding:16px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn,button{border:0;border-radius:12px;padding:13px 18px;background:#a57d3e;color:#fff;font:inherit;font-weight:800;text-decoration:none;cursor:pointer}.secondary{background:#f2ead9!important;color:#775b31!important}.card{background:#fff;border:1px solid #eadfc8;border-radius:18px;padding:22px;margin:18px 0}.eyebrow{font-size:14px;font-weight:900;letter-spacing:.08em;color:#8b7957}.sentence{font-size:42px;font-weight:900;line-height:1.25;margin:16px 0}.zh{font-size:29px;font-weight:800;color:#6d5431}.context{background:#fff7e7;padding:16px;border-radius:12px;margin-top:14px}.step{background:#fbf7ef;border-left:5px solid #b89253;padding:14px;border-radius:10px;margin:12px 0}.hidden{display:none}.quiz label{display:block;border:1px solid #e4d7bf;border-radius:10px;padding:10px;margin:8px 0}.metric{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.metric div{background:#fffaf1;border:1px solid #eadfc8;border-radius:12px;padding:14px;text-align:center}.metric b{display:block;font-size:28px}.good{color:#047857}.bad{color:#b42318}.muted{font-size:16px;color:#776d5f}.history p{padding:8px 0;border-bottom:1px solid #eee4d3}input[type=text],input[type=email]{width:100%;padding:12px;border:1px solid #d1c1a6;border-radius:10px;font:inherit}@media(max-width:700px){body{font-size:20px}.sentence{font-size:36px}.zh{font-size:26px}.metric{grid-template-columns:1fr}.btn,button{width:100%}.card{padding:16px}}@media print{header .actions,.actions,button{display:none!important}body{background:white}.card{border:0}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="actions"><a class="btn secondary" href="/">回 Hub</a><a class="btn secondary" href="/roadmap/">回 Roadmap</a><a class="btn" href="https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su=Gary%20%E6%A8%82%E9%BD%A1%E8%8B%B1%E6%96%87%E6%AF%8F%E6%97%A5%E4%B8%80%E5%8F%A5%20%E8%81%AF%E7%B5%A1%E7%AB%99%E9%95%B7" target="_blank" rel="noopener">聯絡站長</a></div><h1>Gary 樂齡英文每日一句</h1><p>每天只學一句｜聽懂、看懂、跟讀、會用。</p></div></header>
+<main>
+<section class="card"><p class="eyebrow">01 · TODAY</p><p id="dateText"></p><div class="sentence" id="sentence"></div><div class="zh" id="translation"></div><div class="context" id="context"></div><div class="actions" style="margin-top:16px"><button id="speakSlow">慢速聽一句</button><button id="speakNormal" class="secondary">正常速度再聽一次</button><button id="nextSentence" class="secondary">換下一句練習</button></div></section>
+
+<section class="card"><p class="eyebrow">02 · SHADOWING</p><h2>跟讀 3 次</h2><div class="step"><b>第 1 次：</b>先只聽，不急著說。</div><div class="step"><b>第 2 次：</b>看著英文，跟著慢慢說。</div><div class="step"><b>第 3 次：</b>不看中文，自己完整說一次。</div><div class="actions"><button id="countPractice">我完成 3 次跟讀</button></div><p id="practiceStatus">尚未記錄今天跟讀。</p></section>
+
+<section class="card"><p class="eyebrow">03 · QUICK CHECK</p><h2>今天一句小測</h2><div class="quiz" id="quiz"></div><button id="submit">完成小測</button><p id="quizStatus"></p></section>
+
+<section id="resultCard" class="card hidden"><p class="eyebrow">04 · RESULT</p><h2>今天完成了</h2><div class="metric"><div><b id="score">0/2</b>答對</div><div><b id="accuracy">0%</b>正確率</div><div><b id="streak">1</b>累積完成次數</div></div><div id="review"></div></section>
+
+<section id="deliveryCard" class="card hidden"><p class="eyebrow">05 · SAVE</p><h2>保存今天成果</h2><label>姓名<input id="student" type="text" value="Gary 樂齡學員"></label><label>Email（選填）<input id="email" type="email"></label><div class="actions" style="margin-top:14px"><button id="download">下載 JSON</button><button id="print" class="secondary">列印／另存 PDF</button><button id="coach">寄給 Gary 教練（Gmail 草稿）</button></div><p class="muted">一句學會的標準：看懂意思、聽得出來、自己能說一次。</p><p id="deliveryStatus"></p></section>
+
+<section class="card"><p class="eyebrow">06 · HISTORY</p><h2>最近完成紀錄</h2><div id="history" class="history">尚無紀錄。</div></section>
+</main>
+
+<script>
+const lessons=[
+{s:"How are you today?",z:"你今天好嗎？",c:"打招呼、關心朋友或同學。",reply:"I'm fine, thank you.",key:"today"},
+{s:"Please speak slowly.",z:"請說慢一點。",c:"聽不懂英文時，非常實用的一句。",reply:"Sure, no problem.",key:"slowly"},
+{s:"Can you help me?",z:"你可以幫我嗎？",c:"需要協助時可以直接使用。",reply:"Of course.",key:"help"},
+{s:"Where is the bathroom?",z:"洗手間在哪裡？",c:"旅行、餐廳、飯店都很實用。",reply:"It's over there.",key:"bathroom"},
+{s:"I would like some water.",z:"我想要一些水。",c:"餐廳、飛機或飯店可以使用。",reply:"Certainly.",key:"water"},
+{s:"How much is this?",z:"這個多少錢？",c:"購物時詢問價格。",reply:"It's ten dollars.",key:"much"},
+{s:"I need a doctor.",z:"我需要醫生。",c:"身體不舒服或緊急時使用。",reply:"I'll get help.",key:"doctor"},
+{s:"What time is breakfast?",z:"早餐幾點開始？",c:"住飯店時很常用。",reply:"Breakfast starts at seven.",key:"breakfast"},
+{s:"Please take me to this address.",z:"請載我到這個地址。",c:"搭計程車時使用。",reply:"Okay.",key:"address"},
+{s:"Thank you for your help.",z:"謝謝你的幫忙。",c:"接受協助後表達感謝。",reply:"You're welcome.",key:"help"},
+{s:"Could you say that again?",z:"你可以再說一次嗎？",c:"沒聽清楚時可以使用。",reply:"Sure.",key:"again"},
+{s:"I have a reservation.",z:"我有預約。",c:"飯店、餐廳報到時使用。",reply:"May I have your name?",key:"reservation"}
+];
+const $=id=>document.getElementById(id);
+let index=Math.floor(Date.now()/86400000)%lessons.length,current=lessons[index],results=[],practiced=false;
+function speak(text,rate){if(!("speechSynthesis" in window)){alert("此裝置不支援語音播放。");return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="en-US";u.rate=rate;speechSynthesis.speak(u)}
+function render(){
+ current=lessons[index];results=[];practiced=false;
+ $("dateText").textContent=new Date().toLocaleDateString("zh-TW",{year:"numeric",month:"long",day:"numeric",weekday:"long"});
+ $("sentence").textContent=current.s;$("translation").textContent=current.z;$("context").innerHTML="<b>使用情境</b><br>"+current.c;
+ $("practiceStatus").textContent="尚未記錄今天跟讀。";
+ $("resultCard").classList.add("hidden");$("deliveryCard").classList.add("hidden");$("quizStatus").textContent="";
+ const wrongZ=lessons.filter((_,i)=>i!==index).slice(0,3).map(x=>x.z);const opts1=[current.z,...wrongZ].sort(()=>Math.random()-.5);
+ const wrongReply=lessons.filter((_,i)=>i!==index).slice(0,3).map(x=>x.reply);const opts2=[current.reply,...wrongReply].sort(()=>Math.random()-.5);
+ $("quiz").innerHTML='<div><p><b>Q1. 這句英文的意思是？</b></p>'+opts1.map((o,i)=>'<label><input type="radio" name="q1" value="'+encodeURIComponent(o)+'"> '+String.fromCharCode(65+i)+'. '+o+'</label>').join("")+'</div><div><p><b>Q2. 對方最可能怎麼回應？</b></p>'+opts2.map((o,i)=>'<label><input type="radio" name="q2" value="'+encodeURIComponent(o)+'"> '+String.fromCharCode(65+i)+'. '+o+'</label>').join("")+'</div>';
+}
+$("speakSlow").onclick=()=>speak(current.s,.58);
+$("speakNormal").onclick=()=>speak(current.s,.85);
+$("nextSentence").onclick=()=>{index=(index+1)%lessons.length;render()};
+$("countPractice").onclick=()=>{practiced=true;$("practiceStatus").textContent="✓ 已記錄今天完成 3 次跟讀。"};
+$("submit").onclick=()=>{
+ const q1=document.querySelector('input[name="q1"]:checked'),q2=document.querySelector('input[name="q2"]:checked');
+ if(!q1||!q2){$("quizStatus").textContent="還有題目未作答。";return}
+ const a1=decodeURIComponent(q1.value),a2=decodeURIComponent(q2.value);
+ results=[{q:"中文意思",chosen:a1,answer:current.z,ok:a1===current.z},{q:"情境回應",chosen:a2,answer:current.reply,ok:a2===current.reply}];
+ const score=results.filter(x=>x.ok).length;
+ $("score").textContent=score+"/2";$("accuracy").textContent=(score*50)+"%";
+ const arr=JSON.parse(localStorage.getItem("gary-senior-daily-sentence-history-v1")||"[]");arr.unshift({date:new Date().toISOString(),index,score,practiced});localStorage.setItem("gary-senior-daily-sentence-history-v1",JSON.stringify(arr.slice(0,30)));$("streak").textContent=arr.length;
+ $("review").innerHTML=results.map(r=>'<div class="'+(r.ok?'good':'bad')+'"><b>'+(r.ok?'✓':'✗')+' '+r.q+'</b><br>你的答案：'+r.chosen+'<br>正確答案：'+r.answer+'</div>').join("<hr>");
+ $("resultCard").classList.remove("hidden");$("deliveryCard").classList.remove("hidden");showHistory();$("resultCard").scrollIntoView({behavior:"smooth"});
+};
+function snapshot(){const score=results.filter(x=>x.ok).length;return{site:"Gary 樂齡英文每日一句",version:"MVP V1",date:new Date().toISOString(),student:$("student").value.trim()||"Gary 樂齡學員",email:$("email").value.trim(),lesson_index:index,sentence:current.s,translation:current.z,context:current.c,expected_reply:current.reply,shadowing_completed:practiced,score,total:2}}
+function report(){const d=snapshot();return "Gary 樂齡英文每日一句\n學員："+d.student+"\n今日句子："+d.sentence+"\n中文："+d.translation+"\n情境："+d.context+"\n跟讀完成："+(d.shadowing_completed?"是":"否")+"\n小測："+d.score+"/2"}
+function showHistory(){const arr=JSON.parse(localStorage.getItem("gary-senior-daily-sentence-history-v1")||"[]");$("history").innerHTML=arr.length?arr.slice(0,12).map(x=>'<p>'+new Date(x.date).toLocaleString()+'｜第 '+(x.index+1)+' 句｜'+x.score+'/2｜跟讀：'+(x.practiced?'完成':'未記錄')+'</p>').join(""):"尚無紀錄。"}
+$("download").onclick=()=>{const b=new Blob([JSON.stringify(snapshot(),null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="gary-senior-daily-sentence-"+new Date().toISOString().slice(0,10)+".json";a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);$("deliveryStatus").textContent="已下載今天的學習紀錄。"};
+$("print").onclick=()=>window.print();
+$("coach").onclick=()=>{const d=snapshot(),subject="Gary 樂齡英文每日一句｜"+d.student+"｜"+d.score+"/2";window.open("https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su="+encodeURIComponent(subject)+"&body="+encodeURIComponent(report()),"_blank","noopener,noreferrer");$("deliveryStatus").textContent="已嘗試開啟 Gmail 草稿，請確認後手動傳送。"};
+render();showHistory();
+</script>
+</body></html>
