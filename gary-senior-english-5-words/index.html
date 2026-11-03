@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Gary 樂齡英文每日5字：每天5個實用英文單字，中英對照、慢速發音、例句、小測驗與學習紀錄。">
+<title>Gary 樂齡英文每日5字</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4fbf4;color:#25412a;font:21px/1.7 system-ui,"Noto Sans TC",sans-serif}header{background:#397146;color:#fff;padding:24px 16px}.wrap,main{max-width:940px;margin:auto}main{padding:16px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn,button{border:0;border-radius:12px;padding:13px 18px;background:#4d8b59;color:white;font:inherit;font-weight:800;text-decoration:none;cursor:pointer}.secondary{background:#e3f0e4!important;color:#315e39!important}.card{background:#fff;border:1px solid #d6e8d8;border-radius:18px;padding:22px;margin:18px 0}.eyebrow{font-size:14px;font-weight:900;letter-spacing:.08em;color:#66846b}.today{font-size:17px}.word-card{border:2px solid #dbeadd;border-radius:18px;padding:22px;margin:16px 0;background:#fbfffb}.word{font-size:42px;font-weight:900;line-height:1.1}.meaning{font-size:28px;font-weight:800;margin:8px 0}.example{font-size:22px;background:#f0f8f1;padding:14px;border-radius:12px}.example-zh{font-size:19px;color:#4f6853}.number{display:inline-block;background:#397146;color:#fff;border-radius:999px;padding:4px 11px;font-weight:900}.quiz-item{padding:18px 0;border-top:1px solid #e2ede3}.quiz-item label{display:block;border:1px solid #dbe6dc;border-radius:10px;padding:10px;margin:8px 0}.hidden{display:none}.metric{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.metric div{background:#f6fbf6;border:1px solid #dce9dd;border-radius:12px;padding:14px;text-align:center}.metric b{display:block;font-size:28px}.good{color:#047857}.bad{color:#b42318}.muted{font-size:16px;color:#647468}.history p{padding:8px 0;border-bottom:1px solid #e5eee5}input[type=text],input[type=email]{width:100%;padding:12px;border:1px solid #bdd1c0;border-radius:10px;font:inherit}@media(max-width:700px){body{font-size:20px}.word{font-size:38px}.meaning{font-size:26px}.metric{grid-template-columns:1fr}.btn,button{width:100%}.card{padding:16px}}@media print{header .actions,.actions,button{display:none!important}body{background:white}.card{border:0}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="actions"><a class="btn secondary" href="/">回 Hub</a><a class="btn secondary" href="/roadmap/">回 Roadmap</a><a class="btn" href="https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su=Gary%20%E6%A8%82%E9%BD%A1%E8%8B%B1%E6%96%87%E6%AF%8F%E6%97%A55%E5%AD%97%20%E8%81%AF%E7%B5%A1%E7%AB%99%E9%95%B7" target="_blank" rel="noopener">聯絡站長</a></div><h1>Gary 樂齡英文每日5字</h1><p>每天只學 5 個字｜看懂、聽懂、說一次、做一回小測。</p></div></header>
+<main>
+<section class="card"><p class="eyebrow">01 · TODAY</p><h2>今天的 5 個字</h2><p id="dateText" class="today"></p><p>不用一次背很多。今天先把這 5 個字念熟、看懂例句，再做 5 題小測。</p><div class="actions"><button id="speakAll">慢速播放今天 5 個字</button><button id="newSet" class="secondary">換下一組練習</button></div></section>
+
+<section id="wordList"></section>
+
+<section class="card"><p class="eyebrow">02 · QUICK QUIZ</p><h2>5 題小測驗</h2><div id="quiz"></div><button id="submit">完成今天小測</button><p id="quizStatus"></p></section>
+
+<section id="resultCard" class="card hidden"><p class="eyebrow">03 · RESULT</p><h2>今天完成了</h2><div class="metric"><div><b id="score">0/5</b>答對</div><div><b id="accuracy">0%</b>正確率</div><div><b id="streak">1</b>累積完成次數</div></div><div id="review"></div></section>
+
+<section id="deliveryCard" class="card hidden"><p class="eyebrow">04 · SAVE</p><h2>保存今天成果</h2><label>姓名<input id="student" type="text" value="Gary 樂齡學員"></label><label>Email（選填）<input id="email" type="email"></label><div class="actions" style="margin-top:14px"><button id="download">下載 JSON</button><button id="print" class="secondary">列印／另存 PDF</button><button id="coach">寄給 Gary 教練（Gmail 草稿）</button></div><p class="muted">建議明天先快速回想今天 5 個字，再開始新的 5 個字。</p><p id="deliveryStatus"></p></section>
+
+<section class="card"><p class="eyebrow">05 · HISTORY</p><h2>最近完成紀錄</h2><div id="history" class="history">尚無紀錄。</div></section>
+</main>
+
+<script>
+const sets=[
+[
+{w:"hello",m:"你好",e:"Hello, I am Gary.",z:"你好，我是 Gary。"},
+{w:"thank",m:"感謝",e:"Thank you very much.",z:"非常謝謝你。"},
+{w:"please",m:"請",e:"Please sit down.",z:"請坐下。"},
+{w:"water",m:"水",e:"I need some water.",z:"我需要一些水。"},
+{w:"friend",m:"朋友",e:"She is my friend.",z:"她是我的朋友。"}
+],
+[
+{w:"morning",m:"早上",e:"Good morning!",z:"早安！"},
+{w:"happy",m:"開心的",e:"I am happy today.",z:"我今天很開心。"},
+{w:"family",m:"家人／家庭",e:"I love my family.",z:"我愛我的家人。"},
+{w:"home",m:"家",e:"I am at home.",z:"我在家。"},
+{w:"walk",m:"走路／散步",e:"I walk every day.",z:"我每天走路。"}
+],
+[
+{w:"eat",m:"吃",e:"I eat breakfast at seven.",z:"我七點吃早餐。"},
+{w:"drink",m:"喝",e:"I drink tea.",z:"我喝茶。"},
+{w:"coffee",m:"咖啡",e:"I like coffee.",z:"我喜歡咖啡。"},
+{w:"rice",m:"飯／米",e:"I eat rice for lunch.",z:"我午餐吃飯。"},
+{w:"delicious",m:"美味的",e:"This soup is delicious.",z:"這個湯很好喝。"}
+],
+[
+{w:"bus",m:"公車",e:"I take the bus.",z:"我搭公車。"},
+{w:"station",m:"車站",e:"Where is the station?",z:"車站在哪裡？"},
+{w:"ticket",m:"票",e:"I need a ticket.",z:"我需要一張票。"},
+{w:"left",m:"左邊",e:"Turn left here.",z:"在這裡左轉。"},
+{w:"right",m:"右邊",e:"Turn right there.",z:"在那裡右轉。"}
+],
+[
+{w:"hotel",m:"飯店",e:"This is my hotel.",z:"這是我住的飯店。"},
+{w:"room",m:"房間",e:"My room is clean.",z:"我的房間很乾淨。"},
+{w:"key",m:"鑰匙",e:"Here is your key.",z:"這是你的鑰匙。"},
+{w:"help",m:"幫助",e:"Can you help me?",z:"你可以幫我嗎？"},
+{w:"bathroom",m:"洗手間",e:"Where is the bathroom?",z:"洗手間在哪裡？"}
+],
+[
+{w:"doctor",m:"醫生",e:"I need a doctor.",z:"我需要醫生。"},
+{w:"pain",m:"疼痛",e:"I have pain here.",z:"我這裡會痛。"},
+{w:"medicine",m:"藥",e:"I need my medicine.",z:"我需要我的藥。"},
+{w:"rest",m:"休息",e:"Please get some rest.",z:"請休息一下。"},
+{w:"better",m:"更好的／好一點",e:"I feel better now.",z:"我現在感覺好多了。"}
+]
+];
+const $=id=>document.getElementById(id);
+let setIndex=Math.floor(Date.now()/86400000)%sets.length,current=sets[setIndex],results=[];
+function speak(text,rate=.72){if(!("speechSynthesis" in window)){alert("此裝置不支援語音播放。");return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="en-US";u.rate=rate;speechSynthesis.speak(u)}
+function render(){
+ current=sets[setIndex];
+ $("dateText").textContent=new Date().toLocaleDateString("zh-TW",{year:"numeric",month:"long",day:"numeric",weekday:"long"});
+ $("wordList").replaceChildren();
+ current.forEach((x,i)=>{const s=document.createElement("section");s.className="word-card";s.innerHTML='<span class="number">'+(i+1)+'</span><div class="word">'+x.w+'</div><div class="meaning">'+x.m+'</div><div class="example">'+x.e+'<div class="example-zh">'+x.z+'</div></div><div class="actions" style="margin-top:12px"><button data-speak="'+x.w+'">聽單字</button><button class="secondary" data-sentence="'+x.e+'">聽例句</button></div>';$("wordList").append(s)});
+ document.querySelectorAll("[data-speak]").forEach(b=>b.onclick=()=>speak(b.dataset.speak,.65));
+ document.querySelectorAll("[data-sentence]").forEach(b=>b.onclick=()=>speak(b.dataset.sentence,.72));
+ buildQuiz();
+ $("resultCard").classList.add("hidden");$("deliveryCard").classList.add("hidden");$("quizStatus").textContent="";
+}
+function buildQuiz(){
+ $("quiz").replaceChildren();
+ current.forEach((x,i)=>{const others=current.filter((_,j)=>j!==i).map(y=>y.m);const opts=[x.m,...others.slice(0,3)].sort(()=>Math.random()-.5);const d=document.createElement("div");d.className="quiz-item";let h='<p><b>Q'+(i+1)+'. What does “'+x.w+'” mean?</b></p>';opts.forEach((o,j)=>h+='<label><input type="radio" name="q'+i+'" value="'+encodeURIComponent(o)+'"> '+String.fromCharCode(65+j)+'. '+o+'</label>');d.innerHTML=h;$("quiz").append(d)});
+}
+$("speakAll").onclick=()=>speak(current.map(x=>x.w).join(". "),.58);
+$("newSet").onclick=()=>{setIndex=(setIndex+1)%sets.length;render()};
+$("submit").onclick=()=>{
+ const missing=current.filter((x,i)=>!document.querySelector('input[name="q'+i+'"]:checked')).length;
+ if(missing){$("quizStatus").textContent="還有 "+missing+" 題未作答。";return}
+ let score=0;results=current.map((x,i)=>{const chosen=decodeURIComponent(document.querySelector('input[name="q'+i+'"]:checked').value),ok=chosen===x.m;if(ok)score++;return{x,chosen,ok}});
+ $("score").textContent=score+"/5";$("accuracy").textContent=(score*20)+"%";
+ const arr=JSON.parse(localStorage.getItem("gary-senior-5words-history-v1")||"[]");arr.unshift({date:new Date().toISOString(),set:setIndex,score});localStorage.setItem("gary-senior-5words-history-v1",JSON.stringify(arr.slice(0,30)));$("streak").textContent=arr.length;
+ $("review").replaceChildren();results.forEach((r,i)=>{const d=document.createElement("div");d.className="quiz-item";d.innerHTML='<h3 class="'+(r.ok?'good':'bad')+'">'+(r.ok?'✓':'✗')+' '+r.x.w+'｜'+r.x.m+'</h3><p>你的答案：'+r.chosen+'</p><p>'+r.x.e+'<br>'+r.x.z+'</p>'; $("review").append(d)});
+ $("resultCard").classList.remove("hidden");$("deliveryCard").classList.remove("hidden");showHistory();$("resultCard").scrollIntoView({behavior:"smooth"});
+};
+function snapshot(){const score=results.filter(x=>x.ok).length;return{site:"Gary 樂齡英文每日5字",version:"MVP V1",date:new Date().toISOString(),student:$("student").value.trim()||"Gary 樂齡學員",email:$("email").value.trim(),set:setIndex,score,total:5,words:current,answers:results.map(r=>({word:r.x.w,chosen:r.chosen,answer:r.x.m,correct:r.ok}))}}
+function report(){const d=snapshot();return "Gary 樂齡英文每日5字\n學員："+d.student+"\n分數："+d.score+"/5\n\n今天5字：\n"+d.words.map((x,i)=>(i+1)+". "+x.w+"｜"+x.m+"｜"+x.e).join("\n")}
+function showHistory(){const arr=JSON.parse(localStorage.getItem("gary-senior-5words-history-v1")||"[]");$("history").innerHTML=arr.length?arr.slice(0,12).map(x=>'<p>'+new Date(x.date).toLocaleString()+'｜第 '+(x.set+1)+' 組｜'+x.score+'/5</p>').join(""):"尚無紀錄。"}
+$("download").onclick=()=>{const b=new Blob([JSON.stringify(snapshot(),null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="gary-senior-5words-"+new Date().toISOString().slice(0,10)+".json";a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);$("deliveryStatus").textContent="已下載今天的學習紀錄。"};
+$("print").onclick=()=>window.print();
+$("coach").onclick=()=>{const d=snapshot(),subject="Gary 樂齡英文每日5字｜"+d.student+"｜"+d.score+"/5";window.open("https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su="+encodeURIComponent(subject)+"&body="+encodeURIComponent(report()),"_blank","noopener,noreferrer");$("deliveryStatus").textContent="已嘗試開啟 Gmail 草稿，請確認後手動傳送。"};
+render();showHistory();
+</script>
+</body></html>
