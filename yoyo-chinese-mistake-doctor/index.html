@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="yo-yo 國文錯題醫生：錯題分類、白話解析、同類題重練、訂正紀錄與 Gary 教練交付。">
+<title>yo-yo 國文錯題醫生</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#faf7f2;color:#3a322c;font:18px/1.7 system-ui,"Noto Sans TC",sans-serif}header{background:#5f4737;color:white;padding:22px 16px}.wrap,main{max-width:980px;margin:auto}main{padding:16px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn,button{border:0;border-radius:10px;padding:11px 15px;background:#7b5a45;color:white;font:inherit;font-weight:800;text-decoration:none;cursor:pointer}.secondary{background:#eee5dc!important;color:#5f4737!important}.card{background:#fff;border:1px solid #e9ddd2;border-radius:16px;padding:20px;margin:16px 0}.eyebrow{font-size:13px;font-weight:900;letter-spacing:.08em;color:#846d5e}.hidden{display:none}.q{padding:16px 0;border-top:1px solid #eee3d9}.q:first-child{border-top:0}.q label{display:block;padding:8px 10px;border:1px solid #e7dcd2;border-radius:9px;margin:7px 0;font-weight:400}.q input{width:auto;margin-right:8px}.tag{display:inline-block;padding:4px 8px;border-radius:999px;background:#efe7df;color:#644c3d;font-size:13px;font-weight:800;margin:2px}.feedback{white-space:pre-line;background:#f8f0e9;padding:12px;border-radius:9px;margin-top:10px}.metric{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric div{background:#fcf8f4;border:1px solid #eadfd5;border-radius:12px;padding:14px;text-align:center}.metric b{display:block;font-size:25px}.good{color:#047857}.bad{color:#b42318}.priority{padding:12px;border-left:5px solid #9a6e52;background:#fbf1e9;border-radius:10px}input[type=text],input[type=email]{width:100%;padding:10px;border:1px solid #ccb9aa;border-radius:9px;font:inherit}.muted{color:#74665d;font-size:14px}@media(max-width:700px){.metric{grid-template-columns:1fr 1fr}.card{padding:14px}.btn,button{width:100%}}@media print{header .actions,.actions,button{display:none!important}body{background:white}.card{border:0}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="actions"><a class="btn secondary" href="/">回 Hub</a><a class="btn secondary" href="/roadmap/">回 Roadmap</a><a class="btn" href="https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su=yo-yo%20%E5%9C%8B%E6%96%87%E9%8C%AF%E9%A1%8C%E9%86%AB%E7%94%9F%20%E8%81%AF%E7%B5%A1%E7%AB%99%E9%95%B7" target="_blank" rel="noopener">聯絡站長</a></div><h1>yo-yo 國文錯題醫生</h1><p>錯題分類 × 白話訂正 × 同類題重練｜目的不是「知道答案」，而是知道自己為什麼會錯。</p></div></header>
+<main>
+<section class="card"><p class="eyebrow">01 · DIAGNOSE</p><h2>每回 12 題國文錯因診斷</h2><p>題型涵蓋字詞、成語、修辭、文意、語句與閱讀理解。完成後自動統計錯誤類型與優先訂正項目。</p><div class="actions"><button id="start">開始 12 題診斷</button><button id="retry" class="secondary">只重練錯題</button></div><p id="startStatus">按「開始 12 題診斷」。</p></section>
+
+<section id="quizCard" class="card hidden"><p class="eyebrow">02 · ANSWER</p><h2>國文練習</h2><div id="quiz"></div><button id="submit">交卷並查看訂正</button><p id="submitStatus"></p></section>
+
+<section id="resultCard" class="card hidden"><p class="eyebrow">03 · CORRECT</p><h2>本次錯題診斷</h2><div class="metric"><div><b id="score">0/12</b>分數</div><div><b id="accuracy">0%</b>正確率</div><div><b id="weakType">—</b>優先錯因</div><div><b id="wrongN">0</b>錯題</div></div><div id="priorityPlan" class="priority"></div><div id="typeSummary"></div><div id="review"></div></section>
+
+<section id="deliveryCard" class="card hidden"><p class="eyebrow">04 · SAVE & COACH</p><h2>保存／交付</h2><label>姓名<input id="student" type="text" value="yo-yo"></label><label>Email（選填）<input id="email" type="email"></label><div class="actions" style="margin-top:14px"><button id="download">下載 JSON</button><button id="print" class="secondary">列印／另存 PDF</button><button id="coach">寄給 Gary 教練（Gmail 草稿）</button></div><p class="muted">建議訂正後 24–48 小時再做錯題重練，確認不是只記住答案。</p><p id="deliveryStatus"></p></section>
+
+<section class="card"><p class="eyebrow">05 · HISTORY</p><h2>最近訂正紀錄</h2><div id="history">尚無紀錄。</div></section>
+</main>
+<script>
+const bank=[
+{t:"字詞",q:"「迫不及待」最接近下列哪個意思？",o:["非常期待，等不下去","被迫停止","不願意等待別人","等待很久"],a:0,plain:"迫不及待就是心裡很急，已經等不下去。",why:"若只看到「迫」而選成被迫，就是只看單字沒有看整個成語。"},
+{t:"字詞",q:"「井然有序」的意思是？",o:["排列整齊、有條理","非常熱鬧","雜亂無章","十分危險"],a:0,plain:"井然有序形容整齊、有條理。",why:"可用反義詞「雜亂無章」幫助記憶。"},
+{t:"成語",q:"下列哪一句最適合使用「畫蛇添足」？",o:["已經完成，卻又多做不必要的事","事情做得太慢","忘記帶東西","努力後成功"],a:0,plain:"畫蛇添足是比喻做了多餘的事，反而壞事。",why:"關鍵不是「做很多」，而是「多做且沒有必要」。"},
+{t:"成語",q:"「一舉兩得」最適合形容？",o:["一次行動得到兩種好處","做兩次才成功","兩個人一起努力","失去兩個機會"],a:0,plain:"一舉兩得就是做一件事，同時得到兩個好處。",why:"看到「一舉」與「兩得」要直接連成「一件事，兩個收穫」。"},
+{t:"修辭",q:"「月亮像一艘銀色的小船」使用哪一種修辭？",o:["譬喻","擬人","誇飾","排比"],a:0,plain:"句中用「像」把月亮比成小船，是明喻。",why:"看到「像、如、彷彿」常是譬喻的重要線索。"},
+{t:"修辭",q:"「風兒在窗外唱歌」使用哪一種修辭？",o:["擬人","譬喻","設問","對偶"],a:0,plain:"把風寫成會唱歌的人，是擬人。",why:"只要把非人事物寫得像人會做事，就是擬人。"},
+{t:"語句",q:"下列哪一句語意最通順？",o:["因為下雨，所以比賽延期。","因為下雨，但是比賽延期。","雖然下雨，所以比賽延期。","如果下雨，卻比賽延期。"],a:0,plain:"「因為…所以…」是完整的因果關係。",why:"判斷連接詞時，要先看前後是因果、轉折還是假設。"},
+{t:"語句",q:"下列哪一句用詞最恰當？",o:["他聚精會神地聽老師說明。","他漫不經心地專心聽課。","他安靜地大聲喧嘩。","他迅速地慢慢走路。"],a:0,plain:"聚精會神和專心聽說明語意一致。",why:"其他選項前後詞義互相矛盾。"},
+{t:"文意",q:"「雖然失敗了，他仍決定再試一次。」這句話最能表現什麼態度？",o:["不輕易放棄","害怕失敗","不願努力","依賴別人"],a:0,plain:"失敗後仍再試一次，就是堅持、不放棄。",why:"要抓動作轉折：「失敗」之後「仍再試」。"},
+{t:"文意",q:"「她把雨傘留給沒帶傘的同學，自己跑去搭車。」最能表現她？",o:["體貼他人","粗心大意","膽小怕事","愛出風頭"],a:0,plain:"願意把雨傘留給別人，顯示她替別人著想。",why:"人物特質要從行為推論，不要只看單一詞語。"},
+{t:"閱讀",q:"短文：小明每天睡前讀十分鐘，三個月後，他發現自己閱讀速度變快，也更容易抓到文章重點。這段主要說明？",o:["持續短時間閱讀也能累積效果","一定要一次讀很久","閱讀速度不會改變","睡前不能閱讀"],a:0,plain:"重點在「每天十分鐘」與「三個月後進步」，說明持續累積有效。",why:"主旨題要找整段共同指向，不要被單一句子帶走。"},
+{t:"閱讀",q:"短文：老師沒有直接告訴答案，而是請學生先找課文中的線索，再說明自己的理由。老師最重視什麼？",o:["根據證據思考","快速猜答案","背誦所有內容","只聽老師解答"],a:0,plain:"老師要求找線索並說理由，重點是有證據的思考。",why:"題目問的是「老師最重視什麼」，要從教學行為推論。"},
+{t:"字詞",q:"「截然不同」最接近哪個意思？",o:["差異非常明顯","完全相同","稍微不同","互相幫助"],a:0,plain:"截然不同就是差異很大、很明顯。",why:"不要只看「不同」，還要注意「截然」加強程度。"},
+{t:"成語",q:"「亡羊補牢」最接近哪一種想法？",o:["出了問題後趕快補救還不算晚","事情錯了就放棄","做事前不用準備","只要運氣好就可以"],a:0,plain:"亡羊補牢是說犯錯後及時補救，仍有價值。",why:"重點是「補救」而不是「已經太晚」。"},
+{t:"修辭",q:"「教室裡安靜得連一根針掉下來都聽得見」使用哪種修辭？",o:["誇飾","譬喻","擬人","借代"],a:0,plain:"這句把安靜的程度故意說得非常誇張，是誇飾。",why:"誇飾就是把程度放大或縮小來加強效果。"},
+{t:"語句",q:"「只要每天練習，就會慢慢進步。」這是什麼關係？",o:["條件關係","轉折關係","並列關係","因果結果已發生"],a:0,plain:"「只要…就…」表示條件成立後可能產生結果。",why:"看到固定搭配先辨認句型，再判斷語意。"}
+];
+const $=id=>document.getElementById(id);let current=[],results=[],wrong=[];
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function build(){return shuffle(bank).slice(0,12)}
+function render(items){current=items;results=[];$("quiz").replaceChildren();items.forEach((q,i)=>{const d=document.createElement("div");d.className="q";let h='<span class="tag">'+q.t+'</span><p><b>Q'+(i+1)+'. '+q.q+'</b></p>';q.o.forEach((x,j)=>h+='<label><input type="radio" name="q'+i+'" value="'+j+'"> '+String.fromCharCode(65+j)+'. '+x+'</label>');d.innerHTML=h;$("quiz").append(d)});$("quizCard").classList.remove("hidden");$("resultCard").classList.add("hidden");$("deliveryCard").classList.add("hidden");$("submitStatus").textContent=""}
+$("start").onclick=()=>{render(build());$("startStatus").textContent="已建立 12 題診斷。"};
+$("retry").onclick=()=>{if(!wrong.length){$("startStatus").textContent="目前沒有上一回錯題可重練。";return}render(wrong.map(x=>x.q));$("startStatus").textContent="已載入上一回錯題。"};
+$("submit").onclick=()=>{const missing=current.filter((q,i)=>!document.querySelector('input[name="q'+i+'"]:checked')).length;if(missing){$("submitStatus").textContent="還有 "+missing+" 題未作答。";return}let score=0;const by={};results=current.map((q,i)=>{if(!by[q.t])by[q.t]={c:0,t:0};by[q.t].t++;const selected=Number(document.querySelector('input[name="q'+i+'"]:checked').value),ok=selected===q.a;if(ok){score++;by[q.t].c++}return{q,selected,ok}});wrong=results.filter(x=>!x.ok);const weak=Object.keys(by).sort((a,b)=>(by[a].c/by[a].t)-(by[b].c/by[b].t))[0]||"無明顯弱點";$("score").textContent=score+"/"+current.length;$("accuracy").textContent=Math.round(score/current.length*100)+"%";$("weakType").textContent=weak;$("wrongN").textContent=wrong.length;const plan=score/current.length>=.9?"訂正策略：目前錯題少，直接重練錯題並說出「為什麼其他選項不對」。":score/current.length>=.7?"訂正策略：先集中處理 "+weak+"，每題用白話說出判斷線索，再做錯題重練。":"訂正策略：先把題型分清楚，再練「題目在問什麼 → 找線索 → 排除錯誤選項」三步驟。";$("priorityPlan").innerHTML="<b>"+plan+"</b>";$("typeSummary").innerHTML='<h3>題型表現</h3>'+Object.entries(by).map(([t,x])=>'<span class="tag">'+t+' '+x.c+'/'+x.t+'</span>').join("");$("review").replaceChildren();results.forEach((r,i)=>{const q=r.q,d=document.createElement("div");d.className="q";d.innerHTML='<h3 class="'+(r.ok?'good':'bad')+'">Q'+(i+1)+' '+(r.ok?'✓ 正確':'✗ 需要訂正')+'</h3><p><span class="tag">'+q.t+'</span> <b>'+q.q+'</b></p><p>你的答案：'+q.o[r.selected]+'<br>正確答案：'+q.o[q.a]+'</p><div class="feedback"><b>白話解析</b>\n'+q.plain+'\n\n<b>為什麼容易錯</b>\n'+q.why+'</div>';$("review").append(d)});$("resultCard").classList.remove("hidden");$("deliveryCard").classList.remove("hidden");save(score,weak);$("resultCard").scrollIntoView({behavior:"smooth"})};
+function snapshot(){const score=results.filter(x=>x.ok).length;return{site:"yo-yo 國文錯題醫生",version:"MVP V1",date:new Date().toISOString(),student:$("student").value.trim()||"yo-yo",email:$("email").value.trim(),score,total:current.length,accuracy:current.length?Math.round(score/current.length*100):0,items:results.map((r,i)=>({no:i+1,type:r.q.t,question:r.q.q,chosen:r.q.o[r.selected],answer:r.q.o[r.q.a],correct:r.ok,plain_explanation:r.q.plain,error_reason:r.q.why}))}}
+function save(score,weak){const key="yoyo-chinese-mistake-doctor-v1",arr=JSON.parse(localStorage.getItem(key)||"[]");arr.unshift({date:new Date().toISOString(),score,total:current.length,weak});localStorage.setItem(key,JSON.stringify(arr.slice(0,12)));showHistory()}
+function showHistory(){const arr=JSON.parse(localStorage.getItem("yoyo-chinese-mistake-doctor-v1")||"[]");$("history").innerHTML=arr.length?arr.map(x=>'<p>'+new Date(x.date).toLocaleString()+'｜'+x.score+'/'+x.total+'｜優先：'+x.weak+'</p>').join(""):"尚無紀錄。"}
+function report(){const d=snapshot();return "yo-yo 國文錯題醫生\n學員："+d.student+"\nEmail："+d.email+"\n分數："+d.score+"/"+d.total+"（"+d.accuracy+"%）\n\n"+d.items.map(x=>x.no+". ["+x.type+"] "+x.question+"\n你的答案："+x.chosen+"\n正解："+x.answer+"｜"+(x.correct?"正確":"錯誤")+"\n白話解析："+x.plain_explanation+"\n易錯原因："+x.error_reason).join("\n\n")}
+$("download").onclick=()=>{const b=new Blob([JSON.stringify(snapshot(),null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="yoyo-chinese-mistake-doctor-"+new Date().toISOString().slice(0,10)+".json";a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);$("deliveryStatus").textContent="已下載 JSON 備份。"};
+$("print").onclick=()=>window.print();
+$("coach").onclick=()=>{const d=snapshot(),subject="yo-yo 國文錯題醫生｜"+d.student+"｜"+d.score+"/"+d.total;window.open("https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su="+encodeURIComponent(subject)+"&body="+encodeURIComponent(report()),"_blank","noopener,noreferrer");$("deliveryStatus").textContent="已嘗試開啟 Gmail 草稿，請確認後手動傳送。"};
+showHistory();
+</script>
+</body></html>
