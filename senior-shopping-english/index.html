@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="樂齡購物英文：詢價、尺寸顏色、試穿、折扣、退換貨、付款六大情境，大字中英對照、慢速播放、情境小測與學習紀錄。">
+<title>樂齡購物英文</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#fffaf4;color:#3d3128;font:21px/1.7 system-ui,"Noto Sans TC",sans-serif}header{background:#7d5f43;color:#fff;padding:24px 16px}.wrap,main{max-width:960px;margin:auto}main{padding:16px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn,button{border:0;border-radius:12px;padding:13px 18px;background:#9b7653;color:#fff;font:inherit;font-weight:800;text-decoration:none;cursor:pointer}.secondary{background:#f2e8dc!important;color:#70533c!important}.card{background:#fff;border:1px solid #eadfD3;border-radius:18px;padding:22px;margin:18px 0}.eyebrow{font-size:14px;font-weight:900;letter-spacing:.08em;color:#8e7766}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.steps button{background:#f7eee5;color:#75563f}.steps button.active{background:#9b7653;color:white}.phrase{border:2px solid #ecdfd4;border-radius:16px;padding:18px;margin:14px 0}.sentence{font-size:38px;font-weight:900;line-height:1.25;margin:12px 0}.zh{font-size:27px;font-weight:800;color:#705c4d}.use{background:#fbf2e9;padding:14px;border-radius:12px}.flow{padding:12px;border-left:5px solid #ae8761;background:#fbf3eb;border-radius:10px}.quiz label{display:block;border:1px solid #e7dbd1;border-radius:10px;padding:10px;margin:8px 0}.hidden{display:none}.metric{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.metric div{background:#fdf9f5;border:1px solid #e9dfd7;border-radius:12px;padding:14px;text-align:center}.metric b{display:block;font-size:28px}.good{color:#047857}.bad{color:#b42318}.muted{font-size:16px;color:#756b64}.history p{padding:8px 0;border-bottom:1px solid #eee4dc}input[type=text],input[type=email]{width:100%;padding:12px;border:1px solid #d3c2b4;border-radius:10px;font:inherit}@media(max-width:700px){body{font-size:20px}.sentence{font-size:34px}.zh{font-size:25px}.steps{grid-template-columns:1fr 1fr}.metric{grid-template-columns:1fr}.btn,button{width:100%}.card{padding:16px}}@media print{header .actions,.actions,.steps,button{display:none!important}body{background:white}.card{border:0}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="actions"><a class="btn secondary" href="/">回 Hub</a><a class="btn secondary" href="/roadmap/">回 Roadmap</a><a class="btn" href="https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su=%E6%A8%82%E9%BD%A1%E8%B3%BC%E7%89%A9%E8%8B%B1%E6%96%87%20%E8%81%AF%E7%B5%A1%E7%AB%99%E9%95%B7" target="_blank" rel="noopener">聯絡站長</a></div><h1>樂齡購物英文</h1><p>從看商品到付款｜跟著購物流程學，買東西更有把握。</p></div></header>
+<main>
+<section class="card"><p class="eyebrow">01 · SHOPPING FLOW</p><h2>六大購物情境</h2><div id="steps" class="steps"></div></section>
+
+<section class="card"><p class="eyebrow">02 · LEARN</p><h2 id="stepTitle"></h2><div id="flowNote" class="flow"></div><div id="phrases"></div></section>
+
+<section class="card"><p class="eyebrow">03 · QUICK CHECK</p><h2>本情境小測</h2><div id="quiz" class="quiz"></div><button id="submit">完成 4 題小測</button><p id="quizStatus"></p></section>
+
+<section id="resultCard" class="card hidden"><p class="eyebrow">04 · RESULT</p><h2>本情境完成</h2><div class="metric"><div><b id="score">0/4</b>答對</div><div><b id="accuracy">0%</b>正確率</div><div><b id="count">1</b>累積完成次數</div></div><div id="review"></div></section>
+
+<section id="deliveryCard" class="card hidden"><p class="eyebrow">05 · SAVE & COACH</p><h2>保存成果</h2><label>姓名<input id="student" type="text" value="Gary 樂齡學員"></label><label>Email（選填）<input id="email" type="email"></label><div class="actions" style="margin-top:14px"><button id="download">下載 JSON</button><button id="print" class="secondary">列印／另存 PDF</button><button id="coach">寄給 Gary 教練（Gmail 草稿）</button></div><p class="muted">建議每次只練一個購物情境，能自己說出關鍵句再進下一段。</p><p id="deliveryStatus"></p></section>
+
+<section class="card"><p class="eyebrow">06 · HISTORY</p><h2>最近完成紀錄</h2><div id="history" class="history">尚無紀錄。</div></section>
+</main>
+<script>
+const stages=[
+{name:"1 詢價 Price",note:"先詢問價格，再決定是否購買。",items:[
+{s:"How much is this?",z:"這個多少錢？",u:"詢問單一商品價格。"},
+{s:"How much are these?",z:"這些多少錢？",u:"詢問多件商品價格。"},
+{s:"Is this on sale?",z:"這個有特價嗎？",u:"確認是否打折。"},
+{s:"Is tax included?",z:"有包含稅嗎？",u:"確認價格是否含稅。"}]},
+{name:"2 尺寸與顏色 Size & Color",note:"衣物或鞋子常需要確認尺寸與顏色。",items:[
+{s:"Do you have a larger size?",z:"有大一點的尺寸嗎？",u:"尺寸太小時。"},
+{s:"Do you have a smaller size?",z:"有小一點的尺寸嗎？",u:"尺寸太大時。"},
+{s:"Do you have this in blue?",z:"這個有藍色的嗎？",u:"詢問其他顏色。"},
+{s:"What sizes do you have?",z:"你們有哪些尺寸？",u:"不知道有哪些尺寸時。"}]},
+{name:"3 試穿 Try On",note:"想試穿時，先找試衣間或詢問是否可以試。",items:[
+{s:"Can I try this on?",z:"我可以試穿嗎？",u:"詢問是否可試穿。"},
+{s:"Where is the fitting room?",z:"試衣間在哪裡？",u:"找試衣間。"},
+{s:"This is too tight.",z:"這個太緊了。",u:"試穿後覺得太緊。"},
+{s:"This fits well.",z:"這個很合身。",u:"試穿後覺得合適。"}]},
+{name:"4 折扣 Discount",note:"看到促銷標示時，可以進一步確認折扣。",items:[
+{s:"Is there a discount?",z:"有折扣嗎？",u:"詢問是否可折價。"},
+{s:"Is this the final price?",z:"這是最後價格嗎？",u:"確認是否還能再優惠。"},
+{s:"Do you have any promotions?",z:"有任何促銷活動嗎？",u:"詢問促銷。"},
+{s:"Can I use this coupon?",z:"我可以用這張優惠券嗎？",u:"使用折價券。"}]},
+{name:"5 退換貨 Returns",note:"退換貨時要準備收據並說明需求。",items:[
+{s:"Can I return this?",z:"我可以退這個嗎？",u:"詢問退貨。"},
+{s:"Can I exchange this?",z:"我可以換這個嗎？",u:"詢問換貨。"},
+{s:"Here is the receipt.",z:"這是收據。",u:"辦理退換貨。"},
+{s:"This item is damaged.",z:"這個商品有損壞。",u:"說明商品問題。"}]},
+{name:"6 付款 Payment",note:"結帳時確認付款方式與是否需要袋子。",items:[
+{s:"I will take it.",z:"我要買這個。",u:"決定購買。"},
+{s:"Can I pay by credit card?",z:"可以刷卡嗎？",u:"確認是否可刷卡。"},
+{s:"Do you accept cash?",z:"你們收現金嗎？",u:"確認是否可付現。"},
+{s:"Could I have a bag, please?",z:"可以給我一個袋子嗎？",u:"需要購物袋。"}]}
+];
+const $=id=>document.getElementById(id);let stageIndex=0,current=stages[0],results=[];
+function speak(text,rate=.62){if(!("speechSynthesis" in window)){alert("此裝置不支援語音播放。");return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="en-US";u.rate=rate;speechSynthesis.speak(u)}
+function renderSteps(){ $("steps").replaceChildren(); stages.forEach((s,i)=>{const b=document.createElement("button");b.textContent=s.name;b.className=i===stageIndex?"active":"";b.onclick=()=>{stageIndex=i;render()};$("steps").append(b)});}
+function render(){
+ current=stages[stageIndex];results=[];renderSteps();$("stepTitle").textContent=current.name;$("flowNote").textContent=current.note;$("phrases").replaceChildren();
+ current.items.forEach((x,i)=>{const d=document.createElement("div");d.className="phrase";d.innerHTML='<div class="sentence">'+x.s+'</div><div class="zh">'+x.z+'</div><div class="use"><b>使用時機</b><br>'+x.u+'</div><div class="actions" style="margin-top:12px"><button data-slow="'+i+'">慢速聽</button><button class="secondary" data-normal="'+i+'">正常速度</button></div>';$("phrases").append(d)});
+ document.querySelectorAll("[data-slow]").forEach(b=>b.onclick=()=>speak(current.items[Number(b.dataset.slow)].s,.55));
+ document.querySelectorAll("[data-normal]").forEach(b=>b.onclick=()=>speak(current.items[Number(b.dataset.normal)].s,.85));
+ buildQuiz();$("resultCard").classList.add("hidden");$("deliveryCard").classList.add("hidden");$("quizStatus").textContent="";
+}
+function buildQuiz(){
+ $("quiz").replaceChildren();
+ current.items.forEach((x,i)=>{const others=current.items.filter((_,j)=>j!==i).map(y=>y.z);const opts=[x.z,...others].sort(()=>Math.random()-.5);const d=document.createElement("div");d.innerHTML='<p><b>Q'+(i+1)+'. '+x.s+'</b></p>'+opts.map((o,j)=>'<label><input type="radio" name="q'+i+'" value="'+encodeURIComponent(o)+'"> '+String.fromCharCode(65+j)+'. '+o+'</label>').join("");$("quiz").append(d)});
+}
+$("submit").onclick=()=>{
+ const missing=current.items.filter((x,i)=>!document.querySelector('input[name="q'+i+'"]:checked')).length;if(missing){$("quizStatus").textContent="還有 "+missing+" 題未作答。";return}
+ let score=0;results=current.items.map((x,i)=>{const chosen=decodeURIComponent(document.querySelector('input[name="q'+i+'"]:checked').value),ok=chosen===x.z;if(ok)score++;return{x,chosen,ok}});
+ $("score").textContent=score+"/4";$("accuracy").textContent=(score*25)+"%";
+ const arr=JSON.parse(localStorage.getItem("senior-shopping-english-history-v1")||"[]");arr.unshift({date:new Date().toISOString(),stage:current.name,score});localStorage.setItem("senior-shopping-english-history-v1",JSON.stringify(arr.slice(0,30)));$("count").textContent=arr.length;
+ $("review").innerHTML=results.map(r=>'<p class="'+(r.ok?'good':'bad')+'"><b>'+(r.ok?'✓':'✗')+' '+r.x.s+'</b><br>'+r.x.z+'<br>你的答案：'+r.chosen+'</p>').join("");
+ $("resultCard").classList.remove("hidden");$("deliveryCard").classList.remove("hidden");showHistory();$("resultCard").scrollIntoView({behavior:"smooth"});
+};
+function snapshot(){const score=results.filter(x=>x.ok).length;return{site:"樂齡購物英文",version:"MVP V1",date:new Date().toISOString(),student:$("student").value.trim()||"Gary 樂齡學員",email:$("email").value.trim(),stage:current.name,score,total:4,phrases:current.items,answers:results.map(r=>({sentence:r.x.s,chosen:r.chosen,answer:r.x.z,correct:r.ok}))}}
+function report(){const d=snapshot();return "樂齡購物英文\n學員："+d.student+"\n情境："+d.stage+"\n分數："+d.score+"/4\n\n重點句：\n"+d.phrases.map((x,i)=>(i+1)+". "+x.s+"｜"+x.z).join("\n")}
+function showHistory(){const arr=JSON.parse(localStorage.getItem("senior-shopping-english-history-v1")||"[]");$("history").innerHTML=arr.length?arr.slice(0,12).map(x=>'<p>'+new Date(x.date).toLocaleString()+'｜'+x.stage+'｜'+x.score+'/4</p>').join(""):"尚無紀錄。"}
+$("download").onclick=()=>{const b=new Blob([JSON.stringify(snapshot(),null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="senior-shopping-english-"+new Date().toISOString().slice(0,10)+".json";a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);$("deliveryStatus").textContent="已下載學習紀錄。"};
+$("print").onclick=()=>window.print();
+$("coach").onclick=()=>{const d=snapshot(),subject="樂齡購物英文｜"+d.student+"｜"+d.stage+"｜"+d.score+"/4";window.open("https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su="+encodeURIComponent(subject)+"&body="+encodeURIComponent(report()),"_blank","noopener,noreferrer");$("deliveryStatus").textContent="已嘗試開啟 Gmail 草稿，請確認後手動傳送。"};
+render();showHistory();
+</script>
+</body></html>
