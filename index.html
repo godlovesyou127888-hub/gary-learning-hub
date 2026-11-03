@@ -20,10 +20,10 @@ footer{padding:28px 18px 50px;color:var(--muted);text-align:center}@media(max-wi
 </style>
 </head>
 <body>
-<header><div class="wrap"><div style="display:inline-block;margin-bottom:10px;padding:6px 10px;border-radius:999px;background:#1f2937;border:1px solid #374151;font-size:12px;">LEARNING HUB</div><h1>Gary Learning Hub</h1><p class="lead"><span id="headerCount">0</span> 個已建立網站／入口（含測試）的唯一入口｜樂齡英語、英檢、文法、學科複習、AI 工具、創意教學與雙語品格教育集中管理。</p></div></header>
+<header><div class="wrap"><div style="display:inline-block;margin-bottom:10px;padding:6px 10px;border-radius:999px;background:#1f2937;border:1px solid #374151;font-size:12px;">LEARNING HUB</div><h1>Gary Learning Hub</h1><p class="lead"><span id="headerCount">115</span> 個已建立網站／入口（含測試）的唯一入口｜樂齡英語、英檢、文法、學科複習、AI 工具、創意教學與雙語品格教育集中管理。</p></div></header>
 <div class="toolbar"><div class="wrap"><div class="controls"><input id="q" type="search" placeholder="搜尋：樂齡、TOEIC、Jasper、AI…"><select id="cat"><option value="">全部分類</option></select><select id="state"><option value="">全部存取</option><option value="public">一般開啟</option><option value="limited">限定／私人</option></select><select id="sort"><option value="original">建議順序</option><option value="category">依分類</option><option value="name">依名稱</option></select></div><div class="stats wrap" id="stats"></div></div></div>
 <main class="wrap">
-<section class="dashboard"><div class="metric"><b id="siteCount">0</b><span>已建立網站／入口（含測試）</span></div><div class="metric"><b id="categoryCount">0</b><span>主要分類</span></div><div class="metric"><b id="missingUrlCount">0</b><span>待補網址</span></div></section><section class="panel" style="margin-bottom:16px"><h2 style="margin-top:0">從這裡開始</h2><p class="note" style="font-size:16px">先選分類，再進入網站；或直接搜尋人名、考試、科目與工具名稱。這裡是唯一中央入口。已建立數量包含測試版與限定存取網站，不代表全部通過功能驗收。</p><p><a class="btn primary" href="/senior-learning-center/" style="font-size:19px;margin-right:10px;margin-bottom:10px">進入 Gary 樂齡學習總站｜18 個樂齡網站</a><a class="btn primary" href="/roadmap/">查看 Gary 101 Website Master Roadmap（101 項規劃＋延伸工具）</a></p><div id="quick" class="quick"></div></section><div id="grid" class="grid"></div>
+<section class="dashboard"><div class="metric"><b id="siteCount">115</b><span>已建立網站／入口（含測試）</span></div><div class="metric"><b id="categoryCount">14</b><span>主要分類</span></div><div class="metric"><b id="missingUrlCount">0</b><span>待補網址</span></div></section><section class="panel" style="margin-bottom:16px"><h2 style="margin-top:0">從這裡開始</h2><p class="note" style="font-size:16px">先選分類，再進入網站；或直接搜尋人名、考試、科目與工具名稱。這裡是唯一中央入口。已建立數量包含測試版與限定存取網站，不代表全部通過功能驗收。</p><p><a class="btn primary" href="/senior-learning-center/" style="font-size:19px;margin-right:10px;margin-bottom:10px">進入 Gary 樂齡學習總站｜18 個樂齡網站</a><a class="btn primary" href="/roadmap/">查看 Gary 101 Website Master Roadmap（101 項規劃＋延伸工具）</a></p><div id="quick" class="quick"></div></section><div id="grid" class="grid"></div>
 <section class="section panel"><h2>中央入口規則</h2><p class="note">① Gary Learning Hub 是唯一總入口。② 新網站只在這裡新增一次。③ 子網站只保留「回 Hub／聯絡站長／核心功能」。④ 舊版網站保留但清楚標示，避免和正式版本混淆。</p></section>
 <section class="section panel" id="contact"><h2>聯絡站長</h2><p class="note">為避免舊版 FormSubmit 產生空白或重複郵件，Gary Learning Hub 首頁已停用外部表單。需要聯絡站長時，請直接使用 Email。</p><p><a class="btn primary" href="https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su=Gary%20Learning%20Hub%20%E8%81%AF%E7%B5%A1%E7%AB%99%E9%95%B7" target="_blank" rel="noopener">開啟 Gmail 聯絡站長</a></p><p class="note">若未登入 Gmail，會先進入 Google 登入頁。也可直接寄到：godlovesyou127888@gmail.com</p></section>
 </main>
@@ -44,49 +44,47 @@ const sites=[
 {"name":"English Speaking Confidence Lab｜英文開口信心實驗室","category":"成人英語","audience":"成人／上班族","desc":"15題五構面診斷、15/30/60秒短答、計時、TTS、Ready/Draft、JSON/CSV/PDF與 Apps Script 雙交付；Gmail E2E 待驗收。","url":"https://gary-learning-hub.onrender.com/english-speaking-confidence-lab/","status":"V1.0 QA"},
 {"name":"Presentation English Coach｜英文簡報教練","category":"商務英語","audience":"上班族／主管","desc":"15題簡報診斷、五角色演練、雙語解析與本機備份；Gmail E2E 待驗收。","url":"https://gary-learning-hub.onrender.com/presentation-english-coach/","status":"測試版"},
 {"name":"Meeting English Coach｜英文會議教練","category":"商務英語","audience":"上班族／主管","desc":"15題會議情境診斷、五角色演練、逐題解析、JSON/PDF與 Google Apps Script 雙交付；Gmail E2E 待驗收。","url":"https://gary-learning-hub.onrender.com/meeting-english-coach/","status":"V1.1 測試版"},
-
 {"name":"TOEIC Vocabulary 1000｜主題單字訓練","category":"英語檢定","audience":"TOEIC學習者","desc":"首批60字、6大情境、例句與解析、5字學習、隨機測驗、錯題與到期複習；寄送待收件驗收。","url":"https://gary-learning-hub.onrender.com/toeic-vocabulary-1000/","status":"測試版"},
 {"name":"TOEIC Listening Shadowing Lab","category":"英語檢定","audience":"TOEIC／成人","desc":"6情境18句：分句跟讀、影子練習、錄音回聽與自評；保留本機紀錄，支援JSON與列印PDF。","url":"https://gary-learning-hub.onrender.com/toeic-listening-shadowing-lab/","status":"測試版"},
 {"name":"TOEIC Part 6 Context Lab","category":"英語檢定","audience":"TOEIC學習者","desc":"篇章填空、上下文判斷、句子插入、中文詳解、錯誤分類、PDF與成績紀錄","url":"https://gary-learning-hub.onrender.com/toeic-part6-context-lab/","status":"測試版"},
 {"name":"Email English Doctor","category":"商務英語","audience":"上班族／主管","desc":"商務Email診斷、中文解析與改寫；功能待驗收","url":"https://gary-learning-hub.onrender.com/email-english-doctor/","status":"測試版"},
 {"name":"多益 T-PASS 學習中心","category":"英語檢定","audience":"TOEIC學習者","desc":"核心診斷→Part 5→Listening→教練解讀","url":"https://gary-learning-hub.onrender.com/tpass-next/","status":"測試版"},
-{"name":"多益｜T-PASS 核心診斷","category":"英語檢定","audience":"TOEIC學習者","desc":"12題核心診斷、PDF／JSON與兩種寄送方式；寄送待驗收","url":"https://gary-learning-hub.onrender.com/tpass-next/diagnostic/","status":"測試版"},
 {"name":"多益｜Part 5 文法診斷","category":"英語檢定","audience":"TOEIC學習者","desc":"10題文法診斷、PDF／JSON；Gary已確認寄送成功","url":"https://gary-learning-hub.onrender.com/tpass-next/part5/","status":"測試版"},
 {"name":"多益｜Listening 聽力診斷","category":"英語檢定","audience":"TOEIC學習者","desc":"10題聽力診斷、播放次數與PDF／JSON；Gary已確認寄送成功","url":"https://gary-learning-hub.onrender.com/tpass-next/listening/","status":"測試版"},
-{name:"T-PASS TOEIC Command Center",category:"英語檢定",audience:"TOEIC／成人",desc:"TOEIC 診斷、90天計畫、專項訓練、模考與付費教練解讀／校準的單一入口。",url:"https://gary-learning-hub.onrender.com/tpass-toeic-command-center/",status:"測試版"},
-{name:"Gary 樂齡英語花園",category:"樂齡英語",audience:"零基礎／樂齡",desc:"字母、生活單字、句子、測驗、錯題複習與成績紀錄。",url:"https://senior-english-garden.gary2049.chatgpt.site",status:"已確認網址"},
-{name:"Gary老師｜樂活英語陪練",category:"樂齡英語",audience:"樂齡成人",desc:"樂齡生活英語陪練入口。",url:"https://gary-ymca-english-practice.gary2049.chatgpt.site",status:"已確認網址"},
-{name:"TPASS｜詞素診斷與練習",category:"英語檢定",audience:"TOEIC／成人",desc:"18題詞素診斷；完成後學生收到結果副本，Gary 教練同步收到診斷摘要。",url:"https://gary-learning-hub.onrender.com/tpass-morpheme-v08/",status:"雙交付版"},
-{name:"T-PASS AI 入學診斷",category:"英語檢定",audience:"TOEIC／成人",desc:"AI 多益入學診斷；既有流程包含學生完整報告寄送與教練新診斷通知。",url:"https://t-pass-ai-assessment.gary2049.chatgpt.site",status:"既有雙交付流程"},
-{name:"T-PASS Member Dashboard V1",category:"英語檢定",audience:"T-PASS會員",desc:"會員學習儀表板與進度入口。",url:"https://t-pass-member-dashboard.gary2049.chatgpt.site",status:"限定存取"},
-{name:"Gary 英文文法複習站",category:"文法與單字",audience:"英語學習者",desc:"30題隨機文法練習、中文詳解、成績記錄。",url:"https://gary-grammar-review-2026.gary2049.chatgpt.site",status:"已確認網址"},
-{name:"Jasper 文法複習站",category:"文法與單字",audience:"Jasper",desc:"文法練習、中文詳解、作品目錄。",url:"https://jasper-grammar-review.gary2049.chatgpt.site/gary-works.html",status:"已確認網址"},
-{name:"Jasper IS 複習站",category:"學科複習",audience:"Jasper",desc:"隨機選擇題＋Word Bank填空、中文詳解、PDF、成績紀錄。",url:"https://jasper-is-review.gary2049.chatgpt.site",status:"已確認網址"},
-{name:"yo-yo 國文複習站",category:"學科複習",audience:"yo-yo",desc:"選擇＋填空、白話詳解、PDF、成績紀錄。",url:"https://yoyo-chinese-review.gary2049.chatgpt.site",status:"已確認網址"},
-{name:"MA 數學英語複習站",category:"學科複習",audience:"MA",desc:"數學英語隨機選擇＋填空、中文詳解、PDF與CSV。",url:"https://ma-math-review.gary2049.chatgpt.site",status:"已確認網址"},
-{name:"Judy 英語練習室 V1.1",category:"學科複習",audience:"Judy",desc:"拼字、閱讀中英對照、中文詳解、逐題成績。",url:"https://judy-english-lab.gary2049.chatgpt.site",status:"私人存取"},
-{name:"Gary 蛋・自由彩繪工作室",category:"創意教學",audience:"兒童／教師",desc:"手機與 iPad 可操作的2D／3D彩繪互動網站。",url:"https://gary-egg-paint.gary2049.chatgpt.site",status:"已確認網址"},
-{name:"Gary 國小老師的一天",category:"創意教學",audience:"教師／教育",desc:"國小主任、組長、導師、科任角色情境學習。",url:"https://gary-school-day.gary2049.chatgpt.site",status:"已確認網址"},
-{name:"神隊友雙語聖經品格教育",category:"雙語品格",audience:"5–12歲兒童／家長",desc:"雙語英文、AI活動、聖經故事與品格任務。",url:"https://skywalker-bilingual-bible.gary2049.chatgpt.site/",status:"已確認網址"},
-{name:"Gary AI Threads 客戶雷達",category:"AI工具",audience:"工作／行銷",desc:"關鍵字搜尋、AI診斷、Lead Score、草稿與人工批准。",url:"https://gary-threads-radar.gary2049.chatgpt.site",status:"已確認網址"},
-{name:"Skywalker AI Content Factory",category:"AI工具",audience:"工作／內容",desc:"AI內容工作流程與產製工具。",url:"https://skywalker-content-factory.gary2049.chatgpt.site",status:"已確認網址"},
-{name:"Gary 社群發文助手",category:"AI工具",audience:"社群／內容",desc:"協助規劃與整理社群貼文內容。",url:"https://gary-social-helper.gary2049.chatgpt.site",status:"已確認網址"},
-{name:"樂樂的英語練習基地",category:"文法與單字",audience:"國中英語／樂樂",desc:"英語單字與複習練習基地。",url:"https://lele-english-review.gary2049.chatgpt.site",status:"已確認網址"},
-{name:"Gary 雅思考試的一天",category:"英語檢定",audience:"IELTS 學習者",desc:"IELTS 考試流程與學習情境網站。",url:"https://gary-ielts-day.gary2049.chatgpt.site",status:"已確認網址"},
-{name:"Jasper｜Unit 6 英語練習室",category:"學科複習",audience:"Jasper",desc:"Unit 6 英語課程練習與複習。",url:"https://jasper-unit-practice.gary2049.chatgpt.site",status:"已確認網址"},
-{name:"Module 6 英語練習室",category:"學科複習",audience:"Rita",desc:"Module 6 英語課程練習與複習。",url:"https://rita-unit-practice.gary2049.chatgpt.site",status:"已確認網址"},
-{name:"yo-yo 國文複習所（舊版）",category:"學科複習",audience:"yo-yo",desc:"早期版本，保留供舊連結與內容查閱；新版請優先使用「yo-yo 國文複習站」。",url:"https://yo-yo-chinese-review.gary2049.chatgpt.site",status:"舊版保留"},
-{name:"Gary 英文卡關診斷中心",category:"成人英語",audience:"成人／上班族",desc:"中英雙語20題、五構面、Likert五點量表；輸出主要卡點，並支援研究CSV匯出。",url:"https://gary-learning-hub.onrender.com/english-stuck-diagnosis/",status:"研究測試版"},
-{name:"Gary 成人英文程度雷達",category:"成人英語",audience:"成人／上班族",desc:"中英雙語20題，從聽、說、讀、寫與語言基礎建立成人英文自評能力輪廓。",url:"https://gary-learning-hub.onrender.com/adult-english-radar/",status:"測試版"},
-{name:"Gary 英文90天進步計畫",category:"成人英語",audience:"成人／上班族",desc:"把卡點診斷與程度雷達轉成90天三階段行動計畫、每週任務與進度追蹤。",url:"https://gary-learning-hub.onrender.com/english-90day-plan/",status:"測試版"},
-{name:"TOEIC Weakness Radar",category:"英語檢定",audience:"TOEIC／成人",desc:"中英雙語20題，診斷聽力、閱讀、字彙文法、解題策略、時間與考場表現；學生與教練雙交付。",url:"https://gary-learning-hub.onrender.com/toeic-weakness-radar/",status:"測試版"},
-{name:"TOEIC Mistake Doctor",category:"英語檢定",audience:"TOEIC／成人",desc:"輸入最近錯題，診斷錯誤類型、根因與優先學習處方，並安排24–48小時再測；學生與教練雙交付。",url:"https://gary-learning-hub.onrender.com/toeic-mistake-doctor/",status:"測試版"},
-{name:"TOEIC 90-Day Planner",category:"英語檢定",audience:"TOEIC／成人",desc:"承接#28弱點雷達與#29錯題醫生，轉成90天三階段提分計畫、13週任務與複測節點；學生與教練雙交付。",url:"https://gary-learning-hub.onrender.com/toeic-90day-planner/",status:"測試版"},
-{name:"TOEIC Mock Test Lab",category:"英語檢定",audience:"TOEIC／成人",desc:"記錄每次模考 Listening、Reading、總分與主要失分，追蹤前後變化。",url:"https://gary-learning-hub.onrender.com/toeic-mock-test-lab/",status:"測試版"},
-{name:"TOEIC Part 5 Grammar Lab",category:"英語檢定",audience:"TOEIC／成人",desc:"10題 Part 5 文法診斷、錯誤分類、中文詳解與同類再測；學生與教練雙交付。",url:"https://gary-learning-hub.onrender.com/toeic-part5-grammar-lab/",status:"測試版"},
-{name:"TOEIC Part 7 Reading Lab",category:"英語檢定",audience:"TOEIC／成人",desc:"自編 Part 7 閱讀專項：時間資訊、目的題、推論、同義改寫與流程定位；學生與教練雙交付。",url:"https://gary-learning-hub.onrender.com/toeic-part7-reading-lab/",status:"測試版"},
-{name:"TOEIC Listening Training Lab",category:"英語檢定",audience:"TOEIC／成人",desc:"Step 4 Listening Track V2：TTS、播放限制、語速、聽寫錯詞分析＋20題診斷與10題再測。",url:"https://gary-learning-hub.onrender.com/toeic-listening-training-lab/",status:"測試版"},
-{name:"Business English Survival Kit",category:"商務英語",audience:"上班族／主管",desc:"5大職場情境×15題診斷，完成後提供逐題中英詳解、弱點排序與專屬實戰句型包。",url:"https://gary-learning-hub.onrender.com/business-english-survival-kit/",status:"測試版"},
+{"name":"T-PASS TOEIC Command Center","category":"英語檢定","audience":"TOEIC／成人","desc":"TOEIC 診斷、90天計畫、專項訓練、模考與付費教練解讀／校準的單一入口。","url":"https://gary-learning-hub.onrender.com/tpass-toeic-command-center/","status":"測試版"},
+{"name":"Gary 樂齡英語花園","category":"樂齡英語","audience":"零基礎／樂齡","desc":"字母、生活單字、句子、測驗、錯題複習與成績紀錄。","url":"https://senior-english-garden.gary2049.chatgpt.site","status":"已確認網址"},
+{"name":"Gary老師｜樂活英語陪練","category":"樂齡英語","audience":"樂齡成人","desc":"樂齡生活英語陪練入口。","url":"https://gary-ymca-english-practice.gary2049.chatgpt.site","status":"已確認網址"},
+{"name":"TPASS｜詞素診斷與練習","category":"英語檢定","audience":"TOEIC／成人","desc":"18題詞素診斷；完成後學生收到結果副本，Gary 教練同步收到診斷摘要。","url":"https://gary-learning-hub.onrender.com/tpass-morpheme-v08/","status":"雙交付版"},
+{"name":"T-PASS AI 入學診斷","category":"英語檢定","audience":"TOEIC／成人","desc":"AI 多益入學診斷；既有流程包含學生完整報告寄送與教練新診斷通知。","url":"https://t-pass-ai-assessment.gary2049.chatgpt.site","status":"既有雙交付流程"},
+{"name":"T-PASS Member Dashboard V1","category":"英語檢定","audience":"T-PASS會員","desc":"會員學習儀表板與進度入口。","url":"https://t-pass-member-dashboard.gary2049.chatgpt.site","status":"限定存取"},
+{"name":"Gary 英文文法複習站","category":"文法與單字","audience":"英語學習者","desc":"30題隨機文法練習、中文詳解、成績記錄。","url":"https://gary-grammar-review-2026.gary2049.chatgpt.site","status":"已確認網址"},
+{"name":"Jasper 文法複習站","category":"文法與單字","audience":"Jasper","desc":"文法練習、中文詳解、作品目錄。","url":"https://jasper-grammar-review.gary2049.chatgpt.site/gary-works.html","status":"已確認網址"},
+{"name":"Jasper IS 複習站","category":"學科複習","audience":"Jasper","desc":"隨機選擇題＋Word Bank填空、中文詳解、PDF、成績紀錄。","url":"https://jasper-is-review.gary2049.chatgpt.site","status":"已確認網址"},
+{"name":"yo-yo 國文複習站","category":"學科複習","audience":"yo-yo","desc":"選擇＋填空、白話詳解、PDF、成績紀錄。","url":"https://yoyo-chinese-review.gary2049.chatgpt.site","status":"已確認網址"},
+{"name":"MA 數學英語複習站","category":"學科複習","audience":"MA","desc":"數學英語隨機選擇＋填空、中文詳解、PDF與CSV。","url":"https://ma-math-review.gary2049.chatgpt.site","status":"已確認網址"},
+{"name":"Judy 英語練習室 V1.1","category":"學科複習","audience":"Judy","desc":"拼字、閱讀中英對照、中文詳解、逐題成績。","url":"https://judy-english-lab.gary2049.chatgpt.site","status":"私人存取"},
+{"name":"Gary 蛋・自由彩繪工作室","category":"創意教學","audience":"兒童／教師","desc":"手機與 iPad 可操作的2D／3D彩繪互動網站。","url":"https://gary-egg-paint.gary2049.chatgpt.site","status":"已確認網址"},
+{"name":"Gary 國小老師的一天","category":"創意教學","audience":"教師／教育","desc":"國小主任、組長、導師、科任角色情境學習。","url":"https://gary-school-day.gary2049.chatgpt.site","status":"已確認網址"},
+{"name":"神隊友雙語聖經品格教育","category":"雙語品格","audience":"5–12歲兒童／家長","desc":"雙語英文、AI活動、聖經故事與品格任務。","url":"https://skywalker-bilingual-bible.gary2049.chatgpt.site/","status":"已確認網址"},
+{"name":"Gary AI Threads 客戶雷達","category":"AI工具","audience":"工作／行銷","desc":"關鍵字搜尋、AI診斷、Lead Score、草稿與人工批准。","url":"https://gary-threads-radar.gary2049.chatgpt.site","status":"已確認網址"},
+{"name":"Skywalker AI Content Factory","category":"AI工具","audience":"工作／內容","desc":"AI內容工作流程與產製工具。","url":"https://skywalker-content-factory.gary2049.chatgpt.site","status":"已確認網址"},
+{"name":"Gary 社群發文助手","category":"AI工具","audience":"社群／內容","desc":"協助規劃與整理社群貼文內容。","url":"https://gary-social-helper.gary2049.chatgpt.site","status":"已確認網址"},
+{"name":"樂樂的英語練習基地","category":"文法與單字","audience":"國中英語／樂樂","desc":"英語單字與複習練習基地。","url":"https://lele-english-review.gary2049.chatgpt.site","status":"已確認網址"},
+{"name":"Gary 雅思考試的一天","category":"英語檢定","audience":"IELTS 學習者","desc":"IELTS 考試流程與學習情境網站。","url":"https://gary-ielts-day.gary2049.chatgpt.site","status":"已確認網址"},
+{"name":"Jasper｜Unit 6 英語練習室","category":"學科複習","audience":"Jasper","desc":"Unit 6 英語課程練習與複習。","url":"https://jasper-unit-practice.gary2049.chatgpt.site","status":"已確認網址"},
+{"name":"Module 6 英語練習室","category":"學科複習","audience":"Rita","desc":"Module 6 英語課程練習與複習。","url":"https://rita-unit-practice.gary2049.chatgpt.site","status":"已確認網址"},
+{"name":"yo-yo 國文複習所（舊版）","category":"學科複習","audience":"yo-yo","desc":"早期版本，保留供舊連結與內容查閱；新版請優先使用「yo-yo 國文複習站」。","url":"https://yo-yo-chinese-review.gary2049.chatgpt.site","status":"舊版保留"},
+{"name":"Gary 英文卡關診斷中心","category":"成人英語","audience":"成人／上班族","desc":"中英雙語20題、五構面、Likert五點量表；輸出主要卡點，並支援研究CSV匯出。","url":"https://gary-learning-hub.onrender.com/english-stuck-diagnosis/","status":"研究測試版"},
+{"name":"Gary 成人英文程度雷達","category":"成人英語","audience":"成人／上班族","desc":"中英雙語20題，從聽、說、讀、寫與語言基礎建立成人英文自評能力輪廓。","url":"https://gary-learning-hub.onrender.com/adult-english-radar/","status":"測試版"},
+{"name":"Gary 英文90天進步計畫","category":"成人英語","audience":"成人／上班族","desc":"把卡點診斷與程度雷達轉成90天三階段行動計畫、每週任務與進度追蹤。","url":"https://gary-learning-hub.onrender.com/english-90day-plan/","status":"測試版"},
+{"name":"TOEIC Weakness Radar","category":"英語檢定","audience":"TOEIC／成人","desc":"中英雙語20題，診斷聽力、閱讀、字彙文法、解題策略、時間與考場表現；學生與教練雙交付。","url":"https://gary-learning-hub.onrender.com/toeic-weakness-radar/","status":"測試版"},
+{"name":"TOEIC Mistake Doctor","category":"英語檢定","audience":"TOEIC／成人","desc":"輸入最近錯題，診斷錯誤類型、根因與優先學習處方，並安排24–48小時再測；學生與教練雙交付。","url":"https://gary-learning-hub.onrender.com/toeic-mistake-doctor/","status":"測試版"},
+{"name":"TOEIC 90-Day Planner","category":"英語檢定","audience":"TOEIC／成人","desc":"承接#28弱點雷達與#29錯題醫生，轉成90天三階段提分計畫、13週任務與複測節點；學生與教練雙交付。","url":"https://gary-learning-hub.onrender.com/toeic-90day-planner/","status":"測試版"},
+{"name":"TOEIC Mock Test Lab","category":"英語檢定","audience":"TOEIC／成人","desc":"記錄每次模考 Listening、Reading、總分與主要失分，追蹤前後變化。","url":"https://gary-learning-hub.onrender.com/toeic-mock-test-lab/","status":"測試版"},
+{"name":"TOEIC Part 5 Grammar Lab","category":"英語檢定","audience":"TOEIC／成人","desc":"10題 Part 5 文法診斷、錯誤分類、中文詳解與同類再測；學生與教練雙交付。","url":"https://gary-learning-hub.onrender.com/toeic-part5-grammar-lab/","status":"測試版"},
+{"name":"TOEIC Part 7 Reading Lab","category":"英語檢定","audience":"TOEIC／成人","desc":"自編 Part 7 閱讀專項：時間資訊、目的題、推論、同義改寫與流程定位；學生與教練雙交付。","url":"https://gary-learning-hub.onrender.com/toeic-part7-reading-lab/","status":"測試版"},
+{"name":"TOEIC Listening Training Lab","category":"英語檢定","audience":"TOEIC／成人","desc":"Step 4 Listening Track V2：TTS、播放限制、語速、聽寫錯詞分析＋20題診斷與10題再測。","url":"https://gary-learning-hub.onrender.com/toeic-listening-training-lab/","status":"測試版"},
+{"name":"Business English Survival Kit","category":"商務英語","audience":"上班族／主管","desc":"5大職場情境×15題診斷，完成後提供逐題中英詳解、弱點排序與專屬實戰句型包。","url":"https://gary-learning-hub.onrender.com/business-english-survival-kit/","status":"測試版"},
 {"name":"Gary Learning Hub","category":"中央管理","audience":"Gary／所有使用者","desc":"100網站唯一入口與管理控制台","url":"https://gary-learning-hub.onrender.com","status":"正式上線（Roadmap）"},
 {"name":"Interview English Coach","category":"成人英語","audience":"求職者／轉職者","desc":"12題面試診斷、8題高頻演練、STAR Builder、五構面自評、本機紀錄、JSON與PDF","url":"https://gary-learning-hub.onrender.com/interview-english-coach/","status":"測試版（Roadmap）"},
 {"name":"Sylvia IELTS Writing Sprint","category":"IELTS","audience":"Sylvia","desc":"30天寫作衝刺、每日作答、Gary四項評分、個人錯誤庫、Band進步曲線、診斷處方與自動派課","url":"https://gary-learning-hub.onrender.com/sylvia-ielts-30day/","status":"正式上線（Roadmap）"},
@@ -118,7 +116,35 @@ const sites=[
 {"name":"IELTS Mock Test Lab","category":"IELTS","audience":"IELTS學習者","desc":"Listening／Reading／Writing／Speaking 四科模考、Overall Band、最低科目、前後趨勢、錯誤分類、JSON／PDF與 Gary 教練交付","url":"https://gary-learning-hub.onrender.com/ielts-mock-test-lab/","status":"測試版（Roadmap）"},
 {"name":"IELTS Listening Mini Test","category":"IELTS","audience":"IELTS學習者","desc":"原創10題：Part 1生活對話＋Part 4學術獨白、正式模式一次播放、自動判分、中文詳解、錯題重練、JSON／PDF與 Gary 教練交付","url":"https://gary-learning-hub.onrender.com/ielts-listening-mini-test/","status":"測試版（Roadmap）"},
 {"name":"IELTS Academic Writing Mini Test","category":"IELTS","audience":"IELTS學習者","desc":"原創 Task 1 表格題＋Task 2 Discussion Essay、60分鐘計時、150／250字、四構面自評、完成度檢查、JSON／PDF與完整作文交付 Gary 教練","url":"https://gary-learning-hub.onrender.com/ielts-writing-mini-test/","status":"測試版（Roadmap）"},
-{"name":"IELTS Listening Mini Test 2","category":"IELTS","audience":"IELTS學習者","desc":"原創10題：Part 2社會情境獨白＋Part 3教育情境討論、正式模式一次播放、自動判分、中文詳解、錯題重練、JSON／PDF與完整模考資料交付 Gary 教練","url":"https://gary-learning-hub.onrender.com/ielts-listening-mini-test-2/","status":"測試版（Roadmap）"}
+{"name":"IELTS Listening Mini Test 2","category":"IELTS","audience":"IELTS學習者","desc":"原創10題：Part 2社會情境獨白＋Part 3教育情境討論、正式模式一次播放、自動判分、中文詳解、錯題重練、JSON／PDF與完整模考資料交付 Gary 教練","url":"https://gary-learning-hub.onrender.com/ielts-listening-mini-test-2/","status":"測試版（Roadmap）"},
+{"name":"樂齡機場英文","category":"樂齡英語","audience":"樂齡旅遊者","desc":"報到／托運／安檢／登機／入境／領行李六段機場流程，每段4句，大字中英對照、慢速／正常語速播放、流程小測、完成紀錄、JSON／PDF與 Gary 教練交付","url":"https://gary-learning-hub.onrender.com/senior-airport-english/","status":"測試版（Roadmap）"},
+{"name":"樂齡飯店英文","category":"樂齡英語","audience":"樂齡旅遊者","desc":"入住／房內需求／設備問題／早餐設施／退房五大情境，每情境4句，大字中英對照、慢速／正常語速播放、情境小測、完成紀錄、JSON／PDF與 Gary 教練交付","url":"https://gary-learning-hub.onrender.com/senior-hotel-english/","status":"測試版（Roadmap）"},
+{"name":"樂齡餐廳英文","category":"樂齡英語","audience":"樂齡旅遊者","desc":"帶位／菜單／點餐／飲食需求／加點與問題／結帳六大情境，每情境4句，大字中英對照、慢速／正常語速播放、情境小測、完成紀錄、JSON／PDF與 Gary 教練交付","url":"https://gary-learning-hub.onrender.com/senior-restaurant-english/","status":"測試版（Roadmap）"},
+{"name":"樂齡購物英文","category":"樂齡英語","audience":"樂齡旅遊者","desc":"詢價／尺寸與顏色／試穿／折扣／退換貨／付款六大情境，每情境4句，大字中英對照、慢速／正常語速播放、情境小測、完成紀錄、JSON／PDF與 Gary 教練交付","url":"https://gary-learning-hub.onrender.com/senior-shopping-english/","status":"測試版（Roadmap）"},
+{"name":"樂齡醫療英文","category":"樂齡英語","audience":"樂齡成人","desc":"掛號／症狀／疼痛／用藥／緊急求助五大情境、大字中英對照、慢速播放、小測與本機紀錄","url":"https://gary-learning-hub.onrender.com/senior-medical-english/","status":"測試版（Roadmap）"},
+{"name":"樂齡交通英文","category":"樂齡英語","audience":"樂齡旅遊者","desc":"計程車／公車／地鐵／火車／問路五大情境、大字中英對照、慢速播放、小測與本機紀錄","url":"https://gary-learning-hub.onrender.com/senior-transport-english/","status":"測試版（Roadmap）"},
+{"name":"樂齡電話英文","category":"樂齡英語","audience":"樂齡成人","desc":"接電話／找人／留言／確認資訊／聽不清楚五大電話情境、大字中英對照、慢速播放、小測與本機紀錄","url":"https://gary-learning-hub.onrender.com/senior-phone-english/","status":"測試版（Roadmap）"},
+{"name":"樂齡英文發音診所","category":"樂齡英語","audience":"樂齡初學者","desc":"常見母音／子音／最小對立音／重音訓練、慢速播放、自我檢查與完成紀錄","url":"https://gary-learning-hub.onrender.com/senior-pronunciation-clinic/","status":"測試版（Roadmap）"},
+{"name":"樂齡英文記憶訓練","category":"樂齡英語","audience":"樂齡初學者","desc":"5字看／遮／想／說／再測提取流程、間隔複習建議與本機學習紀錄","url":"https://gary-learning-hub.onrender.com/senior-english-memory-training/","status":"測試版（Roadmap）"},
+{"name":"樂齡英文12週學習護照","category":"樂齡英語","audience":"樂齡學員","desc":"12週任務勾選、每週反思、進度保存、JSON下載與列印／PDF","url":"https://gary-learning-hub.onrender.com/senior-english-12-week-passport/","status":"測試版（Roadmap）"},
+{"name":"樂齡AI英文陪練","category":"樂齡英語","audience":"樂齡學員","desc":"餐廳／飯店／機場／購物／日常問候情境對話、本機規則引擎回應、慢速語音與對話紀錄","url":"https://gary-learning-hub.onrender.com/senior-ai-english-practice/","status":"測試版（Roadmap）"},
+{"name":"樂齡英文成果發表站","category":"樂齡英語","audience":"樂齡學員","desc":"英文成果卡、學習心得、瀏覽器錄音、音檔下載、成果牆、JSON與列印／PDF","url":"https://gary-learning-hub.onrender.com/senior-english-showcase/","status":"測試版（Roadmap）"},
+{"name":"樂齡英文教師版後台","category":"樂齡英語","audience":"教師","desc":"同一瀏覽器樂齡學習紀錄彙整、各站完成次數、最近活動、JSON總覽下載；本機版後台","url":"https://gary-learning-hub.onrender.com/senior-english-teacher-dashboard/","status":"測試版（Roadmap）"},
+{"name":"Gary AI 出題機","category":"教師AI工具","audience":"教師","desc":"主題／程度／題型／題數設定、題庫草稿生成、可編輯輸出、複製與TXT下載；本機規則引擎 MVP","url":"https://gary-learning-hub.onrender.com/gary-ai-question-generator/","status":"測試版（Roadmap）"},
+{"name":"Gary AI 詳解生成器","category":"教師AI工具","audience":"教師","desc":"輸入題目／正解／學生答案／知識點，產生中英詳解與訂正策略；本機規則模板 MVP","url":"https://gary-learning-hub.onrender.com/gary-ai-explanation-generator/","status":"測試版（Roadmap）"},
+{"name":"Gary AI 錯題分析器","category":"教師AI工具","audience":"教師","desc":"依題目、學生答案與自述原因進行錯因分類、診斷與練習處方；本機規則引擎 MVP","url":"https://gary-learning-hub.onrender.com/gary-ai-mistake-analyzer/","status":"測試版（Roadmap）"},
+{"name":"Gary AI 教案生成器","category":"教師AI工具","audience":"教師","desc":"依主題／對象／時間／目標生成暖身、輸入、練習、任務與Exit Ticket教案架構","url":"https://gary-learning-hub.onrender.com/gary-ai-lesson-plan-generator/","status":"測試版（Roadmap）"},
+{"name":"Gary AI Worksheet Maker","category":"教師AI工具","audience":"教師","desc":"依主題／程度／題型／題數生成可列印練習單與答案，支援TXT與PDF","url":"https://gary-learning-hub.onrender.com/gary-ai-worksheet-maker/","status":"測試版（Roadmap）"},
+{"name":"Gary AI Quiz Builder","category":"教師AI工具","audience":"教師","desc":"建立10題線上測驗、自動計分、結果JSON下載；本機題庫 MVP","url":"https://gary-learning-hub.onrender.com/gary-ai-quiz-builder/","status":"測試版（Roadmap）"},
+{"name":"Gary AI Rubric Builder","category":"教師AI工具","audience":"教師","desc":"依任務、評量面向與等級生成可觀察Rubric，支援列印／PDF","url":"https://gary-learning-hub.onrender.com/gary-ai-rubric-builder/","status":"測試版（Roadmap）"},
+{"name":"Gary AI Feedback Coach","category":"教師AI工具","audience":"教師","desc":"依分數、優勢與主要弱點產生聚焦式個人化回饋與下一步處方","url":"https://gary-learning-hub.onrender.com/gary-ai-feedback-coach/","status":"測試版（Roadmap）"},
+{"name":"Gary AI 課程網站生成器","category":"教師AI工具","audience":"教師","desc":"依課程名稱／學員／核心任務／必要功能生成建站流程、功能規格與QA完成線","url":"https://gary-learning-hub.onrender.com/gary-ai-course-site-generator/","status":"測試版（Roadmap）"},
+{"name":"Gary 教師網站健康檢查器","category":"教師AI工具","audience":"教師","desc":"15項網站QA清單、健康分數、未通過項目與JSON下載","url":"https://gary-learning-hub.onrender.com/gary-teacher-site-health-checker/","status":"測試版（Roadmap）"},
+{"name":"雙語聖經每日一句","category":"信仰／品格","audience":"兒童／成人","desc":"每日中英經文、英文慢速播放、關鍵字、簡短反思與本機保存；KJV英文＋和合本短節選","url":"https://gary-learning-hub.onrender.com/bilingual-bible-daily-verse/","status":"測試版（Roadmap）"},
+{"name":"兒童聖經100個品格故事","category":"信仰／品格","audience":"兒童／家長","desc":"品格短故事、討論問題、英文重點句、今日任務與本機反思紀錄","url":"https://gary-learning-hub.onrender.com/kids-bible-100-character-stories/","status":"測試版（Roadmap）"},
+{"name":"Bible English Vocabulary Lab","category":"信仰／品格","audience":"英語學習者","desc":"15字聖經核心字彙庫、每回10字、發音、例句、10題小測與JSON結果","url":"https://gary-learning-hub.onrender.com/bible-english-vocabulary-lab/","status":"測試版（Roadmap）"},
+{"name":"Bible English Reading Lab","category":"信仰／品格","audience":"英語學習者","desc":"雙語短經文、英文慢速朗讀、理解題、主旨與關鍵字閱讀訓練","url":"https://gary-learning-hub.onrender.com/bible-english-reading-lab/","status":"測試版（Roadmap）"},
+{"name":"101 Reasons to Read the Bilingual Bible","category":"信仰／品格","audience":"一般讀者","desc":"101個理由互動閱讀、每日／隨機瀏覽、今日行動與本機收藏","url":"https://gary-learning-hub.onrender.com/101-reasons-bilingual-bible/","status":"測試版（Roadmap）"}
 ];
 const q=document.getElementById("q"),cat=document.getElementById("cat"),state=document.getElementById("state"),sort=document.getElementById("sort"),grid=document.getElementById("grid"),stats=document.getElementById("stats"),quick=document.getElementById("quick");
 const categories=[...new Set(sites.map(x=>x.category))].sort();
@@ -128,7 +154,7 @@ function isLimited(s){return /限定|私人/.test(s.status)}
 function draw(){const keyword=q.value.trim().toLowerCase();let filtered=sites.filter(s=>{const hit=[s.name,s.category,s.audience,s.desc,s.status].join(" ").toLowerCase().includes(keyword);const hitCat=!cat.value||s.category===cat.value;const hitState=!state.value||(state.value==="limited"?isLimited(s):!isLimited(s));return hit&&hitCat&&hitState});
 if(sort.value==="category")filtered.sort((a,b)=>a.category.localeCompare(b.category,"zh-Hant")||a.name.localeCompare(b.name,"zh-Hant"));if(sort.value==="name")filtered.sort((a,b)=>a.name.localeCompare(b.name,"zh-Hant"));
 grid.innerHTML="";filtered.forEach(s=>{const article=document.createElement("article");article.className="card";const limited=isLimited(s);const button=`<a class="btn primary" href="${s.url}" target="_blank" rel="noopener">${limited?"進入限定網站":"進入網站"}</a>`;article.innerHTML=`<div class="meta"><span class="tag">${s.category}</span><span class="tag">${s.audience}</span><span class="tag status">${s.status}</span></div><h2>${s.name}</h2><div class="desc">${s.desc}</div><div class="actions">${button}</div>`;grid.appendChild(article)});
-const limitedCount=sites.filter(isLimited).length;stats.textContent=`${sites.length} 個已建立網站／入口（含測試）｜${categories.length} 個分類｜限定／私人 ${limitedCount} 站｜目前顯示 ${filtered.length} 站｜最後核對：2026-11-03`}
+const limitedCount=sites.filter(isLimited).length;stats.textContent=`${sites.length} 個已建立網站／入口（含測試）｜${categories.length} 個分類｜限定／私人 ${limitedCount} 站｜目前顯示 ${filtered.length} 站｜資料同步：2026-11-03（以 Roadmap 登錄網址為準）`}
 [q,cat,state,sort].forEach(el=>el.addEventListener("input",draw));cat.addEventListener("change",()=>{[...quick.children].forEach(x=>x.classList.toggle("active",(cat.value===""&&x.textContent.startsWith("全部"))||x.textContent.startsWith(cat.value+" ")))});
 headerCount.textContent=sites.length;
 siteCount.textContent=sites.length;
