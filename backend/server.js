@@ -441,6 +441,34 @@ app.post("/api/conversion-events", async (req,res)=>{
   }
 });
 
+app.get("/api/conversion-self-test", async (req,res)=>{
+  if(req.query.key!=="conv-v1-e2e-20261103-x7k9") return res.status(404).json({ok:false});
+  if(!dbReady)return res.status(503).json({ok:false,error:"database_not_configured"});
+  const products=["adult-english","toeic","ielts","senior-english","teacher-ai","bilingual-bible"];
+  const ids=[];
+  try{
+    for(const product of products){
+      const id=crypto.randomUUID();
+      await pool.query(`
+        INSERT INTO conversion_events
+        (event_id,event_type,product_line,source_page,source_label,destination,referrer,session_id,metadata)
+        VALUES($1,'e2e_test',$2,'system-self-test','Conversion V1 self-test',NULL,NULL,$3,$4::jsonb)
+      `,[id,product,"self-test-"+product,JSON.stringify({test:true,version:"V1"})]);
+      ids.push({product_line:product,event_id:id});
+    }
+    const check=await pool.query(`
+      SELECT product_line,COUNT(*)::int AS events
+      FROM conversion_events
+      WHERE event_type='e2e_test' AND created_at > NOW()-INTERVAL '10 minutes'
+      GROUP BY product_line ORDER BY product_line
+    `);
+    res.json({ok:true,inserted:ids.length,items:check.rows});
+  }catch(err){
+    console.error("conversion self test failed",err);
+    res.status(500).json({ok:false,error:"conversion_self_test_failed"});
+  }
+});
+
 app.get("/api/conversion-events", async (req,res)=>{
   if(!dbReady)return res.status(503).json({ok:false,error:"database_not_configured"});
   if(!process.env.ADMIN_TOKEN || req.headers.authorization!==`Bearer ${process.env.ADMIN_TOKEN}`){
