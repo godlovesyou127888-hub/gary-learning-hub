@@ -93,6 +93,27 @@ async function init(){
   `);
   await pool.query(`CREATE INDEX IF NOT EXISTS idx_conversion_events_product_created ON conversion_events(product_line, created_at DESC);`);
   await pool.query(`CREATE INDEX IF NOT EXISTS idx_conversion_events_type_created ON conversion_events(event_type, created_at DESC);`);
+  const existingTest=await pool.query(`
+    SELECT COUNT(*)::int AS n
+    FROM conversion_events
+    WHERE event_type='e2e_test' AND metadata->>'seed'='conversion-v1'
+  `);
+  if(Number(existingTest.rows[0]?.n||0)===0){
+    const products=["adult-english","toeic","ielts","senior-english","teacher-ai","bilingual-bible"];
+    for(const product of products){
+      await pool.query(`
+        INSERT INTO conversion_events
+        (event_id,event_type,product_line,source_page,source_label,destination,referrer,session_id,metadata)
+        VALUES($1,'e2e_test',$2,'system-startup-self-test','Conversion V1 DB self-test',NULL,NULL,$3,$4::jsonb)
+      `,[
+        crypto.randomUUID(),product,"seed-"+product,
+        JSON.stringify({test:true,seed:"conversion-v1"})
+      ]);
+    }
+    console.log("Conversion V1 DB self-test inserted",products.length,"events");
+  }else{
+    console.log("Conversion V1 DB self-test already present",existingTest.rows[0].n);
+  }
 }
 let dbReady=false;
 if(process.env.DATABASE_URL){
@@ -438,34 +459,6 @@ app.post("/api/conversion-events", async (req,res)=>{
   }catch(err){
     console.error("conversion event write failed",err);
     res.status(500).json({ok:false,error:"conversion_event_write_failed"});
-  }
-});
-
-app.get("/api/conversion-self-test", async (req,res)=>{
-  if(req.query.key!=="conv-v1-e2e-20261103-x7k9") return res.status(404).json({ok:false});
-  if(!dbReady)return res.status(503).json({ok:false,error:"database_not_configured"});
-  const products=["adult-english","toeic","ielts","senior-english","teacher-ai","bilingual-bible"];
-  const ids=[];
-  try{
-    for(const product of products){
-      const id=crypto.randomUUID();
-      await pool.query(`
-        INSERT INTO conversion_events
-        (event_id,event_type,product_line,source_page,source_label,destination,referrer,session_id,metadata)
-        VALUES($1,'e2e_test',$2,'system-self-test','Conversion V1 self-test',NULL,NULL,$3,$4::jsonb)
-      `,[id,product,"self-test-"+product,JSON.stringify({test:true,version:"V1"})]);
-      ids.push({product_line:product,event_id:id});
-    }
-    const check=await pool.query(`
-      SELECT product_line,COUNT(*)::int AS events
-      FROM conversion_events
-      WHERE event_type='e2e_test' AND created_at > NOW()-INTERVAL '10 minutes'
-      GROUP BY product_line ORDER BY product_line
-    `);
-    res.json({ok:true,inserted:ids.length,items:check.rows});
-  }catch(err){
-    console.error("conversion self test failed",err);
-    res.status(500).json({ok:false,error:"conversion_self_test_failed"});
   }
 });
 
