@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="樂齡飯店英文：訂房入住、房內需求、設備問題、早餐設施、退房五大情境，大字中英對照、慢速播放、情境小測與學習紀錄。">
+<title>樂齡飯店英文</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#fbf8f5;color:#3d332d;font:21px/1.7 system-ui,"Noto Sans TC",sans-serif}header{background:#745948;color:#fff;padding:24px 16px}.wrap,main{max-width:960px;margin:auto}main{padding:16px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn,button{border:0;border-radius:12px;padding:13px 18px;background:#8d6b55;color:white;font:inherit;font-weight:800;text-decoration:none;cursor:pointer}.secondary{background:#efe6df!important;color:#6a5040!important}.card{background:white;border:1px solid #eadfd7;border-radius:18px;padding:22px;margin:18px 0}.eyebrow{font-size:14px;font-weight:900;letter-spacing:.08em;color:#8b7567}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.steps button{background:#f4ece6;color:#6f5544}.steps button.active{background:#8d6b55;color:white}.phrase{border:2px solid #ebdfd7;border-radius:16px;padding:18px;margin:14px 0}.sentence{font-size:38px;font-weight:900;line-height:1.25;margin:12px 0}.zh{font-size:27px;font-weight:800;color:#6b584d}.use{background:#f8f0ea;padding:14px;border-radius:12px}.flow{padding:12px;border-left:5px solid #9a7a63;background:#f8f1ec;border-radius:10px}.quiz label{display:block;border:1px solid #e5d9d1;border-radius:10px;padding:10px;margin:8px 0}.hidden{display:none}.metric{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.metric div{background:#fcfaf8;border:1px solid #e9dfd8;border-radius:12px;padding:14px;text-align:center}.metric b{display:block;font-size:28px}.good{color:#047857}.bad{color:#b42318}.muted{font-size:16px;color:#756a63}.history p{padding:8px 0;border-bottom:1px solid #eee5df}input[type=text],input[type=email]{width:100%;padding:12px;border:1px solid #d0bfb4;border-radius:10px;font:inherit}@media(max-width:700px){body{font-size:20px}.sentence{font-size:34px}.zh{font-size:25px}.steps{grid-template-columns:1fr 1fr}.metric{grid-template-columns:1fr}.btn,button{width:100%}.card{padding:16px}}@media print{header .actions,.actions,.steps,button{display:none!important}body{background:white}.card{border:0}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="actions"><a class="btn secondary" href="/">回 Hub</a><a class="btn secondary" href="/roadmap/">回 Roadmap</a><a class="btn" href="https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su=%E6%A8%82%E9%BD%A1%E9%A3%AF%E5%BA%97%E8%8B%B1%E6%96%87%20%E8%81%AF%E7%B5%A1%E7%AB%99%E9%95%B7" target="_blank" rel="noopener">聯絡站長</a></div><h1>樂齡飯店英文</h1><p>從入住到退房｜跟著飯店流程學，遇到問題也能開口說。</p></div></header>
+<main>
+<section class="card"><p class="eyebrow">01 · HOTEL FLOW</p><h2>五大飯店情境</h2><div id="steps" class="steps"></div></section>
+
+<section class="card"><p class="eyebrow">02 · LEARN</p><h2 id="stepTitle"></h2><div id="flowNote" class="flow"></div><div id="phrases"></div></section>
+
+<section class="card"><p class="eyebrow">03 · QUICK CHECK</p><h2>本情境小測</h2><div id="quiz" class="quiz"></div><button id="submit">完成 4 題小測</button><p id="quizStatus"></p></section>
+
+<section id="resultCard" class="card hidden"><p class="eyebrow">04 · RESULT</p><h2>本情境完成</h2><div class="metric"><div><b id="score">0/4</b>答對</div><div><b id="accuracy">0%</b>正確率</div><div><b id="count">1</b>累積完成次數</div></div><div id="review"></div></section>
+
+<section id="deliveryCard" class="card hidden"><p class="eyebrow">05 · SAVE & COACH</p><h2>保存成果</h2><label>姓名<input id="student" type="text" value="Gary 樂齡學員"></label><label>Email（選填）<input id="email" type="email"></label><div class="actions" style="margin-top:14px"><button id="download">下載 JSON</button><button id="print" class="secondary">列印／另存 PDF</button><button id="coach">寄給 Gary 教練（Gmail 草稿）</button></div><p class="muted">建議每次只練一個飯店情境，能自己說出關鍵句再進下一段。</p><p id="deliveryStatus"></p></section>
+
+<section class="card"><p class="eyebrow">06 · HISTORY</p><h2>最近完成紀錄</h2><div id="history" class="history">尚無紀錄。</div></section>
+</main>
+<script>
+const stages=[
+{name:"1 入住 Check-in",note:"準備護照與訂房姓名，先完成入住手續。",items:[
+{s:"I have a reservation.",z:"我有預約。",u:"到櫃檯辦理入住。"},
+{s:"The reservation is under Wang.",z:"訂房姓名是 Wang。",u:"提供訂房姓名。"},
+{s:"May I have the room key?",z:"可以給我房卡嗎？",u:"領取房卡。"},
+{s:"What time is check-out?",z:"幾點退房？",u:"入住時先確認退房時間。"}]},
+{name:"2 房內需求 Room Requests",note:"缺少用品或需要額外物品時，直接打給櫃檯。",items:[
+{s:"Could I have two more towels?",z:"可以再給我兩條毛巾嗎？",u:"需要額外毛巾。"},
+{s:"I need another pillow.",z:"我需要多一個枕頭。",u:"需要額外枕頭。"},
+{s:"Could I have some bottled water?",z:"可以給我一些瓶裝水嗎？",u:"需要飲用水。"},
+{s:"Could you clean the room later?",z:"可以晚一點再整理房間嗎？",u:"希望延後打掃。"}]},
+{name:"3 設備問題 Problems",note:"設備有問題時，簡單說明哪一項不能用。",items:[
+{s:"The air conditioner is not working.",z:"冷氣壞了。",u:"冷氣無法運作。"},
+{s:"The shower has no hot water.",z:"淋浴沒有熱水。",u:"熱水故障。"},
+{s:"The TV is not working.",z:"電視壞了。",u:"電視無法使用。"},
+{s:"Could someone come and check it?",z:"可以請人來檢查嗎？",u:"請飯店派人處理。"}]},
+{name:"4 早餐與設施 Breakfast & Facilities",note:"詢問早餐時間、地點與飯店設施。",items:[
+{s:"What time is breakfast?",z:"早餐幾點開始？",u:"詢問早餐時間。"},
+{s:"Where is the breakfast room?",z:"早餐餐廳在哪裡？",u:"詢問早餐地點。"},
+{s:"Is there a gym in the hotel?",z:"飯店有健身房嗎？",u:"詢問健身房。"},
+{s:"What time does the pool close?",z:"游泳池幾點關閉？",u:"詢問設施時間。"}]},
+{name:"5 退房 Check-out",note:"退房前確認帳單、交通與行李寄放。",items:[
+{s:"I would like to check out.",z:"我想要退房。",u:"到櫃檯辦理退房。"},
+{s:"Could I see the bill, please?",z:"可以讓我看一下帳單嗎？",u:"確認費用。"},
+{s:"Could you call a taxi for me?",z:"可以幫我叫計程車嗎？",u:"需要交通協助。"},
+{s:"Can I leave my luggage here?",z:"我可以把行李寄放在這裡嗎？",u:"退房後寄放行李。"}]}
+];
+const $=id=>document.getElementById(id);let stageIndex=0,current=stages[0],results=[];
+function speak(text,rate=.62){if(!("speechSynthesis" in window)){alert("此裝置不支援語音播放。");return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="en-US";u.rate=rate;speechSynthesis.speak(u)}
+function renderSteps(){ $("steps").replaceChildren(); stages.forEach((s,i)=>{const b=document.createElement("button");b.textContent=s.name;b.className=i===stageIndex?"active":"";b.onclick=()=>{stageIndex=i;render()};$("steps").append(b)});}
+function render(){
+ current=stages[stageIndex];results=[];renderSteps();$("stepTitle").textContent=current.name;$("flowNote").textContent=current.note;$("phrases").replaceChildren();
+ current.items.forEach((x,i)=>{const d=document.createElement("div");d.className="phrase";d.innerHTML='<div class="sentence">'+x.s+'</div><div class="zh">'+x.z+'</div><div class="use"><b>使用時機</b><br>'+x.u+'</div><div class="actions" style="margin-top:12px"><button data-slow="'+i+'">慢速聽</button><button class="secondary" data-normal="'+i+'">正常速度</button></div>';$("phrases").append(d)});
+ document.querySelectorAll("[data-slow]").forEach(b=>b.onclick=()=>speak(current.items[Number(b.dataset.slow)].s,.55));
+ document.querySelectorAll("[data-normal]").forEach(b=>b.onclick=()=>speak(current.items[Number(b.dataset.normal)].s,.85));
+ buildQuiz();$("resultCard").classList.add("hidden");$("deliveryCard").classList.add("hidden");$("quizStatus").textContent="";
+}
+function buildQuiz(){
+ $("quiz").replaceChildren();
+ current.items.forEach((x,i)=>{const others=current.items.filter((_,j)=>j!==i).map(y=>y.z);const opts=[x.z,...others].sort(()=>Math.random()-.5);const d=document.createElement("div");d.innerHTML='<p><b>Q'+(i+1)+'. '+x.s+'</b></p>'+opts.map((o,j)=>'<label><input type="radio" name="q'+i+'" value="'+encodeURIComponent(o)+'"> '+String.fromCharCode(65+j)+'. '+o+'</label>').join("");$("quiz").append(d)});
+}
+$("submit").onclick=()=>{
+ const missing=current.items.filter((x,i)=>!document.querySelector('input[name="q'+i+'"]:checked')).length;if(missing){$("quizStatus").textContent="還有 "+missing+" 題未作答。";return}
+ let score=0;results=current.items.map((x,i)=>{const chosen=decodeURIComponent(document.querySelector('input[name="q'+i+'"]:checked').value),ok=chosen===x.z;if(ok)score++;return{x,chosen,ok}});
+ $("score").textContent=score+"/4";$("accuracy").textContent=(score*25)+"%";
+ const arr=JSON.parse(localStorage.getItem("senior-hotel-english-history-v1")||"[]");arr.unshift({date:new Date().toISOString(),stage:current.name,score});localStorage.setItem("senior-hotel-english-history-v1",JSON.stringify(arr.slice(0,30)));$("count").textContent=arr.length;
+ $("review").innerHTML=results.map(r=>'<p class="'+(r.ok?'good':'bad')+'"><b>'+(r.ok?'✓':'✗')+' '+r.x.s+'</b><br>'+r.x.z+'<br>你的答案：'+r.chosen+'</p>').join("");
+ $("resultCard").classList.remove("hidden");$("deliveryCard").classList.remove("hidden");showHistory();$("resultCard").scrollIntoView({behavior:"smooth"});
+};
+function snapshot(){const score=results.filter(x=>x.ok).length;return{site:"樂齡飯店英文",version:"MVP V1",date:new Date().toISOString(),student:$("student").value.trim()||"Gary 樂齡學員",email:$("email").value.trim(),stage:current.name,score,total:4,phrases:current.items,answers:results.map(r=>({sentence:r.x.s,chosen:r.chosen,answer:r.x.z,correct:r.ok}))}}
+function report(){const d=snapshot();return "樂齡飯店英文\n學員："+d.student+"\n情境："+d.stage+"\n分數："+d.score+"/4\n\n重點句：\n"+d.phrases.map((x,i)=>(i+1)+". "+x.s+"｜"+x.z).join("\n")}
+function showHistory(){const arr=JSON.parse(localStorage.getItem("senior-hotel-english-history-v1")||"[]");$("history").innerHTML=arr.length?arr.slice(0,12).map(x=>'<p>'+new Date(x.date).toLocaleString()+'｜'+x.stage+'｜'+x.score+'/4</p>').join(""):"尚無紀錄。"}
+$("download").onclick=()=>{const b=new Blob([JSON.stringify(snapshot(),null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="senior-hotel-english-"+new Date().toISOString().slice(0,10)+".json";a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);$("deliveryStatus").textContent="已下載學習紀錄。"};
+$("print").onclick=()=>window.print();
+$("coach").onclick=()=>{const d=snapshot(),subject="樂齡飯店英文｜"+d.student+"｜"+d.stage+"｜"+d.score+"/4";window.open("https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su="+encodeURIComponent(subject)+"&body="+encodeURIComponent(report()),"_blank","noopener,noreferrer");$("deliveryStatus").textContent="已嘗試開啟 Gmail 草稿，請確認後手動傳送。"};
+render();showHistory();
+</script>
+</body></html>
