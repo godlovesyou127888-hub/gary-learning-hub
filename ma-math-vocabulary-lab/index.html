@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="MA Math Vocabulary Lab：數學英語詞彙診斷，涵蓋運算、分數、方程式、幾何與文字題關鍵字，提供中英詳解、錯題重練與學習歷程。">
+<title>MA Math Vocabulary Lab</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f7f9fc;color:#253244;font:18px/1.65 system-ui,"Noto Sans TC",sans-serif}header{background:#374b6a;color:#fff;padding:22px 16px}.wrap,main{max-width:980px;margin:auto}main{padding:16px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn,button{border:0;border-radius:10px;padding:11px 15px;background:#4a658f;color:#fff;font:inherit;font-weight:800;text-decoration:none;cursor:pointer}.secondary{background:#e5ebf4!important;color:#374b6a!important}.card{background:#fff;border:1px solid #dde4ee;border-radius:16px;padding:20px;margin:16px 0}.eyebrow{font-size:13px;font-weight:900;letter-spacing:.08em;color:#71809a}.hidden{display:none}.q{padding:16px 0;border-top:1px solid #e6ebf2}.q:first-child{border-top:0}.q label{display:block;padding:8px 10px;border:1px solid #dfe5ee;border-radius:9px;margin:7px 0;font-weight:400}.q input{width:auto;margin-right:8px}.tag{display:inline-block;padding:4px 8px;border-radius:999px;background:#e8edf5;color:#374b6a;font-size:13px;font-weight:800;margin:2px}.feedback{white-space:pre-line;background:#eef2f8;padding:12px;border-radius:9px;margin-top:10px}.metric{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric div{background:#f8fafc;border:1px solid #e0e6ef;border-radius:12px;padding:14px;text-align:center}.metric b{display:block;font-size:25px}.good{color:#047857}.bad{color:#b42318}.priority{padding:12px;border-left:5px solid #5f769e;background:#eef3f9;border-radius:10px}input[type=text],input[type=email]{width:100%;padding:10px;border:1px solid #bec8d8;border-radius:9px;font:inherit}.muted{color:#6f7785;font-size:14px}@media(max-width:700px){.metric{grid-template-columns:1fr 1fr}.card{padding:14px}.btn,button{width:100%}}@media print{header .actions,.actions,button{display:none!important}body{background:white}.card{border:0}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="actions"><a class="btn secondary" href="/">回 Hub</a><a class="btn secondary" href="/roadmap/">回 Roadmap</a><a class="btn" href="https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su=MA%20Math%20Vocabulary%20Lab%20%E8%81%AF%E7%B5%A1%E7%AB%99%E9%95%B7" target="_blank" rel="noopener">聯絡站長</a></div><h1>MA Math Vocabulary Lab</h1><p>數學英語詞彙｜不是只會翻譯，而是要看得懂英文數學題在問什麼。</p></div></header>
+<main>
+<section class="card"><p class="eyebrow">01 · START</p><h2>每回 15 題數學英文診斷</h2><p>涵蓋 Operation 運算、Fraction 分數、Equation 方程式、Geometry 幾何、Word Problems 文字題關鍵字五大類。</p><div class="actions"><button id="start">開始 15 題診斷</button><button id="retry" class="secondary">只重練錯題</button></div><p id="startStatus">按「開始 15 題診斷」。</p></section>
+
+<section id="quizCard" class="card hidden"><p class="eyebrow">02 · PRACTICE</p><h2>Math Vocabulary Practice</h2><div id="quiz"></div><button id="submit">交卷並查看詳解</button><p id="submitStatus"></p></section>
+
+<section id="resultCard" class="card hidden"><p class="eyebrow">03 · DIAGNOSIS</p><h2>本次數學英文診斷</h2><div class="metric"><div><b id="score">0/15</b>分數</div><div><b id="accuracy">0%</b>正確率</div><div><b id="weakType">—</b>優先弱點</div><div><b id="wrongN">0</b>錯題</div></div><div id="priorityPlan" class="priority"></div><div id="typeSummary"></div><div id="review"></div></section>
+
+<section id="deliveryCard" class="card hidden"><p class="eyebrow">04 · SAVE & COACH</p><h2>保存／交付</h2><label>姓名<input id="student" type="text" value="MA"></label><label>Email（選填）<input id="email" type="email"></label><div class="actions" style="margin-top:14px"><button id="download">下載 JSON</button><button id="print" class="secondary">列印／另存 PDF</button><button id="coach">寄給 Gary 教練（Gmail 草稿）</button></div><p class="muted">建議錯題要用「英文詞 → 中文概念 → 數學例子」三步驟重新說一次。</p><p id="deliveryStatus"></p></section>
+
+<section class="card"><p class="eyebrow">05 · HISTORY</p><h2>最近練習紀錄</h2><div id="history">尚無紀錄。</div></section>
+</main>
+<script>
+const bank=[
+{t:"Operation",q:"What does 'sum' mean?",o:["和","差","積","商"],a:0,en:"Sum is the result of addition.",zh:"sum 是加法的結果，也就是「和」。",ex:"8 + 5 = 13 → 13 is the sum."},
+{t:"Operation",q:"What does 'difference' mean in math?",o:["差","和","倍數","分母"],a:0,en:"Difference is the result of subtraction.",zh:"difference 是減法的結果，也就是「差」。",ex:"12 - 7 = 5 → 5 is the difference."},
+{t:"Operation",q:"What is a 'product'?",o:["乘積","商","餘數","小數"],a:0,en:"Product is the result of multiplication.",zh:"product 是乘法的結果，也就是「乘積」。",ex:"4 × 6 = 24 → 24 is the product."},
+{t:"Operation",q:"What does 'quotient' mean?",o:["商","和","差","面積"],a:0,en:"Quotient is the result of division.",zh:"quotient 是除法的結果，也就是「商」。",ex:"20 ÷ 5 = 4 → 4 is the quotient."},
+
+{t:"Fraction",q:"In 3/5, what is the 'numerator'?",o:["3","5","8","15"],a:0,en:"The numerator is the top number of a fraction.",zh:"numerator 是分數上面的數字，也就是「分子」。",ex:"3/5 → 3 is the numerator."},
+{t:"Fraction",q:"In 3/5, what is the 'denominator'?",o:["5","3","2","8"],a:0,en:"The denominator is the bottom number of a fraction.",zh:"denominator 是分數下面的數字，也就是「分母」。",ex:"3/5 → 5 is the denominator."},
+{t:"Fraction",q:"What does 'equivalent fractions' mean?",o:["等值分數","假分數","帶分數","最簡分數"],a:0,en:"Equivalent fractions have the same value.",zh:"equivalent fractions 是數值相同的分數。",ex:"1/2 = 2/4"},
+{t:"Fraction",q:"What is a 'mixed number'?",o:["帶分數","真分數","分子","百分比"],a:0,en:"A mixed number has a whole number and a fraction.",zh:"mixed number 是由整數和分數組成的帶分數。",ex:"2 1/3 is a mixed number."},
+
+{t:"Equation",q:"What does 'variable' mean?",o:["變數","常數","答案","單位"],a:0,en:"A variable is a symbol, often a letter, that can represent different values.",zh:"variable 是可以代表不同數值的符號，常用字母表示。",ex:"x + 3 = 8 → x is the variable."},
+{t:"Equation",q:"What does 'solve the equation' mean?",o:["解方程式","畫圖形","估算答案","寫單位"],a:0,en:"To solve an equation means to find the value that makes it true.",zh:"solve the equation 就是找出讓等式成立的未知數。",ex:"x + 2 = 7 → x = 5"},
+{t:"Equation",q:"What does 'equal to' mean?",o:["等於","大於","小於","不等於"],a:0,en:"Equal to means two quantities have the same value.",zh:"equal to 表示「等於」。",ex:"6 + 4 is equal to 10."},
+{t:"Equation",q:"What does 'greater than' mean?",o:["大於","小於","等於","接近"],a:0,en:"Greater than means one value is larger than another.",zh:"greater than 表示「大於」。",ex:"9 > 4 → 9 is greater than 4."},
+
+{t:"Geometry",q:"What is the 'perimeter' of a shape?",o:["周長","面積","體積","角度"],a:0,en:"Perimeter is the total distance around a shape.",zh:"perimeter 是圖形外圍一圈的總長度，也就是周長。",ex:"Rectangle 3 by 5 → perimeter = 16."},
+{t:"Geometry",q:"What is 'area'?",o:["面積","周長","高度","重量"],a:0,en:"Area is the amount of surface inside a two-dimensional shape.",zh:"area 是平面圖形內部的大小，也就是面積。",ex:"Rectangle 3 × 5 → area = 15."},
+{t:"Geometry",q:"What does 'parallel' mean?",o:["平行的","垂直的","相交的","彎曲的"],a:0,en:"Parallel lines stay the same distance apart and do not meet.",zh:"parallel 表示平行，兩條線保持等距且不相交。",ex:"Opposite sides of a rectangle are parallel."},
+{t:"Geometry",q:"What is a 'right angle'?",o:["直角","銳角","鈍角","平角"],a:0,en:"A right angle measures 90 degrees.",zh:"right angle 是 90 度的直角。",ex:"90° = a right angle."},
+
+{t:"Word Problem",q:"In a word problem, what does 'in total' usually signal?",o:["加總","相減","平均","比例"],a:0,en:"In total often asks for the combined amount.",zh:"in total 通常表示要把數量加總。",ex:"3 apples + 4 apples → 7 apples in total."},
+{t:"Word Problem",q:"What does 'how many more' usually ask you to find?",o:["差多少","總共有多少","每組幾個","平均值"],a:0,en:"How many more usually asks for the difference between two quantities.",zh:"how many more 通常是在問「多多少」，所以常用減法。",ex:"9 books vs. 5 books → 4 more."},
+{t:"Word Problem",q:"What does 'each' often suggest in a multiplication problem?",o:["每一個","剩下","至少","大約"],a:0,en:"Each means every one in a group.",zh:"each 表示「每一個」，常和重複相同數量有關。",ex:"4 bags, 3 apples each → 4 × 3."},
+{t:"Word Problem",q:"What does 'remaining' mean?",o:["剩下的","全部的","增加的","相等的"],a:0,en:"Remaining means what is left after some amount is removed or used.",zh:"remaining 表示「剩下的」。",ex:"10 pencils - 3 used = 7 remaining."}
+];
+const $=id=>document.getElementById(id);let current=[],results=[],wrong=[];
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function build(){const types=["Operation","Fraction","Equation","Geometry","Word Problem"];return types.flatMap(t=>shuffle(bank.filter(x=>x.t===t)).slice(0,3))}
+function render(items){current=items;results=[];$("quiz").replaceChildren();items.forEach((q,i)=>{const d=document.createElement("div");d.className="q";let h='<span class="tag">'+q.t+'</span><p><b>Q'+(i+1)+'. '+q.q+'</b></p>';q.o.forEach((x,j)=>h+='<label><input type="radio" name="q'+i+'" value="'+j+'"> '+String.fromCharCode(65+j)+'. '+x+'</label>');d.innerHTML=h;$("quiz").append(d)});$("quizCard").classList.remove("hidden");$("resultCard").classList.add("hidden");$("deliveryCard").classList.add("hidden");$("submitStatus").textContent=""}
+$("start").onclick=()=>{render(build());$("startStatus").textContent="已建立 15 題數學英文診斷。"};
+$("retry").onclick=()=>{if(!wrong.length){$("startStatus").textContent="目前沒有上一回錯題可重練。";return}render(wrong.map(x=>x.q));$("startStatus").textContent="已載入上一回錯題。"};
+$("submit").onclick=()=>{const missing=current.filter((q,i)=>!document.querySelector('input[name="q'+i+'"]:checked')).length;if(missing){$("submitStatus").textContent="還有 "+missing+" 題未作答。";return}let score=0;const by={};results=current.map((q,i)=>{if(!by[q.t])by[q.t]={c:0,t:0};by[q.t].t++;const selected=Number(document.querySelector('input[name="q'+i+'"]:checked').value),ok=selected===q.a;if(ok){score++;by[q.t].c++}return{q,selected,ok}});wrong=results.filter(x=>!x.ok);const weak=Object.keys(by).sort((a,b)=>(by[a].c/by[a].t)-(by[b].c/by[b].t))[0]||"無明顯弱點";$("score").textContent=score+"/"+current.length;$("accuracy").textContent=Math.round(score/current.length*100)+"%";$("weakType").textContent=weak;$("wrongN").textContent=wrong.length;const plan=score/current.length>=.9?"診斷：數學英文詞彙穩定，可以開始增加完整英文文字題。":score/current.length>=.7?"診斷：基礎不錯，下一步集中補強 "+weak+"，再把詞彙放進題目情境。":"診斷：先把最基本的數學詞彙分類清楚，再做完整英文題目，避免同時卡在語言與計算。";$("priorityPlan").innerHTML="<b>"+plan+"</b>";$("typeSummary").innerHTML='<h3>五類表現</h3>'+Object.entries(by).map(([t,x])=>'<span class="tag">'+t+' '+x.c+'/'+x.t+'</span>').join("");$("review").replaceChildren();results.forEach((r,i)=>{const q=r.q,d=document.createElement("div");d.className="q";d.innerHTML='<h3 class="'+(r.ok?'good':'bad')+'">Q'+(i+1)+' '+(r.ok?'✓ Correct':'✗ Review')+'</h3><p><span class="tag">'+q.t+'</span> <b>'+q.q+'</b></p><p>你的答案：'+q.o[r.selected]+'<br>正確答案：'+q.o[q.a]+'</p><div class="feedback"><b>English explanation</b>\n'+q.en+'\n\n<b>中文詳解</b>\n'+q.zh+'\n\n<b>Math example 數學例子</b>\n'+q.ex+'</div>';$("review").append(d)});$("resultCard").classList.remove("hidden");$("deliveryCard").classList.remove("hidden");save(score,weak);$("resultCard").scrollIntoView({behavior:"smooth"})};
+function snapshot(){const score=results.filter(x=>x.ok).length;return{site:"MA Math Vocabulary Lab",version:"MVP V1",date:new Date().toISOString(),student:$("student").value.trim()||"MA",email:$("email").value.trim(),score,total:current.length,accuracy:current.length?Math.round(score/current.length*100):0,items:results.map((r,i)=>({no:i+1,type:r.q.t,question:r.q.q,chosen:r.q.o[r.selected],answer:r.q.o[r.q.a],correct:r.ok,explanation_en:r.q.en,explanation_zh:r.q.zh,math_example:r.q.ex}))}}
+function save(score,weak){const key="ma-math-vocabulary-history-v1",arr=JSON.parse(localStorage.getItem(key)||"[]");arr.unshift({date:new Date().toISOString(),score,total:current.length,weak});localStorage.setItem(key,JSON.stringify(arr.slice(0,12)));showHistory()}
+function showHistory(){const arr=JSON.parse(localStorage.getItem("ma-math-vocabulary-history-v1")||"[]");$("history").innerHTML=arr.length?arr.map(x=>'<p>'+new Date(x.date).toLocaleString()+'｜'+x.score+'/'+x.total+'｜優先：'+x.weak+'</p>').join(""):"尚無紀錄。"}
+function report(){const d=snapshot();return "MA Math Vocabulary Lab\n學員："+d.student+"\nEmail："+d.email+"\n分數："+d.score+"/"+d.total+"（"+d.accuracy+"%）\n\n"+d.items.map(x=>x.no+". ["+x.type+"] "+x.question+"\n你的答案："+x.chosen+"\n正解："+x.answer+"｜"+(x.correct?"正確":"錯誤")+"\n例子："+x.math_example).join("\n\n")}
+$("download").onclick=()=>{const b=new Blob([JSON.stringify(snapshot(),null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="ma-math-vocabulary-"+new Date().toISOString().slice(0,10)+".json";a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);$("deliveryStatus").textContent="已下載 JSON 備份。"};
+$("print").onclick=()=>window.print();
+$("coach").onclick=()=>{const d=snapshot(),subject="MA Math Vocabulary Lab｜"+d.student+"｜"+d.score+"/"+d.total;window.open("https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su="+encodeURIComponent(subject)+"&body="+encodeURIComponent(report()),"_blank","noopener,noreferrer");$("deliveryStatus").textContent="已嘗試開啟 Gmail 草稿，請確認後手動傳送。"};
+showHistory();
+</script>
+</body></html>
