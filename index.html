@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Gary Learning Hub｜所有學習網站總入口</title>
+<title>Gary Learning Hub｜5大產品入口</title>
 <style>
 :root{--bg:#f6f4ee;--card:#fffdf8;--text:#314247;--muted:#687b80;--line:#dce7e2;--accent:#648f8a;--accent2:#87aaa5;--soft:#eef6f3;--warn:#9a6b3d}
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC",Arial,sans-serif;background:var(--bg);color:var(--text)}
-header{background:linear-gradient(135deg,#5f7f7b,#789d98);color:white;padding:40px 18px}.wrap{max-width:1180px;margin:auto}h1{margin:0 0 10px;font-size:clamp(28px,5vw,44px)}.lead{margin:0;color:#f2f6f4;line-height:1.8}
+header{background:linear-gradient(135deg,#496965,#6f938e);color:white;padding:46px 18px}.wrap{max-width:1180px;margin:auto}h1{margin:0 0 10px;font-size:clamp(28px,5vw,44px)}.lead{margin:0;color:#f2f6f4;line-height:1.8}
 .toolbar{background:rgba(255,253,248,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:4}.controls{display:flex;gap:10px;flex-wrap:wrap;padding:14px 18px}
 input,select,textarea{font:inherit;border:1px solid var(--line);border-radius:12px;padding:12px;background:white}input[type=search]{flex:1;min-width:240px}select{min-width:160px}
 .stats{padding:10px 18px;color:var(--muted);font-size:14px}.dashboard{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}.metric{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}.metric b{display:block;font-size:28px;margin-bottom:4px}.quick{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 20px}.chip{border:1px solid var(--line);background:#fffdf8;border-radius:999px;padding:10px 13px;cursor:pointer;font-weight:700;color:#4f6966}.chip.active{background:var(--accent);color:white;border-color:var(--accent)}main{padding:24px 18px 56px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
@@ -15,19 +15,33 @@ input,select,textarea{font:inherit;border:1px solid var(--line);border-radius:12
 .meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}.tag{font-size:12px;border-radius:999px;padding:6px 9px;background:#e9f3ef;color:#4b6f69}.status{background:#edf6f1;color:#35685e}.status.pending{background:#fff7ed;color:var(--warn)}
 h2{font-size:19px;margin:0 0 8px;line-height:1.35}.desc{color:var(--muted);line-height:1.65;flex:1}.actions{display:flex;gap:9px;margin-top:14px}
 a.btn,button.btn{display:inline-block;text-decoration:none;border:0;border-radius:12px;padding:11px 14px;font-weight:700;cursor:pointer}.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white}.disabled{background:#f3f4f6;color:#9ca3af;cursor:not-allowed}
-.section{margin-top:42px}.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 8px 22px rgba(74,103,100,.05)}.note{color:var(--muted);font-size:14px;line-height:1.7}form{display:grid;gap:10px;max-width:720px}
+.product-gateway{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin:18px 0 26px}.product-card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 10px 26px rgba(74,103,100,.08);display:flex;flex-direction:column}.product-card h2{font-size:24px;margin:0 0 8px}.product-card p{color:var(--muted);line-height:1.65;flex:1}.product-card .actions{flex-wrap:wrap}.product-kicker{font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--accent);margin-bottom:8px}.section{margin-top:42px}.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 8px 22px rgba(74,103,100,.05)}.note{color:var(--muted);font-size:14px;line-height:1.7}form{display:grid;gap:10px;max-width:720px}
 footer{padding:28px 18px 50px;color:var(--muted);text-align:center}@media(max-width:700px){.dashboard{grid-template-columns:1fr}.controls{padding:10px 12px}.controls>*{width:100%;min-width:0}header{padding-top:24px}main{padding:18px 12px 44px}.card{min-height:auto}}
 </style>
 </head>
 <body>
-<header><div class="wrap"><div style="display:inline-block;margin-bottom:10px;padding:6px 10px;border-radius:999px;background:#1f2937;border:1px solid #374151;font-size:12px;">LEARNING HUB</div><h1>Gary Learning Hub</h1><p class="lead"><span id="headerCount">115</span> 個已建立網站／入口（含測試）的唯一入口｜樂齡英語、英檢、文法、學科複習、AI 工具、創意教學與雙語品格教育集中管理。</p></div></header>
+<header><div class="wrap"><div style="display:inline-block;margin-bottom:10px;padding:6px 10px;border-radius:999px;background:#1f2937;border:1px solid #374151;font-size:12px;">PRODUCT HUB</div><h1>Gary Learning Hub</h1><p class="lead">從「100 個網站」進入「5 大產品主線」｜先選目標，再進工具；完整網站目錄保留在第二層。</p></div></header>
 <div class="toolbar"><div class="wrap"><div class="controls"><input id="q" type="search" placeholder="搜尋：樂齡、TOEIC、Jasper、AI…"><select id="cat"><option value="">全部分類</option></select><select id="state"><option value="">全部存取</option><option value="public">一般開啟</option><option value="limited">限定／私人</option></select><select id="sort"><option value="original">建議順序</option><option value="category">依分類</option><option value="name">依名稱</option></select></div><div class="stats wrap" id="stats"></div></div></div>
 <main class="wrap">
-<section class="dashboard"><div class="metric"><b id="siteCount">115</b><span>已建立網站／入口（含測試）</span></div><div class="metric"><b id="categoryCount">14</b><span>主要分類</span></div><div class="metric"><b id="missingUrlCount">0</b><span>待補網址</span></div></section><section class="panel" style="margin-bottom:16px"><h2 style="margin-top:0">從這裡開始</h2><p class="note" style="font-size:16px">先選分類，再進入網站；或直接搜尋人名、考試、科目與工具名稱。這裡是唯一中央入口。已建立數量包含測試版與限定存取網站，不代表全部通過功能驗收。</p><p><a class="btn primary" href="/senior-learning-center/" style="font-size:19px;margin-right:10px;margin-bottom:10px">進入 Gary 樂齡學習總站｜18 個樂齡網站</a><a class="btn primary" href="/roadmap/">查看 Gary 101 Website Master Roadmap（101 項規劃＋延伸工具）</a></p><div id="quick" class="quick"></div></section><div id="grid" class="grid"></div>
+<section class="panel" style="margin-bottom:18px">
+<h2 style="margin-top:0;font-size:26px">先選一條產品主線</h2>
+<p class="note" style="font-size:16px">首頁只保留真正需要做決策的入口。個別練習站、學生案例站與實驗工具仍保留，但降到下方「完整工具目錄」。</p>
+<div class="product-gateway">
+  <article class="product-card"><div class="product-kicker">01｜DIAGNOSE</div><h2>成人英文診斷</h2><p>先找出英文長期卡關的真正原因，再決定 90 天行動與商務／口說訓練。</p><div class="actions"><a class="btn primary" href="/english-stuck-diagnosis/">開始英文卡關診斷</a></div></article>
+  <article class="product-card"><div class="product-kicker">02｜TOEIC</div><h2>TOEIC</h2><p>從弱點診斷、錯題分析到 90-Day Plan、Part 5–7、聽力與模考，集中走同一條提分路徑。</p><div class="actions"><a class="btn primary" href="/tpass-toeic-command-center/">進入 TOEIC 總站</a></div></article>
+  <article class="product-card"><div class="product-kicker">03｜IELTS</div><h2>IELTS</h2><p>閱讀、聽力、寫作、口說與個人錯誤追蹤集中管理，不再從單一練習站開始。</p><div class="actions"><a class="btn primary" href="/ielts-command-center/">進入 IELTS 總站</a></div></article>
+  <article class="product-card"><div class="product-kicker">04｜SENIOR</div><h2>樂齡英文</h2><p>每日 5 字、每日一句、旅遊情境、發音、記憶、12 週護照、AI 陪練與成果發表整合為一條學習路徑。</p><div class="actions"><a class="btn primary" href="/senior-learning-center/">進入樂齡學習總站</a></div></article>
+  <article class="product-card"><div class="product-kicker">05｜TEACHER AI × BIBLE</div><h2>教師 AI／雙語聖經</h2><p>教師端把出題、詳解、錯題、教案、Worksheet、Quiz、Rubric 與 QA 串成工作流；信仰端整合每日經文、品格故事、Vocabulary、Reading 與 101 Reasons。</p><div class="actions"><a class="btn primary" href="/gary-ai-question-generator/">教師 AI 工具</a><a class="btn secondary" href="/bilingual-bible-daily-verse/">雙語聖經</a></div></article>
+</div>
+<p><a class="btn secondary" href="/roadmap/">查看 Master Roadmap</a> <a class="btn secondary" href="https://github.com/godlovesyou127888-hub/gary-learning-hub/blob/main/PRODUCT_GOVERNANCE_V1.md" target="_blank" rel="noopener">查看 100站產品治理表 V1</a></p>
+</section>
+<section class="dashboard"><div class="metric"><b>5</b><span>核心產品入口</span></div><div class="metric"><b>100</b><span>Roadmap 治理項目（#2 未使用）</span></div><div class="metric"><b>4</b><span>治理判定：保留／整併／升級／封存</span></div></section>
+<section class="panel" style="margin-bottom:16px"><h2 style="margin-top:0">完整工具目錄｜第二層</h2><p class="note" style="font-size:16px">只有在你已知道要找哪個工具、學生或練習模組時才使用下方目錄。首頁主決策不再以網站數量為中心。</p><div id="quick" class="quick"></div></section>
+<div id="grid" class="grid"></div>
 <section class="section panel"><h2>中央入口規則</h2><p class="note">① Gary Learning Hub 是唯一總入口。② 新網站只在這裡新增一次。③ 子網站只保留「回 Hub／聯絡站長／核心功能」。④ 舊版網站保留但清楚標示，避免和正式版本混淆。</p></section>
 <section class="section panel" id="contact"><h2>聯絡站長</h2><p class="note">為避免舊版 FormSubmit 產生空白或重複郵件，Gary Learning Hub 首頁已停用外部表單。需要聯絡站長時，請直接使用 Email。</p><p><a class="btn primary" href="https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su=Gary%20Learning%20Hub%20%E8%81%AF%E7%B5%A1%E7%AB%99%E9%95%B7" target="_blank" rel="noopener">開啟 Gmail 聯絡站長</a></p><p class="note">若未登入 Gmail，會先進入 Google 登入頁。也可直接寄到：godlovesyou127888@gmail.com</p></section>
 </main>
-<footer>Gary Learning Hub｜中央網站控制台 V2</footer>
+<footer>Gary Learning Hub｜5大產品入口＋100站治理｜V3</footer>
 <script>
 const sites=[
 {"name":"Gary 國一英語練習站｜第三、四單元 / Grade 7 Units 3 & 4","category":"文法與單字","audience":"國一學員 / Grade 7","desc":"依康軒第三、四單元編寫83題；每回10題選擇＋10題填空、中英詳解、分數與作答紀錄、PDF下載。 / Random practice, bilingual feedback, history and PDF.","url":"https://gary-learning-hub.onrender.com/grade7-units3-4/","status":"測試版"},
@@ -154,12 +168,12 @@ function isLimited(s){return /限定|私人/.test(s.status)}
 function draw(){const keyword=q.value.trim().toLowerCase();let filtered=sites.filter(s=>{const hit=[s.name,s.category,s.audience,s.desc,s.status].join(" ").toLowerCase().includes(keyword);const hitCat=!cat.value||s.category===cat.value;const hitState=!state.value||(state.value==="limited"?isLimited(s):!isLimited(s));return hit&&hitCat&&hitState});
 if(sort.value==="category")filtered.sort((a,b)=>a.category.localeCompare(b.category,"zh-Hant")||a.name.localeCompare(b.name,"zh-Hant"));if(sort.value==="name")filtered.sort((a,b)=>a.name.localeCompare(b.name,"zh-Hant"));
 grid.innerHTML="";filtered.forEach(s=>{const article=document.createElement("article");article.className="card";const limited=isLimited(s);const button=`<a class="btn primary" href="${s.url}" target="_blank" rel="noopener">${limited?"進入限定網站":"進入網站"}</a>`;article.innerHTML=`<div class="meta"><span class="tag">${s.category}</span><span class="tag">${s.audience}</span><span class="tag status">${s.status}</span></div><h2>${s.name}</h2><div class="desc">${s.desc}</div><div class="actions">${button}</div>`;grid.appendChild(article)});
-const limitedCount=sites.filter(isLimited).length;stats.textContent=`${sites.length} 個已建立網站／入口（含測試）｜${categories.length} 個分類｜限定／私人 ${limitedCount} 站｜目前顯示 ${filtered.length} 站｜資料同步：2026-11-03（以 Roadmap 登錄網址為準）`}
+const limitedCount=sites.filter(isLimited).length;stats.textContent=`完整工具目錄 ${sites.length} 個入口（含延伸／測試／案例）｜${categories.length} 個分類｜限定／私人 ${limitedCount} 站｜目前顯示 ${filtered.length} 站｜主產品決策請使用上方 5 大入口`}
 [q,cat,state,sort].forEach(el=>el.addEventListener("input",draw));cat.addEventListener("change",()=>{[...quick.children].forEach(x=>x.classList.toggle("active",(cat.value===""&&x.textContent.startsWith("全部"))||x.textContent.startsWith(cat.value+" ")))});
-headerCount.textContent=sites.length;
-siteCount.textContent=sites.length;
-categoryCount.textContent=categories.length;
-missingUrlCount.textContent=sites.filter(s=>!s.url).length;
+
+
+
+
 
 draw();
 </script>
