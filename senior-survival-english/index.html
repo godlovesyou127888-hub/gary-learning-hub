@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="樂齡旅遊英文 Survival English：機場、飯店、餐廳、交通、購物、求助六大情境，提供大字、中英對照、慢速播放、情境小測與學習紀錄。">
+<title>樂齡旅遊英文 Survival English</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5faf8;color:#254038;font:21px/1.7 system-ui,"Noto Sans TC",sans-serif}header{background:#35695d;color:#fff;padding:24px 16px}.wrap,main{max-width:960px;margin:auto}main{padding:16px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn,button{border:0;border-radius:12px;padding:13px 18px;background:#4b8778;color:white;font:inherit;font-weight:800;text-decoration:none;cursor:pointer}.secondary{background:#e4f0ec!important;color:#35695d!important}.card{background:white;border:1px solid #d9e9e4;border-radius:18px;padding:22px;margin:18px 0}.eyebrow{font-size:14px;font-weight:900;letter-spacing:.08em;color:#6a887f}.scene-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.scene-tabs button{background:#eef6f3;color:#355e55}.scene-tabs button.active{background:#4b8778;color:white}.sentence{font-size:39px;font-weight:900;line-height:1.25;margin:12px 0}.zh{font-size:27px;font-weight:800;color:#516b63}.use{background:#eef7f4;padding:14px;border-radius:12px;margin-top:12px}.phrase{border:2px solid #dcebe6;border-radius:16px;padding:18px;margin:14px 0}.tag{display:inline-block;padding:4px 9px;border-radius:999px;background:#e5f1ed;color:#35695d;font-size:14px;font-weight:900}.hidden{display:none}.quiz label{display:block;border:1px solid #d8e6e1;border-radius:10px;padding:10px;margin:8px 0}.metric{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.metric div{background:#f8fcfa;border:1px solid #dce9e4;border-radius:12px;padding:14px;text-align:center}.metric b{display:block;font-size:28px}.good{color:#047857}.bad{color:#b42318}.muted{font-size:16px;color:#68766f}.history p{padding:8px 0;border-bottom:1px solid #e4ece9}input[type=text],input[type=email]{width:100%;padding:12px;border:1px solid #bdd0ca;border-radius:10px;font:inherit}@media(max-width:700px){body{font-size:20px}.sentence{font-size:34px}.zh{font-size:25px}.scene-tabs{grid-template-columns:1fr 1fr}.metric{grid-template-columns:1fr}.btn,button{width:100%}.card{padding:16px}}@media print{header .actions,.actions,.scene-tabs,button{display:none!important}body{background:white}.card{border:0}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="actions"><a class="btn secondary" href="/">回 Hub</a><a class="btn secondary" href="/roadmap/">回 Roadmap</a><a class="btn" href="https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su=%E6%A8%82%E9%BD%A1%E6%97%85%E9%81%8A%E8%8B%B1%E6%96%87%20Survival%20English%20%E8%81%AF%E7%B5%A1%E7%AB%99%E9%95%B7" target="_blank" rel="noopener">聯絡站長</a></div><h1>樂齡旅遊英文 Survival English</h1><p>出國真的用得到｜一句一句學，先求敢開口，再求說得漂亮。</p></div></header>
+<main>
+<section class="card"><p class="eyebrow">01 · CHOOSE A SCENE</p><h2>選一個旅遊情境</h2><div id="tabs" class="scene-tabs"></div></section>
+
+<section class="card"><p class="eyebrow">02 · LEARN</p><h2 id="sceneTitle"></h2><div id="phrases"></div></section>
+
+<section class="card"><p class="eyebrow">03 · QUICK CHECK</p><h2>情境小測驗</h2><div id="quiz" class="quiz"></div><button id="submit">完成 5 題小測</button><p id="quizStatus"></p></section>
+
+<section id="resultCard" class="card hidden"><p class="eyebrow">04 · RESULT</p><h2>這個情境完成了</h2><div class="metric"><div><b id="score">0/5</b>答對</div><div><b id="accuracy">0%</b>正確率</div><div><b id="count">1</b>累積完成次數</div></div><div id="review"></div></section>
+
+<section id="deliveryCard" class="card hidden"><p class="eyebrow">05 · SAVE & COACH</p><h2>保存成果</h2><label>姓名<input id="student" type="text" value="Gary 樂齡學員"></label><label>Email（選填）<input id="email" type="email"></label><div class="actions" style="margin-top:14px"><button id="download">下載 JSON</button><button id="print" class="secondary">列印／另存 PDF</button><button id="coach">寄給 Gary 教練（Gmail 草稿）</button></div><p class="muted">建議每次只練一個情境，能看懂、能聽懂、能自己說一次就算完成。</p><p id="deliveryStatus"></p></section>
+
+<section class="card"><p class="eyebrow">06 · HISTORY</p><h2>最近完成紀錄</h2><div id="history" class="history">尚無紀錄。</div></section>
+</main>
+<script>
+const scenes=[
+{name:"機場 Airport",items:[
+{s:"Where is the check-in counter?",z:"報到櫃檯在哪裡？",u:"找航空公司櫃檯時。"},
+{s:"Here is my passport.",z:"這是我的護照。",u:"辦理報到或入境時。"},
+{s:"Where is Gate 12?",z:"12 號登機門在哪裡？",u:"找登機門時。"},
+{s:"Is this the line for immigration?",z:"這是入境審查的隊伍嗎？",u:"確認排隊位置時。"},
+{s:"My luggage is missing.",z:"我的行李不見了。",u:"行李沒有出現在轉盤時。"}]},
+{name:"飯店 Hotel",items:[
+{s:"I have a reservation.",z:"我有預約。",u:"飯店報到時。"},
+{s:"May I have the room key?",z:"可以給我房卡嗎？",u:"領取或補發房卡時。"},
+{s:"What time is breakfast?",z:"早餐幾點開始？",u:"詢問早餐時間。"},
+{s:"The air conditioner is not working.",z:"冷氣壞了。",u:"房內設備故障時。"},
+{s:"Could I check out later?",z:"我可以晚一點退房嗎？",u:"詢問延後退房。"}]},
+{name:"餐廳 Restaurant",items:[
+{s:"A table for two, please.",z:"兩位，謝謝。",u:"進餐廳等候帶位時。"},
+{s:"May I see the menu?",z:"可以看菜單嗎？",u:"想點餐時。"},
+{s:"I would like this one.",z:"我想要這一道。",u:"不知道菜名時可指著菜單說。"},
+{s:"No spicy food, please.",z:"請不要辣。",u:"表達飲食需求。"},
+{s:"Could we have the bill, please?",z:"可以買單嗎？",u:"用餐結束結帳時。"}]},
+{name:"交通 Transport",items:[
+{s:"Please take me to this address.",z:"請載我到這個地址。",u:"搭計程車時。"},
+{s:"How much is the fare?",z:"車資多少？",u:"詢問票價或車資。"},
+{s:"Does this bus go downtown?",z:"這班公車有到市中心嗎？",u:"確認公車方向。"},
+{s:"Where should I get off?",z:"我應該在哪一站下車？",u:"不知道下車站時。"},
+{s:"Please stop here.",z:"請在這裡停。",u:"搭計程車想下車時。"}]},
+{name:"購物 Shopping",items:[
+{s:"How much is this?",z:"這個多少錢？",u:"詢問價格。"},
+{s:"Do you have a larger size?",z:"有大一點的尺寸嗎？",u:"試穿衣服時。"},
+{s:"Can I try this on?",z:"我可以試穿嗎？",u:"想試穿衣物時。"},
+{s:"Do you take credit cards?",z:"可以刷卡嗎？",u:"付款前確認支付方式。"},
+{s:"I will take it.",z:"我要買這個。",u:"決定購買時。"}]},
+{name:"求助 Help",items:[
+{s:"Can you help me?",z:"你可以幫我嗎？",u:"任何需要協助的情況。"},
+{s:"I am lost.",z:"我迷路了。",u:"找不到方向時。"},
+{s:"Please speak slowly.",z:"請說慢一點。",u:"英文聽不清楚時。"},
+{s:"Could you say that again?",z:"可以再說一次嗎？",u:"沒聽懂對方時。"},
+{s:"I need a doctor.",z:"我需要醫生。",u:"身體不舒服或緊急時。"}]}
+];
+const $=id=>document.getElementById(id);let sceneIndex=0,current=scenes[0],results=[];
+function speak(text,rate=.62){if(!("speechSynthesis" in window)){alert("此裝置不支援語音播放。");return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="en-US";u.rate=rate;speechSynthesis.speak(u)}
+function renderTabs(){
+ $("tabs").replaceChildren();
+ scenes.forEach((s,i)=>{const b=document.createElement("button");b.textContent=s.name;b.className=i===sceneIndex?"active":"";b.onclick=()=>{sceneIndex=i;render()};$("tabs").append(b)});
+}
+function render(){
+ current=scenes[sceneIndex];results=[];renderTabs();$("sceneTitle").textContent=current.name;$("phrases").replaceChildren();
+ current.items.forEach((x,i)=>{const d=document.createElement("div");d.className="phrase";d.innerHTML='<span class="tag">Phrase '+(i+1)+'</span><div class="sentence">'+x.s+'</div><div class="zh">'+x.z+'</div><div class="use"><b>使用情境</b><br>'+x.u+'</div><div class="actions" style="margin-top:12px"><button data-slow="'+i+'">慢速聽</button><button class="secondary" data-normal="'+i+'">正常速度</button></div>';$("phrases").append(d)});
+ document.querySelectorAll("[data-slow]").forEach(b=>b.onclick=()=>speak(current.items[Number(b.dataset.slow)].s,.55));
+ document.querySelectorAll("[data-normal]").forEach(b=>b.onclick=()=>speak(current.items[Number(b.dataset.normal)].s,.85));
+ buildQuiz();$("resultCard").classList.add("hidden");$("deliveryCard").classList.add("hidden");$("quizStatus").textContent="";
+}
+function buildQuiz(){
+ $("quiz").replaceChildren();
+ current.items.forEach((x,i)=>{const others=current.items.filter((_,j)=>j!==i).map(y=>y.z);const opts=[x.z,...others.slice(0,3)].sort(()=>Math.random()-.5);const d=document.createElement("div");d.innerHTML='<p><b>Q'+(i+1)+'. '+x.s+'</b></p>'+opts.map((o,j)=>'<label><input type="radio" name="q'+i+'" value="'+encodeURIComponent(o)+'"> '+String.fromCharCode(65+j)+'. '+o+'</label>').join("");$("quiz").append(d)});
+}
+$("submit").onclick=()=>{
+ const missing=current.items.filter((x,i)=>!document.querySelector('input[name="q'+i+'"]:checked')).length;if(missing){$("quizStatus").textContent="還有 "+missing+" 題未作答。";return}
+ let score=0;results=current.items.map((x,i)=>{const chosen=decodeURIComponent(document.querySelector('input[name="q'+i+'"]:checked').value),ok=chosen===x.z;if(ok)score++;return{x,chosen,ok}});
+ $("score").textContent=score+"/5";$("accuracy").textContent=(score*20)+"%";
+ const arr=JSON.parse(localStorage.getItem("senior-survival-english-history-v1")||"[]");arr.unshift({date:new Date().toISOString(),scene:current.name,score});localStorage.setItem("senior-survival-english-history-v1",JSON.stringify(arr.slice(0,30)));$("count").textContent=arr.length;
+ $("review").innerHTML=results.map(r=>'<div class="'+(r.ok?'good':'bad')+'"><p><b>'+(r.ok?'✓':'✗')+' '+r.x.s+'</b><br>'+r.x.z+'<br>你的答案：'+r.chosen+'</p></div>').join("");
+ $("resultCard").classList.remove("hidden");$("deliveryCard").classList.remove("hidden");showHistory();$("resultCard").scrollIntoView({behavior:"smooth"});
+};
+function snapshot(){const score=results.filter(x=>x.ok).length;return{site:"樂齡旅遊英文 Survival English",version:"MVP V1",date:new Date().toISOString(),student:$("student").value.trim()||"Gary 樂齡學員",email:$("email").value.trim(),scene:current.name,score,total:5,phrases:current.items,answers:results.map(r=>({sentence:r.x.s,chosen:r.chosen,answer:r.x.z,correct:r.ok}))}}
+function report(){const d=snapshot();return "樂齡旅遊英文 Survival English\n學員："+d.student+"\n情境："+d.scene+"\n分數："+d.score+"/5\n\n重點句：\n"+d.phrases.map((x,i)=>(i+1)+". "+x.s+"｜"+x.z).join("\n")}
+function showHistory(){const arr=JSON.parse(localStorage.getItem("senior-survival-english-history-v1")||"[]");$("history").innerHTML=arr.length?arr.slice(0,12).map(x=>'<p>'+new Date(x.date).toLocaleString()+'｜'+x.scene+'｜'+x.score+'/5</p>').join(""):"尚無紀錄。"}
+$("download").onclick=()=>{const b=new Blob([JSON.stringify(snapshot(),null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="senior-survival-english-"+new Date().toISOString().slice(0,10)+".json";a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);$("deliveryStatus").textContent="已下載學習紀錄。"};
+$("print").onclick=()=>window.print();
+$("coach").onclick=()=>{const d=snapshot(),subject="樂齡旅遊英文｜"+d.student+"｜"+d.scene+"｜"+d.score+"/5";window.open("https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su="+encodeURIComponent(subject)+"&body="+encodeURIComponent(report()),"_blank","noopener,noreferrer");$("deliveryStatus").textContent="已嘗試開啟 Gmail 草稿，請確認後手動傳送。"};
+render();showHistory();
+</script>
+</body></html>
