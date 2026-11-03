@@ -77,6 +77,22 @@ async function init(){
     );
   `);
   await pool.query(`CREATE INDEX IF NOT EXISTS idx_ielts_writing_email_created ON ielts_writing_submissions(student_email, created_at DESC);`);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS conversion_events (
+      event_id UUID PRIMARY KEY,
+      event_type TEXT NOT NULL DEFAULT 'cta_click',
+      product_line TEXT NOT NULL,
+      source_page TEXT NOT NULL,
+      source_label TEXT,
+      destination TEXT,
+      referrer TEXT,
+      session_id TEXT,
+      metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `);
+  await pool.query(`CREATE INDEX IF NOT EXISTS idx_conversion_events_product_created ON conversion_events(product_line, created_at DESC);`);
+  await pool.query(`CREATE INDEX IF NOT EXISTS idx_conversion_events_type_created ON conversion_events(event_type, created_at DESC);`);
 }
 let dbReady=false;
 if(process.env.DATABASE_URL){
@@ -392,6 +408,75 @@ app.patch("/api/ielts-contact-tickets/:id/status", async (req,res)=>{
   `,[status,req.params.id]);
   if(!r.rowCount)return res.status(404).json({ok:false,error:"not_found"});
   res.json({ok:true,...r.rows[0]});
+});
+
+app.post("/api/conversion-events", async (req,res)=>{
+  if(!dbReady)return res.status(503).json({ok:false,error:"database_not_configured"});
+  try{
+    const b=req.body||{};
+    const productLine=String(b.product_line||"").slice(0,80);
+    const sourcePage=String(b.source_page||"").slice(0,500);
+    const eventType=String(b.event_type||"cta_click").slice(0,50);
+    if(!productLine || !sourcePage){
+      return res.status(400).json({ok:false,error:"product_line and source_page are required"});
+    }
+    const eventId=crypto.randomUUID();
+    const metadata=(b.metadata && typeof b.metadata==="object")?b.metadata:{};
+    await pool.query(`
+      INSERT INTO conversion_events
+      (event_id,event_type,product_line,source_page,source_label,destination,referrer,session_id,metadata)
+      VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9::jsonb)
+    `,[
+      eventId,eventType,productLine,sourcePage,
+      b.source_label?String(b.source_label).slice(0,160):null,
+      b.destination?String(b.destination).slice(0,800):null,
+      b.referrer?String(b.referrer).slice(0,800):null,
+      b.session_id?String(b.session_id).slice(0,120):null,
+      JSON.stringify(metadata)
+    ]);
+    res.status(201).json({ok:true,event_id:eventId,stored_at:new Date().toISOString()});
+  }catch(err){
+    console.error("conversion event write failed",err);
+    res.status(500).json({ok:false,error:"conversion_event_write_failed"});
+  }
+});
+
+app.get("/api/conversion-events", async (req,res)=>{
+  if(!dbReady)return res.status(503).json({ok:false,error:"database_not_configured"});
+  if(!process.env.ADMIN_TOKEN || req.headers.authorization!==`Bearer ${process.env.ADMIN_TOKEN}`){
+    return res.status(401).json({ok:false,error:"unauthorized"});
+  }
+  const limit=Math.min(Math.max(Number(req.query.limit)||100,1),500);
+  const product=String(req.query.product_line||"").slice(0,80);
+  const params=[]; let where="";
+  if(product){params.push(product);where="WHERE product_line=$1";}
+  params.push(limit);
+  const r=await pool.query(`
+    SELECT event_id,event_type,product_line,source_page,source_label,destination,referrer,session_id,metadata,created_at
+    FROM conversion_events
+    ${where}
+    ORDER BY created_at DESC
+    LIMIT ${params.length}
+  `,params);
+  res.json({ok:true,items:r.rows});
+});
+
+app.get("/api/conversion-summary", async (req,res)=>{
+  if(!dbReady)return res.status(503).json({ok:false,error:"database_not_configured"});
+  if(!process.env.ADMIN_TOKEN || req.headers.authorization!==`Bearer ${process.env.ADMIN_TOKEN}`){
+    return res.status(401).json({ok:false,error:"unauthorized"});
+  }
+  const days=Math.min(Math.max(Number(req.query.days)||30,1),365);
+  const r=await pool.query(`
+    SELECT product_line,event_type,COUNT(*)::int AS events,
+           COUNT(DISTINCT NULLIF(session_id,''))::int AS sessions,
+           MIN(created_at) AS first_event,MAX(created_at) AS last_event
+    FROM conversion_events
+    WHERE created_at >= NOW() - ($1::text || ' days')::interval
+    GROUP BY product_line,event_type
+    ORDER BY events DESC,product_line
+  `,[days]);
+  res.json({ok:true,days,items:r.rows});
 });
 
 app.get("/api/submissions", async (req,res)=>{
