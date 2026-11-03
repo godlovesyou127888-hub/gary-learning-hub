@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="樂齡餐廳英文：帶位、看菜單、點餐、飲食需求、加點與結帳六大情境，大字中英對照、慢速播放、情境小測與學習紀錄。">
+<title>樂齡餐廳英文</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#fff9f5;color:#3f3027;font:21px/1.7 system-ui,"Noto Sans TC",sans-serif}header{background:#8b5b3f;color:#fff;padding:24px 16px}.wrap,main{max-width:960px;margin:auto}main{padding:16px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn,button{border:0;border-radius:12px;padding:13px 18px;background:#a86f4d;color:#fff;font:inherit;font-weight:800;text-decoration:none;cursor:pointer}.secondary{background:#f2e5dc!important;color:#784d35!important}.card{background:#fff;border:1px solid #ecdcd0;border-radius:18px;padding:22px;margin:18px 0}.eyebrow{font-size:14px;font-weight:900;letter-spacing:.08em;color:#8e7463}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.steps button{background:#f7ede6;color:#7d553e}.steps button.active{background:#a86f4d;color:white}.phrase{border:2px solid #ecddd3;border-radius:16px;padding:18px;margin:14px 0}.sentence{font-size:38px;font-weight:900;line-height:1.25;margin:12px 0}.zh{font-size:27px;font-weight:800;color:#6f5849}.use{background:#fbf1ea;padding:14px;border-radius:12px}.flow{padding:12px;border-left:5px solid #b27d5d;background:#fbf2ec;border-radius:10px}.quiz label{display:block;border:1px solid #e7d9cf;border-radius:10px;padding:10px;margin:8px 0}.hidden{display:none}.metric{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.metric div{background:#fdf9f6;border:1px solid #eadfd7;border-radius:12px;padding:14px;text-align:center}.metric b{display:block;font-size:28px}.good{color:#047857}.bad{color:#b42318}.muted{font-size:16px;color:#756b64}.history p{padding:8px 0;border-bottom:1px solid #eee4dd}input[type=text],input[type=email]{width:100%;padding:12px;border:1px solid #d3c0b4;border-radius:10px;font:inherit}@media(max-width:700px){body{font-size:20px}.sentence{font-size:34px}.zh{font-size:25px}.steps{grid-template-columns:1fr 1fr}.metric{grid-template-columns:1fr}.btn,button{width:100%}.card{padding:16px}}@media print{header .actions,.actions,.steps,button{display:none!important}body{background:white}.card{border:0}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="actions"><a class="btn secondary" href="/">回 Hub</a><a class="btn secondary" href="/roadmap/">回 Roadmap</a><a class="btn" href="https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su=%E6%A8%82%E9%BD%A1%E9%A4%90%E5%BB%B3%E8%8B%B1%E6%96%87%20%E8%81%AF%E7%B5%A1%E7%AB%99%E9%95%B7" target="_blank" rel="noopener">聯絡站長</a></div><h1>樂齡餐廳英文</h1><p>從入座到結帳｜跟著流程學，出國點餐不慌張。</p></div></header>
+<main>
+<section class="card"><p class="eyebrow">01 · RESTAURANT FLOW</p><h2>六大餐廳情境</h2><div id="steps" class="steps"></div></section>
+
+<section class="card"><p class="eyebrow">02 · LEARN</p><h2 id="stepTitle"></h2><div id="flowNote" class="flow"></div><div id="phrases"></div></section>
+
+<section class="card"><p class="eyebrow">03 · QUICK CHECK</p><h2>本情境小測</h2><div id="quiz" class="quiz"></div><button id="submit">完成 4 題小測</button><p id="quizStatus"></p></section>
+
+<section id="resultCard" class="card hidden"><p class="eyebrow">04 · RESULT</p><h2>本情境完成</h2><div class="metric"><div><b id="score">0/4</b>答對</div><div><b id="accuracy">0%</b>正確率</div><div><b id="count">1</b>累積完成次數</div></div><div id="review"></div></section>
+
+<section id="deliveryCard" class="card hidden"><p class="eyebrow">05 · SAVE & COACH</p><h2>保存成果</h2><label>姓名<input id="student" type="text" value="Gary 樂齡學員"></label><label>Email（選填）<input id="email" type="email"></label><div class="actions" style="margin-top:14px"><button id="download">下載 JSON</button><button id="print" class="secondary">列印／另存 PDF</button><button id="coach">寄給 Gary 教練（Gmail 草稿）</button></div><p class="muted">建議每次只練一個餐廳情境，能自己說出關鍵句再進下一段。</p><p id="deliveryStatus"></p></section>
+
+<section class="card"><p class="eyebrow">06 · HISTORY</p><h2>最近完成紀錄</h2><div id="history" class="history">尚無紀錄。</div></section>
+</main>
+<script>
+const stages=[
+{name:"1 帶位 Seating",note:"先說人數，再等服務人員安排座位。",items:[
+{s:"A table for two, please.",z:"兩位，謝謝。",u:"進餐廳等候帶位。"},
+{s:"We have a reservation.",z:"我們有預約。",u:"有訂位時。"},
+{s:"Could we sit by the window?",z:"我們可以坐窗邊嗎？",u:"想指定座位。"},
+{s:"How long is the wait?",z:"要等多久？",u:"需要候位時。"}]},
+{name:"2 菜單 Menu",note:"先看菜單，不確定可以直接問推薦。",items:[
+{s:"May I see the menu?",z:"可以看菜單嗎？",u:"想看菜單。"},
+{s:"What do you recommend?",z:"你推薦什麼？",u:"不知道吃什麼時。"},
+{s:"What is today's special?",z:"今天的特餐是什麼？",u:"詢問今日特餐。"},
+{s:"What is this dish?",z:"這道菜是什麼？",u:"看不懂菜名時。"}]},
+{name:"3 點餐 Ordering",note:"用 I would like… 是最穩定、安全的點餐句型。",items:[
+{s:"I would like this one.",z:"我想要這一道。",u:"指著菜單點餐。"},
+{s:"I would like the chicken, please.",z:"我想要雞肉餐，謝謝。",u:"直接點主餐。"},
+{s:"Could I have some water?",z:"可以給我一些水嗎？",u:"點飲料或水。"},
+{s:"That's all, thank you.",z:"就這些，謝謝。",u:"完成點餐。"}]},
+{name:"4 飲食需求 Dietary Needs",note:"有忌口或過敏時，務必先說清楚。",items:[
+{s:"No spicy food, please.",z:"請不要辣。",u:"不吃辣時。"},
+{s:"I am allergic to peanuts.",z:"我對花生過敏。",u:"有食物過敏。"},
+{s:"No sugar, please.",z:"請不要加糖。",u:"需要無糖。"},
+{s:"Is this vegetarian?",z:"這是素食嗎？",u:"確認素食餐點。"}]},
+{name:"5 加點與問題 More / Problems",note:"想加點或餐點有問題時，簡單直接說明。",items:[
+{s:"Could we have another one?",z:"可以再來一份嗎？",u:"想加點。"},
+{s:"Could I have another fork?",z:"可以再給我一支叉子嗎？",u:"需要餐具。"},
+{s:"This is not what I ordered.",z:"這不是我點的。",u:"送錯餐點。"},
+{s:"Could you warm this up?",z:"可以幫我加熱嗎？",u:"餐點太冷。"}]},
+{name:"6 結帳 Bill",note:"用餐結束後詢問帳單與付款方式。",items:[
+{s:"Could we have the bill, please?",z:"可以買單嗎？",u:"準備結帳。"},
+{s:"Can I pay by credit card?",z:"可以刷卡嗎？",u:"確認付款方式。"},
+{s:"Is service included?",z:"有包含服務費嗎？",u:"確認服務費。"},
+{s:"Could we split the bill?",z:"可以分開結帳嗎？",u:"多人分帳。"}]}
+];
+const $=id=>document.getElementById(id);let stageIndex=0,current=stages[0],results=[];
+function speak(text,rate=.62){if(!("speechSynthesis" in window)){alert("此裝置不支援語音播放。");return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="en-US";u.rate=rate;speechSynthesis.speak(u)}
+function renderSteps(){ $("steps").replaceChildren(); stages.forEach((s,i)=>{const b=document.createElement("button");b.textContent=s.name;b.className=i===stageIndex?"active":"";b.onclick=()=>{stageIndex=i;render()};$("steps").append(b)});}
+function render(){
+ current=stages[stageIndex];results=[];renderSteps();$("stepTitle").textContent=current.name;$("flowNote").textContent=current.note;$("phrases").replaceChildren();
+ current.items.forEach((x,i)=>{const d=document.createElement("div");d.className="phrase";d.innerHTML='<div class="sentence">'+x.s+'</div><div class="zh">'+x.z+'</div><div class="use"><b>使用時機</b><br>'+x.u+'</div><div class="actions" style="margin-top:12px"><button data-slow="'+i+'">慢速聽</button><button class="secondary" data-normal="'+i+'">正常速度</button></div>';$("phrases").append(d)});
+ document.querySelectorAll("[data-slow]").forEach(b=>b.onclick=()=>speak(current.items[Number(b.dataset.slow)].s,.55));
+ document.querySelectorAll("[data-normal]").forEach(b=>b.onclick=()=>speak(current.items[Number(b.dataset.normal)].s,.85));
+ buildQuiz();$("resultCard").classList.add("hidden");$("deliveryCard").classList.add("hidden");$("quizStatus").textContent="";
+}
+function buildQuiz(){
+ $("quiz").replaceChildren();
+ current.items.forEach((x,i)=>{const others=current.items.filter((_,j)=>j!==i).map(y=>y.z);const opts=[x.z,...others].sort(()=>Math.random()-.5);const d=document.createElement("div");d.innerHTML='<p><b>Q'+(i+1)+'. '+x.s+'</b></p>'+opts.map((o,j)=>'<label><input type="radio" name="q'+i+'" value="'+encodeURIComponent(o)+'"> '+String.fromCharCode(65+j)+'. '+o+'</label>').join("");$("quiz").append(d)});
+}
+$("submit").onclick=()=>{
+ const missing=current.items.filter((x,i)=>!document.querySelector('input[name="q'+i+'"]:checked')).length;if(missing){$("quizStatus").textContent="還有 "+missing+" 題未作答。";return}
+ let score=0;results=current.items.map((x,i)=>{const chosen=decodeURIComponent(document.querySelector('input[name="q'+i+'"]:checked').value),ok=chosen===x.z;if(ok)score++;return{x,chosen,ok}});
+ $("score").textContent=score+"/4";$("accuracy").textContent=(score*25)+"%";
+ const arr=JSON.parse(localStorage.getItem("senior-restaurant-english-history-v1")||"[]");arr.unshift({date:new Date().toISOString(),stage:current.name,score});localStorage.setItem("senior-restaurant-english-history-v1",JSON.stringify(arr.slice(0,30)));$("count").textContent=arr.length;
+ $("review").innerHTML=results.map(r=>'<p class="'+(r.ok?'good':'bad')+'"><b>'+(r.ok?'✓':'✗')+' '+r.x.s+'</b><br>'+r.x.z+'<br>你的答案：'+r.chosen+'</p>').join("");
+ $("resultCard").classList.remove("hidden");$("deliveryCard").classList.remove("hidden");showHistory();$("resultCard").scrollIntoView({behavior:"smooth"});
+};
+function snapshot(){const score=results.filter(x=>x.ok).length;return{site:"樂齡餐廳英文",version:"MVP V1",date:new Date().toISOString(),student:$("student").value.trim()||"Gary 樂齡學員",email:$("email").value.trim(),stage:current.name,score,total:4,phrases:current.items,answers:results.map(r=>({sentence:r.x.s,chosen:r.chosen,answer:r.x.z,correct:r.ok}))}}
+function report(){const d=snapshot();return "樂齡餐廳英文\n學員："+d.student+"\n情境："+d.stage+"\n分數："+d.score+"/4\n\n重點句：\n"+d.phrases.map((x,i)=>(i+1)+". "+x.s+"｜"+x.z).join("\n")}
+function showHistory(){const arr=JSON.parse(localStorage.getItem("senior-restaurant-english-history-v1")||"[]");$("history").innerHTML=arr.length?arr.slice(0,12).map(x=>'<p>'+new Date(x.date).toLocaleString()+'｜'+x.stage+'｜'+x.score+'/4</p>').join(""):"尚無紀錄。"}
+$("download").onclick=()=>{const b=new Blob([JSON.stringify(snapshot(),null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="senior-restaurant-english-"+new Date().toISOString().slice(0,10)+".json";a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);$("deliveryStatus").textContent="已下載學習紀錄。"};
+$("print").onclick=()=>window.print();
+$("coach").onclick=()=>{const d=snapshot(),subject="樂齡餐廳英文｜"+d.student+"｜"+d.stage+"｜"+d.score+"/4";window.open("https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su="+encodeURIComponent(subject)+"&body="+encodeURIComponent(report()),"_blank","noopener,noreferrer");$("deliveryStatus").textContent="已嘗試開啟 Gmail 草稿，請確認後手動傳送。"};
+render();showHistory();
+</script>
+</body></html>
