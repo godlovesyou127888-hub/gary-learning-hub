@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="樂樂 2500 單字診斷站：以分層抽題估計核心 2500 字掌握度，輸出程度區間、錯詞清單、優先複習與 Gary 教練交付。">
+<title>樂樂 2500 單字診斷站</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f7fbf5;color:#263a2d;font:18px/1.65 system-ui,"Noto Sans TC",sans-serif}header{background:#355f3d;color:#fff;padding:22px 16px}.wrap,main{max-width:980px;margin:auto}main{padding:16px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn,button{border:0;border-radius:10px;padding:11px 15px;background:#4d7b56;color:white;font:inherit;font-weight:800;text-decoration:none;cursor:pointer}.secondary{background:#e7f1e5!important;color:#355f3d!important}.card{background:#fff;border:1px solid #dce9da;border-radius:16px;padding:20px;margin:16px 0}.eyebrow{font-size:13px;font-weight:900;letter-spacing:.08em;color:#6d876f}.hidden{display:none}.metric{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric div{background:#f7fbf5;border:1px solid #dce9da;border-radius:12px;padding:14px;text-align:center}.metric b{display:block;font-size:25px}.q{padding:16px 0;border-top:1px solid #e6eee4}.q:first-child{border-top:0}.q label{display:block;padding:8px 10px;border:1px solid #dce8da;border-radius:9px;margin:7px 0;font-weight:400}.q input{width:auto;margin-right:8px}.tag{display:inline-block;padding:4px 8px;border-radius:999px;background:#e8f1e6;color:#355f3d;font-size:13px;font-weight:800;margin:2px}.feedback{white-space:pre-line;background:#eef6ec;padding:12px;border-radius:9px;margin-top:10px}.good{color:#047857}.bad{color:#b42318}input[type=text],input[type=email]{width:100%;padding:10px;border:1px solid #b8cbb6;border-radius:9px;font:inherit}.muted{color:#68796b;font-size:14px}.barbox{height:18px;background:#edf3eb;border-radius:999px;overflow:hidden}.bar{height:100%;background:#5f8e67;width:0}.wordlist{display:flex;flex-wrap:wrap;gap:8px}.wordchip{padding:6px 9px;border-radius:999px;background:#f3eee7;color:#694f37;font-weight:700}@media(max-width:700px){.metric{grid-template-columns:1fr 1fr}.card{padding:14px}.btn,button{width:100%}}@media print{header .actions,.actions,button{display:none!important}body{background:white}.card{border:0}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="actions"><a class="btn secondary" href="/">回 Hub</a><a class="btn secondary" href="/roadmap/">回 Roadmap</a><a class="btn" href="https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su=%E6%A8%82%E6%A8%82%202500%20%E5%96%AE%E5%AD%97%E8%A8%BA%E6%96%B7%E7%AB%99%20%E8%81%AF%E7%B5%A1%E7%AB%99%E9%95%B7" target="_blank" rel="noopener">聯絡站長</a></div><h1>樂樂 2500 單字診斷站</h1><p>不是背完 2500 字才測，而是先用分層抽題找出目前大約掌握到哪裡。</p></div></header>
+<main>
+<section class="card"><p class="eyebrow">01 · DIAGNOSE</p><h2>30 題分層單字診斷</h2><p>題目分成 Level 1–5，每層抽 6 題。完成後依各層表現估算目前字彙掌握區間，並列出錯詞與優先複習層級。</p><div class="actions"><button id="start">開始 30 題診斷</button><button id="retry" class="secondary">只重練錯詞</button></div><p id="startStatus">按「開始 30 題診斷」。</p></section>
+
+<section id="quizCard" class="card hidden"><p class="eyebrow">02 · TEST</p><h2>Vocabulary Diagnostic</h2><div id="quiz"></div><button id="submit">交卷並查看程度</button><p id="submitStatus"></p></section>
+
+<section id="resultCard" class="card hidden"><p class="eyebrow">03 · RESULT</p><h2>本次字彙程度估計</h2>
+<div class="metric"><div><b id="score">0/30</b>分數</div><div><b id="accuracy">0%</b>正確率</div><div><b id="estimate">—</b>估計掌握</div><div><b id="priority">—</b>優先複習</div></div>
+<div class="barbox"><div class="bar" id="bar"></div></div><p id="diagnosis"></p><div id="levelSummary"></div><h3>錯詞清單</h3><div id="wrongWords" class="wordlist"></div><div id="review"></div></section>
+
+<section id="deliveryCard" class="card hidden"><p class="eyebrow">04 · SAVE & COACH</p><h2>保存／交付</h2><label>姓名<input id="student" type="text" value="樂樂"></label><label>Email（選填）<input id="email" type="email"></label><div class="actions" style="margin-top:14px"><button id="download">下載 JSON</button><button id="print" class="secondary">列印／另存 PDF</button><button id="coach">寄給 Gary 教練（Gmail 草稿）</button></div><p class="muted">這是抽樣診斷，不等於完整 2500 字逐字測驗；結果用來決定下一階段複習範圍。</p><p id="deliveryStatus"></p></section>
+
+<section class="card"><p class="eyebrow">05 · HISTORY</p><h2>最近診斷紀錄</h2><div id="history">尚無紀錄。</div></section>
+</main>
+<script>
+const levels={
+1:[
+["always","總是"],["before","在…之前"],["because","因為"],["family","家庭"],["different","不同的"],["usually","通常"],["sometimes","有時候"],["important","重要的"],["favorite","最喜歡的"],["together","一起"]
+],
+2:[
+["borrow","借入"],["choose","選擇"],["decide","決定"],["enough","足夠的"],["future","未來"],["message","訊息"],["practice","練習"],["problem","問題"],["remember","記得"],["special","特別的"]
+],
+3:[
+["achieve","達成"],["compare","比較"],["consider","考慮"],["develop","發展"],["improve","改善"],["include","包含"],["method","方法"],["prepare","準備"],["require","需要"],["specific","具體的"]
+],
+4:[
+["advantage","優點"],["available","可取得的"],["challenge","挑戰"],["environment","環境"],["experience","經驗"],["influence","影響"],["opportunity","機會"],["population","人口"],["responsible","負責任的"],["solution","解決方法"]
+],
+5:[
+["accurate","精確的"],["consequence","結果／後果"],["efficient","有效率的"],["evidence","證據"],["maintain","維持"],["predict","預測"],["process","過程"],["resource","資源"],["strategy","策略"],["significant","顯著的"]
+]
+};
+const $=id=>document.getElementById(id);let current=[],results=[],wrong=[];
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function distract(correct){const all=Object.values(levels).flat().map(x=>x[1]).filter(x=>x!==correct);return shuffle(all).slice(0,3)}
+function build(){return Object.entries(levels).flatMap(([lv,arr])=>shuffle(arr).slice(0,6).map(x=>({lv:Number(lv),w:x[0],m:x[1]})))}
+function render(items){current=items;results=[];$("quiz").replaceChildren();items.forEach((q,i)=>{const opts=shuffle([q.m,...distract(q.m)]),d=document.createElement("div");d.className="q";let h='<span class="tag">Level '+q.lv+'</span><p><b>Q'+(i+1)+'. '+q.w+'</b></p>';opts.forEach((x,j)=>h+='<label><input type="radio" name="q'+i+'" value="'+encodeURIComponent(x)+'"> '+String.fromCharCode(65+j)+'. '+x+'</label>');d.innerHTML=h;$("quiz").append(d)});$("quizCard").classList.remove("hidden");$("resultCard").classList.add("hidden");$("deliveryCard").classList.add("hidden");$("submitStatus").textContent=""}
+$("start").onclick=()=>{render(build());$("startStatus").textContent="已建立 30 題分層診斷。"};
+$("retry").onclick=()=>{if(!wrong.length){$("startStatus").textContent="目前沒有錯詞可重練。請先完成一回。";return}render(wrong.map(x=>x.q));$("startStatus").textContent="已載入上一回錯詞。"};
+$("submit").onclick=()=>{const missing=current.filter((q,i)=>!document.querySelector('input[name="q'+i+'"]:checked')).length;if(missing){$("submitStatus").textContent="還有 "+missing+" 題未作答。";return}let score=0;const by={};results=current.map((q,i)=>{const chosen=decodeURIComponent(document.querySelector('input[name="q'+i+'"]:checked').value),ok=chosen===q.m;if(ok)score++;if(!by[q.lv])by[q.lv]={c:0,t:0};by[q.lv].t++;if(ok)by[q.lv].c++;return{q,chosen,ok}});wrong=results.filter(x=>!x.ok);
+let stable=0;for(let lv=1;lv<=5;lv++){const x=by[lv];if(x&&x.c/x.t>=.67)stable=lv;else break}
+const estimate=[0,500,1000,1500,2000,2500][stable];
+const priorityLv=Math.min(stable+1,5);
+$("score").textContent=score+"/"+current.length;$("accuracy").textContent=Math.round(score/current.length*100)+"%";$("estimate").textContent=estimate+" 字";$("priority").textContent="Level "+priorityLv;$("bar").style.width=(estimate/2500*100)+"%";
+$("diagnosis").textContent=estimate>=2000?"診斷：核心字彙基礎已相對穩定，可把重點轉向不熟詞與閱讀情境。":estimate>=1000?"診斷：已有中段基礎，下一步不要平均背 2500 字，先集中補 Level "+priorityLv+"。":"診斷：目前應先穩定高頻基礎字，再逐層往上，不適合一次大量擴充。";
+$("levelSummary").innerHTML='<h3>分層表現</h3>'+Object.entries(by).map(([lv,x])=>'<span class="tag">Level '+lv+' '+x.c+'/'+x.t+'</span>').join("");
+$("wrongWords").innerHTML=wrong.length?wrong.map(x=>'<span class="wordchip">'+x.q.w+'｜'+x.q.m+'</span>').join(""):"<p>本回沒有錯詞。</p>";
+$("review").replaceChildren();results.forEach((r,i)=>{const d=document.createElement("div");d.className="q";d.innerHTML='<h3 class="'+(r.ok?'good':'bad')+'">Q'+(i+1)+' '+(r.ok?'✓ Correct':'✗ Review')+'</h3><p><span class="tag">Level '+r.q.lv+'</span> <b>'+r.q.w+'</b></p><p>你的答案：'+r.chosen+'<br>正確答案：'+r.q.m+'</p><div class="feedback"><b>Learning note</b>\n'+r.q.w+' = '+r.q.m+'\n\n<b>中文策略</b>\n錯詞先放入個人錯詞清單，24–48 小時後再測一次，不要只重看答案。</div>';$("review").append(d)});
+$("resultCard").classList.remove("hidden");$("deliveryCard").classList.remove("hidden");save(score,estimate,priorityLv);$("resultCard").scrollIntoView({behavior:"smooth"})};
+function snapshot(){const score=results.filter(x=>x.ok).length;const by={};results.forEach(r=>{if(!by[r.q.lv])by[r.q.lv]={correct:0,total:0};by[r.q.lv].total++;if(r.ok)by[r.q.lv].correct++});let stable=0;for(let lv=1;lv<=5;lv++){const x=by[lv];if(x&&x.correct/x.total>=.67)stable=lv;else break}const estimate=[0,500,1000,1500,2000,2500][stable];return{site:"樂樂 2500 單字診斷站",version:"MVP V1",date:new Date().toISOString(),student:$("student").value.trim()||"樂樂",email:$("email").value.trim(),score,total:current.length,accuracy:current.length?Math.round(score/current.length*100):0,estimated_vocabulary:estimate,levels:by,wrong_words:results.filter(x=>!x.ok).map(x=>({level:x.q.lv,word:x.q.w,meaning:x.q.m,chosen:x.chosen}))}}
+function save(score,estimate,priorityLv){const key="lele-2500-history-v1",arr=JSON.parse(localStorage.getItem(key)||"[]");arr.unshift({date:new Date().toISOString(),score,total:current.length,estimate,priorityLv});localStorage.setItem(key,JSON.stringify(arr.slice(0,12)));showHistory()}
+function showHistory(){const arr=JSON.parse(localStorage.getItem("lele-2500-history-v1")||"[]");$("history").innerHTML=arr.length?arr.map(x=>'<p>'+new Date(x.date).toLocaleString()+'｜'+x.score+'/'+x.total+'｜估計 '+x.estimate+' 字｜優先 Level '+x.priorityLv+'</p>').join(""):"尚無紀錄。"}
+function report(){const d=snapshot();return "樂樂 2500 單字診斷站\n學員："+d.student+"\nEmail："+d.email+"\n分數："+d.score+"/"+d.total+"（"+d.accuracy+"%）\n估計掌握："+d.estimated_vocabulary+" 字\n\n錯詞：\n"+(d.wrong_words.length?d.wrong_words.map(x=>"Level "+x.level+"｜"+x.word+"｜"+x.meaning).join("\n"):"無")}
+$("download").onclick=()=>{const b=new Blob([JSON.stringify(snapshot(),null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="lele-2500-diagnostic-"+new Date().toISOString().slice(0,10)+".json";a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);$("deliveryStatus").textContent="已下載 JSON 備份。"};
+$("print").onclick=()=>window.print();
+$("coach").onclick=()=>{const d=snapshot(),subject="樂樂 2500 單字診斷｜"+d.student+"｜估計 "+d.estimated_vocabulary+" 字";window.open("https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su="+encodeURIComponent(subject)+"&body="+encodeURIComponent(report()),"_blank","noopener,noreferrer");$("deliveryStatus").textContent="已嘗試開啟 Gmail 草稿，請確認後手動傳送。"};
+showHistory();
+</script>
+</body></html>
