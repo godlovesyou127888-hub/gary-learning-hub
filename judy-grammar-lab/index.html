@@ -25,10 +25,377 @@ const $=id=>document.getElementById(id);let current=[],results=[],lastWrong=[];
 function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
 function pool(){const u=$("unit").value;return u==="Mixed"?bank:bank.filter(x=>x.unit===u)}
 function startQuiz(custom=null){let p=custom||pool();const n=custom?p.length:Math.min(+$("count").value,p.length);current=custom?p.slice(0,n):($("order").value==="random"?shuffle(p).slice(0,n):p.slice(0,n));results=[];$("quiz").innerHTML=current.map((x,i)=>'<div class="q"><div class="meta"><span class="tag '+x.unit.toLowerCase()+'">'+x.unit+'</span><span class="tag">'+x.lesson+'</span><span class="tag">'+x.type+'</span></div><h3>Q'+(i+1)+'. '+x.q+'</h3>'+x.o.map((o,j)=>'<label><input type="radio" name="q'+i+'" value="'+j+'"> '+String.fromCharCode(65+j)+'. '+o+'</label>').join("")+'</div>').join("");$("quizTitle").textContent=(custom?"錯題重練":"Grammar Diagnosis")+"｜"+current.length+" 題";$("quizCard").classList.remove("hidden");$("resultCard").classList.add("hidden");$("deliveryCard").classList.add("hidden");$("quizCard").scrollIntoView({behavior:"smooth"})}
+
+function translateQuestion(x){
+  const map={
+    "if/whether 名詞子句":"whether／if 名詞子句",
+    "wh-名詞子句":"wh-疑問詞引導的名詞子句",
+    "間接問句":"間接問句",
+    "分詞構句":"分詞構句",
+    "花費句型":"花費句型",
+    "虛主詞 it":"虛主詞 it",
+    "比較級修飾":"比較級修飾",
+    "使役動詞":"使役動詞",
+    "so that 目的子句":"so that 目的子句",
+    "不定詞表目的":"不定詞表目的",
+    "動名詞當主詞":"動名詞當主詞",
+    "片語":"片語／慣用語"
+  };
+  return map[x.type]||x.type;
+}
+function detailNotes(x){
+  const q=x.q;
+  const notes={translation:"",vocab:[],phrases:[],grammar:"",pattern:"",steps:[],traps:[]};
+
+  // Source-grounded, question-specific teaching notes.
+  if(q.includes("thinking about")&&q.includes("basketball team")){
+    notes.translation="Mark 正在考慮他是否應該加入學校籃球隊。";
+    notes.vocab=[["think about","考慮"],["join","加入"],["school basketball team","學校籃球隊"]];
+    notes.phrases=[["think about + N/V-ing/wh-clause","考慮某事／做某事／某個問題"]];
+    notes.grammar="介系詞 about 後面若接「是否……」的名詞子句，使用 whether；正式文法中介系詞後通常不用 if。";
+    notes.pattern="S + be thinking about + whether + S + should + V";
+    notes.steps=["先看到 about，判斷後面是介系詞受詞。","再看句意是『是否』，鎖定 if/whether。","介系詞後選 whether。"];
+    notes.traps=["that：表示『那件事』，不能表『是否』。","if：一般可表『是否』，但此題前有介系詞 about。","what：表示『什麼』，語意不合。"];
+  } else if(q.includes("earth to be flat")){
+    notes.translation="當時許多人相信地球是平的，因此害怕自己會從世界邊緣掉下去。";
+    notes.vocab=[["flat","平的"],["be afraid that","害怕……"],["fall off","從……掉下"],["edge","邊緣"]];
+    notes.phrases=[["believe A to be B","相信 A 是 B"],["fall off the edge","從邊緣掉下"]];
+    notes.grammar="分詞構句若主句主詞 many people 主動執行 believe，就使用現在分詞 Believing。";
+    notes.pattern="V-ing ..., S + V";
+    notes.steps=["找主句主詞 many people。","判斷 many people 是主動 believe。","主動用 V-ing → Believing。"];
+    notes.traps=["Believed：過去分詞表示被動，不合語意。","They believed：會變成完整子句，與後面的主句形成逗號拼接。"];
+  } else if(q.includes("break up with David")){
+    notes.translation="Cathy 正在考慮她是否應該和 David 分手。";
+    notes.vocab=[["break up with","和……分手"],["think about","考慮"]];
+    notes.phrases=[["break up with + 人","和某人分手"]];
+    notes.grammar="about 是介系詞；介系詞後接 whether 名詞子句表示『是否』。";
+    notes.pattern="S + be thinking about + whether + S + should + V";
+    notes.steps=["先辨識 about。","判斷語意是『是否』。","介系詞後使用 whether。"];
+    notes.traps=["that：不表『是否』。","what/who：疑問意義不合。"];
+  } else if(q.includes("Emma asked her teacher")){
+    notes.translation="因為不知道該怎麼做，Emma 向老師求助。";
+    notes.vocab=[["ask ... for help","向……求助"],["what to do","該做什麼"]];
+    notes.phrases=[["ask + 人 + for help","向某人求助"],["what to do","該做什麼"]];
+    notes.grammar="否定分詞構句用 Not + V-ing。Emma 主動『不知道』，所以是 Not knowing。";
+    notes.pattern="Not + V-ing ..., S + V";
+    notes.steps=["主句主詞 Emma。","Emma 主動 know / not know。","主動分詞用 knowing；否定加 Not。"];
+    notes.traps=["Not known：表示『不被知道』，被動錯誤。","Not to know：不定詞不符合此分詞構句。"];
+  } else if(q.includes("all the guests will arrive")){
+    notes.translation="我不確定所有賓客是否都會準時抵達。";
+    notes.vocab=[["guest","賓客"],["arrive on time","準時抵達"],["be sure","確定"]];
+    notes.phrases=[["be not sure if/whether","不確定是否……"]];
+    notes.grammar="not sure 後可接 if / whether 名詞子句，表示『是否』。此題選項只有 if。";
+    notes.pattern="S + be not sure + if/whether + S + V";
+    notes.steps=["看到 not sure。","判斷後面是『是否會準時到』。","選 if。"];
+    notes.traps=["what：表示『什麼』。","of/about：後面不能直接接完整子句 all the guests will arrive。"];
+  } else if(q.includes("New Year’s Eve dinner took Miranda")){
+    notes.translation="準備除夕晚餐花了 Miranda 三天。";
+    notes.vocab=[["New Year’s Eve dinner","除夕晚餐"],["prepare","準備"]];
+    notes.phrases=[["take + 人 + 時間 + to V","做某事花某人多少時間"]];
+    notes.grammar="take 表花費時使用 It/事情 + take + 人 + 時間 + to V。";
+    notes.pattern="Thing + take + person + time + to V";
+    notes.steps=["看到 took + Miranda + three days。","後面要接 to V 表示花時間去做的動作。","所以選 to prepare。"];
+    notes.traps=["prepare：少了 to。","prepared/prepares：時態形式不符合花費句型。"];
+  } else if(q.includes("finish my homework by 10 p.m.")){
+    notes.translation="我不確定自己能不能在晚上十點前完成作業。";
+    notes.vocab=[["finish","完成"],["by 10 p.m.","在晚上十點之前"]];
+    notes.phrases=[["be not sure if/whether","不確定是否……"]];
+    notes.grammar="if / whether 可引導 yes-no 名詞子句。";
+    notes.pattern="S + be not sure + if + S + can + V";
+    notes.steps=["not sure → 後面可能接是否子句。","I can finish 是完整主詞＋動詞。","選 if。"];
+    notes.traps=["which/what：不是『是否』。","about：後面不能直接接 I can finish。"];
+  } else if(q.includes("long line at the bakery")){
+    notes.translation="看到麵包店排著長隊時，Jason 放棄了買鳳梨酥的念頭。";
+    notes.vocab=[["a long line","長隊伍"],["bakery","麵包店"],["give up","放棄"],["pineapple cakes","鳳梨酥"]];
+    notes.phrases=[["give up + N/V-ing","放棄某事／做某事"],["idea of + V-ing","做某事的想法"]];
+    notes.grammar="Jason 主動看到隊伍，因此 when 子句簡化為 When seeing...。";
+    notes.pattern="When + V-ing ..., S + V";
+    notes.steps=["找主句主詞 Jason。","Jason 主動 see。","主動用 seeing。"];
+    notes.traps=["seen：被動。","saw：若保留完整子句需有主詞 Jason。","to see：目的用法，不合。"];
+  } else if(q.includes("soy and almond milk")){
+    notes.translation="豆漿和杏仁奶比一般牛奶健康很多，這種說法不一定總是正確。";
+    notes.vocab=[["soy milk","豆漿"],["almond milk","杏仁奶"],["regular milk","一般牛奶"],["healthier","更健康的"]];
+    notes.phrases=[["much + comparative","……得多"]];
+    notes.grammar="much 可修飾比較級 healthier；very 通常不直接修飾比較級。";
+    notes.pattern="much + comparative adjective + than";
+    notes.steps=["看到 healthier，確定是比較級。","找可修飾比較級的副詞。","選 much。"];
+    notes.traps=["very healthier：標準用法錯誤。","more healthier：雙重比較級。"];
+  } else if(q.includes("after graduation")){
+    notes.translation="因為不知道畢業後要做什麼，Teddy 先去澳洲打工度假。";
+    notes.vocab=[["graduation","畢業"],["working holiday","打工度假"]];
+    notes.phrases=[["what to do","該做什麼"],["go on a working holiday","去打工度假"]];
+    notes.grammar="Teddy 主動不知道，因此用否定現在分詞 Not knowing。";
+    notes.pattern="Not knowing + wh-to V ..., S + V";
+    notes.steps=["主詞 Teddy 主動 know。","否定 → Not。","分詞構句 → knowing。"];
+    notes.traps=["Not known：被動『不被知道』。","He doesn’t know：會形成完整子句，需連接詞。"];
+  } else if(q.includes("wasn’t invited to the party")){
+    notes.translation="因為 Emma 沒有被邀請參加派對，所以她那晚待在家。";
+    notes.vocab=[["invite","邀請"],["stay home","待在家"]];
+    notes.phrases=[["be invited to + 活動","被邀請參加……"]];
+    notes.grammar="Emma 是被邀請的對象，所以簡化為過去分詞 Not invited...。";
+    notes.pattern="(Not) Vpp ..., S + V";
+    notes.steps=["判斷原句是被動 wasn’t invited。","省略 because + 主詞 + be。","保留過去分詞 invited，前加 Not。"];
+    notes.traps=["inviting：表示 Emma 主動邀請別人，語意相反。"];
+  } else if(q.includes("old car in the garage")){
+    notes.translation="我父親花了將近一年在車庫裡修那輛舊車。";
+    notes.vocab=[["repair","修理"],["garage","車庫"],["nearly","將近"]];
+    notes.phrases=[["It takes/took + 人 + 時間 + to V","某人花多少時間做某事"]];
+    notes.grammar="虛主詞 It 放句首，真正動作放在 to repair。";
+    notes.pattern="It took + person + time + to V";
+    notes.steps=["找花費時間 nearly a year。","確認執行者 my father。","套入 It took my father ... to repair。"];
+    notes.traps=["spend 句型應為 person + spend + time + V-ing，不可混用。"];
+  } else if(q.includes("3D printer")){
+    notes.translation="學生學會如何使用這台 3D 印表機後，為自己做了許多有趣的玩具。";
+    notes.vocab=[["3D printer","3D 印表機"],["create","創造、製作"],["for themselves","為他們自己"]];
+    notes.phrases=[["learn how to V","學會如何做……"]];
+    notes.grammar="前後主詞都是 the students，且 students 主動 learn，因此可簡化為 After learning...。";
+    notes.pattern="After + V-ing ..., S + V";
+    notes.steps=["確認兩子句主詞相同。","判斷 learn 為主動。","刪除主詞與助動詞，改 V-ing。"];
+    notes.traps=["learned：若沒有主詞，不能單獨作此分詞構句核心。"];
+  } else if(q.includes("encouraged by her mother")){
+    notes.translation="受到母親鼓勵，Anya 打算申請藝術學校。";
+    notes.vocab=[["encourage","鼓勵"],["apply to","申請"],["art school","藝術學校"]];
+    notes.phrases=[["be encouraged by","受到……鼓勵"],["apply to + school","申請某學校"]];
+    notes.grammar="Anya 是被鼓勵，分詞構句用 Vpp：Encouraged by...。";
+    notes.pattern="Vpp ..., S + V";
+    notes.steps=["原句是被動 was encouraged。","省略 because + Anya + was。","保留 encouraged。"];
+    notes.traps=["Encouraging：表示 Anya 主動鼓勵別人。"];
+  } else if(q.includes("manager didn’t tell us")){
+    notes.translation="經理沒有告訴我們他明天早上是否會參加會議。";
+    notes.vocab=[["manager","經理"],["attend","參加"],["meeting","會議"]];
+    notes.phrases=[["tell + 人 + if/whether...","告訴某人是否……"]];
+    notes.grammar="yes/no 問句嵌入句中後，改成 if/whether + 主詞 + 動詞的直述語序。";
+    notes.pattern="S + V + if/whether + S + will + V";
+    notes.steps=["原直接問句 Will he attend...?","改間接問句取消倒裝。","變成 whether he will attend。"];
+    notes.traps=["whether will he attend：仍保留疑問句倒裝，錯誤。"];
+  } else if(q.includes("heavy burden for the young man")){
+    notes.translation="對那位年輕人來說，償還這筆債務是一項沉重負擔。";
+    notes.vocab=[["debt","債務"],["pay off","還清"],["burden","負擔"]];
+    notes.phrases=[["pay off a debt","還清債務"],["a heavy burden for + 人","對某人是沉重負擔"]];
+    notes.grammar="It 是虛主詞，真正主詞是後面的 to pay off the debt。";
+    notes.pattern="It + be + N + for + person + to V";
+    notes.steps=["先排 It was a heavy burden。","再接 for the young man。","最後放真正主詞 to pay off the debt。"];
+    notes.traps=["不可把 to pay off 放到 It 前面造成語序混亂。"];
+  } else if(q.includes("John’s new investment")){
+    notes.translation="我們沒有人確定 John 的新投資是否會賺錢。";
+    notes.vocab=[["investment","投資"],["make money","賺錢"],["be sure","確定"]];
+    notes.phrases=[["be sure whether...","確定是否……"]];
+    notes.grammar="whether 名詞子句內部使用直述語序：John’s new investment will make money。";
+    notes.pattern="S + be sure + whether + S + will + V";
+    notes.steps=["先排主句 None of us are sure。","whether 放在子句開頭。","子句使用 S + will + V。"];
+    notes.traps=["will John’s new investment make money 是直接問句語序。"];
+  } else if(q.includes("movie will be interesting")){
+    notes.translation="我不確定這部電影是否會有趣。";
+    notes.vocab=[["interesting","有趣的"],["or not","或不是、是否"]];
+    notes.phrases=[["if ... or not","是否……"]];
+    notes.grammar="if 名詞子句用直述語序 the movie will be interesting。";
+    notes.pattern="S + be not sure + if + S + will + be + adj + or not";
+    notes.steps=["先排 I am not sure。","if 後接 the movie。","再接 will be interesting or not。"];
+    notes.traps=["if will the movie... 是倒裝，錯誤。"];
+  } else if(q.includes("Born in a small town")){
+    notes.translation="Eric 出生在小鎮，卻一直夢想住在大城市。";
+    notes.vocab=[["be born in","出生於"],["dream of","夢想"],["a big city","大城市"]];
+    notes.phrases=[["dream of + V-ing","夢想做……"],["be born in + 地方","出生於某地"]];
+    notes.grammar="born 是過去分詞，表示 Eric『被生下』，分詞構句 Born in... 修飾 Eric。";
+    notes.pattern="Vpp ..., S + V + of + V-ing";
+    notes.steps=["Born in a small town 先作修飾語。","主句主詞 Eric。","dreamed of 後接 living。"];
+    notes.traps=["dream of 後面應接 V-ing，不接原形。"];
+  } else if(q.includes("security system")){
+    notes.translation="雖然珠寶受到保全系統保護，它最後仍然被偷走了。";
+    notes.vocab=[["security system","保全系統"],["jewelry","珠寶"],["stolen","被偷的"]];
+    notes.phrases=[["be protected by","受到……保護"]];
+    notes.grammar="Though 後可接簡化的過去分詞構句 protected by...；主句 the jewelry was still stolen 為被動。";
+    notes.pattern="Though + Vpp ..., S + be + Vpp";
+    notes.steps=["jewelry 是被保護 → protected。","Though protected by... 作讓步修飾。","主句仍用 was stolen。"];
+    notes.traps=["protecting：變成珠寶主動保護別人，語意錯。"];
+  } else if(q.includes("landlord")&&q.includes("keep a dog")){
+    notes.translation="我的房東不讓我養狗，因為動物可能會造成鄰居的困擾。";
+    notes.vocab=[["landlord","房東"],["neighbor","鄰居"],["keep a dog","養狗"]];
+    notes.phrases=[["let + 人 + V","讓某人做某事"]];
+    notes.grammar="使役動詞 let 後接受詞 + 原形動詞，不加 to。";
+    notes.pattern="S + let + object + base verb";
+    notes.steps=["空格後已有 me keep。","能直接接 object + V 的選項為 let。","allow 必須是 allow + 人 + to V。"];
+    notes.traps=["allow me keep：少了 to。","make 語意是『強迫』，不符合句意。"];
+  } else if(q.includes("where")&&q.includes("Jason lives")){
+    notes.translation="我不記得 Jason 住在哪裡。你得自己去問他。";
+    notes.vocab=[["remember","記得"],["yourself","你自己"]];
+    notes.phrases=[["where + S + V","……在哪裡的間接問句"]];
+    notes.grammar="wh-名詞子句使用直述語序 where Jason lives，不使用 does Jason live。";
+    notes.pattern="S + V + wh-word + S + V";
+    notes.steps=["這不是直接問句。","where 後放主詞 Jason。","再放動詞 lives。"];
+    notes.traps=["does Jason live：直接問句語序。"];
+  } else if(q.includes("which necklace")){
+    notes.translation="Ben 不知道哪一條項鍊戴在女友身上最好看。";
+    notes.vocab=[["necklace","項鍊"],["girlfriend","女友"],["look good on","穿戴在……身上好看"]];
+    notes.phrases=[["look + adj + on + 人","穿戴在某人身上看起來……"]];
+    notes.grammar="which necklace 在名詞子句中直接作主詞，因此後面接 looks。";
+    notes.pattern="S + has no idea + which + noun + V";
+    notes.steps=["which necklace 已是主詞。","不需再加 it。","單數 necklace → looks。"];
+    notes.traps=["it looks：重複主詞。","looking：缺完整謂語。"];
+  } else if(q.includes("which book")&&q.includes("English report")){
+    notes.translation="John 告訴我英文報告應該讀哪一本書。";
+    notes.vocab=[["report","報告"],["which book","哪一本書"]];
+    notes.phrases=[["tell + 人 + wh-clause","告訴某人……"]];
+    notes.grammar="間接問句使用直述語序 we should read。";
+    notes.pattern="S + V + object + wh-word + S + modal + V";
+    notes.steps=["which book 保留在子句前。","接主詞 we。","再接 should read。"];
+    notes.traps=["should we read：直接問句倒裝。"];
+  } else if(q.includes("turned off his phone")){
+    notes.translation="Ian 關掉手機，以便能專心讀書。";
+    notes.vocab=[["turn off","關掉"],["focus on","專注於"],["study","讀書"]];
+    notes.phrases=[["focus on + V-ing","專注於做……"],["so that + S + can/could","以便……"]];
+    notes.grammar="so that 引導目的副詞子句。";
+    notes.pattern="S + V + so that + S + could + V";
+    notes.steps=["判斷後句是前面行為的目的。","目的子句有主詞 he。","選 so that。"];
+    notes.traps=["since：表示原因。","such that：不是此標準目的用法。"];
+  } else if(q.includes("get to the station")){
+    notes.translation="你可以告訴我我們要怎麼到車站嗎？";
+    notes.vocab=[["get to","到達"],["station","車站"]];
+    notes.phrases=[["how + S + can + V","某人如何能……"]];
+    notes.grammar="how 引導名詞子句，使用直述語序 we can get。";
+    notes.pattern="Can you tell me + how + S + can + V";
+    notes.steps=["語意問『如何』 → how。","間接問句不倒裝。","所以是 how we can get。"];
+    notes.traps=["what/who/which：疑問意義不對。"];
+  } else if(q.includes("enjoy what")){
+    notes.translation="很高興聽到你喜歡自己在那裡所做的事情。";
+    notes.vocab=[["enjoy","喜歡、享受"],["what","所……的事"]];
+    notes.phrases=[["enjoy + N/V-ing","喜歡某事／做某事"]];
+    notes.grammar="what 引導名詞子句，內部用直述語序 you are doing。";
+    notes.pattern="enjoy + what + S + be + V-ing";
+    notes.steps=["what = the thing(s) that。","後面接主詞 you。","再接 are doing。"];
+    notes.traps=["are you doing：直接問句倒裝。"];
+  } else if(q.includes("newborn baby")){
+    notes.translation="Mary 正在休假，好照顧她剛出生的寶寶。";
+    notes.vocab=[["on leave","休假"],["take care of","照顧"],["newborn baby","新生兒"]];
+    notes.phrases=[["so as to + V","為了做……"]];
+    notes.grammar="so as to 為不定詞目的片語。";
+    notes.pattern="S + V + so as to + V";
+    notes.steps=["後面直接接 take。","語意是目的。","選 so as to。"];
+    notes.traps=["so that 後面需要完整子句，例如 so that she can take care of...。"];
+  } else if(q.includes("fried noodles")){
+    notes.translation="Wanda 在炒麵裡加了一些香料，好讓麵吃起來更美味。";
+    notes.vocab=[["spice","香料"],["fried noodles","炒麵"],["taste better","吃起來更好"]];
+    notes.phrases=[["add A to B","把 A 加到 B"],["so that + S + would","為了讓……"]];
+    notes.grammar="so that 引導目的子句，後面是完整主詞 they + would taste。";
+    notes.pattern="S + V + so that + S + would + V";
+    notes.steps=["後句描述加香料的目的。","有完整主詞 they。","選 so that。"];
+    notes.traps=["while：同時。","as soon as：一……就……。","that：缺少目的語意。"];
+  } else if(q.includes("which road")){
+    notes.translation="Alice 告訴我去超市應該走哪一條路。";
+    notes.vocab=[["road","道路"],["supermarket","超市"]];
+    notes.phrases=[["show + 人 + wh-clause","告訴／指給某人……"]];
+    notes.grammar="間接問句使用直述語序 I should take。";
+    notes.pattern="S + V + object + which + noun + S + should + V";
+    notes.steps=["which road 先放。","主詞 I。","再放 should take。"];
+    notes.traps=["should I take：直接問句語序。"];
+  } else if(q.includes("boring speech")){
+    notes.translation="學生們正在想：這場無聊的演講什麼時候才會結束。";
+    notes.vocab=[["speech","演講"],["boring","無聊的"],["wonder","想知道"]];
+    notes.phrases=[["wonder + wh-clause","想知道……"]];
+    notes.grammar="直接問句 When will ... end? 變間接問句後取消倒裝，變成 when ... will end。";
+    notes.pattern="S + wonder + when + S + will + V";
+    notes.steps=["保留疑問詞 when。","把 this boring speech 放在 will 前。","取消問號式倒裝。"];
+    notes.traps=["when will this speech end：仍是直接問句語序。"];
+  } else if(q.includes("Roy and his family")){
+    notes.translation="沒有人知道 Roy 和他的家人明年夏天會去哪裡旅行。";
+    notes.vocab=[["travel","旅行"],["next summer","明年夏天"]];
+    notes.phrases=[["know + wh-clause","知道……"]];
+    notes.grammar="where 引導名詞子句，用直述語序 Roy and his family will travel。";
+    notes.pattern="S + V + where + S + will + V";
+    notes.steps=["No one knows 為主句。","保留 where。","子句改直述語序。"];
+    notes.traps=["where will Roy...：直接問句倒裝。"];
+  } else if(q.includes("copy machine")){
+    notes.translation="請告訴我該怎麼使用這台新的影印機。";
+    notes.vocab=[["copy machine","影印機"],["show","示範、告訴"]];
+    notes.phrases=[["show + 人 + how-clause","告訴某人如何……"]];
+    notes.grammar="how 引導名詞子句，使用 I can use 的直述語序。";
+    notes.pattern="Please show me + how + S + can + V";
+    notes.steps=["how 保留。","主詞 I 放 can 前。","再接 use。"];
+    notes.traps=["how can I use：直接問句語序。"];
+  } else if(q.includes("shopping list")){
+    notes.translation="媽媽給男孩一張購物清單，好讓他不會忘記超市要買的任何東西。";
+    notes.vocab=[["shopping list","購物清單"],["forget","忘記"]];
+    notes.phrases=[["so that + S + would not","以免／好讓……不會"]];
+    notes.grammar="so that 引導目的副詞子句。";
+    notes.pattern="S + V + so that + S + would not + V";
+    notes.steps=["第二句說明給清單的目的。","兩句合併使用 so that。","保留 he would not forget。"];
+    notes.traps=["because 會變成原因，不是目的。"];
+  } else if(q.includes("broken window")){
+    notes.translation="當媽媽發現那扇破掉的窗戶時，她氣炸了。";
+    notes.vocab=[["broken window","破掉的窗戶"],["find out about","得知"],["hit the roof","勃然大怒"]];
+    notes.phrases=[["find out about + N","得知某事"],["hit the roof","非常生氣"]];
+    notes.grammar="When 引導時間副詞子句；主句 she hit the roof。";
+    notes.pattern="When + S + V ..., S + V";
+    notes.steps=["先排 When my mom found out about...。","受詞是 the broken window。","主句 she hit the roof。"];
+    notes.traps=["不要把 find out about 與 hit the roof 拆錯。"];
+  } else if(q.includes("train station")){
+    notes.translation="你可以告訴我怎麼去火車站嗎？";
+    notes.vocab=[["get to","到達"],["train station","火車站"]];
+    notes.phrases=[["Can you tell me how...","你可以告訴我如何……嗎？"]];
+    notes.grammar="how 名詞子句用直述語序 I can get。";
+    notes.pattern="Can you tell me + how + S + can + V";
+    notes.steps=["先排 Can you tell me。","接 how。","再接 I can get to...。"];
+    notes.traps=["how can I get：直接問句倒裝。"];
+  } else if(q.includes("Living alone in that big house")){
+    notes.translation="一個人住在那棟大房子裡，讓那個男人感到孤單。";
+    notes.vocab=[["live alone","獨居"],["lonely","孤單的"]];
+    notes.phrases=[["make + 人 + feel + adj","讓某人感到……"]];
+    notes.grammar="Living alone... 是動名詞片語作主詞；made 後用受詞 the man + 原形 feel。";
+    notes.pattern="V-ing phrase + make + object + base verb + adjective";
+    notes.steps=["Living alone... 作主詞。","made 是謂語。","the man 是受詞，後面用 feel。"];
+    notes.traps=["feel 不加 to。"];
+  } else if(q.includes("social media")){
+    notes.translation="我不明白為什麼人們花那麼多時間在社群媒體上。";
+    notes.vocab=[["social media","社群媒體"],["spend time on","花時間在……"]];
+    notes.phrases=[["spend + time + on + N","花時間在某事上"]];
+    notes.grammar="why 引導名詞子句，使用直述語序 people spend。";
+    notes.pattern="S + V + why + S + V";
+    notes.steps=["I don’t understand 為主句。","why 引導子句。","子句用 people spend，不倒裝。"];
+    notes.traps=["why do people spend：直接問句語序。"];
+  } else if(q.includes("library early")){
+    notes.translation="我提早到圖書館，好讓自己能找到一個好座位。";
+    notes.vocab=[["arrive at","抵達"],["find a good seat","找到好座位"]];
+    notes.phrases=[["so that + S + could","為了讓某人能……"]];
+    notes.grammar="so that 目的子句需有完整主詞 I + could find。";
+    notes.pattern="S + V + so that + S + could + V";
+    notes.steps=["先排主句 I arrived at the library early。","再接 so that。","最後 I could find a good seat。"];
+    notes.traps=["could I find：疑問句倒裝，不合。"];
+  } else if(q.includes("chart that shows")){
+    notes.translation="這裡有一張圖表，顯示每位學生坐在哪裡。";
+    notes.vocab=[["chart","圖表"],["show","顯示"],["sit","坐"]];
+    notes.phrases=[["where + S + V","某人在哪裡……"]];
+    notes.grammar="where each student sits 是 wh-名詞子句，採直述語序。";
+    notes.pattern="Here is + N + that + V + where + S + V";
+    notes.steps=["先建立 Here is a chart。","that shows 修飾 chart。","shows 後接 where each student sits。"];
+    notes.traps=["where does each student sit：直接問句語序。"];
+  } else {
+    notes.translation="請依題意判斷最符合文法與語意的答案。";
+    notes.vocab=[];
+    notes.phrases=[];
+    notes.grammar=x.zh;
+    notes.pattern=translateQuestion(x);
+    notes.steps=["先找句中提示詞。","再判斷文法結構。","最後檢查語意與選項形式。"];
+    notes.traps=["排除不符合語序、時態或語意的選項。"];
+  }
+  return notes;
+}
+function renderTeachingDetail(x){
+  const d=detailNotes(x);
+  const vocab=d.vocab.length?d.vocab.map(v=>"• "+v[0]+"： "+v[1]).join("\n"):"• 本題以句型判斷為主。";
+  const phrases=d.phrases.length?d.phrases.map(v=>"• "+v[0]+"： "+v[1]).join("\n"):"• 無額外固定片語。";
+  return "【題目中文翻譯】\n"+d.translation+
+    "\n\n【關鍵單字】\n"+vocab+
+    "\n\n【片語／搭配】\n"+phrases+
+    "\n\n【文法規則】\n"+d.grammar+
+    "\n\n【句型結構】\n"+d.pattern+
+    "\n\n【解題步驟】\n"+d.steps.map((s,i)=>(i+1)+". "+s).join("\n")+
+    "\n\n【易錯點／選項判斷】\n"+d.traps.map(s=>"• "+s).join("\n")+
+    "\n\n【English Explanation】\n"+x.en;
+}
 $("start").onclick=()=>startQuiz();$("retry").onclick=()=>{if(!lastWrong.length){$("startStatus").textContent="目前沒有上一回錯題。";return}startQuiz(lastWrong)};
-$("submit").onclick=()=>{const missing=current.filter((x,i)=>!document.querySelector('input[name=q'+i+']:checked')).length;if(missing){$("submitStatus").textContent="還有 "+missing+" 題未作答。";return}results=current.map((x,i)=>{const chosen=+document.querySelector('input[name=q'+i+']:checked').value;return{...x,chosen,correct:chosen===x.a}});lastWrong=results.filter(x=>!x.correct).map(({chosen,correct,...x})=>x);const score=results.filter(x=>x.correct).length,acc=Math.round(score/results.length*100);$("score").textContent=score+"/"+results.length;$("accuracy").textContent=acc+"%";$("wrongN").textContent=results.length-score;const stats={};results.forEach(x=>{stats[x.type]??={right:0,total:0};stats[x.type].total++;if(x.correct)stats[x.type].right++});const weak=Object.entries(stats).sort((a,b)=>(a[1].right/a[1].total)-(b[1].right/b[1].total)||b[1].total-a[1].total)[0]?.[0]||"—";$("weakType").textContent=weak;$("diagnosis").textContent=acc>=90?"文法已相當穩定；下一輪只重練錯題。":acc>=75?"基礎已建立，但「"+weak+"」仍不穩定。":"先集中修正「"+weak+"」，暫時不要平均刷更多題。";const us={};results.forEach(x=>{us[x.unit]??={right:0,total:0};us[x.unit].total++;if(x.correct)us[x.unit].right++});$("unitSummary").innerHTML=Object.entries(us).map(([k,v])=>{const p=Math.round(v.right/v.total*100);return '<p><b>'+k+'</b> '+v.right+'/'+v.total+'｜'+p+'%</p><div class="bar"><i style="width:'+p+'%"></i></div>'}).join("");$("typeSummary").innerHTML=Object.entries(stats).sort((a,b)=>(a[1].right/a[1].total)-(b[1].right/b[1].total)).map(([k,v])=>{const p=Math.round(v.right/v.total*100);return '<p><b>'+k+'</b> '+v.right+'/'+v.total+'｜'+p+'%</p><div class="bar"><i style="width:'+p+'%"></i></div>'}).join("");$("review").innerHTML=results.map((x,i)=>'<div class="q"><div class="meta"><span class="tag '+x.unit.toLowerCase()+'">'+x.unit+'</span><span class="tag">'+x.type+'</span></div><h3 class="'+(x.correct?'good':'bad')+'">'+(x.correct?'✓':'✗')+' Q'+(i+1)+'. '+x.q+'</h3><p><b>你的答案：</b>'+String.fromCharCode(65+x.chosen)+'. '+x.o[x.chosen]+'<br><b>正確答案：</b>'+String.fromCharCode(65+x.a)+'. '+x.o[x.a]+'</p><div class="feedback"><b>中文詳解：</b>'+x.zh+'\n\n<b>英文解析 English Explanation：</b>'+x.en+'</div><div class="source">來源：翰林技高 '+x.unit+'《'+x.lesson+'》｜'+x.src+'</div></div>').join("");save(score,acc,weak);$("resultCard").classList.remove("hidden");$("deliveryCard").classList.remove("hidden");$("resultCard").scrollIntoView({behavior:"smooth"})};
+$("submit").onclick=()=>{const missing=current.filter((x,i)=>!document.querySelector('input[name=q'+i+']:checked')).length;if(missing){$("submitStatus").textContent="還有 "+missing+" 題未作答。";return}results=current.map((x,i)=>{const chosen=+document.querySelector('input[name=q'+i+']:checked').value;return{...x,chosen,correct:chosen===x.a}});lastWrong=results.filter(x=>!x.correct).map(({chosen,correct,...x})=>x);const score=results.filter(x=>x.correct).length,acc=Math.round(score/results.length*100);$("score").textContent=score+"/"+results.length;$("accuracy").textContent=acc+"%";$("wrongN").textContent=results.length-score;const stats={};results.forEach(x=>{stats[x.type]??={right:0,total:0};stats[x.type].total++;if(x.correct)stats[x.type].right++});const weak=Object.entries(stats).sort((a,b)=>(a[1].right/a[1].total)-(b[1].right/b[1].total)||b[1].total-a[1].total)[0]?.[0]||"—";$("weakType").textContent=weak;$("diagnosis").textContent=acc>=90?"文法已相當穩定；下一輪只重練錯題。":acc>=75?"基礎已建立，但「"+weak+"」仍不穩定。":"先集中修正「"+weak+"」，暫時不要平均刷更多題。";const us={};results.forEach(x=>{us[x.unit]??={right:0,total:0};us[x.unit].total++;if(x.correct)us[x.unit].right++});$("unitSummary").innerHTML=Object.entries(us).map(([k,v])=>{const p=Math.round(v.right/v.total*100);return '<p><b>'+k+'</b> '+v.right+'/'+v.total+'｜'+p+'%</p><div class="bar"><i style="width:'+p+'%"></i></div>'}).join("");$("typeSummary").innerHTML=Object.entries(stats).sort((a,b)=>(a[1].right/a[1].total)-(b[1].right/b[1].total)).map(([k,v])=>{const p=Math.round(v.right/v.total*100);return '<p><b>'+k+'</b> '+v.right+'/'+v.total+'｜'+p+'%</p><div class="bar"><i style="width:'+p+'%"></i></div>'}).join("");$("review").innerHTML=results.map((x,i)=>'<div class="q"><div class="meta"><span class="tag '+x.unit.toLowerCase()+'">'+x.unit+'</span><span class="tag">'+x.type+'</span></div><h3 class="'+(x.correct?'good':'bad')+'">'+(x.correct?'✓':'✗')+' Q'+(i+1)+'. '+x.q+'</h3><p><b>你的答案：</b>'+String.fromCharCode(65+x.chosen)+'. '+x.o[x.chosen]+'<br><b>正確答案：</b>'+String.fromCharCode(65+x.a)+'. '+x.o[x.a]+'</p><div class="feedback">'+renderTeachingDetail(x)+'</div><div class="source">來源：翰林技高 '+x.unit+'《'+x.lesson+'》｜'+x.src+'</div></div>').join("");save(score,acc,weak);$("resultCard").classList.remove("hidden");$("deliveryCard").classList.remove("hidden");$("resultCard").scrollIntoView({behavior:"smooth"})};
 function save(score,accuracy,weak){let h=[];try{h=JSON.parse(localStorage.getItem("judy-grammar-history-v1")||"[]")}catch{}h.unshift({date:new Date().toISOString(),unit:$("unit").value,count:results.length,score,accuracy,weak});localStorage.setItem("judy-grammar-history-v1",JSON.stringify(h.slice(0,30)));showHistory()}
 function showHistory(){let h=[];try{h=JSON.parse(localStorage.getItem("judy-grammar-history-v1")||"[]")}catch{}$("history").innerHTML=h.length?h.slice(0,12).map(x=>'<p>'+new Date(x.date).toLocaleString()+'｜'+x.unit+'｜'+x.score+'/'+x.count+'｜'+x.accuracy+'%｜優先：'+x.weak+'</p>').join(""):"尚無紀錄。"}
-function snap(){return{site:"Judy Grammar Lab｜翰林技高 U3–U4",version:"V3",date:new Date().toISOString(),student:$("student").value.trim()||"Judy",email:$("email").value.trim(),mode:$("unit").value,score:results.filter(x=>x.correct).length,total:results.length,answers:results.map((x,i)=>({number:i+1,unit:x.unit,lesson:x.lesson,type:x.type,source:x.src,question:x.q,chosen:x.o[x.chosen],answer:x.o[x.a],status:x.correct?"正確":"錯誤",correct:x.correct,zh_explanation:x.zh,en_explanation:x.en}))}}
-$("download").onclick=()=>{const b=new Blob([JSON.stringify(snap(),null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="judy-grammar-u3-u4-"+new Date().toISOString().slice(0,10)+".json";a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};$("print").onclick=()=>window.print();$("coach").onclick=()=>{const d=snap();const detail=d.answers.map(x=>"Q"+x.number+"｜"+x.status+"\n題目："+x.question+"\n我的答案："+x.chosen+"\n正確答案："+x.answer+"\n文法點："+x.type+"\n中文詳解："+x.zh_explanation+"\n英文解析："+x.en_explanation).join("\n\n");const body="Judy Grammar Lab｜翰林技高 U3–U4\n姓名："+d.student+"\n模式："+d.mode+"\n分數："+d.score+"/"+d.total+"\n正確："+d.answers.filter(x=>x.correct).length+" 題｜錯誤："+d.answers.filter(x=>!x.correct).length+" 題\n\n【逐題紀錄】\n"+detail+"\n\n請 Gary 教練協助判讀下一輪複習重點。";window.open("https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su="+encodeURIComponent("Judy Grammar Lab U3-U4｜"+d.score+"/"+d.total)+"&body="+encodeURIComponent(body),"_blank","noopener,noreferrer");$("deliveryStatus").textContent="已建立含完整題目、正誤、作答與解析的 Gmail 草稿，請確認後寄出。"};showHistory();
+function snap(){return{site:"Judy Grammar Lab｜翰林技高 U3–U4",version:"V3",date:new Date().toISOString(),student:$("student").value.trim()||"Judy",email:$("email").value.trim(),mode:$("unit").value,score:results.filter(x=>x.correct).length,total:results.length,answers:results.map((x,i)=>({number:i+1,unit:x.unit,lesson:x.lesson,type:x.type,source:x.src,question:x.q,chosen:x.o[x.chosen],answer:x.o[x.a],status:x.correct?"正確":"錯誤",correct:x.correct,zh_explanation:x.zh,en_explanation:x.en,teaching_detail:renderTeachingDetail(x)}))}}
+$("download").onclick=()=>{const b=new Blob([JSON.stringify(snap(),null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="judy-grammar-u3-u4-"+new Date().toISOString().slice(0,10)+".json";a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};$("print").onclick=()=>window.print();$("coach").onclick=()=>{const d=snap();const detail=d.answers.map(x=>"Q"+x.number+"｜"+x.status+"\n題目："+x.question+"\n我的答案："+x.chosen+"\n正確答案："+x.answer+"\n文法點："+x.type+"\n\n"+x.teaching_detail).join("\n\n====================\n\n");const body="Judy Grammar Lab｜翰林技高 U3–U4\n姓名："+d.student+"\n模式："+d.mode+"\n分數："+d.score+"/"+d.total+"\n正確："+d.answers.filter(x=>x.correct).length+" 題｜錯誤："+d.answers.filter(x=>!x.correct).length+" 題\n\n【逐題紀錄】\n"+detail+"\n\n請 Gary 教練協助判讀下一輪複習重點。";window.open("https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su="+encodeURIComponent("Judy Grammar Lab U3-U4｜"+d.score+"/"+d.total)+"&body="+encodeURIComponent(body),"_blank","noopener,noreferrer");$("deliveryStatus").textContent="已建立含完整題目、正誤、作答與解析的 Gmail 草稿，請確認後寄出。"};showHistory();
 </script></body></html>
