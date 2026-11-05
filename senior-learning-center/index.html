@@ -79,5 +79,5 @@ function render(){const q=search.value.trim().toLocaleLowerCase();const g=group.
 let mainOnly=false;
 document.getElementById('showMain').addEventListener('click',()=>{mainOnly=true;search.value='';group.value='';document.getElementById('showMain').setAttribute('aria-pressed','true');document.getElementById('showAll').setAttribute('aria-pressed','false');render();});
 document.getElementById('showAll').addEventListener('click',()=>{mainOnly=false;document.getElementById('showMain').setAttribute('aria-pressed','false');document.getElementById('showAll').setAttribute('aria-pressed','true');render();});
-search.addEventListener('input',()=>{mainOnly=false;render();});group.addEventListener('change',()=>{mainOnly=false;render();});render();
+document.getElementById('clearSearch').addEventListener('click',()=>{search.value='';group.value='';mainOnly=false;document.getElementById('showMain').setAttribute('aria-pressed','false');document.getElementById('showAll').setAttribute('aria-pressed','true');render();search.focus();});search.addEventListener('input',()=>{mainOnly=false;render();});group.addEventListener('change',()=>{mainOnly=false;render();});render();
 </script><script src="/assets/conversion-tracking.js?v=20261103-v1"></script></body></html>
