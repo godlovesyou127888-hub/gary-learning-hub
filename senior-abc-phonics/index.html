@@ -18,13 +18,13 @@
 </main>
 <script>
 const data=[
-["A","a","apple","ă"],["B","b","book","b"],["C","c","cat","k"],["D","d","dog","d"],
-["E","e","egg","ĕ"],["F","f","fish","f"],["G","g","go","g"],["H","h","hat","h"],
-["I","i","igloo","ĭ"],["J","j","jam","j"],["K","k","kite","k"],["L","l","lion","l"],
-["M","m","moon","m"],["N","n","nose","n"],["O","o","octopus","ŏ"],["P","p","pen","p"],
-["Q","q","queen","kw"],["R","r","red","r"],["S","s","sun","s"],["T","t","top","t"],
-["U","u","umbrella","ŭ"],["V","v","van","v"],["W","w","water","w"],["X","x","box","ks"],
-["Y","y","yellow","y"],["Z","z","zoo","z"]
+["A","a","apple","蘋果","ă"],["B","b","book","書","b"],["C","c","cat","貓","k"],["D","d","dog","狗","d"],
+["E","e","egg","蛋","ĕ"],["F","f","fish","魚","f"],["G","g","go","去","g"],["H","h","hat","帽子","h"],
+["I","i","igloo","冰屋","ĭ"],["J","j","jam","果醬","j"],["K","k","kite","風箏","k"],["L","l","lion","獅子","l"],
+["M","m","moon","月亮","m"],["N","n","nose","鼻子","n"],["O","o","octopus","章魚","ŏ"],["P","p","pen","筆","p"],
+["Q","q","queen","女王","kw"],["R","r","red","紅色","r"],["S","s","sun","太陽","s"],["T","t","top","頂部","t"],
+["U","u","umbrella","雨傘","ŭ"],["V","v","van","廂型車","v"],["W","w","water","水","w"],["X","x","box","盒子","ks"],
+["Y","y","yellow","黃色","y"],["Z","z","zoo","動物園","z"]
 ];
 
 function speak(text,rate){
@@ -50,13 +50,13 @@ function shuffle(arr){
 
 const letters=document.getElementById("letters");
 data.forEach(item=>{
-  const [upper,lower,word,sound]=item;
+  const [upper,lower,word,zh,sound]=item;
   const card=document.createElement("article");
   card.className="letter";
   card.innerHTML=
     '<div class="big">'+upper+' <span class="small">'+lower+'</span></div>'+
     '<div class="sound">字母音提示：'+sound+'</div>'+
-    '<div class="word">'+word+'</div>'+
+    '<div class="word">'+word+' <span class="small" style="font-size:20px">｜'+zh+'</span></div>'+
     '<div class="actions" style="justify-content:center;margin-top:10px">'+
       '<button type="button" data-letter="'+upper+'">聽字母名稱</button>'+
       '<button type="button" class="secondary" data-word="'+word+'">聽單字</button>'+
@@ -86,7 +86,7 @@ document.getElementById("startQuiz").addEventListener("click",()=>{
       '<label><input type="radio" name="q'+i+'" value="'+o[0]+'"> '+o[0]+' '+o[1]+'</label>'
     ).join("");
     return '<div class="quizq">'+
-      '<h3>Q'+(i+1)+'. 哪一個字母對應單字「'+x[2]+'」？</h3>'+
+      '<h3>Q'+(i+1)+'. 哪一個字母對應單字「'+x[2]+'（'+x[3]+'）」？</h3>'+
       choices+
       '<input type="hidden" id="a'+i+'" value="'+x[0]+'">'+
     '</div>';
