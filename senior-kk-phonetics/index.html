@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Gary 樂齡 KK 音標入門站 V1：常見 KK 母音與子音、代表單字、口型提示、慢速播放、最小對立音與 5 題小測。">
+<title>Gary 樂齡 KK 音標入門站 V1</title>
+<style>
+:root{--green:#276b59;--deep:#174e40;--bg:#f6faf6;--line:#d9e7df;--soft:#edf6f0;--muted:#53665f;--blue:#2f6f92;--ok:#087a4b;--bad:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#173c32;font:20px/1.75 system-ui,"Noto Sans TC",sans-serif}.wrap,main{max-width:1120px;margin:auto}header{background:linear-gradient(135deg,#194c3e,#35816b);color:#fff;padding:36px 18px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn,button{border:0;border-radius:13px;padding:13px 18px;background:var(--green);color:#fff;font:inherit;font-weight:800;text-decoration:none;cursor:pointer;min-height:54px}.secondary{background:#e7f1ea!important;color:#285f4f!important}.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;margin:18px 0;box-shadow:0 8px 22px rgba(30,80,60,.05)}.eyebrow{font-size:13px;font-weight:900;letter-spacing:.08em;color:#617c72}.steps,.sound-grid,.pairs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.sound-grid{grid-template-columns:repeat(3,1fr)}.sound-card{background:#fbfefb;border:1px solid var(--line);border-radius:18px;padding:18px}.symbol{font-size:42px;font-weight:900;color:var(--deep);line-height:1.1}.word{font-size:26px;font-weight:800}.tip{background:var(--soft);padding:10px 12px;border-radius:12px;margin:8px 0}.tag{display:inline-block;padding:4px 9px;border-radius:999px;background:#e6f3ea;color:#285f4f;font-size:14px;font-weight:800}.tag.cons{background:#e8f1f7;color:#285e7c}.pair{background:#fbfefb;border:1px solid var(--line);border-radius:16px;padding:16px;text-align:center}.pair b{font-size:25px}.quizq{padding:15px 0;border-top:1px solid var(--line)}.quizq:first-child{border-top:0}.quizq label{display:block;padding:9px 11px;border:1px solid var(--line);border-radius:10px;margin:7px 0}.metric{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.metric div{background:#f8fcf9;border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center}.metric b{display:block;font-size:28px}.hidden{display:none}.good{color:var(--ok)}.bad{color:var(--bad)}.muted{color:var(--muted);font-size:15px}h2{font-size:30px}h3{font-size:23px}@media(max-width:820px){.sound-grid{grid-template-columns:1fr 1fr}.steps,.pairs{grid-template-columns:1fr 1fr}}@media(max-width:520px){.sound-grid,.steps,.pairs,.metric{grid-template-columns:1fr}.btn,button{width:100%}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="actions"><a class="btn secondary" href="/senior-learning-center/">回樂齡總站</a><a class="btn secondary" href="/senior-abc-phonics/">回 ABC × Phonics</a><a class="btn" href="https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su=Gary%20%E6%A8%82%E9%BD%A1%20KK%20%E9%9F%B3%E6%A8%99%E5%85%A5%E9%96%80%E7%AB%99" target="_blank" rel="noopener">聯絡站長</a></div><h1>Gary 樂齡 KK 音標入門站 V1</h1><p>先看符號，再聽代表單字，再做口型。目標不是背完全部音標，而是看到常見 KK 時不再害怕。</p></div></header>
+<main>
+<section class="card"><p class="eyebrow">01 · HOW TO USE</p><h2>一次只學 3–5 個音</h2><div class="steps"><div class="tip"><b>1｜看符號</b><br>認得形狀</div><div class="tip"><b>2｜聽例字</b><br>先聽再模仿</div><div class="tip"><b>3｜看口型</b><br>照中文提示做</div><div class="tip"><b>4｜做對比</b><br>分辨容易混淆的音</div></div><p class="muted">本 V1 以台灣英語學習常見的 KK 記號做入門。不同教材或字典可能採用略有差異的符號；之後的 IPA 站會專門處理國際音標與字典對照。</p></section>
+
+<section class="card"><p class="eyebrow">02 · VOWELS</p><h2>常見 KK 母音</h2><div id="vowels" class="sound-grid"></div></section>
+
+<section class="card"><p class="eyebrow">03 · CONSONANTS</p><h2>常見 KK 子音</h2><div id="cons" class="sound-grid"></div></section>
+
+<section class="card"><p class="eyebrow">04 · MINIMAL PAIRS</p><h2>最小對立音：先學會「聽差別」</h2><div id="pairs" class="pairs"></div></section>
+
+<section class="card"><p class="eyebrow">05 · QUIZ</p><h2>5 題小測</h2><p>看 KK 符號，選出最符合的代表單字。</p><button id="startQuiz">開始 5 題</button><div id="quiz" class="hidden"></div><div id="result" class="hidden"></div></section>
+
+<section class="card"><p class="eyebrow">06 · NEXT</p><h2>下一步</h2><p>如果這一站能穩定辨識常見 KK，再進入 IPA。若還不穩，先回 ABC × Phonics 或發音診所，不急著增加符號量。</p><div class="actions"><a class="btn" href="/senior-pronunciation-clinic/">進入發音診所</a><a class="btn secondary" href="/gary-senior-english-5-words/">每日 5 字</a></div></section>
+</main>
+<script>
+const vowels=[
+{sym:"[i]",word:"see",zh:"嘴角微微向兩側，舌位高，聲音拉長。"},
+{sym:"[ɪ]",word:"sit",zh:"比 [i] 放鬆、較短，不要拉太長。"},
+{sym:"[e]",word:"say",zh:"嘴角略展開，從較前的母音滑動。"},
+{sym:"[ɛ]",word:"bed",zh:"嘴巴比 [ɪ] 更開，舌頭放低一些。"},
+{sym:"[æ]",word:"cat",zh:"嘴巴明顯張開，下巴往下，聲音靠前。"},
+{sym:"[ɑ]",word:"hot",zh:"嘴巴張開，舌位低，聲音較後。"},
+{sym:"[ɔ]",word:"law",zh:"嘴唇略圓，舌位較後。"},
+{sym:"[o]",word:"go",zh:"嘴唇由較圓逐漸收小。"},
+{sym:"[ʊ]",word:"book",zh:"嘴唇微圓，聲音短而放鬆。"},
+{sym:"[u]",word:"food",zh:"嘴唇收圓，舌位高，聲音可稍拉長。"},
+{sym:"[ʌ]",word:"cup",zh:"嘴巴自然微開，中央短母音。"},
+{sym:"[ə]",word:"about",zh:"弱讀音，嘴巴放鬆，聲音很輕。"},
+{sym:"[aɪ]",word:"my",zh:"從較開的母音滑向 [ɪ]。"},
+{sym:"[aʊ]",word:"house",zh:"從張口滑向圓唇。"},
+{sym:"[ɔɪ]",word:"boy",zh:"從圓唇母音滑向 [ɪ]。"},
+{sym:"[ɝ]",word:"bird",zh:"美式捲舌母音，舌尖不碰上顎。"},
+{sym:"[ɚ]",word:"teacher",zh:"常見弱讀捲舌音，多出現在非重讀音節。"}
+];
+const consonants=[
+{sym:"[p]",word:"pen",zh:"雙唇閉合後送氣。"},
+{sym:"[b]",word:"bed",zh:"雙唇閉合，聲帶震動。"},
+{sym:"[t]",word:"tea",zh:"舌尖靠齒齦後快速放開。"},
+{sym:"[d]",word:"dog",zh:"位置像 [t]，但聲帶震動。"},
+{sym:"[k]",word:"cat",zh:"舌後部接近軟顎後放開。"},
+{sym:"[g]",word:"go",zh:"位置像 [k]，但聲帶震動。"},
+{sym:"[f]",word:"fan",zh:"上齒輕碰下唇，吹氣。"},
+{sym:"[v]",word:"van",zh:"位置像 [f]，但聲帶震動。"},
+{sym:"[θ]",word:"think",zh:"舌尖輕放上下齒間，吹氣，不震動。"},
+{sym:"[ð]",word:"this",zh:"舌尖位置同 [θ]，但聲帶震動。"},
+{sym:"[s]",word:"sun",zh:"舌尖靠近齒齦，讓氣流摩擦。"},
+{sym:"[z]",word:"zoo",zh:"位置像 [s]，但聲帶震動。"},
+{sym:"[ʃ]",word:"she",zh:"嘴唇略圓，氣流較集中。"},
+{sym:"[ʒ]",word:"vision",zh:"位置像 [ʃ]，但聲帶震動。"},
+{sym:"[h]",word:"hat",zh:"喉部送氣，像輕吐氣。"},
+{sym:"[tʃ]",word:"chair",zh:"先阻住再放出摩擦音。"},
+{sym:"[dʒ]",word:"job",zh:"位置像 [tʃ]，但聲帶震動。"},
+{sym:"[m]",word:"man",zh:"雙唇閉合，氣流走鼻腔。"},
+{sym:"[n]",word:"nose",zh:"舌尖靠齒齦，氣流走鼻腔。"},
+{sym:"[ŋ]",word:"sing",zh:"舌後部抬起，氣流走鼻腔。"},
+{sym:"[l]",word:"leg",zh:"舌尖碰齒齦，氣流從兩側出去。"},
+{sym:"[r]",word:"red",zh:"美式音舌尖往後捲但不碰上顎。"},
+{sym:"[j]",word:"yes",zh:"像中文『耶』開頭的滑音。"},
+{sym:"[w]",word:"water",zh:"嘴唇先收圓，再快速打開。"}
+];
+const pairs=[
+["ship","sheep","[ɪ] vs [i]"],
+["full","fool","[ʊ] vs [u]"],
+["bed","bad","[ɛ] vs [æ]"],
+["fan","van","[f] vs [v]"],
+["thin","then","[θ] vs [ð]"],
+["rice","lice","[r] vs [l]"]
+];
+function speak(word,rate=.68){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(word);u.lang="en-US";u.rate=rate;speechSynthesis.speak(u)}
+function renderCards(list,id,kind){const box=document.getElementById(id);list.forEach(x=>{const c=document.createElement("article");c.className="sound-card";c.innerHTML='<span class="tag '+(kind==="cons"?"cons":"")+'">'+(kind==="cons"?"子音":"母音")+'</span><div class="symbol">'+x.sym+'</div><div class="word">'+x.word+'</div><div class="tip">'+x.zh+'</div><button data-word="'+x.word+'">慢速聽例字</button>';box.append(c)});box.addEventListener("click",e=>{const b=e.target.closest("button[data-word]");if(b)speak(b.dataset.word)})}
+renderCards(vowels,"vowels","vowel");renderCards(consonants,"cons","cons");
+const pbox=document.getElementById("pairs");pairs.forEach(p=>{const d=document.createElement("div");d.className="pair";d.innerHTML='<div class="muted">'+p[2]+'</div><b>'+p[0]+' / '+p[1]+'</b><div class="actions" style="justify-content:center;margin-top:8px"><button data-w="'+p[0]+'">'+p[0]+'</button><button class="secondary" data-w="'+p[1]+'">'+p[1]+'</button></div>';pbox.append(d)});pbox.addEventListener("click",e=>{const b=e.target.closest("button[data-w]");if(b)speak(b.dataset.w)});
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+document.getElementById("startQuiz").onclick=()=>{const source=shuffle([...vowels,...consonants]).slice(0,5);const q=document.getElementById("quiz"),r=document.getElementById("result");q.classList.remove("hidden");r.classList.add("hidden");q.innerHTML=source.map((x,i)=>{const pool=[...vowels,...consonants].filter(y=>y.word!==x.word);const opts=shuffle([x,...shuffle(pool).slice(0,3)]);return '<div class="quizq"><h3>Q'+(i+1)+'. KK '+x.sym+' 的代表字是哪一個？</h3>'+opts.map(o=>'<label><input type="radio" name="q'+i+'" value="'+o.word+'"> '+o.word+'</label>').join("")+'<input type="hidden" id="a'+i+'" value="'+x.word+'"></div>'}).join("")+'<button id="submitQuiz">交卷</button>';document.getElementById("submitQuiz").onclick=()=>{let score=0,done=0;for(let i=0;i<5;i++){const c=document.querySelector('input[name="q'+i+'"]:checked');if(c){done++;if(c.value===document.getElementById("a"+i).value)score++}}r.classList.remove("hidden");if(done<5){r.innerHTML='<p class="bad">還有 '+(5-done)+' 題未作答。</p>';return}r.innerHTML='<div class="metric"><div><b>'+score+'/5</b>答對</div><div><b>'+Math.round(score/5*100)+'%</b>正確率</div><div><b>'+(5-score)+'</b>需再練</div></div><p class="'+(score>=4?'good':'bad')+'">'+(score===5?'已具備初步辨識能力。':score>=4?'基礎已建立，再複習一次即可。':'先回母音／子音卡，一次只學 3–5 個音。')+'</p>'}};
+};
+</script>
+</body></html>
