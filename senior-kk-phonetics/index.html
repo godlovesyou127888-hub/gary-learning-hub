@@ -22,7 +22,21 @@
 
 <section class="card"><p class="eyebrow">05 · QUIZ</p><h2>5 題小測</h2><p>看 KK 符號，選出最符合的代表單字。</p><button id="startQuiz">開始 5 題</button><div id="quiz" class="hidden"></div><div id="result" class="hidden"></div></section>
 
-<section class="card"><p class="eyebrow">06 · NEXT</p><h2>下一步</h2><p>如果這一站能穩定辨識常見 KK，再進入 IPA。若還不穩，先回 ABC × Phonics 或發音診所，不急著增加符號量。</p><div class="actions"><a class="btn" href="/senior-pronunciation-clinic/">進入發音診所</a><a class="btn secondary" href="/gary-senior-english-5-words/">每日 5 字</a></div></section>
+<section class="card"><p class="eyebrow">06 · FEEDBACK</p><h2>完成後只回饋 3 件事</h2>
+<p>這一區不是考試，是用來判斷 KK 是否真的適合樂齡學員。請各選 1–5 分。</p>
+<div class="grid2">
+<label>1｜KK 符號看得懂嗎？
+<select id="fbSymbol"><option value="">請選擇</option><option value="1">1｜幾乎看不懂</option><option value="2">2｜很吃力</option><option value="3">3｜大致看懂</option><option value="4">4｜多數看懂</option><option value="5">5｜很清楚</option></select></label>
+<label>2｜中文口型提示有幫助嗎？
+<select id="fbMouth"><option value="">請選擇</option><option value="1">1｜幾乎沒幫助</option><option value="2">2｜幫助有限</option><option value="3">3｜有一些幫助</option><option value="4">4｜很有幫助</option><option value="5">5｜非常有幫助</option></select></label>
+<label>3｜最小對立音分得出來嗎？
+<select id="fbPair"><option value="">請選擇</option><option value="1">1｜幾乎分不出來</option><option value="2">2｜常常混淆</option><option value="3">3｜約一半能分</option><option value="4">4｜多數能分</option><option value="5">5｜很清楚</option></select></label>
+<label>其他感受（選填）
+<input id="fbNote" type="text" placeholder="例如：符號太多、口型很有幫助、ship/sheep最難">
+</label></div>
+<div class="actions" style="margin-top:14px"><button id="saveFeedback">儲存本機回饋</button><button id="sendFeedback" class="secondary">寄給 Gary 教練</button></div><p id="fbStatus" class="muted"></p></section>
+
+<section class="card"><p class="eyebrow">07 · NEXT</p><h2>下一步</h2><p>如果這一站能穩定辨識常見 KK，再進入 IPA。若還不穩，先回 ABC × Phonics 或發音診所，不急著增加符號量。</p><div class="actions"><a class="btn" href="/senior-pronunciation-clinic/">進入發音診所</a><a class="btn secondary" href="/gary-senior-english-5-words/">每日 5 字</a></div></section>
 </main>
 <script>
 const vowels=[
@@ -84,6 +98,33 @@ renderCards(vowels,"vowels","vowel");renderCards(consonants,"cons","cons");
 const pbox=document.getElementById("pairs");pairs.forEach(p=>{const d=document.createElement("div");d.className="pair";d.innerHTML='<div class="muted">'+p[2]+'</div><b>'+p[0]+' / '+p[1]+'</b><div class="actions" style="justify-content:center;margin-top:8px"><button data-w="'+p[0]+'">'+p[0]+'</button><button class="secondary" data-w="'+p[1]+'">'+p[1]+'</button></div>';pbox.append(d)});pbox.addEventListener("click",e=>{const b=e.target.closest("button[data-w]");if(b)speak(b.dataset.w)});
 function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
 document.getElementById("startQuiz").onclick=()=>{const source=shuffle([...vowels,...consonants]).slice(0,5);const q=document.getElementById("quiz"),r=document.getElementById("result");q.classList.remove("hidden");r.classList.add("hidden");q.innerHTML=source.map((x,i)=>{const pool=[...vowels,...consonants].filter(y=>y.word!==x.word);const opts=shuffle([x,...shuffle(pool).slice(0,3)]);return '<div class="quizq"><h3>Q'+(i+1)+'. KK '+x.sym+' 的代表字是哪一個？</h3>'+opts.map(o=>'<label><input type="radio" name="q'+i+'" value="'+o.word+'"> '+o.word+'</label>').join("")+'<input type="hidden" id="a'+i+'" value="'+x.word+'"></div>'}).join("")+'<button id="submitQuiz">交卷</button>';document.getElementById("submitQuiz").onclick=()=>{let score=0,done=0;for(let i=0;i<5;i++){const c=document.querySelector('input[name="q'+i+'"]:checked');if(c){done++;if(c.value===document.getElementById("a"+i).value)score++}}r.classList.remove("hidden");if(done<5){r.innerHTML='<p class="bad">還有 '+(5-done)+' 題未作答。</p>';return}r.innerHTML='<div class="metric"><div><b>'+score+'/5</b>答對</div><div><b>'+Math.round(score/5*100)+'%</b>正確率</div><div><b>'+(5-score)+'</b>需再練</div></div><p class="'+(score>=4?'good':'bad')+'">'+(score===5?'已具備初步辨識能力。':score>=4?'基礎已建立，再複習一次即可。':'先回母音／子音卡，一次只學 3–5 個音。')+'</p>'}};
+};
+function feedbackData(){
+  return {
+    symbol:+document.getElementById("fbSymbol").value||0,
+    mouth:+document.getElementById("fbMouth").value||0,
+    pair:+document.getElementById("fbPair").value||0,
+    note:document.getElementById("fbNote").value.trim(),
+    date:new Date().toISOString()
+  };
+}
+document.getElementById("saveFeedback").onclick=()=>{
+  const d=feedbackData();
+  if(!d.symbol||!d.mouth||!d.pair){document.getElementById("fbStatus").textContent="請先完成三項評分。";return}
+  let arr=[];try{arr=JSON.parse(localStorage.getItem("senior-kk-feedback-v1")||"[]")}catch{}
+  arr.unshift(d);localStorage.setItem("senior-kk-feedback-v1",JSON.stringify(arr.slice(0,30)));
+  document.getElementById("fbStatus").textContent="已儲存在這台裝置。";
+};
+document.getElementById("sendFeedback").onclick=()=>{
+  const d=feedbackData();
+  if(!d.symbol||!d.mouth||!d.pair){document.getElementById("fbStatus").textContent="請先完成三項評分。";return}
+  const body="Gary 樂齡 KK 音標入門站 V1 體驗回饋\n"+
+  "1. KK 符號看得懂："+d.symbol+"/5\n"+
+  "2. 中文口型提示有幫助："+d.mouth+"/5\n"+
+  "3. 最小對立音分辨："+d.pair+"/5\n"+
+  "其他感受："+(d.note||"無")+"\n";
+  window.open("https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888@gmail.com&su="+encodeURIComponent("樂齡 KK V1 體驗回饋")+"&body="+encodeURIComponent(body),"_blank","noopener,noreferrer");
+  document.getElementById("fbStatus").textContent="已建立 Gmail 草稿，請確認後寄出。";
 };
 </script>
 </body></html>
