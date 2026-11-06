@@ -23,7 +23,7 @@ $("sendCoach").onclick=()=>{
  const record={...report,delivery_submission_id:submission,student_name:name,email};
  const payload={submission_id:submission,submitted_at:new Date().toISOString(),assessment_type:"IELTS Academic Reading Mini Mock｜原創閱讀模考",test_type:"IELTS Academic Reading Mini Mock",source_page:location.href,student_name:name,email,total_score:report.score+"/"+report.total,accuracy:report.accuracy+"%",primary_weakness:wrong[0]?"本次優先訂正題目 Q"+wrong[0].number+"｜"+wrong[0].skill:"本次無錯題",secondary_weakness:wrong[1]?"本次優先訂正題目 Q"+wrong[1].number+"｜"+wrong[1].skill:"",summary,responses_json:JSON.stringify(record)};
  if(!confirm("即將送出完整閱讀模考資料給 Gary 教練，並開啟 Google Apps Script 回應頁。請確認已下載 JSON 備份。Submission ID："+submission))return;
- const form=document.createElement("form");form.method="POST";form.action=GAS_URL;form.target="_self";form.style.display="none";
+ const form=document.createElement("form");form.method="POST";form.action=GAS_URL;form.target="_blank";form.style.display="none";
  for(const [key,value] of Object.entries(payload)){const input=document.createElement("input");input.type="hidden";input.name=key;input.value=String(value??"");form.appendChild(input)}document.body.appendChild(form);
  status.textContent="正在提交："+submission+"。請以 Google Apps Script 成功頁面、Gmail 與 Sheets 相同 ID 確認實際送達。";form.submit()
 };
