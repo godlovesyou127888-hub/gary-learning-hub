@@ -68,7 +68,9 @@ $("print").onclick=()=>window.print();
 $("sendCoach").onclick=()=>{
  const p=payload(),a=p.latest_attempt;
  if(!a){$("deliveryStatus").textContent="請先完成測驗並取得結果。";return}
- if(!a.email||!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(a.email)){$("deliveryStatus").textContent="請填寫可接收結果的有效 Email。";return}
+ const currentEmail=$("email").value.trim();
+ if(a.email!==currentEmail){$("deliveryStatus").textContent="Email 已修改。請先重新按「送出答案」，再寄送最新測驗資料。";return}
+ if(!a.email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(a.email)){$("deliveryStatus").textContent="請填寫有效的 Email，重新按「送出答案」後再寄送。";return}
  const submissionId="IELTS-LMINI-"+Date.now();
  const wrongDetails=(a.wrong||[]).map(id=>({
    question:id.toUpperCase(),
@@ -142,10 +144,10 @@ $("sendCoach").onclick=()=>{
      email:a.email
    }));
  }catch{}
- $("deliveryStatus").textContent="正在寄送完整模考資料給 Gary 教練。Submission ID："+submissionId+"。需以 Gmail 實收確認才算正式完成。";
+ $("deliveryStatus").textContent="已準備提交完整報告（Submission ID："+submissionId+"）。交付頁面會在新分頁開啟；請查看提交結果。只有 Gary 的 Gmail 實際收到資料才算寄送完成。請勿重複點擊。";
  const form=document.createElement("form");
- form.method="POST";form.action=DELIVERY_URL;form.target="_self";form.style.display="none";
+ form.method="POST";form.action=DELIVERY_URL;form.target="_blank";form.rel="noopener";form.style.display="none";
  Object.entries(body).forEach(([k,v])=>{const i=document.createElement("input");i.type="hidden";i.name=k;i.value=String(v??"");form.appendChild(i)});
- document.body.appendChild(form);form.submit()
+ document.body.appendChild(form);form.submit();form.remove()
 };
 })();
