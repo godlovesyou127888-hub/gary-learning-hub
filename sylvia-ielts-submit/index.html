@@ -22,7 +22,6 @@ h1{margin:0 0 6px}.muted{color:var(--muted)}input,textarea{width:100%;padding:11
 <input type="hidden" id="submissionField" name="submission_id">
 <input type="hidden" id="taskTypeField" name="task_type">
 <input type="hidden" id="questionField" name="question">
-<input type="hidden" id="submissionField" name="submission_id">
 <input type="hidden" name="form_type" value="Sylvia IELTS Writing Submission">
 
 <div class="grid">
@@ -82,13 +81,13 @@ ieltsForm.addEventListener('submit',()=>{
     student_email:emailField.value.trim(),
     preformatted_message:messageField.value.trim(),
     submitted_at:new Date().toISOString(),
-    delivery_status:'native_formsubmit_post'
+    delivery_status:'submitted_unconfirmed'
   };
   localStorage.setItem('sylvia_ielts_last_submission',JSON.stringify(backup));
   localStorage.setItem('sylvia_ielts_backup_'+(data.submission_id||Date.now()),JSON.stringify(backup));
   submitBtn.disabled=true;
   submitBtn.textContent='已開啟 Google Apps Script 寄送頁';
-  deliveryStatusBox.innerHTML='✅ 已使用 IELTS 專用 Google Apps Script 寄送。新分頁顯示「IELTS Writing 已成功送出」後，回到此頁可直接返回 IELTS 首頁。';
+  deliveryStatusBox.textContent='已向 Google Apps Script 提交；尚未確認收件。請在新分頁核對 Submission ID、成功畫面，並以 Gary Gmail 的實際收件為準。';
   afterSubmitActions.style.display='flex';
   afterSubmitActions.style.gap='8px';
   afterSubmitActions.style.flexWrap='wrap';
