@@ -37,7 +37,8 @@ $("download").onclick=()=>{const p=payload(),u=URL.createObjectURL(new Blob([JSO
 $("sendCoach").onclick=()=>{
  const p=payload(),a=p.latest_attempt;
  if(!a){$("deliveryStatus").textContent="請先完成測驗並取得結果。";return}
- if(!a.email||!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(a.email)){$("deliveryStatus").textContent="請填寫可接收結果的有效 Email。";return}
+ if(a.email!==$("email").value.trim()){$("deliveryStatus").textContent="Email 已修改，請重新送出答案後再寄送。";return}
+ if(!a.email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(a.email)){$("deliveryStatus").textContent="請填寫可接收結果的有效 Email。";return}
  const submissionId="IELTS-LMINI2-"+Date.now();
  const wrongDetails=(a.wrong||[]).map(id=>({
    question:id.toUpperCase(),
@@ -102,7 +103,7 @@ $("sendCoach").onclick=()=>{
    responses_json:JSON.stringify(fullDelivery)
  };
  try{
-   localStorage.setItem("ielts_listening_delivery_last_v1",JSON.stringify({
+   localStorage.setItem("ielts_listening_2_delivery_last_v1",JSON.stringify({
      submission_id:submissionId,
      assessment:"IELTS Listening Mini Test 2",
      created_at:body.submitted_at,
@@ -111,9 +112,9 @@ $("sendCoach").onclick=()=>{
      email:a.email
    }));
  }catch{}
- $("deliveryStatus").textContent="正在寄送完整模考資料給 Gary 教練。Submission ID："+submissionId+"。需以 Gmail 實收確認才算正式完成。";
+ $("deliveryStatus").textContent="已準備提交資料至 Google Apps Script。Submission ID："+submissionId+"。需以 Gmail 實收確認才算正式完成。";
  const form=document.createElement("form");
- form.method="POST";form.action=DELIVERY_URL;form.target="_self";form.style.display="none";
+ form.method="POST";form.action=DELIVERY_URL;form.target="_blank";form.style.display="none";
  Object.entries(body).forEach(([k,v])=>{const i=document.createElement("input");i.type="hidden";i.name=k;i.value=String(v??"");form.appendChild(i)});
  document.body.appendChild(form);form.submit()
 };
