@@ -116,6 +116,6 @@ $("sendCoach").onclick=()=>{
  const form=document.createElement("form");
  form.method="POST";form.action=DELIVERY_URL;form.target="_blank";form.style.display="none";
  Object.entries(body).forEach(([k,v])=>{const i=document.createElement("input");i.type="hidden";i.name=k;i.value=String(v??"");form.appendChild(i)});
- document.body.appendChild(form);form.submit()
+ document.body.appendChild(form);window.open("https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888%40gmail.com&su="+encodeURIComponent("[IELTS] "+body.assessment_type+" "+submissionId)+"&body="+encodeURIComponent(body.summary+"\n\n請將「下載 JSON」取得的完整報告附加於此信，然後按傳送。"),"_blank")
 };
 })();
