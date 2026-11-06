@@ -148,6 +148,6 @@ $("sendCoach").onclick=()=>{
  const form=document.createElement("form");
  form.method="POST";form.action=DELIVERY_URL;form.target="_blank";form.rel="noopener";form.style.display="none";
  Object.entries(body).forEach(([k,v])=>{const i=document.createElement("input");i.type="hidden";i.name=k;i.value=String(v??"");form.appendChild(i)});
- document.body.appendChild(form);form.submit();form.remove()
+ document.body.appendChild(form);window.GaryCoachEmail.sendForm(form);form.remove()
 };
 })();
