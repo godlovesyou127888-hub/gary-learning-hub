@@ -27,7 +27,7 @@ send.addEventListener("click",()=>{
  const form=document.createElement("form");form.method="POST";form.action=endpoint;form.target="_blank";form.style.display="none";
  for(const [k,v] of Object.entries(payload)){const i=document.createElement("input");i.type="hidden";i.name=k;i.value=String(v??"");form.appendChild(i)}
  document.body.appendChild(form);
- try{window.GaryCoachEmail.sendForm(form);status.textContent="請複製完整報告，開啟 Gmail 草稿並手動按傳送。送件編號："+submission;sessionStorage.setItem("ielts_delivery_pending_"+key,submission)}
+ try{window.open('https://mail.google.com/mail/?view=cm&fs=1&to=godlovesyou127888%40gmail.com&su='+encodeURIComponent(title+' '+submission)+'&body='+encodeURIComponent('請將下載的完整 JSON 報告附加至這封信，並按傳送。送件編號：'+submission),'_blank');status.textContent="請複製完整報告，開啟 Gmail 草稿並手動按傳送。送件編號："+submission;sessionStorage.setItem("ielts_delivery_pending_"+key,submission)}
  catch(e){lastClick=0;status.textContent="提交未完成，請下載 JSON 並重試。"}
  finally{form.remove()}
 });
