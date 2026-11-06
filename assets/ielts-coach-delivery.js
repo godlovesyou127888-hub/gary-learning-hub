@@ -27,7 +27,7 @@ send.addEventListener("click",()=>{
  const form=document.createElement("form");form.method="POST";form.action=endpoint;form.target="_blank";form.style.display="none";
  for(const [k,v] of Object.entries(payload)){const i=document.createElement("input");i.type="hidden";i.name=k;i.value=String(v??"");form.appendChild(i)}
  document.body.appendChild(form);
- try{form.submit();status.textContent="已嘗試提交至 Google Apps Script，送件編號："+submission+"。請檢查新分頁；只有 Gmail／Sheets 實際收件才算完成。";sessionStorage.setItem("ielts_delivery_pending_"+key,submission)}
+ try{window.GaryCoachEmail.sendForm(form);status.textContent="請複製完整報告，開啟 Gmail 草稿並手動按傳送。送件編號："+submission;sessionStorage.setItem("ielts_delivery_pending_"+key,submission)}
  catch(e){lastClick=0;status.textContent="提交未完成，請下載 JSON 並重試。"}
  finally{form.remove()}
 });
