@@ -513,5 +513,47 @@ app.get("/api/submissions", async (req,res)=>{
   res.json({ok:true,items:r.rows});
 });
 
+
+app.post("/api/grammar-score-submit", async (req,res)=>{
+  try{
+    const b=req.body||{};
+    const name=String(b.student_name||"").trim().slice(0,80);
+    const score=String(b.score||"").slice(0,20);
+    const report=String(b.report||"").trim().slice(0,18000);
+    if(!name || !score || !report){
+      return res.status(400).json({ok:false,emailAccepted:false,error:"student_name_score_report_required"});
+    }
+    const form=new URLSearchParams();
+    form.set("_subject","[Gary 國二文法特訓站] 成績報告｜"+name+"｜"+score);
+    form.set("_template","table");
+    form.set("_captcha","false");
+    form.set("form_type","Junior High Grammar Score Report");
+    form.set("student_name",name);
+    form.set("score",score);
+    form.set("source_page","https://gary-learning-hub.onrender.com/junior-grammar-2/");
+    form.set("report",report);
+    let accepted=false,status=0,error=null;
+    for(let attempt=1;attempt<=3 && !accepted;attempt++){
+      const controller=new AbortController();
+      const timer=setTimeout(()=>controller.abort(),12000);
+      try{
+        const r=await fetch("https://formsubmit.co/43c5627bc898e872509ffd1b6aa8d728",{
+          method:"POST",
+          headers:{"Content-Type":"application/x-www-form-urlencoded","Accept":"text/html","Origin":"https://gary-learning-hub.onrender.com","Referer":"https://gary-learning-hub.onrender.com/junior-grammar-2/"},
+          body:form.toString(),redirect:"manual",signal:controller.signal
+        });
+        status=r.status;accepted=r.status>=200&&r.status<400;
+        if(!accepted)error="mail_provider_http_"+r.status;
+      }catch(e){error=e?.name==="AbortError"?"mail_provider_timeout":String(e?.message||e);}
+      finally{clearTimeout(timer);}
+      if(!accepted&&attempt<3)await new Promise(resolve=>setTimeout(resolve,700*attempt));
+    }
+    return res.status(accepted?201:502).json({ok:accepted,emailAccepted:accepted,emailStatus:status,error:accepted?null:error});
+  }catch(err){
+    console.error("Grammar score email failed",err);
+    return res.status(500).json({ok:false,emailAccepted:false,error:"grammar_score_email_failed"});
+  }
+});
+
 const port=process.env.PORT||10000;
 app.listen(port,()=>console.log(`T-PASS Results API listening on ${port}`));
