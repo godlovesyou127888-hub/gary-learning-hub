@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="description" content="福爾摩思學院 × Gary 老師 2020 公益課《字源創世紀》。按堂次觀看官方課程影片，記下問題與影片時間。">
+<title>字源創世紀｜福爾摩思學院 × Gary 老師</title>
+<link rel="stylesheet" href="style.css">
+<script src="lessons.js" defer></script>
+<script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#watch">跳至影片</a>
+<header class="top"><div class="wrap bar">
+  <a class="brand" href="#top"><span class="monogram" aria-hidden="true">Aa</span><span>字源創世紀</span></a>
+  <nav aria-label="網站導覽"><a href="#catalog">課程目錄</a><a href="#supplements">延伸學習</a><a class="outline" href="#ask">我要提問</a></nav>
+</div></header>
+<main id="top" class="wrap">
+  <section class="hero" aria-labelledby="course-title">
+    <div class="hero-content"><p class="eyebrow">福爾摩思學院 × Gary 老師</p><h1 id="course-title">字源創世紀</h1><p class="hero-sub">2020 公益英語字源課程</p></div>
+    <div class="hero-art" aria-hidden="true"><span>etymology</span></div>
+  </section>
+  <div class="warmup"><a href="#supplements" id="warmup">第 1 堂前先看：單字記憶法大公開 ↗</a></div>
+  <div class="workspace">
+    <section class="card watch" id="watch" aria-labelledby="lesson-title">
+      <div class="section-label" id="video-category">課程影片</div>
+      <h2 id="lesson-title"></h2>
+      <p class="video-source" id="video-source" hidden></p>
+      <div id="player-slot" class="player" aria-label="YouTube 影片播放器"></div>
+      <p id="player-status" class="feedback" role="status"></p>
+      <div class="watch-actions">
+        <a id="external" target="_blank" rel="noopener">在 YouTube 觀看 ↗</a>
+        <a id="ask-current" href="#ask">問這支影片 ↓</a>
+        <button type="button" id="complete" class="outline" aria-pressed="false">標為看完</button>
+      </div>
+      <div class="pager"><button id="prev" type="button">← 上一部</button><button id="next" type="button">下一部 →</button></div>
+    </section>
+    <aside class="card catalog" id="catalog" aria-labelledby="catalog-title">
+      <div class="catalog-heading"><h2 id="catalog-title">課程目錄</h2><span id="count"></span></div>
+      <label class="visually-hidden" for="filter">搜尋堂次</label>
+      <input id="filter" type="search" placeholder="搜尋堂次，例如 12">
+      <p class="progress-text" id="progress"></p>
+      <progress id="progress-bar" aria-label="觀看進度"></progress>
+      <ol class="lesson-list" id="lessons"></ol>
+      <p id="empty" hidden>找不到符合的影片。</p>
+      <p class="catalog-note">本頁收錄官方公開的各堂上集。<a href="https://www.youtube.com/watch?v=WrDJE5j1Xms" target="_blank" rel="noopener">課程介紹 ↗</a></p>
+    </aside>
+    <section class="card ask" id="ask" aria-labelledby="ask-title">
+      <div class="section-label">課堂問答</div>
+      <h2 id="ask-title">問 Gary 老師</h2>
+      <p class="muted">寫下單字或字根，附上影片時間，老師就能找到你問的段落。</p>
+      <form id="question">
+        <div class="fields">
+          <label>課程影片<select id="question-lesson"></select></label>
+          <div><label for="time">影片時間（選填）</label><div class="time-input"><input id="time" placeholder="例如 12:35" maxlength="8"><button class="outline" id="capture" type="button" disabled>帶入時間</button></div></div>
+        </div>
+        <label for="message">你的問題</label>
+        <textarea id="message" required maxlength="700" rows="4" placeholder="例如，這兩個單字看起來有相同的字根，它們的意思有什麼關聯？"></textarea>
+        <div class="form-actions"><button type="submit" class="primary">用 Gmail 提問 ↗</button><button type="button" id="copy" class="outline">複製提問</button></div>
+        <p class="help">提問內容會保存在這個瀏覽器。按下「用 Gmail 提問」後，請在 Gmail 確認並寄出。</p>
+        <p id="feedback" class="feedback" role="status"></p>
+        <textarea id="copy-preview" aria-label="可複製的提問內容" readonly hidden></textarea>
+      </form>
+    </section>
+  </div>
+  <section class="supplement-section" id="supplements" aria-labelledby="supplement-title">
+    <h2 id="supplement-title">Gary 老師延伸學習</h2>
+    <div id="supplement-list" class="supplement-list"></div>
+  </section>
+</main>
+<footer class="wrap footer"><a href="https://gary-learning-hub.onrender.com/">← Gary Learning Hub</a><span>福爾摩思學院 × Gary 老師</span><a href="https://www.youtube.com/channel/UCK1VYWnJRUhoyWQ2Wid65fw" target="_blank" rel="noopener">福爾摩思學院 YouTube 頻道 ↗</a><a href="https://www.youtube.com/playlist?list=PLoKlab82DptaxkbbtF0nibGphI0YoOqlR" target="_blank" rel="noopener">延伸學習 · 2016 公益字彙 ↗</a></footer>
+<noscript>請開啟 JavaScript 使用課程目錄與提問表單。</noscript>
+</body>
+</html>
