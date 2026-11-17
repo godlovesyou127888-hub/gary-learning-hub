@@ -17,7 +17,7 @@
 
 <section class="card"><p class="eyebrow">03 · QUICK CHECK</p><h2>情境小測驗</h2><div id="quiz" class="quiz"></div><button id="submit">完成 5 題小測</button><p id="quizStatus"></p></section>
 
-<section id="resultCard" class="card hidden"><p class="eyebrow">04 · RESULT</p><h2>這個情境完成了</h2><div class="metric"><div><b id="score">0/5</b>答對</div><div><b id="accuracy">0%</b>正確率</div><div><b id="count">1</b>累積完成次數</div></div><div id="review"></div></section>
+<section id="resultCard" class="card hidden"><p class="eyebrow">04 · RESULT</p><h2>這個情境完成了</h2><div class="metric"><div><b id="score">0/5</b>答對</div><div><b id="accuracy">0%</b>正確率</div><div><b id="count">1</b>累積完成次數</div></div><div id="review"></div><h3>下一步學習</h3><p id="nextHint" role="status"></p><div class="actions"><button id="nextStep"></button><button id="retry" class="secondary">再練習一次</button><button id="chooseAgain" class="secondary">返回課程選單</button></div></section>
 
 <section id="deliveryCard" class="card hidden"><p class="eyebrow">05 · SAVE & COACH</p><h2>保存成果</h2><label>姓名<input id="student" type="text" value="Gary 樂齡學員"></label><label>Email（選填）<input id="email" type="email"></label><div class="actions" style="margin-top:14px"><button id="download">下載 JSON</button><button id="print" class="secondary">列印／另存 PDF</button><button id="coach">寄給 Gary 教練（Gmail 草稿）</button></div><p class="muted">建議每次只練一個情境，能看懂、能聽懂、能自己說一次就算完成。</p><p id="deliveryStatus"></p></section>
 
@@ -63,7 +63,7 @@ const scenes=[
 {s:"I need a doctor.",z:"我需要醫生。",u:"身體不舒服或緊急時。"}]}
 ];
 const $=id=>document.getElementById(id);let sceneIndex=0,current=scenes[0],results=[];
-function speak(text,rate=.62){if(!("speechSynthesis" in window)){alert("此裝置不支援語音播放。");return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="en-US";u.rate=rate;speechSynthesis.speak(u)}
+function speak(text,rate=.62){if(!("speechSynthesis" in window)){alert("此裝置不支援語音播放。");return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text.replace(/\bGate 12\b/g,"Gate twelve"));u.lang="en-US";const voices=speechSynthesis.getVoices();const voice=voices.find(v=>v.lang.toLowerCase()==="en-us")||voices.find(v=>/^en[-_]/i.test(v.lang));if(voice){u.voice=voice;u.lang=voice.lang;}u.rate=rate;speechSynthesis.speak(u)}
 function renderTabs(){
  $("tabs").replaceChildren();
  scenes.forEach((s,i)=>{const b=document.createElement("button");b.textContent=s.name;b.className=i===sceneIndex?"active":"";b.onclick=()=>{sceneIndex=i;render()};$("tabs").append(b)});
@@ -85,8 +85,11 @@ $("submit").onclick=()=>{
  $("score").textContent=score+"/5";$("accuracy").textContent=(score*20)+"%";
  const arr=JSON.parse(localStorage.getItem("senior-survival-english-history-v1")||"[]");arr.unshift({date:new Date().toISOString(),scene:current.name,score});localStorage.setItem("senior-survival-english-history-v1",JSON.stringify(arr.slice(0,30)));$("count").textContent=arr.length;
  $("review").innerHTML=results.map(r=>'<div class="'+(r.ok?'good':'bad')+'"><p><b>'+(r.ok?'✓':'✗')+' '+r.x.s+'</b><br>'+r.x.z+'<br>你的答案：'+r.chosen+'</p></div>').join("");
- $("resultCard").classList.remove("hidden");$("deliveryCard").classList.remove("hidden");showHistory();$("resultCard").scrollIntoView({behavior:"smooth"});
+ configureNext(score);$("resultCard").classList.remove("hidden");$("deliveryCard").classList.remove("hidden");showHistory();$("resultCard").scrollIntoView({behavior:"smooth"});
 };
+function goScene(i){sceneIndex=i;render();$("sceneTitle").scrollIntoView({behavior:"smooth",block:"start"});}
+function configureNext(score){const b=$("nextStep");if(score<5){b.textContent=score>=3?"複習錯題":"重新學習";$("nextHint").textContent=score>=3?"先複習答錯的句子，再測一次。":"再聽一次英文例句，慢慢練習。";b.onclick=()=>{if(score>=3){$("review").querySelector(".bad")?.scrollIntoView({behavior:"smooth",block:"center"});}else{goScene(sceneIndex);}};}else{const history=JSON.parse(localStorage.getItem("senior-survival-english-history-v1")||"[]");const done=new Set(history.filter(x=>x.score===5).map(x=>x.scene));let next=-1;for(let n=1;n<=scenes.length;n++){const i=(sceneIndex+n)%scenes.length;if(!done.has(scenes[i].name)){next=i;break;}}b.textContent=next<0?"開始總複習":"下一個課程："+scenes[next].name+" →";$("nextHint").textContent=next<0?"恭喜！六個情境皆已滿分完成。":"恭喜完成！繼續下一個情境。";b.onclick=()=>goScene(next<0?0:next);}}
+$("retry").onclick=()=>{goScene(sceneIndex);$("quiz").scrollIntoView({behavior:"smooth",block:"start"});};$("chooseAgain").onclick=()=>$("tabs").scrollIntoView({behavior:"smooth",block:"center"});
 function snapshot(){const score=results.filter(x=>x.ok).length;return{site:"樂齡旅遊英文 Survival English",version:"MVP V1",date:new Date().toISOString(),student:$("student").value.trim()||"Gary 樂齡學員",email:$("email").value.trim(),scene:current.name,score,total:5,phrases:current.items,answers:results.map(r=>({sentence:r.x.s,chosen:r.chosen,answer:r.x.z,correct:r.ok}))}}
 function report(){const d=snapshot();return "樂齡旅遊英文 Survival English\n學員："+d.student+"\n情境："+d.scene+"\n分數："+d.score+"/5\n\n重點句：\n"+d.phrases.map((x,i)=>(i+1)+". "+x.s+"｜"+x.z).join("\n")}
 function showHistory(){const arr=JSON.parse(localStorage.getItem("senior-survival-english-history-v1")||"[]");$("history").innerHTML=arr.length?arr.slice(0,12).map(x=>'<p>'+new Date(x.date).toLocaleString()+'｜'+x.scene+'｜'+x.score+'/5</p>').join(""):"尚無紀錄。"}
